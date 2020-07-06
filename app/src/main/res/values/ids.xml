@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="selectPhotoButtonParentMyProfile" type="id" />
+    <item name="usernameEditTextParentMyProfile" type="id" />
+    <item name="emailTextViewParentMyProfile" type="id" />
+    <item name="cityTextViewParentMyProfile" type="id" />
+    <item name="cityEditTextParentMyProfile" type="id" />
+    <item name="idChildTextViewParentMyProfile" type="id" />
+    <item name="idChildEditTextParentMyProfile" type="id" />
+    <item name="selectPhotoImageviewParentMyProfile" type="id" />
+</resources>

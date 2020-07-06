@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="7dp"
+    android:scrollbars="none">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="parent.ParentMyProfileFragment">
+
+        <include
+            android:id="@+id/parentToolbar"
+            layout="@layout/toolbar"
+            android:layout_width="399dp"
+            android:layout_height="47dp" />
+
+        <Button
+            android:id="@+id/selectPhotoButtonParentMyProfile"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/rounded_select_photo_button"
+            android:text="Выбрать\nизображение"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/parentToolbar" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/selectPhotoImageviewParentMyProfile"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:civ_border_width="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/selectPhotoButtonParentMyProfile"
+            app:layout_constraintEnd_toEndOf="@+id/selectPhotoButtonParentMyProfile"
+            app:layout_constraintStart_toStartOf="@+id/selectPhotoButtonParentMyProfile"
+            app:layout_constraintTop_toTopOf="@+id/selectPhotoButtonParentMyProfile" />
+
+        <EditText
+            android:id="@+id/usernameEditTextParentMyProfile"
+            android:layout_width="277dp"
+            android:layout_height="23dp"
+            android:layout_marginTop="24dp"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text=""
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectPhotoButtonParentMyProfile" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintTop_toBottomOf="@+id/usernameEditTextParentMyProfile"
+            tools:layout_editor_absoluteX="-16dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="60dp"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <TextView
+            android:id="@+id/emailTextViewParentMyProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="Email:"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/appCompatImageView2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView" />
+
+        <EditText
+            android:id="@+id/emailEditTextParentMyProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:cursorVisible="true"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            app:layout_constraintBottom_toBottomOf="@+id/emailTextViewParentMyProfile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/emailTextViewParentMyProfile"
+            app:layout_constraintTop_toTopOf="@+id/emailTextViewParentMyProfile" />
+
+        <TextView
+            android:id="@+id/cityTextViewParentMyProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="20dp"
+            android:text="Город:"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView2" />
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/cityEditTextParentMyProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:completionThreshold="0"
+            android:ems="10"
+            android:hint="Введите город"
+            android:inputType="textPersonName"
+            android:selectAllOnFocus="false"
+            app:layout_constraintBottom_toBottomOf="@+id/cityTextViewParentMyProfile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cityTextViewParentMyProfile"
+            app:layout_constraintTop_toTopOf="@+id/cityTextViewParentMyProfile" />
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/idChildEditTextParentMyProfile"
+            android:layout_width="0dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:completionThreshold="0"
+            android:ems="10"
+            android:hint="id"
+            android:inputType="textPersonName"
+            android:selectAllOnFocus="false"
+            app:layout_constraintBottom_toBottomOf="@+id/idChildTextViewParentMyProfile"
+            app:layout_constraintEnd_toStartOf="@+id/searchButtonParentMyProfile"
+            app:layout_constraintStart_toEndOf="@+id/idChildTextViewParentMyProfile"
+            app:layout_constraintTop_toTopOf="@+id/idChildTextViewParentMyProfile" />
+
+        <Button
+            android:id="@+id/saveChangeButtonParentMyProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorButton"
+            android:text="Сохранить изменения"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/idChildEditTextParentMyProfile"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/searchButtonParentMyProfile"
+            android:layout_width="67dp"
+            android:layout_height="31dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@color/colorButton"
+            android:text="Добавить"
+            android:textSize="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/idChildEditTextParentMyProfile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/idChildEditTextParentMyProfile" />
+
+        <TextView
+            android:id="@+id/idChildTextViewParentMyProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="40dp"
+            android:text="id ребенка:"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cityTextViewParentMyProfile" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

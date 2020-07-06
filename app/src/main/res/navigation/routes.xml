@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/routesChild"
+    app:startDestination="@id/childMainFragment">
+
+    <fragment
+        android:id="@+id/childMainFragment"
+        android:name="com.diplom.kotlindiplom.child.ChildMainFragment"
+        android:label="Главная"
+        tools:layout="@layout/fragment_child_main" />
+    <fragment
+        android:id="@+id/childSheduleFragment"
+        android:name="com.diplom.kotlindiplom.child.SheduleFragment"
+        android:label="Расписание"
+        tools:layout="@layout/fragment_child_shedule" />
+    <fragment
+        android:id="@+id/childMyProfileFragment"
+        android:name="com.diplom.kotlindiplom.child.ChildMyProfileFragment"
+        android:label="fragment_my_profile"
+        tools:layout="@layout/fragment_child_my_profile" >
+        <action
+            android:id="@+id/action_childMyProfileFragment_to_childMainFragment2"
+            app:destination="@id/childMainFragment"
+            app:popUpTo="@id/childMainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/childMarksFragment"
+        android:name="com.diplom.kotlindiplom.child.MarksFragment"
+        android:label="fragment_child_marks"
+        tools:layout="@layout/fragment_child_marks" />
+    <fragment
+        android:id="@+id/childTasksFragment"
+        android:name="com.diplom.kotlindiplom.child.ChildTasksFragment"
+        android:label="fragment_child_tasks"
+        tools:layout="@layout/fragment_child_tasks" />
+    <fragment
+        android:id="@+id/childAllTasksFragment"
+        android:name="com.diplom.kotlindiplom.child.ChildAllTasksFragment"
+        android:label="fragment_child_all_tasks"
+        tools:layout="@layout/fragment_child_all_tasks" >
+        <argument
+            android:name="titile"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/childTaskContentFragment"
+        android:name="com.diplom.kotlindiplom.child.ChildTaskContentFragment"
+        android:label="fragment_child_task_content"
+        tools:layout="@layout/fragment_child_task_content" />
+</navigation>

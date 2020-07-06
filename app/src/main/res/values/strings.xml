@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">KotlinDiplom</string>
+
+    <integer name="com_vk_sdk_AppId">7345144</integer>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="navigation_drawer_open"> Open</string>
+    <string name="navigation_drawer_close"> Close</string>
+    <string name="accessTokenVkApi"> 82ec654d82ec654d82ec654d1d829c76b5882ec82ec654ddcb339961b9dc274bcd1e19a</string>
+</resources>

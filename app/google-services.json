@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "343877076887",
+    "firebase_url": "https://diplom-64691.firebaseio.com",
+    "project_id": "diplom-64691",
+    "storage_bucket": "diplom-64691.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343877076887:android:96ac831b3179a101b8e6d2",
+        "android_client_info": {
+          "package_name": "com.diplom.kotlindiplom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "343877076887-gi33en42sntkpghek9ncav57cs3jhnf6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.diplom.kotlindiplom",
+            "certificate_hash": "21ddec07adc8e63d00efebf2ed4ebad28e8f65b3"
+          }
+        },
+        {
+          "client_id": "343877076887-025glg6g970acq0v3uhsu8bj6t1u81lh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.diplom.kotlindiplom",
+            "certificate_hash": "5da0a1a9cc9097e44aab926ab3e09b0f388b0909"
+          }
+        },
+        {
+          "client_id": "343877076887-jaulatvsnd97qsh6drcst6q5lhsf0usb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBogqEWcFk0HQw92ZCKicm_zJxXalo4iBA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343877076887-jaulatvsnd97qsh6drcst6q5lhsf0usb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

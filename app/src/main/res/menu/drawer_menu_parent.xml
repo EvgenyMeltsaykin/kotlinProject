@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/parentMainFragment"
+        android:title="Главная"
+        android:icon="@color/colorPrimaryDark"/>
+    <item
+        android:id="@+id/parentMyProfileFragment"
+        android:title="Мой профиль" />
+    <item
+        android:id="@+id/parentSheduleFragment"
+        android:title="Расписание" />
+
+    <item
+        android:id="@+id/parentTasksFragment"
+        android:title="Задания" />
+    <item
+        android:id="@+id/parentExitApplication"
+        android:title="Выйти" />
+
+</menu>
