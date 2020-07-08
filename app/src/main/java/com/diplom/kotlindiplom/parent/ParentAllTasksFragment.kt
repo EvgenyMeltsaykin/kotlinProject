@@ -59,31 +59,23 @@ class ParentAllTasksFragment : Fragment() {
 
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
-        firebase.getTasksParentUid(firebase.uidUser!!,status,object: FirebaseCallback{
+        firebase.getTasksParentUid(firebase.uidUser!!,status,object: FirebaseCallback<List<Task>>{
 
-            override fun onCallBackString(value: String) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onCallBackTasks(value: List<Task>) {
+            override fun onComplete(value: List<Task>) {
                 value.forEach {
                     adapter.add(TaskItem(it))
                 }
                 taskRecyclerViewParent.adapter = adapter
                 adapter.setOnItemClickListener { item, view ->
                     val taskItem = item as TaskItem
-                    val bundle : Bundle = bundleOf()
-                    bundle.putString("title","${taskItem.task.title}")
-                    bundle.putString("taskId","${taskItem.task.taskId}")
-                    val navController = Navigation.findNavController(requireActivity(),R.id.navFragmentParent)
-                    navController.navigate(R.id.parentTaskContentFragment,bundle)
+                    val bundle: Bundle = bundleOf()
+                    bundle.putString("title", "${taskItem.task.title}")
+                    bundle.putString("taskId", "${taskItem.task.taskId}")
+                    val navController =
+                        Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
+                    navController.navigate(R.id.parentTaskContentFragment, bundle)
                 }
             }
-
-            override fun onCallBackTask(value: Task) {
-                TODO("Not yet implemented")
-            }
-
         })
     }
 

@@ -89,17 +89,9 @@ class ChildMainActivity : AppCompatActivity() {
                         firebase.getFieldDatabaseChild(
                             uid!!,
                             "acceptName",
-                            object : FirebaseCallback {
-                                override fun onCallBackString(value: String) {
+                            object : FirebaseCallback<String> {
+                                override fun onComplete(value: String) {
                                     view.invitationTextView.setText("Родитель ${value} запрашивает привязку аккаунта")
-                                }
-
-                                override fun onCallBackTasks(value: List<Task>) {
-                                    TODO("Not yet implemented")
-                                }
-
-                                override fun onCallBackTask(value: Task) {
-                                    TODO("Not yet implemented")
                                 }
                             })
                         window.contentView = view
@@ -109,18 +101,11 @@ class ChildMainActivity : AppCompatActivity() {
                             firebase.getFieldDatabaseChild(
                                 uid,
                                 "acceptUid",
-                                object : FirebaseCallback {
-                                    override fun onCallBackString(value: String) {
+                                object : FirebaseCallback<String> {
+                                    override fun onComplete(value: String) {
                                         firebase.setFieldDatabaseParent(value, "acceptAnswer", "0")
                                     }
 
-                                    override fun onCallBackTasks(value: List<Task>) {
-                                        TODO("Not yet implemented")
-                                    }
-
-                                    override fun onCallBackTask(value: Task) {
-                                        TODO("Not yet implemented")
-                                    }
 
                                 })
                             firebase.clearAcceptRequest()
@@ -130,21 +115,12 @@ class ChildMainActivity : AppCompatActivity() {
                             firebase.getFieldDatabaseChild(
                                 uid,
                                 "acceptUid",
-                                object : FirebaseCallback {
-                                    override fun onCallBackString(value: String) {
+                                object : FirebaseCallback<String> {
+                                    override fun onComplete(value: String) {
                                         Log.d("TAG", "$value")
                                         firebase.setFieldDatabaseChild(uid, "parentUid", value)
                                         firebase.setFieldDatabaseParent(value, "acceptAnswer", "1")
                                     }
-
-                                    override fun onCallBackTasks(value: List<Task>) {
-                                        TODO("Not yet implemented")
-                                    }
-
-                                    override fun onCallBackTask(value: Task) {
-                                        TODO("Not yet implemented")
-                                    }
-
                                 })
                             firebase.clearAcceptRequest()
                         }

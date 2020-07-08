@@ -1,9 +1,9 @@
 package com.diplom.kotlindiplom.models
 
 class Child(
-    val childUid: String,
-    val username: String,
-    val email: String,
+    var childUid: String,
+    var username: String,
+    var email: String,
     var profileImageUrl: String = "",
     var parentUid: String = "",
     var point: Int = 0,

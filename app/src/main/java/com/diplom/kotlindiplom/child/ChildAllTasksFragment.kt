@@ -62,14 +62,10 @@ class ChildAllTasksFragment : Fragment() {
             firebase.getFieldDatabaseChild(
                 firebase.uidUser!!,
                 "parentUid",
-                object : FirebaseCallback {
-                    override fun onCallBackString(value: String) {
-                        firebase.getTasksParentUid(value, status, object : FirebaseCallback {
-
-                            override fun onCallBackString(value: String) {
-                                TODO("Not yet implemented")
-                            }
-                            override fun onCallBackTasks(value: List<Task>) {
+                object : FirebaseCallback<String> {
+                    override fun onComplete(value: String) {
+                        firebase.getTasksParentUid(value, status, object : FirebaseCallback<List<Task>> {
+                            override fun onComplete(value: List<Task>) {
                                 value.forEach {
                                     adapter.add(TaskItem(it))
                                 }
@@ -86,28 +82,14 @@ class ChildAllTasksFragment : Fragment() {
                                     navController.navigate(R.id.childTaskContentFragment, bundle)
                                 }
                             }
-                            override fun onCallBackTask(value: Task) {
-                                TODO("Not yet implemented")
-                            }
 
                         })
                     }
-
-                    override fun onCallBackTasks(value: List<Task>) {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onCallBackTask(value: Task) {
-                        TODO("Not yet implemented")
-                    }
                 })
         }else{
-            firebase.getTasksChildUid(firebase.uidUser!!,status,object : FirebaseCallback{
-                override fun onCallBackString(value: String) {
-                    TODO("Not yet implemented")
-                }
+            firebase.getTasksChildUid(firebase.uidUser!!,status,object : FirebaseCallback<List<Task>>{
 
-                override fun onCallBackTasks(value: List<Task>) {
+                override fun onComplete(value: List<Task>) {
                     value.forEach {
                         adapter.add(TaskItem(it))
                     }
@@ -124,11 +106,6 @@ class ChildAllTasksFragment : Fragment() {
                         navController.navigate(R.id.childTaskContentFragment, bundle)
                     }
                 }
-
-                override fun onCallBackTask(value: Task) {
-                    TODO("Not yet implemented")
-                }
-
             })
         }
     }

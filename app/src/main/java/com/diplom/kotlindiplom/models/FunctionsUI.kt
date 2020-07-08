@@ -31,9 +31,9 @@ class FunctionsUI {
         firebase.getFieldDatabaseChild(
             firebase.uidUser!!,
             "parentUid",
-            object : FirebaseCallback {
+            object : FirebaseCallback<String> {
                 @RequiresApi(Build.VERSION_CODES.O)
-                override fun onCallBackString(value: String) {
+                override fun onComplete(value: String) {
                     if (task.parentUid == value) {
                         val channel1 = NotificationChannel(
                             CHANNEL_ID,
@@ -62,15 +62,6 @@ class FunctionsUI {
                         firebase.setFieldDatabaseTask(task.taskId, "showNotification", 1)
                     }
                 }
-
-                override fun onCallBackTasks(value: List<Task>) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onCallBackTask(value: Task) {
-                    TODO("Not yet implemented")
-                }
-
             })
 
     }

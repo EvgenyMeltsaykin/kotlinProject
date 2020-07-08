@@ -15,6 +15,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.header.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.*
 
 class FunctionsFirebase {
@@ -53,8 +55,10 @@ class FunctionsFirebase {
         ref.child("$field").setValue(value)
 
     }
-    fun getFieldDatabaseChild(childUid: String, field: String,firebaseCallBack: FirebaseCallback){
+    fun getFieldDatabaseChild(childUid: String, field: String,firebaseCallBack: FirebaseCallback<String>) {
         val ref = childRef.child("${childUid}")
+        var value = ""
+
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
@@ -64,14 +68,14 @@ class FunctionsFirebase {
                 if (p0.exists()) {
                     p0.children.forEach {
                         if (it.key.toString() == field) {
-                            firebaseCallBack.onCallBackString(it.value.toString())
+                            firebaseCallBack.onComplete(it.value.toString())
                         }
                     }
                 }
             }
         })
     }
-    fun getFieldDatabaseParent(parentUid: String, field: String,firebaseCallBack: FirebaseCallback){
+    fun getFieldDatabaseParent(parentUid: String, field: String,firebaseCallBack: FirebaseCallback<String>){
         val ref = parentRef.child("${parentUid}")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -82,14 +86,14 @@ class FunctionsFirebase {
                 if (p0.exists()) {
                     p0.children.forEach {
                         if (it.key.toString() == field) {
-                            firebaseCallBack.onCallBackString(it.value.toString())
+                            firebaseCallBack.onComplete(it.value.toString())
                         }
                     }
                 }
             }
         })
     }
-    fun getFieldDatabaseTask(taskId: String,field: String,firebaseCallBack: FirebaseCallback){
+    fun getFieldDatabaseTask(taskId: String,field: String,firebaseCallBack: FirebaseCallback<String>){
         val ref = taskRef.child("${taskId}")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -101,7 +105,7 @@ class FunctionsFirebase {
                     p0.children.forEach {
                         Log.d("TAG",it.key.toString())
                         if (it.key.toString() == field) {
-                            firebaseCallBack.onCallBackString(it.value.toString())
+                            firebaseCallBack.onComplete(it.value.toString())
                         }
                     }
                 }
@@ -111,22 +115,17 @@ class FunctionsFirebase {
     fun addPointChild(childUid: String,point:Int){
         val ref = childRef.child("$childUid")
         Log.d("TAG",childUid)
-        getFieldDatabaseChild(childUid,"point",object :FirebaseCallback{
-            override fun onCallBackString(value: String) {
+        //val value = getFieldDatabaseChild(childUid,"point",object : CallBack() {
+
+        //}
+        val value = getFieldDatabaseChild(childUid,"point",object :FirebaseCallback<String>{
+            override fun onComplete(value: String) {
                 Log.d("TAG","${value.toInt() + point}")
+                Log.d("getField","test1")
                 ref.child("point").setValue(value.toInt() + point)
             }
-
-            override fun onCallBackTasks(value: List<Task>) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onCallBackTask(value: Task) {
-                TODO("Not yet implemented")
-            }
-
         })
-
+        Log.d("getField","value $value")
     }
     fun sendRequestChild(editTextId: EditText, context: Context) {
         val childRef = rootRef.child("users").child("children")
@@ -136,11 +135,11 @@ class FunctionsFirebase {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
+               if (p0.exists()) {
                     val childUid = searchIdChild(p0, editTextId.text.toString())
                     if (childUid.isNotEmpty()) {
-                        getFieldDatabaseChild(childUid, "parentUid",object : FirebaseCallback {
-                            override fun onCallBackString(value: String) {
+                        getFieldDatabaseChild(childUid, "parentUid",object : FirebaseCallback<String> {
+                            override fun onComplete(value: String) {
                                 val parentUid = value
                                 if (parentUid.isNotEmpty()) {
                                     Toast.makeText(
@@ -150,20 +149,11 @@ class FunctionsFirebase {
                                     ).show()
                                 } else {
                                     val firebase = FunctionsFirebase()
-                                    firebase.getFieldDatabaseParent(firebase.uidUser!!,"username",object : FirebaseCallback{
-                                        override fun onCallBackString(value: String) {
+                                    firebase.getFieldDatabaseParent(firebase.uidUser!!,"username",object : FirebaseCallback<String>{
+                                        override fun onComplete(value: String) {
                                             firebase.setFieldDatabaseChild(childUid,"acceptName",value)
                                             firebase.setFieldDatabaseChild(childUid,"acceptUid",firebase.uidUser!!)
                                         }
-
-                                        override fun onCallBackTasks(value: List<Task>) {
-                                            TODO("Not yet implemented")
-                                        }
-
-                                        override fun onCallBackTask(value: Task) {
-                                            TODO("Not yet implemented")
-                                        }
-
                                     })
                                     Toast.makeText(
                                         context,
@@ -172,14 +162,6 @@ class FunctionsFirebase {
                                     ).show()
                                     return
                                 }
-                            }
-
-                            override fun onCallBackTasks(value: List<Task>) {
-                                TODO("Not yet implemented")
-                            }
-
-                            override fun onCallBackTask(value: Task) {
-                                TODO("Not yet implemented")
                             }
                         })
                     } else {
@@ -227,7 +209,7 @@ class FunctionsFirebase {
             Toast.makeText(context,"Задание успешно добавлено", Toast.LENGTH_SHORT).show()
         }
     }
-    fun getTask(taskId:String, firebaseCallBack: FirebaseCallback){
+    fun getTask(taskId:String, firebaseCallBack: FirebaseCallback<Task>){
         val ref = taskRef.child("$taskId")
         var task = Task("","","",0,"","")
         ref.addListenerForSingleValueEvent(object : ValueEventListener{
@@ -238,7 +220,7 @@ class FunctionsFirebase {
             override fun onDataChange(p0: DataSnapshot) {
                 task = getTask(p0)
                 Log.d("TAG",task.childUid)
-                firebaseCallBack.onCallBackTask(task)
+                firebaseCallBack.onComplete(task)
             }
 
         })
@@ -277,7 +259,7 @@ class FunctionsFirebase {
         }
         return  task
     }
-    fun getTasksParentUid(parentUid:String, status:Int, firebaseCallBack: FirebaseCallback){
+    fun getTasksParentUid(parentUid:String, status:Int, firebaseCallBack: FirebaseCallback<List<Task>>){
         taskRef.addListenerForSingleValueEvent(object :ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
@@ -300,12 +282,12 @@ class FunctionsFirebase {
                         tasks.add(getTask(p1))
                     }
                 }
-                firebaseCallBack.onCallBackTasks(tasks)
+                firebaseCallBack.onComplete(tasks)
             }
 
         })
     }
-    fun getTasksChildUid(childUid:String, status:Int, firebaseCallBack: FirebaseCallback){
+    fun getTasksChildUid(childUid:String, status:Int, firebaseCallBack: FirebaseCallback<List<Task>>){
         taskRef.addListenerForSingleValueEvent(object :ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
@@ -328,9 +310,8 @@ class FunctionsFirebase {
                         tasks.add(getTask(p1))
                     }
                 }
-                firebaseCallBack.onCallBackTasks(tasks)
+                firebaseCallBack.onComplete(tasks)
             }
-
         })
     }
 }

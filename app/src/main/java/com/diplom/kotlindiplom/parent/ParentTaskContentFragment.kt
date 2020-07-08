@@ -54,16 +54,8 @@ class ParentTaskContentFragment : Fragment() {
 
         val navController = Navigation.findNavController(requireActivity(),R.id.navFragmentParent)
         val firebase = FunctionsFirebase()
-        firebase.getTask(taskId.toString(), object: FirebaseCallback{
-            override fun onCallBackString(value: String) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onCallBackTasks(value: List<Task>) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onCallBackTask(value: Task) {
+        firebase.getTask(taskId.toString(), object: FirebaseCallback<Task>{
+            override fun onComplete(value: Task) {
                 titleTaskContentTextViewParent.setText(value.title)
                 costTaskContentTextViewParent.setText("Стоимость: " + value.cost.toString())
                 descriptionTaskContentTextViewParent.setText(value.description)
@@ -82,16 +74,8 @@ class ParentTaskContentFragment : Fragment() {
             Toast.makeText(requireContext(),"Задание принято",Toast.LENGTH_SHORT).show()
             navController.popBackStack()
             requireActivity().setTitle("На проверке")
-            firebase.getTask(taskId.toString(), object : FirebaseCallback{
-                override fun onCallBackString(value: String) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onCallBackTasks(value: List<Task>) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onCallBackTask(value: Task) {
+            firebase.getTask(taskId.toString(), object : FirebaseCallback<Task>{
+                override fun onComplete(value: Task) {
                     Log.d("TAG",value.childUid)
                     firebase.addPointChild(value.childUid,value.cost)
                 }

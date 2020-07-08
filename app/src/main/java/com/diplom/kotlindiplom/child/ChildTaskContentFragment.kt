@@ -52,16 +52,8 @@ class ChildTaskContentFragment : Fragment() {
         requireActivity().invalidateOptionsMenu()
         val navController = Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
         val firebase = FunctionsFirebase()
-        firebase.getTask(taskId.toString(), object : FirebaseCallback {
-            override fun onCallBackString(value: String) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onCallBackTasks(value: List<Task>) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onCallBackTask(value: Task) {
+        firebase.getTask(taskId.toString(), object : FirebaseCallback<Task> {
+            override fun onComplete(value: Task) {
                 titleContentTaskTextViewChild.setText(value.title)
                 costContentTaskTextViewChild.setText("Стоимость: " + value.cost.toString())
                 descriptionTaskContentTextViewChild.setText(value.description)
