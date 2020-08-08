@@ -21,16 +21,12 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.room.RoomDatabase
 import com.bumptech.glide.Glide
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.database.ChildParentDatabase
-import com.diplom.kotlindiplom.database.DBChild
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
-import com.diplom.kotlindiplom.models.Task
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -38,8 +34,6 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.accept_parent.view.*
 import kotlinx.android.synthetic.main.activity_child_main.*
 import kotlinx.android.synthetic.main.header.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class ChildMainActivity : AppCompatActivity() {
     private var drawer: DrawerLayout? = null
@@ -155,7 +149,7 @@ class ChildMainActivity : AppCompatActivity() {
 
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                val task = firebase.getTask(p0)
+                val task = firebase.getAllFieldsTask(p0)
 
                 if (task.showNotification == 2 && task.status == -1) {
                     uiFunctions.createNotificationChild(
@@ -182,7 +176,7 @@ class ChildMainActivity : AppCompatActivity() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val task = firebase.getTask(p0)
+                val task = firebase.getAllFieldsTask(p0)
                 if (task.showNotification == 0 && task.status == -1) {
                     uiFunctions.createNotificationChild(
                         applicationContext,
@@ -341,7 +335,7 @@ class ChildMainActivity : AppCompatActivity() {
                         try{
                             usernameTextviewDrawer.text = it.value.toString().toUpperCase()
                         } catch (e:Exception){
-                            usernameTextviewDrawer.text = " "
+                            usernameTextviewDrawer.setText(it.value.toString().toUpperCase())
                         }
 
                     }

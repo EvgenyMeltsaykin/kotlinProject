@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.diplom.kotlindiplom.child.ChildMainActivity
 import com.diplom.kotlindiplom.database.ChildParentDatabase
 import com.diplom.kotlindiplom.database.DBChild
+import com.diplom.kotlindiplom.database.DBParent
 import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.Parent
 import com.diplom.kotlindiplom.parent.ParentMainActivity
@@ -123,6 +124,13 @@ class RegistryActivity : AppCompatActivity() {
                     intent = Intent(this, ParentMainActivity::class.java)
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val parent = DBParent(username,email)
+                        applicationContext.let {
+                            ChildParentDatabase(it).getChildParentDao().addParent(parent)
+                        }
+
+                    }
                     startActivity(intent)
                 }
         }

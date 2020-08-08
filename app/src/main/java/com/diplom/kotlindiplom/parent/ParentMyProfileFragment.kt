@@ -20,11 +20,15 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.ChooseActivity
 
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.child.changeEmail
 import com.diplom.kotlindiplom.child.cityId
+import com.diplom.kotlindiplom.database.ChildParentDatabase
+import com.diplom.kotlindiplom.database.DBChild
+import com.diplom.kotlindiplom.database.DBParent
 import com.diplom.kotlindiplom.models.City
 import com.diplom.kotlindiplom.models.FunctionsApi
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -35,6 +39,7 @@ import kotlinx.android.synthetic.main.activity_parent_main.*
 import kotlinx.android.synthetic.main.fragment_parent_my_profile.*
 import kotlinx.android.synthetic.main.fragment_parent_my_profile.view.*
 import kotlinx.android.synthetic.main.header.*
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 // TODO: Rename parameter arguments, choose names that match
@@ -48,7 +53,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 var cityId: Int? = -1
-class ParentMyProfileFragment : Fragment() {
+class ParentMyProfileFragment : BaseFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -73,7 +78,7 @@ class ParentMyProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         changeEmail = false
-        loadInformationFromFirebase()
+        loadInformation()
 
         val network = FunctionsApi(cityId)
         val firebase = FunctionsFirebase()
@@ -139,6 +144,23 @@ class ParentMyProfileFragment : Fragment() {
             selectPhotoButtonParentMyProfile.alpha = 0f
         }
     }
+    private  fun loadInformation(){
+        loadInformationFromFirebase()
+        loadInformationFromSQLite()
+    }
+    private fun loadInformationFromSQLite(){
+        launch {
+            context?.let {
+                val parent = ChildParentDatabase(it).getChildParentDao().getAllParent()
+                parent.forEach {
+                    usernameEditTextParentMyProfile.setText(it.username)
+                    emailEditTextParentMyProfile.setText(it.email)
+                    cityEditTextParentMyProfile.setText(it.city)
+                }
+                saveChangeButtonParentMyProfile.isVisible = false
+            }
+        }
+    }
     private fun loadInformationFromFirebase() {
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/parents/$uid")
@@ -148,7 +170,6 @@ class ParentMyProfileFragment : Fragment() {
                     if (it.key.toString() == "profileImageUrl") {
                         val profileImageUrl = it.value.toString()
                         if (profileImageUrl != "") {
-
                             try {
                                 //Загрузка изображения в боковое меню
                                 val header = requireActivity().navViewParent.getHeaderView(0);
@@ -169,15 +190,6 @@ class ParentMyProfileFragment : Fragment() {
 
                         }
                     }
-                    if (it.key.toString() == "username") {
-                        usernameEditTextParentMyProfile.setText(it.value.toString())
-                    }
-                    if (it.key.toString() == "email") {
-                        emailEditTextParentMyProfile.setText(it.value.toString())
-                    }
-                    if (it.key.toString() == "city") {
-                        cityEditTextParentMyProfile.setText(it.value.toString())
-                    }
                     if (it.key.toString() == "cityId") {
                         val temp: String = it.value.toString()
                         cityId = temp.toInt()
@@ -194,6 +206,9 @@ class ParentMyProfileFragment : Fragment() {
         val user = FirebaseAuth.getInstance().currentUser
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/parents/$uid")
+        val username = usernameEditTextParentMyProfile.text.toString()
+        val email = emailEditTextParentMyProfile.text.toString()
+        val city = cityEditTextParentMyProfile.text.toString()
         if (changeEmail) {
             user?.updateEmail(emailEditTextParentMyProfile.text.toString())
                 ?.addOnCompleteListener {
@@ -225,6 +240,16 @@ class ParentMyProfileFragment : Fragment() {
         ref.child("city").setValue(cityEditTextParentMyProfile.text.toString())
 
         saveChangeButtonParentMyProfile.isVisible = false;
+        launch {
+            context?.let {
+                val updateParent = DBParent(username,city,email)
+                val parent = ChildParentDatabase(it).getChildParentDao().getAllParent()
+                parent.forEach {
+                    updateParent.uid = it.uid
+                }
+                ChildParentDatabase(it).getChildParentDao().updateParent(updateParent)
+            }
+        }
         Toast.makeText(requireContext(), "Изменения успешно сохранены", Toast.LENGTH_SHORT).show()
     }
 

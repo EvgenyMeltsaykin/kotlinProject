@@ -1,10 +1,10 @@
 package com.diplom.kotlindiplom.models
 
 data class Parent (
-    val parentUid:String,
-    val username:String,
-    val email:String,
-    val profileImageUrl: String = "",
-    val acceptAnswer: String = "",
-    val city:String ="",
-    val cityId : Int = -1)
+    var parentUid:String,
+    var username:String,
+    var email:String,
+    var profileImageUrl: String = "",
+    var acceptAnswer: String = "",
+    var city:String ="",
+    var cityId : Int = -1)

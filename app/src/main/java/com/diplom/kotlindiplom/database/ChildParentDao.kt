@@ -8,7 +8,7 @@ interface ChildParentDao {
     @Insert
     suspend fun addChild (child: DBChild)
 
-    @Query("SELECT * FROM dbchild ORDER BY id DESC")
+    @Query("SELECT * FROM dbchild ORDER BY uid DESC")
     suspend fun getAllChild() : List<DBChild>
 
     @Update

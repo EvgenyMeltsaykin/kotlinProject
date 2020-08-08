@@ -21,7 +21,6 @@ import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
-import com.diplom.kotlindiplom.models.Task
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -107,7 +106,7 @@ class ParentMainActivity : AppCompatActivity() {
 
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                val task = firebase.getTask(p0)
+                val task = firebase.getAllFieldsTask(p0)
                 if (task.showNotification == 1 || task.status != 0) return
                 uiFunctions.createNotificationParent(applicationContext,ParentMainActivity::class.java,R.drawable.ic_launcher_background,"Ребенок выполнил задание","Ребенок выполнил задание",task.title,task)
 

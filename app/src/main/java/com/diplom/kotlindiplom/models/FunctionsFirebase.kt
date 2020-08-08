@@ -203,6 +203,47 @@ class FunctionsFirebase {
             Toast.makeText(context,"Задание успешно добавлено", Toast.LENGTH_SHORT).show()
         }
     }
+    fun getParent(parentUid: String?,firebaseCallBack: FirebaseCallback<Parent>){
+        parentRef.child("$parentUid").addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val parent = getAllFieldsParent(p0)
+                firebaseCallBack.onComplete(parent)
+            }
+
+        })
+    }
+    fun getAllFieldsParent (p0: DataSnapshot) : Parent {
+        var parent = Parent("","","")
+        p0.children.forEach{
+            if (it.key.toString() == "acceptAnswer") {
+                parent.acceptAnswer = it.value.toString()
+            }
+
+            if (it.key.toString() == "city") {
+                parent.city = it.value.toString()
+            }
+            if (it.key.toString() == "cityId") {
+                parent.cityId = it.value.toString().toInt()
+            }
+            if (it.key.toString() == "email") {
+                parent.email = it.value.toString()
+            }
+            if (it.key.toString() == "profileImageUrl") {
+                parent.profileImageUrl = it.value.toString()
+            }
+            if (it.key.toString() == "parentUid") {
+                parent.parentUid = it.value.toString()
+            }
+            if (it.key.toString() == "username") {
+                parent.username = it.value.toString()
+            }
+        }
+        return parent
+    }
     fun getChild(childUid: String?,firebaseCallBack: FirebaseCallback<Child>){
         childRef.child("$childUid").addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
@@ -270,14 +311,14 @@ class FunctionsFirebase {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                task = getTask(p0)
+                task = getAllFieldsTask(p0)
                 Log.d("TAG",task.childUid)
                 firebaseCallBack.onComplete(task)
             }
 
         })
     }
-    fun getTask(p0: DataSnapshot) : Task{
+    fun getAllFieldsTask(p0: DataSnapshot) : Task{
         var task =  Task("","","",0,"","")
 
         p0.children.forEach{
@@ -331,7 +372,7 @@ class FunctionsFirebase {
                         }
                     }
                     if (parentUidInFirebase == parentUid && statusInFirebase == status){
-                        tasks.add(getTask(p1))
+                        tasks.add(getAllFieldsTask(p1))
                     }
                 }
                 firebaseCallBack.onComplete(tasks)
@@ -359,7 +400,7 @@ class FunctionsFirebase {
                         }
                     }
                     if (childUidInFirebase == childUid && statusInFirebase == status){
-                        tasks.add(getTask(p1))
+                        tasks.add(getAllFieldsTask(p1))
                     }
                 }
                 firebaseCallBack.onComplete(tasks)

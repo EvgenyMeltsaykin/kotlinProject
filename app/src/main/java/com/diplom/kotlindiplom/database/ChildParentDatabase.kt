@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [DBChild::class, DBParent::class],
-    version = 2
+    version = 1
 )
 abstract class ChildParentDatabase : RoomDatabase() {
 

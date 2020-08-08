@@ -69,9 +69,10 @@ class ChildMainFragment : BaseFragment() {
         launch {
             context?.let {
                 val child = ChildParentDatabase(it).getChildParentDao().getAllChild()
-                Log.d("TEST", child.size.toString())
+                //Log.d("TEST", child.size.toString())
                 child.forEach {
                     Log.d("TEST", it.username)
+                    Log.d("TEST", it.city)
                 }
 
             }
