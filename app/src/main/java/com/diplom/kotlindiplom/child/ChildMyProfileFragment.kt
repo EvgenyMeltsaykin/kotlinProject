@@ -17,6 +17,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.City
@@ -45,9 +46,7 @@ private const val ARG_PARAM2 = "param2"
 var changeEmail: Boolean = false
 var cityId: Int? = -1
 var schoolId: Int? = -1
-var successCallback = fun(){Log.d("TAG", "true")}
-var errorCallback = fun(){Log.d("TAG", "false")}
-class ChildMyProfileFragment : Fragment() {
+class ChildMyProfileFragment : BaseFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null

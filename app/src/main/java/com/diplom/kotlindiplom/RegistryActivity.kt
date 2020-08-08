@@ -3,9 +3,12 @@ package com.diplom.kotlindiplom
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Contacts
 import android.util.Log
 import android.widget.Toast
 import com.diplom.kotlindiplom.child.ChildMainActivity
+import com.diplom.kotlindiplom.database.ChildDatabase
+import com.diplom.kotlindiplom.database.DBChild
 import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.Parent
 import com.diplom.kotlindiplom.parent.ParentMainActivity
@@ -16,6 +19,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_registry.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.coroutineContext
 
 class RegistryActivity : AppCompatActivity() {
 
@@ -87,6 +92,7 @@ class RegistryActivity : AppCompatActivity() {
 
                 }
             })
+
             ref.setValue(user)
                 .addOnCompleteListener {
                     Log.d(TAG, "Пользователь создан: $uid")
@@ -97,10 +103,18 @@ class RegistryActivity : AppCompatActivity() {
                     )
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val child = DBChild(username,email)
+                        applicationContext.let {
+                            ChildDatabase(it).getChildDao().addChild(child)
+                        }
+
+                    }
                     startActivity(intent)
 
                 }
-        } else {
+        }
+        if (parentOrNot){
             val ref = FirebaseDatabase.getInstance().getReference("/users/parents/$uid")
             val refRole = FirebaseDatabase.getInstance().getReference("roles/")
             refRole.child("$uid").setValue("parent")
@@ -115,8 +129,6 @@ class RegistryActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
         }
-
-
     }
 
 }

@@ -1,6 +1,6 @@
 package com.diplom.kotlindiplom.models
 
-class Parent (
+data class Parent (
     val parentUid:String,
     val username:String,
     val email:String,

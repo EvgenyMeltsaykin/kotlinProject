@@ -3,11 +3,17 @@ package com.diplom.kotlindiplom.child
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.database.ChildDatabase
+import com.diplom.kotlindiplom.database.DBChild
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,7 +28,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ChildMainFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ChildMainFragment : Fragment() {
+class ChildMainFragment : BaseFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -59,6 +65,20 @@ class ChildMainFragment : Fragment() {
         listener = null
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        launch {
+            context?.let {
+                val child = ChildDatabase(it).getChildDao().getAllChild()
+                Log.d("TEST", child.size.toString())
+                child.forEach {
+                    Log.d("TEST", it.username)
+                }
+
+            }
+        }
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

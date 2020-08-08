@@ -17,6 +17,9 @@
         android:id="@+id/parentTasksFragment"
         android:title="Задания" />
     <item
+        android:id="@+id/parentTasksChildren"
+        android:title="Список детей" />
+    <item
         android:id="@+id/parentExitApplication"
         android:title="Выйти" />
 

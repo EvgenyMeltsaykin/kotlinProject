@@ -319,7 +319,7 @@ class ChildMainActivity : AppCompatActivity() {
         //Загрузка фото и имени в боковое меню при запуске приложения
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/children/$uid")
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+        ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 p0.children.forEach {
                     if (it.key.toString() == "profileImageUrl") {

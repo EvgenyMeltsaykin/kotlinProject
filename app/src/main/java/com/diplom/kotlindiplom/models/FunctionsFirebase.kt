@@ -115,17 +115,11 @@ class FunctionsFirebase {
     fun addPointChild(childUid: String,point:Int){
         val ref = childRef.child("$childUid")
         Log.d("TAG",childUid)
-        //val value = getFieldDatabaseChild(childUid,"point",object : CallBack() {
-
-        //}
-        val value = getFieldDatabaseChild(childUid,"point",object :FirebaseCallback<String>{
+        getFieldDatabaseChild(childUid,"point",object :FirebaseCallback<String>{
             override fun onComplete(value: String) {
-                Log.d("TAG","${value.toInt() + point}")
-                Log.d("getField","test1")
                 ref.child("point").setValue(value.toInt() + point)
             }
         })
-        Log.d("getField","value $value")
     }
     fun sendRequestChild(editTextId: EditText, context: Context) {
         val childRef = rootRef.child("users").child("children")

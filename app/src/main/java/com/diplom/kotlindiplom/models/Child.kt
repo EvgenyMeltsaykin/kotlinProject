@@ -1,6 +1,6 @@
 package com.diplom.kotlindiplom.models
 
-class Child(
+data class Child(
     var childUid: String,
     var username: String,
     var email: String,
@@ -13,5 +13,5 @@ class Child(
     var educationalInstitutionId: Int = -1,
     var id: Int = -1,
     var acceptName: String = "",
-    var acceptUid: String? = "")
-
+    var acceptUid: String? = ""
+)
