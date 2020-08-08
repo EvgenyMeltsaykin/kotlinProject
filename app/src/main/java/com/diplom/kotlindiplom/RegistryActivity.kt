@@ -3,24 +3,21 @@ package com.diplom.kotlindiplom
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Contacts
 import android.util.Log
 import android.widget.Toast
 import com.diplom.kotlindiplom.child.ChildMainActivity
-import com.diplom.kotlindiplom.database.ChildDatabase
+import com.diplom.kotlindiplom.database.ChildParentDatabase
 import com.diplom.kotlindiplom.database.DBChild
 import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.Parent
 import com.diplom.kotlindiplom.parent.ParentMainActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_registry.*
 import kotlinx.coroutines.*
-import kotlin.coroutines.coroutineContext
 
 class RegistryActivity : AppCompatActivity() {
 
@@ -104,9 +101,9 @@ class RegistryActivity : AppCompatActivity() {
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     GlobalScope.launch(Dispatchers.IO) {
-                        val child = DBChild(username,email)
+                        val child = DBChild(username,email,id = countChildren)
                         applicationContext.let {
-                            ChildDatabase(it).getChildDao().addChild(child)
+                            ChildParentDatabase(it).getChildParentDao().addChild(child)
                         }
 
                     }

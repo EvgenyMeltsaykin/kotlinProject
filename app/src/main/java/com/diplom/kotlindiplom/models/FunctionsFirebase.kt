@@ -203,6 +203,64 @@ class FunctionsFirebase {
             Toast.makeText(context,"Задание успешно добавлено", Toast.LENGTH_SHORT).show()
         }
     }
+    fun getChild(childUid: String?,firebaseCallBack: FirebaseCallback<Child>){
+        childRef.child("$childUid").addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val child = getAllFieldsChild(p0)
+                firebaseCallBack.onComplete(child)
+            }
+
+        })
+    }
+    fun getAllFieldsChild (p0: DataSnapshot) : Child {
+        var child = Child("","","")
+        p0.children.forEach{
+            if (it.key.toString() == "acceptName") {
+                child.acceptName = it.value.toString()
+            }
+            if (it.key.toString() == "acceptUid") {
+                child.acceptUid = it.value.toString()
+            }
+            if (it.key.toString() == "childUid") {
+                child.childUid = it.value.toString()
+            }
+            if (it.key.toString() == "city") {
+                child.city = it.value.toString()
+            }
+            if (it.key.toString() == "cityId") {
+                child.cityId = it.value.toString().toInt()
+            }
+            if (it.key.toString() == "educationalInstitution") {
+                child.educationalInstitution = it.value.toString()
+            }
+            if (it.key.toString() == "educationalInstitutionId") {
+                child.educationalInstitutionId = it.value.toString().toInt()
+            }
+            if (it.key.toString() == "email") {
+                child.email = it.value.toString()
+            }
+            if (it.key.toString() == "id") {
+                child.id = it.value.toString().toInt()
+            }
+            if (it.key.toString() == "parentUid") {
+                child.parentUid = it.value.toString()
+            }
+            if (it.key.toString() == "point") {
+                child.point = it.value.toString().toInt()
+            }
+            if (it.key.toString() == "profileImageUrl") {
+                child.profileImageUrl = it.value.toString()
+            }
+            if (it.key.toString() == "username") {
+                child.username = it.value.toString()
+            }
+        }
+        return child
+    }
     fun getTask(taskId:String, firebaseCallBack: FirebaseCallback<Task>){
         val ref = taskRef.child("$taskId")
         var task = Task("","","",0,"","")

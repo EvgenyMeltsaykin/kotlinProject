@@ -6,16 +6,16 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [DBChild::class],
-    version = 1
+    entities = [DBChild::class, DBParent::class],
+    version = 2
 )
-abstract class ChildDatabase : RoomDatabase() {
+abstract class ChildParentDatabase : RoomDatabase() {
 
-    abstract fun getChildDao(): ChildDao
+    abstract fun getChildParentDao(): ChildParentDao
 
     companion object{
 
-       @Volatile private var instance : ChildDatabase? = null
+       @Volatile private var instance : ChildParentDatabase? = null
         private  val LOCK = Any()
 
         operator  fun invoke (context: Context) = instance ?: synchronized(LOCK){
@@ -26,9 +26,11 @@ abstract class ChildDatabase : RoomDatabase() {
 
         private fun buildDatebase(context: Context) = Room.databaseBuilder(
             context.applicationContext,
-            ChildDatabase::class.java,
-            "childdatabase"
-        ).build()
+            ChildParentDatabase::class.java,
+            "childparentdatabase"
+        ).fallbackToDestructiveMigration()
+            .build()
 
     }
+
 }

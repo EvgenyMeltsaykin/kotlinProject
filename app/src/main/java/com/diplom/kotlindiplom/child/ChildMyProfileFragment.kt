@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -20,6 +19,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.database.ChildParentDatabase
+import com.diplom.kotlindiplom.database.DBChild
 import com.diplom.kotlindiplom.models.City
 import com.diplom.kotlindiplom.models.SchoolClass
 import com.diplom.kotlindiplom.models.FunctionsApi
@@ -29,14 +30,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_child_main.*
 import kotlinx.android.synthetic.main.fragment_child_my_profile.*
 import kotlinx.android.synthetic.main.fragment_child_my_profile.view.*
 import kotlinx.android.synthetic.main.header.*
+import kotlinx.coroutines.launch
 import java.lang.Exception
-import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -75,7 +75,7 @@ class ChildMyProfileFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
         changeEmail = false
-        loadInformationFromFirebase()
+        loadInformation()
 
         val network = FunctionsApi(cityId)
         val firebase = FunctionsFirebase()
@@ -151,11 +151,15 @@ class ChildMyProfileFragment : BaseFragment() {
             selectphotoButtonChildmyprofile.alpha = 0f
         }
     }
-
+    var childId : Int = 0
+    private fun loadInformation(){
+        loadInformationFromFirebase()
+        loadInformationFromSQLite()
+    }
     private fun loadInformationFromFirebase() {
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/children/$uid")
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+        ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 p0.children.forEach {
                     if (it.key.toString() == "profileImageUrl") {
@@ -182,20 +186,12 @@ class ChildMyProfileFragment : BaseFragment() {
 
                         }
                     }
-                    if (it.key.toString() == "username") {
-                        usernameEditTextChildMyProfile.setText(it.value.toString())
-                    }
-                    if (it.key.toString() == "email") {
-                        emailEditTextChildmyprofile.setText(it.value.toString())
-                    }
                     if (it.key.toString() == "point") {
                         pointTextViewChildMyProfile.text = it.value.toString()
                     }
-                    if (it.key.toString() == "city") {
-                        cityEditTextChildMyProfile.setText(it.value.toString())
-                    }
-                    if (it.key.toString() == "educationalInstitution") {
-                        educationalInstitutionEditTextChildMyProfile.setText(it.value.toString())
+                    if (it.key.toString() == "id"){
+                        //idTextViewChildMyProfile.text = "id: " + it.value.toString();
+                        childId = it.value.toString().toInt()
                     }
                     if (it.key.toString() == "cityId") {
                         val temp: String = it.value.toString()
@@ -205,9 +201,6 @@ class ChildMyProfileFragment : BaseFragment() {
                         val temp: String = it.value.toString()
                         schoolId = temp.toInt()
                     }
-                    if (it.key.toString() == "id"){
-                        idTextViewChildMyProfile.text = "id: " + it.value.toString();
-                    }
                 }
             }
 
@@ -215,18 +208,41 @@ class ChildMyProfileFragment : BaseFragment() {
 
             }
         })
+
+    }
+
+    private fun loadInformationFromSQLite(){
+        launch {
+            context?.let {
+                val child = ChildParentDatabase(it).getChildParentDao().getAllChild()
+                child.forEach {
+                    usernameEditTextChildMyProfile.setText(it.username)
+                    emailEditTextChildmyprofile.setText(it.email)
+                    cityEditTextChildMyProfile.setText(it.city)
+                    educationalInstitutionEditTextChildMyProfile.setText(it.educationalInstitution)
+                    idTextViewChildMyProfile.text = "id: " + it.id.toString()
+                }
+                saveChangeButtonChildMyProfile.isVisible = false
+            }
+        }
     }
 
     private fun saveChangeInChildProfile() {
+        val username =  usernameEditTextChildMyProfile.text.toString();
+        val city =  cityEditTextChildMyProfile.text.toString()
+        val educationalInstitution = educationalInstitutionEditTextChildMyProfile.text.toString()
+        val email = emailEditTextChildmyprofile.text.toString()
+        val point = pointTextViewChildMyProfile.text.toString().toInt()
+
         val user = FirebaseAuth.getInstance().currentUser
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/children/$uid")
         if (changeEmail) {
-            user?.updateEmail(emailEditTextChildmyprofile.text.toString())
+            user?.updateEmail(email)
                 ?.addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
                     if (emailEditTextChildmyprofile.text != null) {
-                        ref.child("email").setValue(emailEditTextChildmyprofile.text.toString())
+                        ref.child("email").setValue(email)
                     }
                     Toast.makeText(
                         requireContext(),
@@ -247,13 +263,24 @@ class ChildMyProfileFragment : BaseFragment() {
                     ).show()
                 }
         }
-        ref.child("username").setValue(usernameEditTextChildMyProfile.text.toString())
+        ref.child("username").setValue(username)
         ref.child("cityId").setValue(cityId)
-        ref.child("city").setValue(cityEditTextChildMyProfile.text.toString())
+        ref.child("city").setValue(city)
         ref.child("educationalInstitutionId").setValue(schoolId)
         ref.child("educationalInstitution")
-            .setValue(educationalInstitutionEditTextChildMyProfile.text.toString())
-        saveChangeButtonChildMyProfile.isVisible = false;
+            .setValue(educationalInstitution)
+        saveChangeButtonChildMyProfile.isVisible = false
+        launch {
+            context?.let {
+                val updateChild = DBChild(username,email,point,city,educationalInstitution,childId)
+                val child = ChildParentDatabase(it).getChildParentDao().getAllChild()
+                child.forEach {
+                    updateChild.uid = it.uid
+                }
+                ChildParentDatabase(it).getChildParentDao().updateChild(updateChild)
+            }
+        }
+
         Toast.makeText(requireContext(), "Изменения успешно сохранены", Toast.LENGTH_SHORT).show()
     }
 

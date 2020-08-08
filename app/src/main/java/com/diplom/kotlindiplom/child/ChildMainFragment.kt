@@ -8,11 +8,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.database.ChildDatabase
-import com.diplom.kotlindiplom.database.DBChild
+import com.diplom.kotlindiplom.database.ChildParentDatabase
 import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
@@ -70,7 +68,7 @@ class ChildMainFragment : BaseFragment() {
 
         launch {
             context?.let {
-                val child = ChildDatabase(it).getChildDao().getAllChild()
+                val child = ChildParentDatabase(it).getChildParentDao().getAllChild()
                 Log.d("TEST", child.size.toString())
                 child.forEach {
                     Log.d("TEST", it.username)

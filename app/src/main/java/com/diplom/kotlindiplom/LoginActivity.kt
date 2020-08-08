@@ -3,12 +3,18 @@ package com.diplom.kotlindiplom
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import com.diplom.kotlindiplom.child.ChildMainActivity
+import com.diplom.kotlindiplom.database.ChildParentDatabase
+import com.diplom.kotlindiplom.database.DBChild
+import com.diplom.kotlindiplom.models.Child
+import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.parent.ParentMainActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
@@ -36,6 +42,26 @@ class LoginActivity : AppCompatActivity() {
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         startActivity(intent)
                     }else{
+                        val firebase = FunctionsFirebase()
+                        firebase.getChild(firebase.uidUser, object: FirebaseCallback<Child>{
+                            override fun onComplete(value: Child) {
+                                GlobalScope.launch(Dispatchers.IO) {
+                                    applicationContext.let {
+                                        val updateChild = DBChild(value.username,value.email,value.point,value.city,value.educationalInstitution,value.id)
+                                        val child = ChildParentDatabase(it).getChildParentDao().getAllChild()
+                                        if (child.size == 0){
+                                            ChildParentDatabase(it).getChildParentDao().addChild(updateChild)
+                                        }else {
+                                            child.forEach {
+                                                updateChild.uid = it.uid
+                                            }
+                                            ChildParentDatabase(it).getChildParentDao()
+                                                .updateChild(updateChild)
+                                        }
+                                    }
+                                }
+                            }
+                        })
                         intent = Intent(this,
                             ChildMainActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)

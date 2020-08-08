@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 data class DBChild (
     var username: String,
     var email: String,
-    var profileImageUrl: String = "",
     var point: Int = 0,
     var city: String = "",
     var educationalInstitution: String = "",
