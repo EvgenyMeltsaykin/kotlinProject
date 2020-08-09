@@ -407,4 +407,22 @@ class FunctionsFirebase {
             }
         })
     }
+    fun getChildrenByParentUid(parentUid: String,firebaseCallBack: FirebaseCallback<List<Child>>){
+        childRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val children: MutableList<Child> = mutableListOf()
+                var child: Child
+                p0.children.forEach {
+                    child = getAllFieldsChild(it)
+                    if (child.parentUid == parentUid) children.add(child)
+                }
+                firebaseCallBack.onComplete(children)
+            }
+
+        })
+    }
 }

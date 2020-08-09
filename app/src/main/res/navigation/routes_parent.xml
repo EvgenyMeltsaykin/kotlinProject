@@ -33,4 +33,9 @@
         android:name="com.diplom.kotlindiplom.parent.ParentTaskContentFragment"
         android:label="fragment_parent_task_content"
         tools:layout="@layout/fragment_parent_task_content" />
+    <fragment
+        android:id="@+id/parentNodeChildrenFragment"
+        android:name="com.diplom.kotlindiplom.parent.ParentNodeChildrenFragment"
+        android:label="fragment_parent_node_children"
+        tools:layout="@layout/fragment_parent_node_children" />
 </navigation>
