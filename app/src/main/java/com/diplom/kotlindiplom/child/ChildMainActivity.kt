@@ -5,10 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupWindow
 import android.widget.Toast
@@ -25,7 +22,7 @@ import com.bumptech.glide.Glide
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.database.ChildParentDatabase
+import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
@@ -35,6 +32,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.accept_parent.view.*
 import kotlinx.android.synthetic.main.activity_child_main.*
 import kotlinx.android.synthetic.main.header.*
+import kotlinx.android.synthetic.main.header.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -44,9 +42,7 @@ class ChildMainActivity : AppCompatActivity() {
     private var back_pressed: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         setContentView(R.layout.activity_child_main)
-        setupDrawerAndToolbar()
         //Нажатие на аватарку в боковом меню
         val header = navViewChild.getHeaderView(0);
         val photo = header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
@@ -59,6 +55,7 @@ class ChildMainActivity : AppCompatActivity() {
             drawer = findViewById(R.id.drawerLayoutChild)
             drawer?.closeDrawer(GravityCompat.START)
         }
+        setupDrawerAndToolbar()
         //Обработка нажатия выхода в боковом меню
         val menu = navViewChild.menu
         val quit = menu.findItem(R.id.childExitApplication)
@@ -317,42 +314,22 @@ class ChildMainActivity : AppCompatActivity() {
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
-        drawer?.addDrawerListener(toggle)
-        toggle.syncState()
-
-        GlobalScope.launch(Dispatchers.Main) {
-            applicationContext.let {
-                val child = ChildParentDatabase(it).getChildParentDao().getAllChild()
-                child.forEach {
-                    usernameTextviewDrawer.text = it.username.toUpperCase()
-                }
-            }
-        }
-
+        val header = navViewChild.getHeaderView(0)
+        val firebase = FunctionsFirebase()
         //Загрузка фото и имени в боковое меню при запуске приложения
-        val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/users/children/$uid")
-        ref.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                p0.children.forEach {
-                    if (it.key.toString() == "profileImageUrl") {
-                        val profileImageUrl = it.value.toString()
-                        if (profileImageUrl != "") {
-                            try {
-                                Glide.with(this@ChildMainActivity).load(profileImageUrl)
-                                    .into(photoImageviewDrawer)
-                            } catch (e: Exception) {
-                                return
-                            }
-                        }
-                    }
+        firebase.getChild(firebase.uidUser!!,object :FirebaseCallback<Child>{
+            override fun onComplete(value: Child) {
+                header.usernameTextviewDrawer.text = value.username.toUpperCase()
+                if (value.profileImageUrl.isNotEmpty()){
+                    Glide.with(this@ChildMainActivity).load(value.profileImageUrl).into(header.photoImageviewDrawer)
                 }
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
+
+
+
+        drawer?.addDrawerListener(toggle)
+        toggle.syncState()
     }
 
 
