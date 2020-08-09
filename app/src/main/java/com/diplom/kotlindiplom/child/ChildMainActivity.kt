@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.database.ChildParentDatabase
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
@@ -34,6 +35,9 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.accept_parent.view.*
 import kotlinx.android.synthetic.main.activity_child_main.*
 import kotlinx.android.synthetic.main.header.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ChildMainActivity : AppCompatActivity() {
     private var drawer: DrawerLayout? = null
@@ -137,8 +141,7 @@ class ChildMainActivity : AppCompatActivity() {
 
         })
 
-        val newTaskRef = firebase.taskRef
-        newTaskRef.addChildEventListener(object : ChildEventListener {
+        firebase.taskRef.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -189,6 +192,7 @@ class ChildMainActivity : AppCompatActivity() {
                     )
                 }
             }
+
             override fun onChildRemoved(p0: DataSnapshot) {
                 return
             }
@@ -196,6 +200,7 @@ class ChildMainActivity : AppCompatActivity() {
         })
 
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val navController = Navigation.findNavController(
             this,
@@ -314,6 +319,16 @@ class ChildMainActivity : AppCompatActivity() {
         )
         drawer?.addDrawerListener(toggle)
         toggle.syncState()
+
+        GlobalScope.launch(Dispatchers.Main) {
+            applicationContext.let {
+                val child = ChildParentDatabase(it).getChildParentDao().getAllChild()
+                child.forEach {
+                    usernameTextviewDrawer.text = it.username.toUpperCase()
+                }
+            }
+        }
+
         //Загрузка фото и имени в боковое меню при запуске приложения
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/children/$uid")
@@ -330,14 +345,6 @@ class ChildMainActivity : AppCompatActivity() {
                                 return
                             }
                         }
-                    }
-                    if (it.key.toString() == "username") {
-                        try{
-                            usernameTextviewDrawer.text = it.value.toString().toUpperCase()
-                        } catch (e:Exception){
-                            usernameTextviewDrawer.setText(it.value.toString().toUpperCase())
-                        }
-
                     }
                 }
             }

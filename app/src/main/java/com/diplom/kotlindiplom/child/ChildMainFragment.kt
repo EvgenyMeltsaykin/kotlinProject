@@ -66,17 +66,16 @@ class ChildMainFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        launch {
+        /*launch {
             context?.let {
                 val child = ChildParentDatabase(it).getChildParentDao().getAllChild()
-                //Log.d("TEST", child.size.toString())
                 child.forEach {
                     Log.d("TEST", it.username)
                     Log.d("TEST", it.city)
                 }
 
             }
-        }
+        }*/
     }
     /**
      * This interface must be implemented by activities that contain this

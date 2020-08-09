@@ -19,6 +19,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.database.ChildParentDatabase
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
@@ -27,6 +28,9 @@ import com.google.firebase.database.*
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_parent_main.*
 import kotlinx.android.synthetic.main.header.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class ParentMainActivity : AppCompatActivity() {
@@ -62,7 +66,7 @@ class ParentMainActivity : AppCompatActivity() {
         val firebase = FunctionsFirebase()
         val uiFunctions = FunctionsUI()
         val ref = firebase.parentRef.child(firebase.uidUser!!)
-        ref.addChildEventListener(object : ChildEventListener{
+        ref.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -72,14 +76,22 @@ class ParentMainActivity : AppCompatActivity() {
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                if (p0.key == "acceptAnswer"){
-                    if (p0.value.toString() == "0"){
-                        Toast.makeText(this@ParentMainActivity,"Ваш запрос отклонен",Toast.LENGTH_SHORT).show()
-                        firebase.setFieldDatabaseParent(firebase.uidUser!!,"acceptAnswer","-1")
+                if (p0.key == "acceptAnswer") {
+                    if (p0.value.toString() == "0") {
+                        Toast.makeText(
+                            this@ParentMainActivity,
+                            "Ваш запрос отклонен",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        firebase.setFieldDatabaseParent(firebase.uidUser!!, "acceptAnswer", "-1")
                     }
-                    if (p0.value.toString() == "1"){
-                        Toast.makeText(this@ParentMainActivity,"Ваш запрос принят",Toast.LENGTH_SHORT).show()
-                        firebase.setFieldDatabaseParent(firebase.uidUser!!,"acceptAnswer","-1")
+                    if (p0.value.toString() == "1") {
+                        Toast.makeText(
+                            this@ParentMainActivity,
+                            "Ваш запрос принят",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        firebase.setFieldDatabaseParent(firebase.uidUser!!, "acceptAnswer", "-1")
                     }
                 }
             }
@@ -95,7 +107,7 @@ class ParentMainActivity : AppCompatActivity() {
         })
 
         val newTaskRef = firebase.taskRef
-        newTaskRef.addChildEventListener(object: ChildEventListener{
+        newTaskRef.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -108,7 +120,15 @@ class ParentMainActivity : AppCompatActivity() {
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
                 if (task.showNotification == 1 || task.status != 0) return
-                uiFunctions.createNotificationParent(applicationContext,ParentMainActivity::class.java,R.drawable.ic_launcher_background,"Ребенок выполнил задание","Ребенок выполнил задание",task.title,task)
+                uiFunctions.createNotificationParent(
+                    applicationContext,
+                    ParentMainActivity::class.java,
+                    R.drawable.ic_launcher_background,
+                    "Ребенок выполнил задание",
+                    "Ребенок выполнил задание",
+                    task.title,
+                    task
+                )
 
             }
 
@@ -123,6 +143,7 @@ class ParentMainActivity : AppCompatActivity() {
 
         })
     }
+
     override fun invalidateOptionsMenu() {
         super.invalidateOptionsMenu()
     }
@@ -132,12 +153,12 @@ class ParentMainActivity : AppCompatActivity() {
             this,
             R.id.navFragmentParent
         )
-        if(navController.currentDestination?.id == R.id.parentAllTasksFragment || navController.currentDestination?.id == R.id.parentNewTaskFragment  ){
+        if (navController.currentDestination?.id == R.id.parentAllTasksFragment || navController.currentDestination?.id == R.id.parentNewTaskFragment) {
             navController.popBackStack()
             setTitle("Задания")
             return
         }
-        if (navController.currentDestination?.id == R.id.parentTaskContentFragment){
+        if (navController.currentDestination?.id == R.id.parentTaskContentFragment) {
             navController.popBackStack()
             setTitle("")
             return
@@ -154,6 +175,7 @@ class ParentMainActivity : AppCompatActivity() {
         back_pressed = System.currentTimeMillis();
 
     }
+
     private fun verifyUserIsLoggedIn() {
         val uid = FirebaseAuth.getInstance().uid
         if (uid == null) {
@@ -162,6 +184,7 @@ class ParentMainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         //Отключение клавиатуры
         if (currentFocus != null) {
@@ -170,6 +193,7 @@ class ParentMainActivity : AppCompatActivity() {
         }
         return super.dispatchTouchEvent(ev)
     }
+
     private fun setupDrawerAndToolbar() {
         val host: NavHostFragment = supportFragmentManager
             .findFragmentById(R.id.navFragmentParent) as NavHostFragment? ?: return
@@ -188,6 +212,14 @@ class ParentMainActivity : AppCompatActivity() {
         )
         drawer?.addDrawerListener(toggle)
         toggle.syncState()
+        GlobalScope.launch(Dispatchers.Main) {
+            applicationContext.let {
+                val parent = ChildParentDatabase(it).getChildParentDao().getAllParent()
+                parent.forEach {
+                    usernameTextviewDrawer.text = it.username.toUpperCase()
+                }
+            }
+        }
         //Загрузка фото и имени в боковое меню при запуске приложения
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/parents/$uid")
@@ -204,9 +236,6 @@ class ParentMainActivity : AppCompatActivity() {
                                 return
                             }
                         }
-                    }
-                    if (it.key.toString() == "username") {
-                        usernameTextviewDrawer.text = it.value.toString().toUpperCase()
                     }
                 }
             }
