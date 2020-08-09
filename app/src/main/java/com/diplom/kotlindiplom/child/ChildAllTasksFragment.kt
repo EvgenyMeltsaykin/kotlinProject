@@ -88,7 +88,6 @@ class ChildAllTasksFragment : Fragment() {
                 })
         }else{
             firebase.getTasksChildUid(firebase.uidUser!!,status,object : FirebaseCallback<List<Task>>{
-
                 override fun onComplete(value: List<Task>) {
                     value.forEach {
                         adapter.add(TaskItem(it))

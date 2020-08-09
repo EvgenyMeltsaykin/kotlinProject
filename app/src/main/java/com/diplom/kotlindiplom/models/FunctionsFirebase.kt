@@ -143,6 +143,8 @@ class FunctionsFirebase {
                                     ).show()
                                 } else {
                                     val firebase = FunctionsFirebase()
+                                    firebase.setFieldDatabaseChild(childUid,"acceptName","")
+                                    firebase.setFieldDatabaseChild(childUid,"acceptUid","")
                                     firebase.getFieldDatabaseParent(firebase.uidUser!!,"username",object : FirebaseCallback<String>{
                                         override fun onComplete(value: String) {
                                             firebase.setFieldDatabaseChild(childUid,"acceptName",value)

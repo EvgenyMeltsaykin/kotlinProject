@@ -5,11 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.ChildrenItem
 import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
@@ -43,7 +48,6 @@ class ParentNodeChildrenFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_parent_node_children, container, false)
     }
 
@@ -52,9 +56,37 @@ class ParentNodeChildrenFragment : Fragment() {
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
         updateRecyclerView(firebase,adapter)
+        childrenRecyclerViewParent.adapter = adapter
         addChildButton.setOnClickListener {
             firebase.sendRequestChild(childIdEditTextParent,requireContext())
         }
+
+        firebase.parentRef.child(firebase.uidUser!!).addChildEventListener(object : ChildEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                if (p0.key == "acceptAnswer"){
+                    if (p0.value.toString() == "1"){
+                        updateRecyclerView(firebase,adapter)
+                    }
+                }
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                return
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
     private fun updateRecyclerView(firebase:FunctionsFirebase,adapter:GroupAdapter<ViewHolder>){
         adapter.clear()
@@ -68,7 +100,6 @@ class ParentNodeChildrenFragment : Fragment() {
                         }
                     } ))
                 }
-                childrenRecyclerViewParent.adapter = adapter
             }
 
         })
