@@ -124,9 +124,6 @@ class ParentMyProfileFragment : BaseFragment() {
             cityId = cities[id.toInt()].id
         }
 
-        searchButtonParentMyProfile.setOnClickListener {
-            firebase.sendRequestChild(idChildEditTextParentMyProfile,requireContext())
-        }
     }
     var selectedPhotoUri: Uri? = null
     @RequiresApi(Build.VERSION_CODES.P)

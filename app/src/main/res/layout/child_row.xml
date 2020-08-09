@@ -30,7 +30,8 @@
         android:layout_marginRight="16dp"
         android:text="Удалить"
         app:layout_constraintBottom_toBottomOf="@+id/nameChildTextView"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/childIdTextView" />
 
     <TextView
         android:id="@+id/childIdTextView"
