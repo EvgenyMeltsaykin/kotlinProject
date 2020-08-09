@@ -24,6 +24,7 @@ class FunctionsFirebase {
     val childRef = rootRef.child("users").child("children")
     val parentRef = rootRef.child("users").child("parents")
     val taskRef = rootRef.child("tasks")
+    val rolesRef = rootRef.child("roles")
     val uidUser  = FirebaseAuth.getInstance().uid
     fun clearAcceptRequest(){
         val ref = rootRef.child("users").child("children").child("$uidUser")
@@ -423,6 +424,18 @@ class FunctionsFirebase {
                     if (child.parentUid == parentUid) children.add(child)
                 }
                 firebaseCallBack.onComplete(children)
+            }
+
+        })
+    }
+    fun getRoleByUid(uid:String,firebaseCallBack: FirebaseCallback<String>){
+        rolesRef.child(uid).addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+               firebaseCallBack.onComplete(p0.value.toString())
             }
 
         })

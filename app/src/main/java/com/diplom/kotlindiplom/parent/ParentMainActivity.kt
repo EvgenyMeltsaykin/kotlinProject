@@ -39,7 +39,6 @@ class ParentMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_parent_main)
-        verifyUserIsLoggedIn()
         setupDrawerAndToolbar()
         //Нажатие на аватарку в боковом меню
         val header = navViewParent.getHeaderView(0);
@@ -176,14 +175,6 @@ class ParentMainActivity : AppCompatActivity() {
 
     }
 
-    private fun verifyUserIsLoggedIn() {
-        val uid = FirebaseAuth.getInstance().uid
-        if (uid == null) {
-            intent = Intent(this, ChooseActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
-    }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         //Отключение клавиатуры

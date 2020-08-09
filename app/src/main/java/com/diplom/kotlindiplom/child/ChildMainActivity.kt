@@ -44,8 +44,8 @@ class ChildMainActivity : AppCompatActivity() {
     private var back_pressed: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         setContentView(R.layout.activity_child_main)
-        verifyUserIsLoggedIn()
         setupDrawerAndToolbar()
         //Нажатие на аватарку в боковом меню
         val header = navViewChild.getHeaderView(0);
@@ -355,14 +355,7 @@ class ChildMainActivity : AppCompatActivity() {
         })
     }
 
-    private fun verifyUserIsLoggedIn() {
-        val uid = FirebaseAuth.getInstance().uid
-        if (uid == null) {
-            val intent = Intent(this, ChooseActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
-    }
+
 
 }
 
