@@ -8,11 +8,13 @@ import com.diplom.kotlindiplom.child.ChildMainActivity
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.parent.ParentMainActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         verifyUserIsLoggedIn()
     }
 
