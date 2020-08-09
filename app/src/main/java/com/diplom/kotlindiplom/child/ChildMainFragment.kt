@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.database.ChildParentDatabase
 import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
@@ -65,6 +66,16 @@ class ChildMainFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /*launch {
+            context?.let {
+                val child = ChildParentDatabase(it).getChildParentDao().getAllChild()
+                child.forEach {
+                    Log.d("TEST", it.username)
+                    Log.d("TEST", it.city)
+                }
+
+            }
+        }*/
     }
     /**
      * This interface must be implemented by activities that contain this

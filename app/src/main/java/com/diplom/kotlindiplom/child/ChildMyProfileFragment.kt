@@ -4,7 +4,6 @@ import android.content.Context
 import android.app.Activity
 import android.content.Intent
 import android.graphics.ImageDecoder
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -19,9 +18,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.ChooseActivity
-import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.*
+import com.diplom.kotlindiplom.database.ChildParentDatabase
+import com.diplom.kotlindiplom.database.DBChild
+import com.diplom.kotlindiplom.models.City
+import com.diplom.kotlindiplom.models.SchoolClass
+import com.diplom.kotlindiplom.models.FunctionsApi
+import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -72,7 +75,7 @@ class ChildMyProfileFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
         changeEmail = false
-        loadInformationFromFirebase()
+        loadInformation()
 
         val network = FunctionsApi(cityId)
         val firebase = FunctionsFirebase()
@@ -149,38 +152,81 @@ class ChildMyProfileFragment : BaseFragment() {
         }
     }
     var childId : Int = 0
+    private fun loadInformation(){
+        loadInformationFromFirebase()
+        loadInformationFromSQLite()
+    }
     private fun loadInformationFromFirebase() {
-        val firebase = FunctionsFirebase()
+        val uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/children/$uid")
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                p0.children.forEach {
+                    if (it.key.toString() == "profileImageUrl") {
+                        val profileImageUrl = it.value.toString()
+                        if (profileImageUrl != "") {
 
-        firebase.getChild(firebase.uidUser!!,object : FirebaseCallback<Child>{
-            override fun onComplete(value: Child) {
-                if (value.profileImageUrl.isNotEmpty()){
-                    val header = requireActivity().navViewChild.getHeaderView(0);
-                    val photo =
-                        header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
-                    Glide.with(requireActivity()).load(value.profileImageUrl)
-                        .into(photo)
-                    //Загрузка изображения в профиль
-                    Glide.with(requireActivity()).load(value.profileImageUrl)
-                        .diskCacheStrategy(
-                            DiskCacheStrategy.ALL
-                        ).into(selectphotoImageviewChildmyprofile)
-                    selectphotoButtonChildmyprofile.alpha = 0f
+                            try {
+                                //Загрузка изображения в боковое меню
+                                val header = requireActivity().navViewChild.getHeaderView(0);
+                                val photo =
+                                    header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
+                                Glide.with(requireActivity()).load(profileImageUrl)
+                                    .into(photo)
+                                //Загрузка изображения в профиль
+                                Glide.with(requireActivity()).load(profileImageUrl)
+                                    .diskCacheStrategy(
+                                        DiskCacheStrategy.ALL
+                                    ).into(selectphotoImageviewChildmyprofile)
+                                selectphotoButtonChildmyprofile.alpha = 0f
+
+                            } catch (e: Exception) {
+                                return
+                            }
+
+                        }
+                    }
+                    if (it.key.toString() == "point") {
+                        pointTextViewChildMyProfile.text = it.value.toString()
+                    }
+                    if (it.key.toString() == "id"){
+                        //idTextViewChildMyProfile.text = "id: " + it.value.toString();
+                        childId = it.value.toString().toInt()
+                    }
+                    if (it.key.toString() == "cityId") {
+                        val temp: String = it.value.toString()
+                        cityId = temp.toInt()
+                    }
+                    if (it.key.toString() == "educationalInstitutionId") {
+                        val temp: String = it.value.toString()
+                        schoolId = temp.toInt()
+                    }
                 }
-                usernameEditTextChildMyProfile.setText(value.username)
-                emailEditTextChildmyprofile.setText(value.email)
-                pointTextViewChildMyProfile.text = value.point.toString()
-                cityEditTextChildMyProfile.setText(value.city)
-                educationalInstitutionEditTextChildMyProfile.setText(value.educationalInstitution)
-                cityId = value.cityId.toString().toInt()
-                schoolId =value.educationalInstitutionId.toString().toInt()
-                idTextViewChildMyProfile.text = "id: " + value.id;
-                saveChangeButtonChildMyProfile.isVisible = false
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
             }
         })
+
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+    private fun loadInformationFromSQLite(){
+        launch {
+            context?.let {
+                val child = ChildParentDatabase(it).getChildParentDao().getAllChild()
+                child.forEach {
+                    usernameEditTextChildMyProfile.setText(it.username)
+                    emailEditTextChildmyprofile.setText(it.email)
+                    cityEditTextChildMyProfile.setText(it.city)
+                    educationalInstitutionEditTextChildMyProfile.setText(it.educationalInstitution)
+                    idTextViewChildMyProfile.text = "id: " + it.id.toString()
+                }
+                saveChangeButtonChildMyProfile.isVisible = false
+            }
+        }
+    }
+
     private fun saveChangeInChildProfile() {
         val username =  usernameEditTextChildMyProfile.text.toString();
         val city =  cityEditTextChildMyProfile.text.toString()
@@ -224,15 +270,18 @@ class ChildMyProfileFragment : BaseFragment() {
         ref.child("educationalInstitution")
             .setValue(educationalInstitution)
         saveChangeButtonChildMyProfile.isVisible = false
-
-        val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = cm.activeNetworkInfo
-        if (netInfo != null && netInfo.isConnected){
-            Toast.makeText(requireContext(), "Изменения успешно сохранены", Toast.LENGTH_SHORT).show()
-        }else{
-            Toast.makeText(requireContext(), "Изменения будут сохранены, когда вы подключитесь к интернету", Toast.LENGTH_SHORT).show()
+        launch {
+            context?.let {
+                val updateChild = DBChild(username,email,point,city,educationalInstitution,childId)
+                val child = ChildParentDatabase(it).getChildParentDao().getAllChild()
+                child.forEach {
+                    updateChild.uid = it.uid
+                }
+                ChildParentDatabase(it).getChildParentDao().updateChild(updateChild)
+            }
         }
 
+        Toast.makeText(requireContext(), "Изменения успешно сохранены", Toast.LENGTH_SHORT).show()
     }
 
     // TODO: Rename method, update argument and hook method into UI event

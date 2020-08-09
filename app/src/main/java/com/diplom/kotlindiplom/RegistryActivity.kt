@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.diplom.kotlindiplom.child.ChildMainActivity
+import com.diplom.kotlindiplom.database.ChildParentDatabase
+import com.diplom.kotlindiplom.database.DBChild
+import com.diplom.kotlindiplom.database.DBParent
 import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.Parent
 import com.diplom.kotlindiplom.parent.ParentMainActivity
@@ -27,9 +30,9 @@ class RegistryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registry)
         alreadyRegistryRextviewRegistry.setOnClickListener {
-            val parentOrNot = intent.getBooleanExtra("parentOrNot", false)
+            val parentOtNot = intent.getBooleanExtra("parentOrNot", false)
             intent = Intent(this, LoginActivity::class.java)
-            intent.putExtra("parentOrNot", parentOrNot)
+            intent.putExtra("parentOrNot", parentOtNot)
             startActivity(intent)
         }
 
@@ -98,6 +101,13 @@ class RegistryActivity : AppCompatActivity() {
                     )
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val child = DBChild(username,email,id = countChildren)
+                        applicationContext.let {
+                            ChildParentDatabase(it).getChildParentDao().addChild(child)
+                        }
+
+                    }
                     startActivity(intent)
 
                 }
@@ -114,6 +124,13 @@ class RegistryActivity : AppCompatActivity() {
                     intent = Intent(this, ParentMainActivity::class.java)
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val parent = DBParent(username,email)
+                        applicationContext.let {
+                            ChildParentDatabase(it).getChildParentDao().addParent(parent)
+                        }
+
+                    }
                     startActivity(intent)
                 }
         }

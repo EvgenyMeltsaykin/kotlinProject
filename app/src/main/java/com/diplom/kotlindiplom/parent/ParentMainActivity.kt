@@ -18,20 +18,16 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.diplom.kotlindiplom.ChooseActivity
-import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.Child
+import com.diplom.kotlindiplom.database.ChildParentDatabase
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
-import com.diplom.kotlindiplom.models.Parent
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.activity_child_main.*
 import kotlinx.android.synthetic.main.activity_parent_main.*
 import kotlinx.android.synthetic.main.header.*
-import kotlinx.android.synthetic.main.header.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -207,15 +203,36 @@ class ParentMainActivity : AppCompatActivity() {
         )
         drawer?.addDrawerListener(toggle)
         toggle.syncState()
-        //Загрузка фото и имени в боковое меню при запуске приложения
-        val firebase = FunctionsFirebase()
-        val header = navViewParent.getHeaderView(0)
-        firebase.getParent(firebase.uidUser!!,object : FirebaseCallback<Parent> {
-            override fun onComplete(value: Parent) {
-                header.usernameTextviewDrawer.text = value.username.toUpperCase()
-                if (value.profileImageUrl.isNotEmpty()){
-                    Glide.with(this@ParentMainActivity).load(value.profileImageUrl).into(header.photoImageviewDrawer)
+        GlobalScope.launch(Dispatchers.Main) {
+            applicationContext.let {
+                val parent = ChildParentDatabase(it).getChildParentDao().getAllParent()
+                parent.forEach {
+                    usernameTextviewDrawer.text = it.username.toUpperCase()
                 }
+            }
+        }
+        //Загрузка фото и имени в боковое меню при запуске приложения
+        val uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/parents/$uid")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                p0.children.forEach {
+                    if (it.key.toString() == "profileImageUrl") {
+                        val profileImageUrl = it.value.toString()
+                        if (profileImageUrl != "") {
+                            try {
+                                Glide.with(this@ParentMainActivity).load(profileImageUrl)
+                                    .into(photoImageviewDrawer)
+                            } catch (e: Exception) {
+                                return
+                            }
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
     }
