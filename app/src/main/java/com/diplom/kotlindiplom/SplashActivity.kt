@@ -26,16 +26,13 @@ class SplashActivity : AppCompatActivity() {
                 override fun onComplete(value: String) {
                     if (value == "child"){
                         intent = Intent(applicationContext, ChildMainActivity::class.java)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
                     }
                     if (value == "parent"){
                         intent = Intent(applicationContext, ParentMainActivity::class.java)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
                     }
+                    intent.flags =
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                 }
 
             })

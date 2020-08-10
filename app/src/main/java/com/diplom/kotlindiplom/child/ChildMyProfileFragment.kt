@@ -68,6 +68,7 @@ class ChildMyProfileFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_child_my_profile, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()

@@ -99,7 +99,7 @@ class ParentMyProfileFragment : BaseFragment() {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 val imn =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                //imn.hideSoftInputFromWindow(requireActivity().window.decorView.windowToken, 0)
+                imn.hideSoftInputFromWindow(requireActivity().window.decorView.windowToken, 0)
                 true
             } else {
                 false
@@ -169,7 +169,7 @@ class ParentMyProfileFragment : BaseFragment() {
                 emailEditTextParentMyProfile.setText(value.email)
                 cityEditTextParentMyProfile.setText(value.city)
                 cityId = value.cityId.toString().toInt()
-                saveChangeButtonChildMyProfile.isVisible = false
+                saveChangeButtonParentMyProfile.isVisible = false
             }
         })
     }
