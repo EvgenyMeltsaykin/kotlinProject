@@ -49,4 +49,13 @@
         android:name="com.diplom.kotlindiplom.child.ChildTaskContentFragment"
         android:label="fragment_child_task_content"
         tools:layout="@layout/fragment_child_task_content" />
+    <fragment
+        android:id="@+id/weekdayFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.WeekdayFragment"
+        android:label="fragment_weekday"
+        tools:layout="@layout/fragment_weekday" >
+        <action
+            android:id="@+id/action_weekdayFragment_to_childSheduleFragment"
+            app:destination="@id/childSheduleFragment" />
+    </fragment>
 </navigation>

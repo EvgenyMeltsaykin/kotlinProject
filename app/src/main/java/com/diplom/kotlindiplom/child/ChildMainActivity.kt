@@ -133,7 +133,7 @@ class ChildMainActivity : AppCompatActivity() {
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
-                TODO("Not yet implemented")
+                return
             }
 
         })

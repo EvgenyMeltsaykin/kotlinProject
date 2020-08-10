@@ -21,6 +21,7 @@ import java.util.*
 
 class FunctionsFirebase {
     val rootRef = FirebaseDatabase.getInstance().getReference()
+    val diariesRef = rootRef.child("diaries")
     val childRef = rootRef.child("users").child("children")
     val parentRef = rootRef.child("users").child("parents")
     val taskRef = rootRef.child("tasks")
@@ -436,6 +437,22 @@ class FunctionsFirebase {
 
             override fun onDataChange(p0: DataSnapshot) {
                firebaseCallBack.onComplete(p0.value.toString())
+            }
+
+        })
+    }
+    fun getDiaries(firebaseCallBack: FirebaseCallback<List<String>>){
+        val diaries = mutableListOf("Электронного дневника нет")
+        diariesRef.addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                p0.children.forEach {
+                    diaries.add("${it.key} (${it.value})" )
+                }
+                firebaseCallBack.onComplete(diaries)
             }
 
         })
