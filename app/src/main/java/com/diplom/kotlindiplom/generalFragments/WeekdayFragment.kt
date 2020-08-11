@@ -6,8 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
+import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.models.FunctionsFirebase
+import kotlinx.android.synthetic.main.activity_registry.*
 import kotlinx.android.synthetic.main.fragment_weekday.*
 import java.text.DateFormat
 import java.util.*
@@ -26,7 +32,8 @@ class WeekdayFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    var urlDiary: String = ""
+    var role : String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.title = "Дни недели"
@@ -46,6 +53,54 @@ class WeekdayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupCalendar()
+        val firebase = FunctionsFirebase()
+        firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                role = value
+                if (role == "child") {
+                    firebase.getFieldDiaryChild(
+                        firebase.uidUser!!,
+                        "url",
+                        object : FirebaseCallback<String> {
+                            override fun onComplete(value: String) {
+                                diaryTextView.text = "Электронный дневник: $value"
+                            }
+                        })
+                }else{
+                    firebase.getFieldDiaryParent(
+                        firebase.uidUser!!,
+                        "url",
+                        object : FirebaseCallback<String> {
+                            override fun onComplete(value: String) {
+                                diaryTextView.text = "Электронный дневник: $value"
+                            }
+                        })
+                }
+            }
+        })
+
+        deleteDiaryButton.setOnClickListener {
+            if (role == "child") {
+                firebase.setFieldDatabaseChild(firebase.uidUser!!, "diary/url", "")
+                firebase.setFieldDatabaseChild(firebase.uidUser!!, "diary/login", "")
+                firebase.setFieldDatabaseChild(firebase.uidUser!!, "diary/password", "")
+                Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
+                    .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
+            }else{
+                firebase.setFieldDatabaseParent(firebase.uidUser!!, "diary/url", "")
+                firebase.setFieldDatabaseParent(firebase.uidUser!!, "diary/login", "")
+                firebase.setFieldDatabaseParent(firebase.uidUser!!, "diary/password", "")
+                Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
+                    .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
+            }
+        }
+
+    }
+
+
+
+    private fun setupCalendar(){
         calendarView.isVisible = false
 
         val selectedDate = calendarView.date
@@ -62,10 +117,7 @@ class WeekdayFragment : Fragment() {
                 openCalendarButton.text = "Открыть календарь"
                 calendarView.isVisible = false
             }
-
-
         }
-
         calendarView.setOnDateChangeListener { calendarView, year, month, dayOfMonth ->
             calendar.set(year,month,dayOfMonth)
             dateTextView.text = dateFormatter.format(calendar.time)

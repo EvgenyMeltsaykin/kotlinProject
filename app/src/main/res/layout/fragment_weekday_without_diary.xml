@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".generalFragments.WeekdayWithoutDiaryFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <include
+        android:id="@+id/weekdayToolbar"
+        layout="@layout/toolbar"
+        android:layout_width="399dp"
+        android:layout_height="47dp"
+        tools:layout_editor_absoluteX="6dp"
+        tools:layout_editor_absoluteY="6dp" />
+
+    <TextView
+        android:id="@+id/diaryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Электронный дневник:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weekdayToolbar" />
+
+    <Spinner
+        android:id="@+id/diariesSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/diaryTextView" />
+
+    <EditText
+        android:id="@+id/loginDiaryEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:ems="10"
+        android:hint="Логин электронного дневника"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/diariesSpinner" />
+
+    <EditText
+        android:id="@+id/passwordDiaryEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:ems="10"
+        android:hint="Пароль"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/loginDiaryEditText"
+        app:layout_constraintStart_toStartOf="@+id/loginDiaryEditText"
+        app:layout_constraintTop_toBottomOf="@+id/loginDiaryEditText" />
+
+    <Button
+        android:id="@+id/enterDiaryButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/colorButton"
+        android:text="Войти"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordDiaryEditText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

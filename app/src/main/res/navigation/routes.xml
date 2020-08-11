@@ -57,5 +57,17 @@
         <action
             android:id="@+id/action_weekdayFragment_to_childSheduleFragment"
             app:destination="@id/childSheduleFragment" />
+        <action
+            android:id="@+id/action_weekdayFragment_to_weekdayWithoutDiaryFragment"
+            app:destination="@id/weekdayWithoutDiaryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/weekdayWithoutDiaryFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.WeekdayWithoutDiaryFragment"
+        android:label="fragment_weekday_without_diary"
+        tools:layout="@layout/fragment_weekday_without_diary" >
+        <action
+            android:id="@+id/action_weekdayWithoutDiaryFragment_to_weekdayFragment"
+            app:destination="@id/weekdayFragment" />
     </fragment>
 </navigation>

@@ -23,9 +23,9 @@
             android:id="@+id/openCalendarButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="24dp"
             android:background="@color/colorButton"
             android:paddingLeft="8dp"
             android:paddingTop="8dp"
@@ -33,7 +33,7 @@
             android:paddingBottom="8dp"
             android:text="Открыть календарь"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/weekdayToolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/diaryTextView" />
 
         <TextView
             android:id="@+id/dateTextView"
@@ -50,8 +50,9 @@
             android:id="@+id/calendarView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.355"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/openCalendarButton" />
 
@@ -59,11 +60,11 @@
             android:id="@+id/mondayButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:background="@color/colorButton"
             android:text="Понедельник"
             app:layout_constraintEnd_toEndOf="parent"
@@ -118,7 +119,7 @@
         app:layout_constraintTop_toBottomOf="@+id/thursdayButton" />
 
         <Button
-            android:id="@+id/sundayButton"
+            android:id="@+id/saturdayButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -128,5 +129,33 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/fridayButton"
             app:layout_constraintTop_toBottomOf="@+id/fridayButton" />
+
+        <TextView
+            android:id="@+id/diaryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="32dp"
+            android:text="Электронный дневник:"
+            app:layout_constraintEnd_toStartOf="@+id/deleteDiaryButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/weekdayToolbar" />
+
+
+        <Button
+            android:id="@+id/deleteDiaryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@color/colorButtonReject"
+            android:padding="12dp"
+            android:text="Удалить дневник"
+            android:textSize="8sp"
+            app:layout_constraintBottom_toBottomOf="@+id/diaryTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/diaryTextView" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

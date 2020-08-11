@@ -450,11 +450,54 @@ class FunctionsFirebase {
 
             override fun onDataChange(p0: DataSnapshot) {
                 p0.children.forEach {
-                    diaries.add("${it.key} (${it.value})" )
+                    diaries.add("${it.value}" )
+                    //diaries.add("${it.key} (${it.value})" )
                 }
                 firebaseCallBack.onComplete(diaries)
             }
 
+        })
+    }
+
+    fun getFieldDiaryChild(childUid: String, field: String,firebaseCallBack: FirebaseCallback<String>){
+        val ref = childRef.child("${childUid}").child("diary")
+        var value = ""
+
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    p0.children.forEach {
+                        if (it.key.toString() == field) {
+                            firebaseCallBack.onComplete(it.value.toString())
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    fun getFieldDiaryParent(parentUid: String, field: String,firebaseCallBack: FirebaseCallback<String>){
+        val ref = parentRef.child("${parentUid}").child("diary")
+        var value = ""
+
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    p0.children.forEach {
+                        if (it.key.toString() == field) {
+                            firebaseCallBack.onComplete(it.value.toString())
+                        }
+                    }
+                }
+            }
         })
     }
 }

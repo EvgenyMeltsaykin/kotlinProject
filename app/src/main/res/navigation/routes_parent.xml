@@ -38,4 +38,21 @@
         android:name="com.diplom.kotlindiplom.parent.ParentNodeChildrenFragment"
         android:label="fragment_parent_node_children"
         tools:layout="@layout/fragment_parent_node_children" />
+    <fragment
+        android:id="@+id/weekdayWithoutDiaryFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.WeekdayWithoutDiaryFragment"
+        android:label="fragment_weekday_without_diary"
+        tools:layout="@layout/fragment_weekday_without_diary" >
+        <action
+            android:id="@+id/action_weekdayWithoutDiaryFragment_to_weekdayFragment"
+            app:destination="@id/weekdayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/weekdayFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.WeekdayFragment"
+        android:label="WeekdayFragment" >
+        <action
+            android:id="@+id/action_weekdayFragment_to_weekdayWithoutDiaryFragment"
+            app:destination="@id/weekdayWithoutDiaryFragment" />
+    </fragment>
 </navigation>
