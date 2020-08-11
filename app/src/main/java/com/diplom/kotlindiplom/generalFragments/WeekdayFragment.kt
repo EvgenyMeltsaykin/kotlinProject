@@ -6,14 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import kotlinx.android.synthetic.main.activity_registry.*
 import kotlinx.android.synthetic.main.fragment_weekday.*
 import java.text.DateFormat
 import java.util.*
@@ -54,46 +51,28 @@ class WeekdayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupCalendar()
+
         val firebase = FunctionsFirebase()
-        firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String>{
-            override fun onComplete(value: String) {
-                role = value
-                if (role == "child") {
-                    firebase.getFieldDiaryChild(
-                        firebase.uidUser!!,
-                        "url",
-                        object : FirebaseCallback<String> {
-                            override fun onComplete(value: String) {
-                                diaryTextView.text = "Электронный дневник: $value"
-                            }
-                        })
-                }else{
-                    firebase.getFieldDiaryParent(
-                        firebase.uidUser!!,
-                        "url",
-                        object : FirebaseCallback<String> {
-                            override fun onComplete(value: String) {
-                                diaryTextView.text = "Электронный дневник: $value"
-                            }
-                        })
-                }
+        firebase.getFieldDiary(firebase.uidUser!!,"url",object : FirebaseCallback<Any>{
+            override fun onComplete(value: Any) {
+                diaryTextView.text = "Электронный дневник: ${value}"
             }
         })
-
         deleteDiaryButton.setOnClickListener {
-            if (role == "child") {
-                firebase.setFieldDatabaseChild(firebase.uidUser!!, "diary/url", "")
-                firebase.setFieldDatabaseChild(firebase.uidUser!!, "diary/login", "")
-                firebase.setFieldDatabaseChild(firebase.uidUser!!, "diary/password", "")
-                Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
-                    .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
-            }else{
-                firebase.setFieldDatabaseParent(firebase.uidUser!!, "diary/url", "")
-                firebase.setFieldDatabaseParent(firebase.uidUser!!, "diary/login", "")
-                firebase.setFieldDatabaseParent(firebase.uidUser!!, "diary/password", "")
-                Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
-                    .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
-            }
+            firebase.setFieldDatabase(firebase.uidUser!!,"diary/login","")
+            firebase.setFieldDatabase(firebase.uidUser!!,"diary/password","")
+            firebase.setFieldDatabase(firebase.uidUser!!,"diary/url","")
+            firebase.getRoleByUid(firebase.uidUser!!,object : FirebaseCallback<String>{
+                override fun onComplete(value: String) {
+                    if(value == "child"){
+                        Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
+                            .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
+                    }else{
+                        Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
+                            .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
+                    }
+                }
+            })
         }
 
     }

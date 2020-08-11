@@ -1,8 +1,6 @@
 package com.diplom.kotlindiplom.generalFragments
 
 import android.os.Bundle
-import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +8,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.widget.addTextChangedListener
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import kotlinx.android.synthetic.main.activity_registry.*
 import kotlinx.android.synthetic.main.activity_registry.diariesSpinner
-import kotlinx.android.synthetic.main.fragment_weekday.*
 import kotlinx.android.synthetic.main.fragment_weekday.diaryTextView
 import kotlinx.android.synthetic.main.fragment_weekday_without_diary.*
 
@@ -57,46 +52,23 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
         super.onViewCreated(view, savedInstanceState)
 
         val firebase = FunctionsFirebase()
-        firebase.getRoleByUid(firebase.uidUser!!,object : FirebaseCallback<String>{
-            override fun onComplete(value: String) {
-                role = value
-                if (role == "child") {
-                    firebase.getFieldDiaryChild(
-                        firebase.uidUser!!,
-                        "url",
-                        object : FirebaseCallback<String> {
-                            override fun onComplete(value: String) {
-                                if (value.isNotEmpty()) {
-                                    Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
-                                        .navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
-                                } else {
-                                    setupSpinner()
-                                    diaryTextView.text =
-                                        "Расписание недоступно.\nВыберите электронный дневник"
-                                }
-                            }
-                        })
+        firebase.getFieldDiaryWithRole(firebase.uidUser!!,"url", object : FirebaseCallback<List<String>>{
+            override fun onComplete(value: List<String>) {
+                if (value[0].isNotEmpty()){
+                    if (value[1] == "child"){
+                        Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
+                            .navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
+                    }else{
+                        Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
+                            .navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
+                    }
                 }else{
-                    firebase.getFieldDiaryParent(
-                        firebase.uidUser!!,
-                        "url",
-                        object : FirebaseCallback<String> {
-                            override fun onComplete(value: String) {
-                                if (value.isNotEmpty()) {
-                                    Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
-                                        .navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
-                                } else {
-                                    setupSpinner()
-                                    diaryTextView.text =
-                                        "Расписание недоступно.\nВыберите электронный дневник"
-                                }
-                            }
-                        })
+                    setupSpinner()
+                    diaryTextView.text =
+                        "Расписание недоступно.\nВыберите электронный дневник"
                 }
             }
         })
-
-
         enterDiaryButton.setOnClickListener {
             if (urlDiary.isEmpty()){
                 Toast.makeText(requireContext(),"Выберите дневник",Toast.LENGTH_SHORT).show()
@@ -106,19 +78,18 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                 val login = loginDiaryEditText.text.toString()
                 val password = passwordDiaryEditText.text.toString()
                 val firebase = FunctionsFirebase()
-                if (role == "child") {
-                    firebase.setFieldDatabaseChild(firebase.uidUser!!, "diary/login", login)
-                    firebase.setFieldDatabaseChild(firebase.uidUser!!, "diary/password", password)
-                    firebase.setFieldDatabaseChild(firebase.uidUser!!, "diary/url", urlDiary)
-                    Navigation.findNavController(requireActivity(),R.id.navFragmentChild).navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
-                }else{
-                    firebase.setFieldDatabaseParent(firebase.uidUser!!, "diary/login", login)
-                    firebase.setFieldDatabaseParent(firebase.uidUser!!, "diary/password", password)
-                    firebase.setFieldDatabaseParent(firebase.uidUser!!, "diary/url", urlDiary)
-                    Navigation.findNavController(requireActivity(),R.id.navFragmentParent).navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
-                }
-
-
+                firebase.setFieldDatabase(firebase.uidUser!!,"diary/login",login)
+                firebase.setFieldDatabase(firebase.uidUser!!,"diary/password",password)
+                firebase.setFieldDatabase(firebase.uidUser!!,"diary/url",urlDiary)
+                firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String>{
+                    override fun onComplete(value: String) {
+                        if(value == "child"){
+                            Navigation.findNavController(requireActivity(),R.id.navFragmentChild).navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
+                        }else{
+                            Navigation.findNavController(requireActivity(),R.id.navFragmentParent).navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
+                        }
+                    }
+                })
             }else{
                 Toast.makeText(requireContext(),"Войти не удалось",Toast.LENGTH_SHORT).show()
             }

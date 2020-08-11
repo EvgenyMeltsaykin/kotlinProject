@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
+import android.widget.ViewAnimator
 import com.bumptech.glide.Glide
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.google.firebase.auth.FirebaseAuth
@@ -31,6 +32,106 @@ class FunctionsFirebase {
         val ref = rootRef.child("users").child("children").child("$uidUser")
         ref.child("acceptName").setValue("")
         ref.child("acceptUid").setValue("")
+    }
+    fun getFieldDatabase(uid:String,field: String,firebaseCallBack: FirebaseCallback<Any>){
+        getRoleByUid(uid,object : FirebaseCallback<String>{
+            override fun onComplete(answer: String) {
+                var role: String = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+
+                val ref = rootRef.child("users").child(role).child(uidUser!!)
+                var value = ""
+
+                ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            p0.children.forEach {
+                                if (it.key.toString() == field) {
+                                    firebaseCallBack.onComplete(it.value.toString())
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        })
+    }
+    fun getFieldDiary(uid: String, field: String, firebaseCallBack: FirebaseCallback<Any>){
+        getRoleByUid(uid,object : FirebaseCallback<String>{
+            override fun onComplete(answer: String) {
+                var role = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+
+                val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
+                var value  = ""
+
+                ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            p0.children.forEach {
+                                if (it.key.toString() == field) {
+                                    value = it.value.toString()
+                                    firebaseCallBack.onComplete(value)
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        })
+    }
+    fun getFieldDiaryWithRole(uid: String, field: String, firebaseCallBack: FirebaseCallback<List<String>>){
+        getRoleByUid(uid,object : FirebaseCallback<String>{
+            override fun onComplete(answer: String) {
+                var role: String = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+
+                val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
+                var value = mutableListOf<String>()
+
+                ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            p0.children.forEach {
+                                if (it.key.toString() == field) {
+                                    value.add(it.value.toString())
+                                    value.add(answer)
+                                    firebaseCallBack.onComplete(value)
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        })
+    }
+    fun setFieldDatabase(uid: String,field: String,value: Any){
+        getRoleByUid(uid,object :FirebaseCallback<String>{
+            override fun onComplete(answer: String) {
+                var role: String = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+
+                val ref = rootRef.child("users").child(role).child(uidUser!!)
+                ref.child("$field").setValue(value)
+
+            }
+        })
     }
     fun searchIdChild(p0: DataSnapshot, id: String): String {
         for (p1: DataSnapshot in p0.children) {
