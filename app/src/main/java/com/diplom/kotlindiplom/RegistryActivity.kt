@@ -44,6 +44,10 @@ class RegistryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             performRegistry()
         }
         //Spinner
+        setupSpinner()
+
+    }
+    fun setupSpinner(){
         val firebase = FunctionsFirebase()
         var arrayAdapter: ArrayAdapter<String>? = null
         firebase.getDiaries(object : FirebaseCallback<List<String>> {
@@ -53,11 +57,10 @@ class RegistryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 arrayAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 diariesSpinner.adapter = arrayAdapter
             }
-
         })
         diariesSpinner.onItemSelectedListener = this
-    }
 
+    }
     override fun onNothingSelected(p0: AdapterView<*>?) {
         TODO("Not yet implemented")
     }
@@ -71,6 +74,7 @@ class RegistryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         }
 
     }
+
 
 
     private fun performRegistry() {

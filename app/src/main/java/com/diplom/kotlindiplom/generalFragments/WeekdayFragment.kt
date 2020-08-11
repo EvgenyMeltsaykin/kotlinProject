@@ -1,11 +1,16 @@
 package com.diplom.kotlindiplom.generalFragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.diplom.kotlindiplom.R
+import kotlinx.android.synthetic.main.fragment_weekday.*
+import java.text.DateFormat
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,6 +44,35 @@ class WeekdayFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_weekday, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        calendarView.isVisible = false
+
+        val selectedDate = calendarView.date
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = selectedDate
+        val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
+        dateTextView.text = dateFormatter.format(calendar.time)
+
+        openCalendarButton.setOnClickListener {
+            if (!calendarView.isVisible ){
+                openCalendarButton.text = "Закрыть календарь"
+                calendarView.isVisible = true
+            }else{
+                openCalendarButton.text = "Открыть календарь"
+                calendarView.isVisible = false
+            }
+
+
+        }
+
+        calendarView.setOnDateChangeListener { calendarView, year, month, dayOfMonth ->
+            calendar.set(year,month,dayOfMonth)
+            dateTextView.text = dateFormatter.format(calendar.time)
+            openCalendarButton.text = "Открыть календарь"
+            calendarView.isVisible  = false
+        }
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of

@@ -139,6 +139,7 @@ class ChildMyProfileFragment : BaseFragment() {
 
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
             Log.d(TAG, "Photo was select")
+            saveChangeButtonChildMyProfile.isVisible = true
             //Новый способ загрузки картинки из галереи
             selectedPhotoUri = data.data
             val source =
