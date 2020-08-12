@@ -153,6 +153,8 @@ class RegistryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 Log.d(TAG, "Пользователь создан: ${firebase.uidUser}")
                 Toast.makeText(this, "Регистрация прошла успешно", Toast.LENGTH_SHORT).show()
                 firebase.setFieldDatabaseParent(firebase.uidUser!!,"diary/url",urlDiary)
+                firebase.setFieldDatabaseParent(firebase.uidUser!!,"diary/login","")
+                firebase.setFieldDatabaseParent(firebase.uidUser!!,"diary/password","")
                 intent = Intent(this, ParentMainActivity::class.java)
                 intent.flags =
                     Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)

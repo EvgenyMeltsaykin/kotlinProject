@@ -1,20 +1,24 @@
 package com.diplom.kotlindiplom.generalFragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import kotlinx.android.synthetic.main.activity_registry.diariesSpinner
 import kotlinx.android.synthetic.main.fragment_weekday.diaryTextView
 import kotlinx.android.synthetic.main.fragment_weekday_without_diary.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,6 +38,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
     var role: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        activity?.title = "Вход в дневник"
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -51,8 +56,9 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         val firebase = FunctionsFirebase()
-        firebase.getFieldDiaryWithRole(firebase.uidUser!!,"url", object : FirebaseCallback<List<String>>{
+        firebase.getFieldDiaryWithRole(firebase.uidUser!!,"login", object : FirebaseCallback<List<String>>{
             override fun onComplete(value: List<String>) {
                 if (value[0].isNotEmpty()){
                     if (value[1] == "child"){
@@ -64,8 +70,17 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                     }
                 }else{
                     setupSpinner()
-                    diaryTextView.text =
-                        "Расписание недоступно.\nВыберите электронный дневник"
+                    firebase.getFieldDiary(firebase.uidUser!!,"url",object : FirebaseCallback<String>{
+                        override fun onComplete(value: String) {
+                            if(value.isEmpty()) {
+                                diaryTextView.text =
+                                    "Расписание недоступно.\nВыберите электронный дневник"
+                            }else{
+                                diaryTextView.text = "Электронный дневник: ${value}"
+                            }
+                        }
+                    })
+
                 }
             }
         })
@@ -77,19 +92,29 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
             if (loginDiaryEditText.text.isNotEmpty() && passwordDiaryEditText.text.isNotEmpty()){
                 val login = loginDiaryEditText.text.toString()
                 val password = passwordDiaryEditText.text.toString()
-                val firebase = FunctionsFirebase()
-                firebase.setFieldDatabase(firebase.uidUser!!,"diary/login",login)
-                firebase.setFieldDatabase(firebase.uidUser!!,"diary/password",password)
-                firebase.setFieldDatabase(firebase.uidUser!!,"diary/url",urlDiary)
-                firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String>{
-                    override fun onComplete(value: String) {
-                        if(value == "child"){
-                            Navigation.findNavController(requireActivity(),R.id.navFragmentChild).navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
-                        }else{
-                            Navigation.findNavController(requireActivity(),R.id.navFragmentParent).navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
-                        }
+                val diary = Diary()
+
+                GlobalScope.launch(Dispatchers.Main) {
+                    var rightLogin = false
+                    when(urlDiary){
+                        diary.elschool.url -> rightLogin = withContext(Dispatchers.IO){diary.elschool.login(login,password)}
                     }
-                })
+                    if (!rightLogin)Toast.makeText(requireContext(),"Не верный логин или пароль",Toast.LENGTH_SHORT).show()
+                    else{
+                        firebase.setFieldDatabase(firebase.uidUser!!,"diary/login",login)
+                        firebase.setFieldDatabase(firebase.uidUser!!,"diary/password",password)
+                        firebase.setFieldDatabase(firebase.uidUser!!,"diary/url",urlDiary)
+                        firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String>{
+                            override fun onComplete(value: String) {
+                                if(value == "child"){
+                                    Navigation.findNavController(requireActivity(),R.id.navFragmentChild).navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
+                                }else{
+                                    Navigation.findNavController(requireActivity(),R.id.navFragmentParent).navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
+                                }
+                            }
+                        })
+                    }
+                }
             }else{
                 Toast.makeText(requireContext(),"Войти не удалось",Toast.LENGTH_SHORT).show()
             }
@@ -103,10 +128,10 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                 arrayAdapter =
                     ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, value)
                 arrayAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                diariesSpinner.adapter = arrayAdapter
+                diariesSpinnerWeekday.adapter = arrayAdapter
             }
         })
-        diariesSpinner.onItemSelectedListener = this
+        diariesSpinnerWeekday.onItemSelectedListener = this
     }
     override fun onNothingSelected(p0: AdapterView<*>?) {
         TODO("Not yet implemented")
@@ -116,8 +141,6 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
         val item = parent?.getItemAtPosition(position) as String
         if (item != "Электронного дневника нет") {
             urlDiary = item
-
-            //Navigation.findNavController(requireActivity(),R.id.navFragmentChild).navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
         }else{
             urlDiary = ""
         }

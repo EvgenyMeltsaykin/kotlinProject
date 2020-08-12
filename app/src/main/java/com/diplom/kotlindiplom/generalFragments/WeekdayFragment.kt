@@ -52,9 +52,10 @@ class WeekdayFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupCalendar()
 
+
         val firebase = FunctionsFirebase()
-        firebase.getFieldDiary(firebase.uidUser!!,"url",object : FirebaseCallback<Any>{
-            override fun onComplete(value: Any) {
+        firebase.getFieldDiary(firebase.uidUser!!,"url",object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
                 diaryTextView.text = "Электронный дневник: ${value}"
             }
         })

@@ -61,7 +61,7 @@ class FunctionsFirebase {
             }
         })
     }
-    fun getFieldDiary(uid: String, field: String, firebaseCallBack: FirebaseCallback<Any>){
+    fun getFieldDiary(uid: String, field: String, firebaseCallBack: FirebaseCallback<String>){
         getRoleByUid(uid,object : FirebaseCallback<String>{
             override fun onComplete(answer: String) {
                 var role = ""
@@ -238,6 +238,10 @@ class FunctionsFirebase {
                         getFieldDatabaseChild(childUid, "parentUid",object : FirebaseCallback<String> {
                             override fun onComplete(value: String) {
                                 val parentUid = value
+                                if (parentUid == uidUser) {
+                                    Toast.makeText(context,"Ребенок уже привязан к Вам",Toast.LENGTH_SHORT).show()
+                                    return
+                                }
                                 if (parentUid.isNotEmpty()) {
                                     Toast.makeText(
                                         context,
@@ -513,6 +517,7 @@ class FunctionsFirebase {
         })
     }
     fun getChildrenByParentUid(parentUid: String,firebaseCallBack: FirebaseCallback<List<Child>>){
+        childRef.keepSynced(true)
         childRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
@@ -522,6 +527,7 @@ class FunctionsFirebase {
                 val children: MutableList<Child> = mutableListOf()
                 var child: Child
                 p0.children.forEach {
+
                     child = getAllFieldsChild(it)
                     if (child.parentUid == parentUid) children.add(child)
                 }
