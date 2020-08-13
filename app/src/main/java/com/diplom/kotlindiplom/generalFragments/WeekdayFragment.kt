@@ -1,17 +1,23 @@
 package com.diplom.kotlindiplom.generalFragments
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_weekday.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.*
 
@@ -31,6 +37,8 @@ class WeekdayFragment : Fragment() {
     private var param2: String? = null
     var urlDiary: String = ""
     var role : String = ""
+    var selectedWeek = 0
+    var selectedYear = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.title = "Дни недели"
@@ -51,6 +59,7 @@ class WeekdayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupCalendar()
+        updateShedule()
 
 
         val firebase = FunctionsFirebase()
@@ -63,6 +72,7 @@ class WeekdayFragment : Fragment() {
             firebase.setFieldDatabase(firebase.uidUser!!,"diary/login","")
             firebase.setFieldDatabase(firebase.uidUser!!,"diary/password","")
             firebase.setFieldDatabase(firebase.uidUser!!,"diary/url","")
+            firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule","")
             firebase.getRoleByUid(firebase.uidUser!!,object : FirebaseCallback<String>{
                 override fun onComplete(value: String) {
                     if(value == "child"){
@@ -78,13 +88,36 @@ class WeekdayFragment : Fragment() {
 
     }
 
+    private fun updateShedule(){
+        val diary = Diary()
+        val firebase = FunctionsFirebase()
+        firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule","")
+        GlobalScope.launch(Dispatchers.IO){
+            diary.elschool.getShedule(selectedYear,selectedWeek,object : FirebaseCallback<MutableMap<String, List<String>>>{
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onComplete(value: MutableMap<String, List<String>>) {
+                    var i = 0
+                    value.forEach { s, list ->
+                        i = 0
+                        list.forEach {
+                            i++
+                            firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/lessonName",it)
+                        }
 
+                    }
+
+                }
+            })
+        }
+    }
 
     private fun setupCalendar(){
         calendarView.isVisible = false
 
         val selectedDate = calendarView.date
         val calendar = Calendar.getInstance()
+        selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
+        selectedYear = calendar.get(Calendar.YEAR)
         calendar.timeInMillis = selectedDate
         val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
         dateTextView.text = dateFormatter.format(calendar.time)
@@ -103,6 +136,10 @@ class WeekdayFragment : Fragment() {
             dateTextView.text = dateFormatter.format(calendar.time)
             openCalendarButton.text = "Открыть календарь"
             calendarView.isVisible  = false
+            selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
+            selectedYear = calendar.get(Calendar.YEAR)
+            updateShedule()
+
         }
     }
     companion object {

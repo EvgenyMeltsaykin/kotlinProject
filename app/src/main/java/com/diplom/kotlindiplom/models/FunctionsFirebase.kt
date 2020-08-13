@@ -90,6 +90,38 @@ class FunctionsFirebase {
             }
         })
     }
+    fun getLoginAndPasswordDiary(uid:String,firebaseCallBack: FirebaseCallback<Map<String,String>>){
+        getRoleByUid(uid,object : FirebaseCallback<String>{
+            override fun onComplete(answer: String) {
+                var role = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+
+                val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
+                var value= mutableMapOf<String,String>()
+
+                ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            p0.children.forEach {
+                                if (it.key.toString() == "login") {
+                                    value["login"] = it.value.toString()
+                                }
+                                if (it.key.toString() == "password"){
+                                    value["password"] = it.value.toString()
+                                }
+                            }
+                            firebaseCallBack.onComplete(value)
+                        }
+                    }
+                })
+            }
+        })
+    }
     fun getFieldDiaryWithRole(uid: String, field: String, firebaseCallBack: FirebaseCallback<List<String>>){
         getRoleByUid(uid,object : FirebaseCallback<String>{
             override fun onComplete(answer: String) {
@@ -98,7 +130,7 @@ class FunctionsFirebase {
                 else role = "parents"
 
                 val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
-                var value = mutableListOf<String>()
+                val value = mutableListOf<String>()
 
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
