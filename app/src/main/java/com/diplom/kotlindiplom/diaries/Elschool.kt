@@ -1,6 +1,12 @@
 package com.diplom.kotlindiplom.diaries
 
+import android.R.id.message
+import android.app.Application
+import android.content.Context
+import android.os.Build
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.coroutines.Dispatchers
@@ -9,6 +15,7 @@ import kotlinx.coroutines.launch
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import java.io.IOException
+
 
 class Elschool {
     val urlLogin = "https://elschool.ru/Logon/Index"
@@ -60,6 +67,7 @@ class Elschool {
         val firebase = FunctionsFirebase()
         firebase.getLoginAndPasswordDiary(firebase.uidUser!!,
             object : FirebaseCallback<Map<String, String>> {
+                @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: Map<String, String>) {
                     GlobalScope.launch(Dispatchers.IO) {
                         var cookies: HashMap<String, String>
@@ -85,10 +93,38 @@ class Elschool {
                             }
                             shedule[day] = lessons
                         }
+                        shedule.forEach { s, list ->
+                            var i = 0
+                            list.forEach {
+                                i++
+                                firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/lessonName",it)
+                            }
+
+                        }
                         firebaseCallback.onComplete(shedule)
                     }
                 }
             })
 
+    }
+
+    fun updateShedule(selectedYear:Int,selectedWeek:Int,context:Context){
+        val diary = Diary()
+        val firebase = FunctionsFirebase()
+        Toast.makeText(context,"Подождите, идет загрузка расписания",Toast.LENGTH_SHORT).show()
+        firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule","")
+        diary.elschool.getShedule(selectedYear,selectedWeek,object : FirebaseCallback<MutableMap<String, List<String>>>{
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onComplete(value: MutableMap<String, List<String>>) {
+                GlobalScope.launch(Dispatchers.Main){
+                    if(value.isNullOrEmpty()){
+                        Toast.makeText(context,"Не удалось загрузить расписание",Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(context,"Раписание загружено успешно",Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            }
+        })
     }
 }

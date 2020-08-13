@@ -284,6 +284,12 @@ class ChildMainActivity : AppCompatActivity() {
             setTitle("")
             return
         }
+        if (navController.currentDestination?.id == R.id.sheduleDayFragment) {
+            navController.popBackStack()
+            setTitle("Дни недели")
+            return
+        }
+
         if (drawer?.isDrawerOpen(GravityCompat.START) == true) {
             drawer?.closeDrawer(GravityCompat.START)
         } else if (back_pressed + 2000 > System.currentTimeMillis()) {
