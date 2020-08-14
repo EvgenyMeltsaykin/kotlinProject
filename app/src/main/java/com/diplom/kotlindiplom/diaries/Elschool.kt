@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.diplom.kotlindiplom.models.Lesson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ import java.io.IOException
 class Elschool {
     val urlLogin = "https://elschool.ru/Logon/Index"
     val urlDiary = "https://elschool.ru/users/diaries"
+    val cabinetText = "каб."
     val monday = "понедельник"
     val url = "elschool.ru"
     fun loginReturnCookies(login: String?, password: String?): MutableMap<String, String>? {
@@ -63,8 +65,9 @@ class Elschool {
         return title == "Личный кабинет"
     }
 
-    fun getShedule(year:Int, week: Int, firebaseCallback: FirebaseCallback<MutableMap<String, List<String>>>) {
+    fun getShedule(year:Int, week: Int, firebaseCallback: FirebaseCallback<MutableMap<String, List<Lesson>>>) {
         val firebase = FunctionsFirebase()
+        val shedule = mutableMapOf<String,List<Lesson>>()
         firebase.getLoginAndPasswordDiary(firebase.uidUser!!,
             object : FirebaseCallback<Map<String, String>> {
                 @RequiresApi(Build.VERSION_CODES.N)
@@ -76,36 +79,76 @@ class Elschool {
                             value["password"]
                         ) as HashMap<String, String>
                         if (cookies.isNullOrEmpty()) return@launch
-                        val document = Jsoup.connect(urlDiary)
-                            .cookies(cookies)
-                            .get()
-                        val sheduleHtml = Jsoup.connect("${document.baseUri()}&year=$year&week=$week&log=false")
-                            .cookies(cookies)
-                            .get()
-                        val dayOfWeekHtml = sheduleHtml.select("tbody")
-                        val shedule = mutableMapOf<String,List<String>>()
-                        dayOfWeekHtml.forEach {it->
-                            val day = it.select("td[class=diary__dayweek ]").select("p").text().toString().substringBefore(" ")
-                            val items = it.select("div[class=d-flex position-relative]")
-                            val lessons = mutableListOf<String>()
-                            items.forEach {item->
-                                lessons.add(item.select("div[class=flex-grow-1]").text())
-                            }
-                            shedule[day] = lessons
-                        }
-                        shedule.forEach { s, list ->
-                            var i = 0
-                            list.forEach {
-                                i++
-                                firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/lessonName",it)
-                            }
+                        try {
+                            val document = Jsoup.connect(urlDiary)
+                                .cookies(cookies)
+                                .get()
+                            val sheduleHtml = Jsoup.connect("${document.baseUri()}&year=$year&week=$week&log=false")
+                                .cookies(cookies)
+                                .get()
+                            val dayOfWeekHtml = sheduleHtml.select("tbody")
+                            dayOfWeekHtml.forEach {it->
+                                val day = it.select("td[class=diary__dayweek ]").select("p").text().toString().substringBefore(" ")
+                                val items = it.select("tr[class=diary__lesson]")
+                                val lessons = mutableListOf<Lesson>()
 
+                                var cabinetAndTime = ""
+                                items.forEach {item->
+                                    var lesson = Lesson()
+                                    lesson.name = item.select("div[class=flex-grow-1]").text()
+                                    lesson.form = item.select("div[class=lesson-form]").text()
+                                    cabinetAndTime = item.select("div[class=diary__discipline__time]").text()
+                                    lesson.cabinet = getCabinet(cabinetAndTime)
+                                    lesson.time = getTime(cabinetAndTime)
+                                    lesson.homework = item.select("div[class=diary__homework-text]").text()
+                                    lesson.mark = item.select("span[class=diary__mark]").text()
+                                    if(lesson.name.isNotEmpty()){
+                                        lessons.add(lesson)
+                                    }
+                                }
+                                shedule[day] = lessons
+                            }
+                            shedule.forEach { s, list ->
+                                var i = 0
+                                list.forEach {
+                                    i++
+                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/lessonName",it.name)
+                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/time",it.time)
+                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/cabinet",it.cabinet)
+                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/form",it.form)
+                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/homework",it.homework)
+                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/mark",it.mark)
+                                }
+
+                            }
+                            firebaseCallback.onComplete(shedule)
+                        }catch (e:IOException){
+                            firebaseCallback.onComplete(shedule)
+                            e.printStackTrace()
                         }
-                        firebaseCallback.onComplete(shedule)
                     }
                 }
             })
 
+    }
+
+    private fun getTime(cabinetAndTime: String?): String {
+        if (cabinetAndTime?.substringBefore(" ") == cabinetText){
+            //example каб. 119 10:15 - 10:55
+            return cabinetAndTime.substringAfter(" ").substringAfter(" ")
+        }else{
+            return cabinetAndTime!!
+        }
+        return ""
+    }
+
+    private fun getCabinet(cabinetAndTime: String?): String {
+        if (cabinetAndTime?.substringBefore(" ") == cabinetText){
+            //example каб. 119 10:15 - 10:55
+            return cabinetAndTime.substringAfter(" ").substringBefore(" ")
+        }else{
+            return ""
+        }
     }
 
     fun updateShedule(selectedYear:Int,selectedWeek:Int,context:Context){
@@ -113,9 +156,9 @@ class Elschool {
         val firebase = FunctionsFirebase()
         Toast.makeText(context,"Подождите, идет загрузка расписания",Toast.LENGTH_SHORT).show()
         firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule","")
-        diary.elschool.getShedule(selectedYear,selectedWeek,object : FirebaseCallback<MutableMap<String, List<String>>>{
+        diary.elschool.getShedule(selectedYear,selectedWeek,object : FirebaseCallback<MutableMap<String, List<Lesson>>>{
             @RequiresApi(Build.VERSION_CODES.N)
-            override fun onComplete(value: MutableMap<String, List<String>>) {
+            override fun onComplete(value: MutableMap<String, List<Lesson>>) {
                 GlobalScope.launch(Dispatchers.Main){
                     if(value.isNullOrEmpty()){
                         Toast.makeText(context,"Не удалось загрузить расписание",Toast.LENGTH_SHORT).show()

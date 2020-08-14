@@ -76,7 +76,7 @@ class WeekdayFragment : Fragment() {
         val firebase = FunctionsFirebase()
         firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
-                diaryTextView.text = "Электронный дневник: ${value}"
+                diaryTextView.text = value
                 firebase.getFieldDiary(firebase.uidUser!!, "shedule", object : FirebaseCallback<String> {
                     override fun onComplete(answer: String) {
                         updateShedule = answer.isEmpty()
@@ -114,18 +114,34 @@ class WeekdayFragment : Fragment() {
         mondayButton.setOnClickListener {
             openFragmentDay("Понедельник")
         }
+        tuesdayButton.setOnClickListener {
+            openFragmentDay("Вторник")
+        }
+        wednesdayButton.setOnClickListener {
+            openFragmentDay("Среда")
+        }
+        thursdayButton.setOnClickListener {
+            openFragmentDay("Четверг")
+        }
+        fridayButton.setOnClickListener {
+            openFragmentDay("Пятница")
+        }
+        saturdayButton.setOnClickListener {
+            openFragmentDay("Суббота")
+        }
+
 
     }
 
     private fun openFragmentDay(day: String) {
+        val bundle: Bundle = bundleOf()
+        bundle.putString("title", day)
         if (role == "child") {
-            val bundle: Bundle = bundleOf()
-            bundle.putString("title", day)
             Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
                 .navigate(R.id.action_weekdayFragment_to_sheduleDayFragment, bundle)
         } else {
-            //Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
-            //    .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
+            Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
+                .navigate(R.id.action_weekdayFragment_to_sheduleDayFragment,bundle)
         }
 
     }
@@ -152,12 +168,14 @@ class WeekdayFragment : Fragment() {
             }
         }
         calendarView.setOnDateChangeListener { calendarView, year, month, dayOfMonth ->
+
             calendar.set(year, month, dayOfMonth)
             dateTextView.text = dateFormatter.format(calendar.time)
             openCalendarButton.text = "Открыть календарь"
             calendarView.isVisible = false
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
+            diaryUrl = diaryTextView.text.toString()
             when (diaryUrl) {
                 diary.elschool.url -> diary.elschool.updateShedule(
                     selectedYear,

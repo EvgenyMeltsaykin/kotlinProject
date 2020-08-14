@@ -13,7 +13,11 @@ class LessonItem(val lesson: Lesson) : Item<ViewHolder>() {
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.lessonNameTextView.text = lesson.name
-        viewHolder.itemView.numberCabinetAndTimeTextView.text = "${lesson.time} кабинет:${lesson.cabinet}"
+        if (lesson.cabinet.isEmpty())
+            viewHolder.itemView.numberCabinetAndTimeTextView.text = "${lesson.form} ${lesson.time}"
+        else{
+            viewHolder.itemView.numberCabinetAndTimeTextView.text = "${lesson.form} ${lesson.time} кабинет:${lesson.cabinet}"
+        }
     }
 
 }

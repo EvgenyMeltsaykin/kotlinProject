@@ -50,6 +50,12 @@ class FunctionsFirebase {
             if (it.key.toString() == "homework"){
                 lesson.homework = it.value.toString()
             }
+            if (it.key.toString() == "form"){
+                lesson.form = it.value.toString()
+            }
+            if (it.key.toString() == "mark"){
+                lesson.mark = it.value.toString()
+            }
         }
         return lesson
     }
