@@ -80,5 +80,41 @@
         tools:layout="@layout/fragment_shedule_day" >
         <argument android:name="day"
             app:argType="string" />
+        <action
+            android:id="@+id/action_sheduleDayFragment_to_weekdayFragment"
+            app:destination="@id/weekdayFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/homeworkFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.HomeworkFragment"
+        android:label="fragment_homework"
+        tools:layout="@layout/fragment_homework" />
+    <fragment
+        android:id="@+id/parentMyProfileFragment"
+        android:name="com.diplom.kotlindiplom.parent.ParentMyProfileFragment"
+        android:label="ParentMyProfileFragment" />
+    <fragment
+        android:id="@+id/parentTasksFragment"
+        android:name="com.diplom.kotlindiplom.parent.ParentTasksFragment"
+        android:label="fragment_parent_tasks"
+        tools:layout="@layout/fragment_parent_tasks" />
+    <fragment
+        android:id="@+id/parentAllTasksFragment"
+        android:name="com.diplom.kotlindiplom.parent.ParentAllTasksFragment"
+        android:label="fragment_parent_all_tasks"
+        tools:layout="@layout/fragment_parent_all_tasks" />
+    <fragment
+        android:id="@+id/parentNewTaskFragment"
+        android:name="com.diplom.kotlindiplom.parent.NewTaskFragment"
+        android:label="NewTaskFragment" />
+    <fragment
+        android:id="@+id/parentTaskContentFragment"
+        android:name="com.diplom.kotlindiplom.parent.ParentTaskContentFragment"
+        android:label="fragment_parent_task_content"
+        tools:layout="@layout/fragment_parent_task_content" />
+    <fragment
+        android:id="@+id/parentNodeChildrenFragment"
+        android:name="com.diplom.kotlindiplom.parent.ParentNodeChildrenFragment"
+        android:label="fragment_parent_node_children"
+        tools:layout="@layout/fragment_parent_node_children" />
 </navigation>

@@ -62,5 +62,14 @@
         android:id="@+id/sheduleDayFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.SheduleDayFragment"
         android:label="fragment_shedule_day"
-        tools:layout="@layout/fragment_shedule_day" />
+        tools:layout="@layout/fragment_shedule_day" >
+        <action
+            android:id="@+id/action_sheduleDayFragment_to_weekdayFragment"
+            app:destination="@id/weekdayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeworkFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.HomeworkFragment"
+        android:label="fragment_homework"
+        tools:layout="@layout/fragment_homework" />
 </navigation>

@@ -40,8 +40,6 @@ import kotlinx.android.synthetic.main.fragment_child_my_profile.*
 import kotlinx.android.synthetic.main.fragment_parent_my_profile.*
 import kotlinx.android.synthetic.main.fragment_parent_my_profile.view.*
 import kotlinx.android.synthetic.main.header.*
-import kotlinx.coroutines.launch
-import java.lang.Exception
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

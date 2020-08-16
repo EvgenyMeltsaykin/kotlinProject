@@ -23,13 +23,12 @@ import kotlinx.android.synthetic.main.activity_registry.*
 import kotlinx.coroutines.*
 import java.text.FieldPosition
 
-class RegistryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class RegistryActivity : AppCompatActivity() {
 
     companion object {
         const val TAG = "RegistryActivity"
     }
 
-    var urlDiary = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registry)
@@ -43,38 +42,7 @@ class RegistryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         registryButtonRegistry.setOnClickListener {
             performRegistry()
         }
-        //Spinner
-        setupSpinner()
-
     }
-    fun setupSpinner(){
-        val firebase = FunctionsFirebase()
-        var arrayAdapter: ArrayAdapter<String>? = null
-        firebase.getDiaries(object : FirebaseCallback<List<String>> {
-            override fun onComplete(value: List<String>) {
-                arrayAdapter =
-                    ArrayAdapter(applicationContext, android.R.layout.simple_spinner_item, value)
-                arrayAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                diariesSpinner.adapter = arrayAdapter
-            }
-        })
-        diariesSpinner.onItemSelectedListener = this
-
-    }
-    override fun onNothingSelected(p0: AdapterView<*>?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val item = parent?.getItemAtPosition(position) as String
-        if (item == "Электронного дневника нет") {
-            urlDiary = ""
-        } else {
-            urlDiary = item
-        }
-
-    }
-
 
 
     private fun performRegistry() {
@@ -129,7 +97,7 @@ class RegistryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             .addOnCompleteListener {
                 Log.d(TAG, "Пользователь создан: ${firebase.uidUser}")
                 Toast.makeText(this, "Регистрация прошла успешно!", Toast.LENGTH_SHORT).show()
-                firebase.setFieldDatabaseChild(firebase.uidUser!!,"diary/url",urlDiary)
+                firebase.createDiary()
                 intent = Intent(
                     this,
                     ChildMainActivity::class.java
@@ -147,14 +115,11 @@ class RegistryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         val ref = FirebaseDatabase.getInstance().getReference("/users/parents/${firebase.uidUser}")
         firebase.rolesRef.child("${firebase.uidUser}").setValue("parent")
         val user = Parent(firebase.uidUser!!, username, email)
-        firebase.setFieldDatabaseParent(firebase.uidUser!!,"diary/url",urlDiary)
         ref.setValue(user)
             .addOnCompleteListener {
                 Log.d(TAG, "Пользователь создан: ${firebase.uidUser}")
                 Toast.makeText(this, "Регистрация прошла успешно", Toast.LENGTH_SHORT).show()
-                firebase.setFieldDatabaseParent(firebase.uidUser!!,"diary/url",urlDiary)
-                firebase.setFieldDatabaseParent(firebase.uidUser!!,"diary/login","")
-                firebase.setFieldDatabaseParent(firebase.uidUser!!,"diary/password","")
+                firebase.createDiary()
                 intent = Intent(this, ParentMainActivity::class.java)
                 intent.flags =
                     Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)

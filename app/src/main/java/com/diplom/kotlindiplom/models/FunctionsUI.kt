@@ -6,14 +6,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Icon
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
-import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.FirebaseCallback
-import com.diplom.kotlindiplom.R
 
 class FunctionsUI {
     fun createNotificationChild(

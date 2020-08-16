@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.Navigation
@@ -20,7 +21,6 @@ import com.bumptech.glide.Glide
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
 import com.diplom.kotlindiplom.models.Parent
@@ -28,14 +28,8 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.activity_child_main.*
 import kotlinx.android.synthetic.main.activity_parent_main.*
-import kotlinx.android.synthetic.main.header.*
 import kotlinx.android.synthetic.main.header.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class ParentMainActivity : AppCompatActivity() {
     private var drawer: DrawerLayout? = null
@@ -167,7 +161,9 @@ class ParentMainActivity : AppCompatActivity() {
             return
         }
         if (navController.currentDestination?.id == R.id.sheduleDayFragment) {
-            navController.popBackStack()
+            val bundle = bundleOf()
+            bundle.putBoolean("updateShedule",false)
+            navController.navigate(R.id.action_sheduleDayFragment_to_weekdayFragment,bundle)
             setTitle("Дни недели")
             return
         }

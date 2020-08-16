@@ -16,11 +16,8 @@ import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_weekday.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.DateFormat
+import java.time.LocalDate
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,19 +32,16 @@ private const val ARG_PARAM2 = "param2"
  */
 class WeekdayFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    private var updateShedule: Boolean = true
     private var param2: String? = null
-    var urlDiary: String = ""
     var role: String = ""
     var selectedWeek = 0
     var selectedYear = 0
-    var updateShedule = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.title = "Дни недели"
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            updateShedule = it.getBoolean("updateShedule", true)
         }
         val firebase = FunctionsFirebase()
 
@@ -70,42 +64,15 @@ class WeekdayFragment : Fragment() {
     var diaryUrl = ""
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupCalendar()
-
-
         val firebase = FunctionsFirebase()
-        firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
-            override fun onComplete(value: String) {
-                diaryTextView.text = value
-                firebase.getFieldDiary(firebase.uidUser!!, "shedule", object : FirebaseCallback<String> {
-                    override fun onComplete(answer: String) {
-                        updateShedule = answer.isEmpty()
-                        if (updateShedule) {
-                            diaryUrl = value
-                            when (value) {
-                                diary.elschool.url -> {
-                                    diary.elschool.updateShedule(
-                                        selectedYear,
-                                        selectedWeek,
-                                        requireContext()
-                                    )
-                                }
-                            }
-                        }
-                    }
-                })
-
-            }
-        })
         deleteDiaryButton.setOnClickListener {
-            firebase.setFieldDatabase(firebase.uidUser!!, "diary/login", "")
-            firebase.setFieldDatabase(firebase.uidUser!!, "diary/password", "")
-            firebase.setFieldDatabase(firebase.uidUser!!, "diary/url", "")
-            firebase.setFieldDatabase(firebase.uidUser!!, "diary/shedule", "")
+            firebase.deleteDiary()
             if (role == "child") {
                 Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
                     .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
-            } else {
+            if(role == "parent")
                 Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
                     .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
             }
@@ -133,31 +100,82 @@ class WeekdayFragment : Fragment() {
 
     }
 
+    private fun updateShedule(calendar: Calendar) {
+        val firebase = FunctionsFirebase()
+        firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
+            override fun onComplete(value: String) {
+                diaryTextView.text = value
+                if (updateShedule) {
+                    firebase.getFieldShedule(
+                        firebase.uidUser!!,
+                        "weekUpdate",
+                        object : FirebaseCallback<String> {
+                            override fun onComplete(answer: String) {
+                                if (selectedWeek != answer.toInt()) {
+                                    diaryUrl = value
+                                    when (value) {
+                                        diary.elschool.url -> {
+                                            diary.elschool.updateShedule(
+                                                selectedYear,
+                                                selectedWeek,
+                                                requireContext()
+                                            )
+                                        }
+                                    }
+                                    firebase.setFieldShedule(
+                                        firebase.uidUser!!,
+                                        "weekUpdate",
+                                        selectedWeek
+                                    )
+                                    firebase.setDateUpdateShedule(
+                                        calendar.get(Calendar.YEAR).toString(),
+                                        calendar.get(Calendar.MONTH).toString(),
+                                        calendar.get(Calendar.DAY_OF_MONTH).toString()
+                                    )
+                                }
+                            }
+                        })
+                } else {
+                    updateShedule = true
+                }
+
+            }
+        })
+    }
+
     private fun openFragmentDay(day: String) {
         val bundle: Bundle = bundleOf()
         bundle.putString("title", day)
         if (role == "child") {
             Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
                 .navigate(R.id.action_weekdayFragment_to_sheduleDayFragment, bundle)
-        } else {
+        if (role == "parent")
             Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
-                .navigate(R.id.action_weekdayFragment_to_sheduleDayFragment,bundle)
+                .navigate(R.id.action_weekdayFragment_to_sheduleDayFragment, bundle)
         }
-
     }
 
 
     private fun setupCalendar() {
         calendarView.isVisible = false
-
         val selectedDate = calendarView.date
         val calendar = Calendar.getInstance()
-        selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
-        selectedYear = calendar.get(Calendar.YEAR)
-        calendar.timeInMillis = selectedDate
+        val firebase = FunctionsFirebase()
         val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
-        dateTextView.text = dateFormatter.format(calendar.time)
-
+        firebase.getDateUpdateInShedule(object : FirebaseCallback<LocalDate> {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onComplete(value: LocalDate) {
+                if (updateShedule) {
+                    calendar.timeInMillis = selectedDate
+                }else{
+                    calendar.set(value.year,value.monthValue,value.dayOfMonth)
+                    calendarView.date = calendar.timeInMillis
+                }
+                selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
+                selectedYear = calendar.get(Calendar.YEAR)
+                dateTextView.text = dateFormatter.format(calendar.time)
+            }
+        })
         openCalendarButton.setOnClickListener {
             if (!calendarView.isVisible) {
                 openCalendarButton.text = "Закрыть календарь"
@@ -168,7 +186,6 @@ class WeekdayFragment : Fragment() {
             }
         }
         calendarView.setOnDateChangeListener { calendarView, year, month, dayOfMonth ->
-
             calendar.set(year, month, dayOfMonth)
             dateTextView.text = dateFormatter.format(calendar.time)
             openCalendarButton.text = "Открыть календарь"
@@ -176,15 +193,9 @@ class WeekdayFragment : Fragment() {
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
             diaryUrl = diaryTextView.text.toString()
-            when (diaryUrl) {
-                diary.elschool.url -> diary.elschool.updateShedule(
-                    selectedYear,
-                    selectedWeek,
-                    requireContext()
-                )
-            }
-
+            updateShedule(calendar)
         }
+        updateShedule(calendar)
     }
 
     companion object {

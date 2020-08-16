@@ -1,7 +1,5 @@
 package com.diplom.kotlindiplom.diaries
 
-import android.R.id.message
-import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.util.Log
@@ -88,10 +86,10 @@ class Elschool {
                                 .get()
                             val dayOfWeekHtml = sheduleHtml.select("tbody")
                             dayOfWeekHtml.forEach {it->
-                                val day = it.select("td[class=diary__dayweek ]").select("p").text().toString().substringBefore(" ")
+                                //example понедельник 17.08
+                                val dayDate = it.select("td[class=diary__dayweek ]").select("p").text().toString()
                                 val items = it.select("tr[class=diary__lesson]")
                                 val lessons = mutableListOf<Lesson>()
-
                                 var cabinetAndTime = ""
                                 items.forEach {item->
                                     var lesson = Lesson()
@@ -106,20 +104,24 @@ class Elschool {
                                         lessons.add(lesson)
                                     }
                                 }
-                                shedule[day] = lessons
+                                shedule[dayDate] = lessons
                             }
                             shedule.forEach { s, list ->
                                 var i = 0
-                                list.forEach {
-                                    i++
-                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/lessonName",it.name)
-                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/time",it.time)
-                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/cabinet",it.cabinet)
-                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/form",it.form)
-                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/homework",it.homework)
-                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$s/lesson$i/mark",it.mark)
+                                val day = s.substringBefore(" ")
+                                val date = s.substringAfter(" ")
+                                if(day.isNotEmpty()){
+                                    list.forEach {
+                                        i++
+                                        firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$day/lesson$i/lessonName",it.name)
+                                        firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$day/lesson$i/time",it.time)
+                                        firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$day/lesson$i/cabinet",it.cabinet)
+                                        firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$day/lesson$i/form",it.form)
+                                        firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$day/lesson$i/homework",it.homework)
+                                        firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$day/lesson$i/mark",it.mark)
+                                    }
+                                    firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule/$day/date",date)
                                 }
-
                             }
                             firebaseCallback.onComplete(shedule)
                         }catch (e:IOException){
