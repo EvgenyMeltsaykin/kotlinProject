@@ -295,16 +295,11 @@ class ChildMainActivity : AppCompatActivity() {
 
         if (drawer?.isDrawerOpen(GravityCompat.START) == true) {
             drawer?.closeDrawer(GravityCompat.START)
-            return
-        }
-        if (navController.currentDestination?.id == R.id.childMainFragment) {
-            if (back_pressed + 2000 > System.currentTimeMillis()) {
-                super.onBackPressed()
-                finishAffinity()
-            } else {
-                Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT)
-                    .show()
-            }
+        } else if (back_pressed + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed()
+            finishAffinity()
+        } else {
+            Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
         }
 
         back_pressed = System.currentTimeMillis();

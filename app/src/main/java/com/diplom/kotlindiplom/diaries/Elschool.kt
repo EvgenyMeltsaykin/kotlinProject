@@ -3,8 +3,10 @@ package com.diplom.kotlindiplom.diaries
 import android.content.Context
 import android.os.Build
 import android.util.Log
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Lesson
@@ -153,15 +155,19 @@ class Elschool {
         }
     }
 
-    fun updateShedule(selectedYear:Int,selectedWeek:Int,context:Context){
+    fun updateShedule(selectedYear:Int,selectedWeek:Int,context:Context, progressBar: ProgressBar, hideButtons:()->Unit,showButtons:()->Unit){
         val diary = Diary()
         val firebase = FunctionsFirebase()
         Toast.makeText(context,"Подождите, идет загрузка расписания",Toast.LENGTH_SHORT).show()
+        progressBar.isVisible = true
+        hideButtons()
         firebase.setFieldDatabase(firebase.uidUser!!,"diary/shedule","")
         diary.elschool.getShedule(selectedYear,selectedWeek,object : FirebaseCallback<MutableMap<String, List<Lesson>>>{
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onComplete(value: MutableMap<String, List<Lesson>>) {
                 GlobalScope.launch(Dispatchers.Main){
+                    progressBar.isVisible = false
+                    showButtons()
                     if(value.isNullOrEmpty()){
                         Toast.makeText(context,"Не удалось загрузить расписание",Toast.LENGTH_SHORT).show()
                     }else{

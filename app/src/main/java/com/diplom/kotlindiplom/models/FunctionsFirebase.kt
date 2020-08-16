@@ -566,6 +566,17 @@ class FunctionsFirebase {
         val filename = UUID.randomUUID().toString()
         val fileRef = FirebaseStorage.getInstance().getReference("/image/$filename")
 
+
+        getFieldDatabase(uidUser!!,"profileImageName", object : FirebaseCallback<Any>{
+            override fun onComplete(value: Any) {
+                if (value.toString().isNotEmpty()){
+                    val deleteRef = FirebaseStorage.getInstance().getReference("/image/$value")
+                    deleteRef.delete()
+                }
+
+
+            }
+        })
         fileRef.putFile(selectedPhotoUri!!)
             .addOnSuccessListener {
                 Log.d("TAG", "Upload image successfully: ${it.metadata?.path}")
@@ -575,6 +586,8 @@ class FunctionsFirebase {
                     val uid = FirebaseAuth.getInstance().uid ?: ""
                     val ref = FirebaseDatabase.getInstance().getReference("/users/$role/$uid")
                     ref.child("profileImageUrl").setValue(it.toString())
+                    ref.child("profileImageName").setValue(filename)
+
                     Glide.with(activity).load(it.toString())
                         .into(activity.photoImageviewDrawer)
                 }

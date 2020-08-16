@@ -76,7 +76,7 @@ class WeekdayFragment : Fragment() {
                     .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
             }
         }
-
+        progressBar.isVisible = false
         mondayButton.setOnClickListener {
             openFragmentDay("Понедельник")
         }
@@ -96,11 +96,33 @@ class WeekdayFragment : Fragment() {
             openFragmentDay("Суббота")
         }
 
-
     }
-
     private fun updateShedule(calendar: Calendar) {
         val firebase = FunctionsFirebase()
+        val showButtons = {
+            mondayButton.isVisible = true
+            tuesdayButton.isVisible = true
+            mondayButton.isVisible = true
+            wednesdayButton.isVisible = true
+            thursdayButton.isVisible = true
+            fridayButton.isVisible = true
+            saturdayButton.isVisible = true
+            deleteDiaryButton.isVisible = true
+            openCalendarButton.isVisible = true
+            dateTextView.isVisible = true
+        }
+        val hideButtons ={
+            mondayButton.isVisible = false
+            tuesdayButton.isVisible = false
+            mondayButton.isVisible = false
+            wednesdayButton.isVisible = false
+            thursdayButton.isVisible = false
+            fridayButton.isVisible = false
+            saturdayButton.isVisible = false
+            deleteDiaryButton.isVisible = false
+            openCalendarButton.isVisible = false
+            dateTextView.isVisible = false
+        }
         firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
                 diaryTextView.text = value
@@ -117,7 +139,10 @@ class WeekdayFragment : Fragment() {
                                             diary.elschool.updateShedule(
                                                 selectedYear,
                                                 selectedWeek,
-                                                requireContext()
+                                                requireContext(),
+                                                progressBar,
+                                                hideButtons,
+                                                showButtons
                                             )
                                         }
                                     }

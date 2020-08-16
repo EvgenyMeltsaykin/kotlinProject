@@ -167,6 +167,10 @@ class ParentMainActivity : AppCompatActivity() {
             setTitle("Дни недели")
             return
         }
+        if (navController.currentDestination?.id == R.id.homeworkFragment) {
+            navController.navigate(R.id.action_homeworkFragment_to_sheduleDayFragment)
+            return
+        }
         if (drawer?.isDrawerOpen(GravityCompat.START) == true) {
             drawer?.closeDrawer(GravityCompat.START)
         } else if (back_pressed + 2000 > System.currentTimeMillis()) {
