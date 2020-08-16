@@ -48,7 +48,7 @@ class NewTaskFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
-        val navController = Navigation.findNavController(requireActivity(),R.id.navFragmentParent)
+        val navController = Navigation.findNavController(requireActivity(),R.id.navFragment)
         val firebase = FunctionsFirebase()
         val time = Calendar.getInstance().time
         val currentTime = time.toLocaleString()

@@ -48,7 +48,7 @@ class ParentTasksFragment : Fragment() {
         requireActivity().invalidateOptionsMenu()
         val navController = Navigation.findNavController(
             requireActivity(),
-            R.id.navFragmentParent
+            R.id.navFragment
         )
         unfulfilledButtonParentTasks.setOnClickListener {
             val bundle : Bundle = bundleOf()

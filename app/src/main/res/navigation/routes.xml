@@ -83,12 +83,19 @@
         <action
             android:id="@+id/action_sheduleDayFragment_to_weekdayFragment"
             app:destination="@id/weekdayFragment" />
+        <action
+            android:id="@+id/action_sheduleDayFragment_to_homeworkFragment"
+            app:destination="@id/homeworkFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeworkFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.HomeworkFragment"
         android:label="fragment_homework"
-        tools:layout="@layout/fragment_homework" />
+        tools:layout="@layout/fragment_homework" >
+        <action
+            android:id="@+id/action_homeworkFragment_to_sheduleDayFragment"
+            app:destination="@id/sheduleDayFragment" />
+    </fragment>
     <fragment
         android:id="@+id/parentMyProfileFragment"
         android:name="com.diplom.kotlindiplom.parent.ParentMyProfileFragment"

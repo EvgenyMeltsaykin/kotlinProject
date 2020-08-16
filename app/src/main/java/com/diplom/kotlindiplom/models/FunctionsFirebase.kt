@@ -141,9 +141,9 @@ class FunctionsFirebase {
                 else role = "parents"
                 val ref = rootRef.child("users").child(role).child(uidUser).child("diary").child("shedule")
 
-                var year: Int = 0
-                var month: Int = 0
-                var day: Int = 0
+                var year: Int = 1
+                var month: Int = 1
+                var day: Int = 1
 
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {

@@ -13,7 +13,6 @@ import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.*
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_shedule_day.*
 import java.util.*
@@ -30,21 +29,15 @@ private const val ARG_PARAM2 = "param2"
  */
 class SheduleDayFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var title: String? = null
-    var role = ""
+    private var title: String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            title = it.get("title").toString()
+            title = it.getString("title")
         }
-        activity?.title = title
-        val firebase = FunctionsFirebase()
-        firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String> {
-            override fun onComplete(value: String) {
-                role = value
-            }
-        })
-
+        if(!title.isNullOrBlank()) {
+            activity?.title = title
+        }
 
     }
 
@@ -61,14 +54,17 @@ class SheduleDayFragment : Fragment() {
         messageTextView.isVisible  =false
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
-
-        firebase.getFieldSheduleDay(firebase.uidUser!!,"${title.toString().toLowerCase()}",object : FirebaseCallback<String>{
-            override fun onComplete(value: String) {
-                activity?.title = "${activity?.title} $value"
-            }
-        })
+        val day = activity?.title.toString().substringBefore(" ")
+        val date = activity?.title.toString().substringAfter(day)
+        if (date.isEmpty()){
+            firebase.getFieldSheduleDay(firebase.uidUser!!,day.toLowerCase(),object : FirebaseCallback<String>{
+                override fun onComplete(value: String) {
+                    activity?.title = "${activity?.title} $value"
+                }
+            })
+        }
         adapter.clear()
-        firebase.getSheduleDay(firebase.uidUser!!, title.toString().toLowerCase(Locale.ROOT),object : FirebaseCallback<List<Lesson>>{
+        firebase.getSheduleDay(firebase.uidUser!!, day.toLowerCase(),object : FirebaseCallback<List<Lesson>>{
             override fun onComplete(value: List<Lesson>) {
                 var fl = true
                 value.forEach {
@@ -83,15 +79,11 @@ class SheduleDayFragment : Fragment() {
         })
 
         adapter.setOnItemClickListener { item, view ->
-            val lessonItem = item as Lesson
+            val lessonItem = item as LessonItem
             val bundle = bundleOf()
-            bundle.putString("homework",lessonItem.homework)
-            if(role == "child"){
-                Navigation.findNavController(requireActivity(),R.id.navFragmentChild).navigate(R.id.homeworkFragment)
-            }
-            if (role == "parent"){
-                Navigation.findNavController(requireActivity(),R.id.navFragmentParent).navigate(R.id.homeworkFragment)
-            }
+            bundle.putString("homework",lessonItem.lesson.homework)
+            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_sheduleDayFragment_to_homeworkFragment,bundle)
+
         }
 
 

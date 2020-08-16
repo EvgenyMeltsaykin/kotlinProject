@@ -2,7 +2,6 @@ package com.diplom.kotlindiplom.generalFragments
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -70,10 +69,10 @@ class WeekdayFragment : Fragment() {
         deleteDiaryButton.setOnClickListener {
             firebase.deleteDiary()
             if (role == "child") {
-                Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
+                Navigation.findNavController(requireActivity(), R.id.navFragment)
                     .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
             if(role == "parent")
-                Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
+                Navigation.findNavController(requireActivity(), R.id.navFragment)
                     .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
             }
         }
@@ -129,7 +128,7 @@ class WeekdayFragment : Fragment() {
                                     )
                                     firebase.setDateUpdateShedule(
                                         calendar.get(Calendar.YEAR).toString(),
-                                        calendar.get(Calendar.MONTH).toString(),
+                                        (calendar.get(Calendar.MONTH)+1).toString(),
                                         calendar.get(Calendar.DAY_OF_MONTH).toString()
                                     )
                                 }
@@ -146,13 +145,8 @@ class WeekdayFragment : Fragment() {
     private fun openFragmentDay(day: String) {
         val bundle: Bundle = bundleOf()
         bundle.putString("title", day)
-        if (role == "child") {
-            Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
+            Navigation.findNavController(requireActivity(), R.id.navFragment)
                 .navigate(R.id.action_weekdayFragment_to_sheduleDayFragment, bundle)
-        if (role == "parent")
-            Navigation.findNavController(requireActivity(), R.id.navFragmentParent)
-                .navigate(R.id.action_weekdayFragment_to_sheduleDayFragment, bundle)
-        }
     }
 
 
@@ -168,7 +162,7 @@ class WeekdayFragment : Fragment() {
                 if (updateShedule) {
                     calendar.timeInMillis = selectedDate
                 }else{
-                    calendar.set(value.year,value.monthValue,value.dayOfMonth)
+                    calendar.set(value.year,value.monthValue-1,value.dayOfMonth)
                     calendarView.date = calendar.timeInMillis
                 }
                 selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)

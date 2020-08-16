@@ -54,7 +54,7 @@ class ChildTasksFragment : Fragment() {
         requireActivity().invalidateOptionsMenu()
         val navController = Navigation.findNavController(
             requireActivity(),
-            R.id.navFragmentChild
+            R.id.navFragment
         )
 
         unfulfilledButtonChildTasks.setOnClickListener {

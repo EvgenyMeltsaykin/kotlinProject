@@ -44,7 +44,7 @@ class ParentMainActivity : AppCompatActivity() {
         photo.setOnClickListener {
             val navController = Navigation.findNavController(
                 this,
-                R.id.navFragmentParent
+                R.id.navFragment
             )
             navController.navigate(R.id.parentMyProfileFragment)
             drawer = findViewById(R.id.drawerLayoutParent)
@@ -148,7 +148,7 @@ class ParentMainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val navController = Navigation.findNavController(
             this,
-            R.id.navFragmentParent
+            R.id.navFragment
         )
         if (navController.currentDestination?.id == R.id.parentAllTasksFragment || navController.currentDestination?.id == R.id.parentNewTaskFragment) {
             navController.popBackStack()
@@ -192,7 +192,7 @@ class ParentMainActivity : AppCompatActivity() {
 
     private fun setupDrawerAndToolbar() {
         val host: NavHostFragment = supportFragmentManager
-            .findFragmentById(R.id.navFragmentParent) as NavHostFragment? ?: return
+            .findFragmentById(R.id.navFragment) as NavHostFragment? ?: return
         val navController = host.navController
         val sideBar = findViewById<NavigationView>(R.id.navViewParent)
         sideBar?.setupWithNavController(navController)

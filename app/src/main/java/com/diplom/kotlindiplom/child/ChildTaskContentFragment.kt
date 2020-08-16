@@ -50,7 +50,7 @@ class ChildTaskContentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
-        val navController = Navigation.findNavController(requireActivity(), R.id.navFragmentChild)
+        val navController = Navigation.findNavController(requireActivity(), R.id.navFragment)
         val firebase = FunctionsFirebase()
         firebase.getTask(taskId.toString(), object : FirebaseCallback<Task> {
             override fun onComplete(value: Task) {

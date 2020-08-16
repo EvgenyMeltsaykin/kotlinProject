@@ -46,7 +46,7 @@ class ChildMainActivity : AppCompatActivity() {
         photo.setOnClickListener {
             val navController = Navigation.findNavController(
                 this,
-                R.id.navFragmentChild
+                R.id.navFragment
             )
             navController.navigate(R.id.childMyProfileFragment)
             drawer = findViewById(R.id.drawerLayoutChild)
@@ -198,7 +198,7 @@ class ChildMainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val navController = Navigation.findNavController(
             this,
-            R.id.navFragmentChild
+            R.id.navFragment
         )
         when (item.itemId) {
             R.id.menuPointsChild -> navController.navigate(
@@ -269,7 +269,7 @@ class ChildMainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val navController = Navigation.findNavController(
             this,
-            R.id.navFragmentChild
+            R.id.navFragment
         )
         if (navController.currentDestination?.id == R.id.childAllTasksFragment) {
             navController.popBackStack()
@@ -283,20 +283,28 @@ class ChildMainActivity : AppCompatActivity() {
         }
         if (navController.currentDestination?.id == R.id.sheduleDayFragment) {
             val bundle = bundleOf()
-            bundle.putBoolean("updateShedule",false)
-            navController.navigate(R.id.action_sheduleDayFragment_to_weekdayFragment,bundle)
+            bundle.putBoolean("updateShedule", false)
+            navController.navigate(R.id.action_sheduleDayFragment_to_weekdayFragment, bundle)
             setTitle("Дни недели")
+            return
+        }
+        if (navController.currentDestination?.id == R.id.homeworkFragment) {
+            navController.navigate(R.id.action_homeworkFragment_to_sheduleDayFragment)
             return
         }
 
         if (drawer?.isDrawerOpen(GravityCompat.START) == true) {
             drawer?.closeDrawer(GravityCompat.START)
-        } else if (back_pressed + 2000 > System.currentTimeMillis()) {
-            super.onBackPressed()
-            finishAffinity()
-        } else {
-            Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT)
-                .show()
+            return
+        }
+        if (navController.currentDestination?.id == R.id.childMainFragment) {
+            if (back_pressed + 2000 > System.currentTimeMillis()) {
+                super.onBackPressed()
+                finishAffinity()
+            } else {
+                Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
 
         back_pressed = System.currentTimeMillis();
@@ -305,7 +313,7 @@ class ChildMainActivity : AppCompatActivity() {
 
     private fun setupDrawerAndToolbar() {
         val host: NavHostFragment = supportFragmentManager
-            .findFragmentById(R.id.navFragmentChild) as NavHostFragment? ?: return
+            .findFragmentById(R.id.navFragment) as NavHostFragment? ?: return
         val navController = host.navController
         val sideBar = findViewById<NavigationView>(R.id.navViewChild)
         sideBar?.setupWithNavController(navController)
@@ -322,11 +330,12 @@ class ChildMainActivity : AppCompatActivity() {
         val header = navViewChild.getHeaderView(0)
         val firebase = FunctionsFirebase()
         //Загрузка фото и имени в боковое меню при запуске приложения
-        firebase.getChild(firebase.uidUser!!,object :FirebaseCallback<Child>{
+        firebase.getChild(firebase.uidUser!!, object : FirebaseCallback<Child> {
             override fun onComplete(value: Child) {
                 header.usernameTextviewDrawer.text = value.username.toUpperCase()
-                if (value.profileImageUrl.isNotEmpty()){
-                    Glide.with(this@ChildMainActivity).load(value.profileImageUrl).into(header.photoImageviewDrawer)
+                if (value.profileImageUrl.isNotEmpty()) {
+                    Glide.with(this@ChildMainActivity).load(value.profileImageUrl)
+                        .into(header.photoImageviewDrawer)
                 }
             }
         })
@@ -336,7 +345,6 @@ class ChildMainActivity : AppCompatActivity() {
         drawer?.addDrawerListener(toggle)
         toggle.syncState()
     }
-
 
 
 }
