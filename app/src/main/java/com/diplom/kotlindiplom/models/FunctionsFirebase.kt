@@ -17,12 +17,15 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.header.*
+import org.cryptonode.jncryptor.AES256JNCryptor
 import java.time.LocalDate
 import java.util.*
+
 
 class FunctionsFirebase {
     val rootRef = FirebaseDatabase.getInstance().getReference()
     val diariesRef = rootRef.child("diaries")
+    val secretKey = "applicatonFromDiplom"
     val childRef = rootRef.child("users").child("children")
     val parentRef = rootRef.child("users").child("parents")
     val taskRef = rootRef.child("tasks")
@@ -104,6 +107,15 @@ class FunctionsFirebase {
 
     }
 
+    fun setLoginAndPasswordDiary(login:String, password:String){
+        val cryptor = AES256JNCryptor()
+        val cipherText = cryptor.encryptData(password.toByteArray(),secretKey.toCharArray())
+        var temp = Arrays.toString(cipherText)
+        setFieldDatabase(uidUser!!,"diary/login",login)
+        setFieldDatabase(uidUser!!,"diary/password",temp)
+
+
+    }
     fun getFieldDatabase(uid: String, field: String, firebaseCallBack: FirebaseCallback<Any>) {
         getRoleByUid(uid, object : FirebaseCallback<String> {
             override fun onComplete(answer: String) {
@@ -259,7 +271,6 @@ class FunctionsFirebase {
             }
         })
     }
-
     fun getFieldDiary(uid: String, field: String, firebaseCallBack: FirebaseCallback<String>) {
         getRoleByUid(uid, object : FirebaseCallback<String> {
             override fun onComplete(answer: String) {
@@ -290,7 +301,8 @@ class FunctionsFirebase {
         })
     }
 
-    fun getLoginAndPasswordDiary(
+    @ExperimentalStdlibApi
+    fun getLoginAndPasswordAndUrlDiary(
         uid: String,
         firebaseCallBack: FirebaseCallback<Map<String, String>>
     ) {
@@ -315,8 +327,32 @@ class FunctionsFirebase {
                                     value["login"] = it.value.toString()
                                 }
                                 if (it.key.toString() == "password") {
-                                    value["password"] = it.value.toString()
+                                    if (it.value.toString().isNotEmpty()) {
+                                        val temp = it.value.toString()
+                                        val byteValues: List<String> =
+                                            temp.substring(1, temp.length - 1).split(",")
+                                        val bytes = ByteArray(byteValues.size)
+
+                                        run {
+                                            var i = 0
+                                            val len = bytes.size
+                                            while (i < len) {
+                                                bytes[i] = byteValues[i].trim { it <= ' ' }.toByte()
+                                                i++
+                                            }
+                                        }
+                                        val cryptor = AES256JNCryptor()
+                                        val decrypt =
+                                            cryptor.decryptData(bytes, secretKey.toCharArray())
+                                        value["password"] = decrypt.decodeToString()
+                                    }else{
+                                        value["password"] = ""
+                                    }
                                 }
+                                if (it.key.toString() == "url") {
+                                    value["url"] = it.value.toString()
+                                }
+
                             }
                             firebaseCallBack.onComplete(value)
                         }

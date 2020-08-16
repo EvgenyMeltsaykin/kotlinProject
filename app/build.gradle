@@ -94,6 +94,8 @@ dependencies {
     //Jsoup
     implementation "org.jsoup:jsoup:1.13.1"
 
+    //crypt
+    implementation 'org.cryptonode.jncryptor:jncryptor:1.2.0'
 
 
 

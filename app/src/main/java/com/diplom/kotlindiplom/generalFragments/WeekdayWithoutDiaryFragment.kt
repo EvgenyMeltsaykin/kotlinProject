@@ -1,6 +1,7 @@
 package com.diplom.kotlindiplom.generalFragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,35 +55,36 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
     }
 
     var urlDiary: String = ""
+    @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
         val firebase = FunctionsFirebase()
-        firebase.getFieldDiaryWithRole(
+        firebase.getLoginAndPasswordAndUrlDiary(
             firebase.uidUser!!,
-            "login",
-            object : FirebaseCallback<List<String>> {
-                override fun onComplete(value: List<String>) {
-                    if (value[0].isNotEmpty()) {
-                        Navigation.findNavController(requireActivity(), R.id.navFragment)
-                            .navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
-                    } else {
-                        setupSpinner()
-                        firebase.getFieldDiary(
-                            firebase.uidUser!!,
-                            "url",
-                            object : FirebaseCallback<String> {
-                                override fun onComplete(value: String) {
-                                    if (value.isEmpty()) {
-                                        diaryTextView.text =
-                                            "Расписание недоступно.\nВыберите электронный дневник"
-                                    } else {
-                                        diaryTextView.text = "Электронный дневник: ${value}"
-                                    }
-                                }
-                            })
-
+            object : FirebaseCallback<Map<String,String>> {
+                override fun onComplete(value: Map<String,String>) {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        val diary =Diary()
+                        var rightLogin = false
+                        when (value["url"]) {
+                            diary.elschool.url -> rightLogin =
+                                withContext(Dispatchers.IO) { diary.elschool.login(value["login"]!!, value["password"]!!) }
+                        }
+                        if (!rightLogin) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Не верный логин или пароль",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            setupSpinner()
+                            diaryTextView.text =
+                                "Расписание недоступно.\nВыберите электронный дневник"
+                        }else{
+                            Navigation.findNavController(requireActivity(), R.id.navFragment)
+                                .navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
+                        }
                     }
                 }
             })
@@ -108,8 +110,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                         Toast.LENGTH_SHORT
                     ).show()
                     else {
-                        firebase.setFieldDatabase(firebase.uidUser!!, "diary/login", login)
-                        firebase.setFieldDatabase(firebase.uidUser!!, "diary/password", password)
+                        firebase.setLoginAndPasswordDiary(login,password)
                         firebase.setFieldDatabase(firebase.uidUser!!, "diary/url", urlDiary)
                         firebase.getRoleByUid(
                             firebase.uidUser!!,

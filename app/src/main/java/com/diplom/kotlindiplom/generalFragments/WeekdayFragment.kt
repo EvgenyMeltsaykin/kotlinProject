@@ -61,6 +61,7 @@ class WeekdayFragment : Fragment() {
 
     val diary = Diary()
     var diaryUrl = ""
+    @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -97,6 +98,7 @@ class WeekdayFragment : Fragment() {
         }
 
     }
+    @ExperimentalStdlibApi
     private fun updateShedule(calendar: Calendar) {
         val firebase = FunctionsFirebase()
         val showButtons = {
@@ -175,6 +177,7 @@ class WeekdayFragment : Fragment() {
     }
 
 
+    @ExperimentalStdlibApi
     private fun setupCalendar() {
         calendarView.isVisible = false
         val selectedDate = calendarView.date

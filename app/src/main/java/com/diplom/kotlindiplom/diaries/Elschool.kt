@@ -22,7 +22,6 @@ class Elschool {
     val urlLogin = "https://elschool.ru/Logon/Index"
     val urlDiary = "https://elschool.ru/users/diaries"
     val cabinetText = "каб."
-    val monday = "понедельник"
     val url = "elschool.ru"
     fun loginReturnCookies(login: String?, password: String?): MutableMap<String, String>? {
         var title = ""
@@ -47,6 +46,8 @@ class Elschool {
     fun login(login: String, password: String): Boolean {
         val cookies: HashMap<String, String> = HashMap()
         var title = ""
+        Log.d("Tag",password)
+        Log.d("Tag","${("1Aqmwnebrv" == password)} 1Aqmwnebrv ? $password")
         try {
             val document = Jsoup.connect(urlLogin)
                 .data("login", login)
@@ -56,19 +57,18 @@ class Elschool {
                 .method(Connection.Method.POST)
                 .userAgent("mozilla")
                 .execute()
-
             title = document.parse().title()
-            Log.d("Tag",title)
         } catch (e: IOException) {
             e.printStackTrace()
         }
         return title == "Личный кабинет"
     }
 
+    @ExperimentalStdlibApi
     fun getShedule(year:Int, week: Int, firebaseCallback: FirebaseCallback<MutableMap<String, List<Lesson>>>) {
         val firebase = FunctionsFirebase()
         val shedule = mutableMapOf<String,List<Lesson>>()
-        firebase.getLoginAndPasswordDiary(firebase.uidUser!!,
+        firebase.getLoginAndPasswordAndUrlDiary(firebase.uidUser!!,
             object : FirebaseCallback<Map<String, String>> {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: Map<String, String>) {
@@ -155,7 +155,8 @@ class Elschool {
         }
     }
 
-    fun updateShedule(selectedYear:Int,selectedWeek:Int,context:Context, progressBar: ProgressBar, hideButtons:()->Unit,showButtons:()->Unit){
+    @ExperimentalStdlibApi
+    fun updateShedule(selectedYear:Int, selectedWeek:Int, context:Context, progressBar: ProgressBar, hideButtons:()->Unit, showButtons:()->Unit){
         val diary = Diary()
         val firebase = FunctionsFirebase()
         Toast.makeText(context,"Подождите, идет загрузка расписания",Toast.LENGTH_SHORT).show()
