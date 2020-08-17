@@ -38,7 +38,6 @@ class RegistryActivity : AppCompatActivity() {
             intent.putExtra("parentOrNot", parentOrNot)
             startActivity(intent)
         }
-
         registryButtonRegistry.setOnClickListener {
             performRegistry()
         }

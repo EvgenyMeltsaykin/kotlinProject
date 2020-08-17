@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -15,7 +14,6 @@ import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.models.Network
 import kotlinx.android.synthetic.main.fragment_weekday.*
 import java.text.DateFormat
 import java.time.LocalDate

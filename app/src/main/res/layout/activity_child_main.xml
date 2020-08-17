@@ -11,8 +11,6 @@
     android:id="@+id/drawerLayoutChild"
     android:background="@color/colorBackground"
     >
-
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/navFragmentScreen"
         android:name="androidx.navigation.fragment.NavHostFragment"

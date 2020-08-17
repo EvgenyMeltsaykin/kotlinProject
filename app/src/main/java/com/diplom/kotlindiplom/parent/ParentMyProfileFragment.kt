@@ -28,15 +28,10 @@ import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.child.changeEmail
 import com.diplom.kotlindiplom.child.cityId
-import com.diplom.kotlindiplom.models.City
-import com.diplom.kotlindiplom.models.FunctionsApi
-import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.models.Parent
+import com.diplom.kotlindiplom.models.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_parent_main.*
-import kotlinx.android.synthetic.main.fragment_child_my_profile.*
 import kotlinx.android.synthetic.main.fragment_parent_my_profile.*
 import kotlinx.android.synthetic.main.fragment_parent_my_profile.view.*
 import kotlinx.android.synthetic.main.header.*
@@ -147,7 +142,6 @@ class ParentMyProfileFragment : BaseFragment() {
 
     private fun loadInformationFromFirebase() {
         val firebase = FunctionsFirebase()
-
         firebase.getParent(firebase.uidUser, object : FirebaseCallback<Parent> {
             override fun onComplete(value: Parent) {
                 if (value.profileImageUrl.isNotEmpty()) {
@@ -175,14 +169,17 @@ class ParentMyProfileFragment : BaseFragment() {
 
     private fun saveChangeInParentProfile() {
         val user = FirebaseAuth.getInstance().currentUser
-        val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/users/parents/$uid")
+        val email = emailEditTextParentMyProfile.text.toString()
+        val username = usernameEditTextParentMyProfile.text.toString()
+        val city = cityEditTextParentMyProfile.text.toString()
+        //val ref = FirebaseDatabase.getInstance().getReference("/users/parents/$uid")
+        val firebase = FunctionsFirebase()
         if (changeEmail) {
             user?.updateEmail(emailEditTextParentMyProfile.text.toString())
                 ?.addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
                     if (emailEditTextParentMyProfile.text != null) {
-                        ref.child("email").setValue(emailEditTextParentMyProfile.text.toString())
+                        firebase.setFieldUserDatabase(firebase.uidUser!!,"email",email)
                     }
                     Toast.makeText(
                         requireContext(),
@@ -203,13 +200,13 @@ class ParentMyProfileFragment : BaseFragment() {
                     ).show()
                 }
         }
-        ref.child("username").setValue(usernameEditTextParentMyProfile.text.toString())
-        ref.child("cityId").setValue(cityId)
-        ref.child("city").setValue(cityEditTextParentMyProfile.text.toString())
-        saveChangeButtonParentMyProfile.isVisible = false;
-        val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = cm.activeNetworkInfo
-        if (netInfo != null && netInfo.isConnected){
+        firebase.setFieldUserDatabase(firebase.uidUser!!,"username",username)
+        firebase.setFieldUserDatabase(firebase.uidUser!!,"cityId",cityId)
+        firebase.setFieldUserDatabase(firebase.uidUser!!,"city",city)
+        saveChangeButtonParentMyProfile.isVisible = false
+
+        val network = FunctionsNetwork()
+        if(network.checkConnect(context)){
             Toast.makeText(requireContext(), "Изменения успешно сохранены", Toast.LENGTH_SHORT).show()
         }else{
             Toast.makeText(requireContext(), "Изменения будут сохранены, когда вы подключитесь к интернету", Toast.LENGTH_SHORT).show()

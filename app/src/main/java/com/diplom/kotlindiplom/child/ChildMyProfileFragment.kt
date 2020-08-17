@@ -4,7 +4,6 @@ import android.content.Context
 import android.app.Activity
 import android.content.Intent
 import android.graphics.ImageDecoder
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,7 +22,6 @@ import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_child_main.*
 import kotlinx.android.synthetic.main.fragment_child_my_profile.*
@@ -186,14 +184,13 @@ class ChildMyProfileFragment : BaseFragment() {
         val point = pointTextViewChildMyProfile.text.toString().toInt()
 
         val user = FirebaseAuth.getInstance().currentUser
-        val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/users/children/$uid")
+        val firebase = FunctionsFirebase()
         if (changeEmail) {
             user?.updateEmail(email)
                 ?.addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
                     if (emailEditTextChildmyprofile.text != null) {
-                        ref.child("email").setValue(email)
+                        firebase.setFieldUserDatabase(firebase.uidUser!!,"email",email)
                     }
                     Toast.makeText(
                         requireContext(),
@@ -214,15 +211,14 @@ class ChildMyProfileFragment : BaseFragment() {
                     ).show()
                 }
         }
-        ref.child("username").setValue(username)
-        ref.child("cityId").setValue(cityId)
-        ref.child("city").setValue(city)
-        ref.child("educationalInstitutionId").setValue(schoolId)
-        ref.child("educationalInstitution")
-            .setValue(educationalInstitution)
+        firebase.setFieldUserDatabase(firebase.uidUser!!,"username",username)
+        firebase.setFieldUserDatabase(firebase.uidUser!!,"cityId", cityId)
+        firebase.setFieldUserDatabase(firebase.uidUser!!,"city",city)
+        firebase.setFieldUserDatabase(firebase.uidUser!!,"educationalInstitutionId", schoolId)
+        firebase.setFieldUserDatabase(firebase.uidUser!!,"educationalInstitution",educationalInstitution)
         saveChangeButtonChildMyProfile.isVisible = false
 
-        val network = Network()
+        val network = FunctionsNetwork()
         if (network.checkConnect(context)){
             Toast.makeText(requireContext(), "Изменения успешно сохранены", Toast.LENGTH_SHORT).show()
         }else{

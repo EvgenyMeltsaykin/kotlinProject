@@ -9,7 +9,7 @@ import androidx.core.view.isVisible
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Lesson
-import com.diplom.kotlindiplom.models.Network
+import com.diplom.kotlindiplom.models.FunctionsNetwork
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -224,7 +224,7 @@ class Elschool {
         hideButtons: () -> Unit,
         showButtons: () -> Unit
     ) {
-        val network = Network()
+        val network = FunctionsNetwork()
         if (!network.checkConnect(context)) {
             Toast.makeText(
                 context,

@@ -29,15 +29,15 @@ private const val ARG_PARAM2 = "param2"
  */
 class ChildAllTasksFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    private var title: String? = null
     private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.get("title").toString()
+            title = it.get("title").toString()
         }
-        activity?.setTitle(param1)
+        activity?.setTitle(title)
     }
 
     override fun onCreateView(
@@ -52,9 +52,9 @@ class ChildAllTasksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
         var status: Int = -2
-        if (param1 == "Невыполненные") status = -1;
-        if (param1 == "На проверке") status = 0;
-        if (param1 == "Выполненные") status = 1;
+        if (title == "Невыполненные") status = -1;
+        if (title == "На проверке") status = 0;
+        if (title == "Выполненные") status = 1;
 
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()

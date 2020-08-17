@@ -395,7 +395,7 @@ class FunctionsFirebase {
         })
     }
 
-    fun setFieldUserDatabase(uid: String, field: String, value: Any) {
+    fun setFieldUserDatabase(uid: String, field: String, value: Any?) {
         getRoleByUid(uid, object : FirebaseCallback<String> {
             override fun onComplete(answer: String) {
                 var role = ""

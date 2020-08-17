@@ -214,7 +214,7 @@ class ChildMainActivity : AppCompatActivity() {
         val firebase = FunctionsFirebase()
         firebase.getFieldUserDatabase(firebase.uidUser!!,"point",object : FirebaseCallback<String>{
             override fun onComplete(value: String) {
-                item?.setTitle(value)
+                item?.title = value
             }
         })
         return super.onCreateOptionsMenu(menu)
@@ -226,21 +226,10 @@ class ChildMainActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val item = menu?.findItem(R.id.menuPointsChild)
-        val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/users/children/$uid")
-
-        ref.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                p0.children.forEach {
-                    if (it.key.toString() == "point") {
-                        val points = it.value.toString()
-                        item?.setTitle(points)
-                    }
-                }
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-
+        val firebase = FunctionsFirebase()
+        firebase.getFieldUserDatabase(firebase.uidUser!!,"point",object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                item?.title = value
             }
         })
         return super.onPrepareOptionsMenu(menu)
@@ -290,8 +279,7 @@ class ChildMainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
         }
-
-        back_pressed = System.currentTimeMillis();
+        back_pressed = System.currentTimeMillis()
 
     }
 
@@ -323,8 +311,6 @@ class ChildMainActivity : AppCompatActivity() {
                 }
             }
         })
-
-
 
         drawer?.addDrawerListener(toggle)
         toggle.syncState()

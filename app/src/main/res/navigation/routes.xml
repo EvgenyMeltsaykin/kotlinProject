@@ -11,11 +11,6 @@
         android:label="Главная"
         tools:layout="@layout/fragment_child_main" />
     <fragment
-        android:id="@+id/childSheduleFragment"
-        android:name="com.diplom.kotlindiplom.child.SheduleFragment"
-        android:label="Расписание"
-        tools:layout="@layout/fragment_child_shedule" />
-    <fragment
         android:id="@+id/childMyProfileFragment"
         android:name="com.diplom.kotlindiplom.child.ChildMyProfileFragment"
         android:label="fragment_my_profile"
@@ -54,9 +49,6 @@
         android:name="com.diplom.kotlindiplom.generalFragments.WeekdayFragment"
         android:label="fragment_weekday"
         tools:layout="@layout/fragment_weekday" >
-        <action
-            android:id="@+id/action_weekdayFragment_to_childSheduleFragment"
-            app:destination="@id/childSheduleFragment" />
         <action
             android:id="@+id/action_weekdayFragment_to_weekdayWithoutDiaryFragment"
             app:destination="@id/weekdayWithoutDiaryFragment" />
