@@ -2,7 +2,6 @@ package com.diplom.kotlindiplom.diaries
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -148,38 +147,38 @@ class Elschool {
                                 if (day.isNotEmpty()) {
                                     list.forEach {
                                         i++
-                                        firebase.setFieldDatabase(
+                                        firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
                                             "diary/shedule/$day/lesson$i/lessonName",
                                             it.name
                                         )
-                                        firebase.setFieldDatabase(
+                                        firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
                                             "diary/shedule/$day/lesson$i/time",
                                             it.time
                                         )
-                                        firebase.setFieldDatabase(
+                                        firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
                                             "diary/shedule/$day/lesson$i/cabinet",
                                             it.cabinet
                                         )
-                                        firebase.setFieldDatabase(
+                                        firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
                                             "diary/shedule/$day/lesson$i/form",
                                             it.form
                                         )
-                                        firebase.setFieldDatabase(
+                                        firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
                                             "diary/shedule/$day/lesson$i/homework",
                                             it.homework
                                         )
-                                        firebase.setFieldDatabase(
+                                        firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
                                             "diary/shedule/$day/lesson$i/mark",
                                             it.mark
                                         )
                                     }
-                                    firebase.setFieldDatabase(
+                                    firebase.setFieldUserDatabase(
                                         firebase.uidUser!!,
                                         "diary/shedule/$day/date",
                                         date

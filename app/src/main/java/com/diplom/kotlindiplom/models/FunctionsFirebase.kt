@@ -64,17 +64,17 @@ class FunctionsFirebase {
     }
 
     fun createDiary(){
-        setFieldDatabase(uidUser!!, "diary/login", "")
-        setFieldDatabase(uidUser!!, "diary/password", "")
-        setFieldDatabase(uidUser!!, "diary/url", "")
-        setFieldDatabase(uidUser!!, "diary/shedule/weekUpdate", 0)
+        setFieldUserDatabase(uidUser!!, "diary/login", "")
+        setFieldUserDatabase(uidUser!!, "diary/password", "")
+        setFieldUserDatabase(uidUser!!, "diary/url", "")
+        setFieldUserDatabase(uidUser!!, "diary/shedule/weekUpdate", 0)
     }
     fun deleteDiary() {
-        setFieldDatabase(uidUser!!, "diary/login", "")
-        setFieldDatabase(uidUser!!, "diary/password", "")
-        setFieldDatabase(uidUser!!, "diary/url", "")
-        setFieldDatabase(uidUser!!, "diary/shedule", "")
-        setFieldDatabase(uidUser!!, "diary/shedule/weekUpdate", 0)
+        setFieldUserDatabase(uidUser!!, "diary/login", "")
+        setFieldUserDatabase(uidUser!!, "diary/password", "")
+        setFieldUserDatabase(uidUser!!, "diary/url", "")
+        setFieldUserDatabase(uidUser!!, "diary/shedule", "")
+        setFieldUserDatabase(uidUser!!, "diary/shedule/weekUpdate", 0)
     }
 
     fun getSheduleDay(uid: String, day: String, firebaseCallBack: FirebaseCallback<List<Lesson>>) {
@@ -111,20 +111,19 @@ class FunctionsFirebase {
         val cryptor = AES256JNCryptor()
         val cipherText = cryptor.encryptData(password.toByteArray(),secretKey.toCharArray())
         var temp = Arrays.toString(cipherText)
-        setFieldDatabase(uidUser!!,"diary/login",login)
-        setFieldDatabase(uidUser!!,"diary/password",temp)
+        setFieldUserDatabase(uidUser!!,"diary/login",login)
+        setFieldUserDatabase(uidUser!!,"diary/password",temp)
 
 
     }
-    fun getFieldDatabase(uid: String, field: String, firebaseCallBack: FirebaseCallback<Any>) {
+    fun getFieldUserDatabase(uid: String, field: String, firebaseCallBack: FirebaseCallback<String>) {
         getRoleByUid(uid, object : FirebaseCallback<String> {
             override fun onComplete(answer: String) {
-                var role: String = ""
+                var role = ""
                 if (answer == "child") role = "children"
                 else role = "parents"
 
-                val ref = rootRef.child("users").child(role).child(uidUser!!)
-                var value = ""
+                val ref = rootRef.child("users").child(role).child(uid)
 
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
@@ -396,14 +395,14 @@ class FunctionsFirebase {
         })
     }
 
-    fun setFieldDatabase(uid: String, field: String, value: Any) {
+    fun setFieldUserDatabase(uid: String, field: String, value: Any) {
         getRoleByUid(uid, object : FirebaseCallback<String> {
             override fun onComplete(answer: String) {
-                var role: String = ""
+                var role = ""
                 if (answer == "child") role = "children"
                 else role = "parents"
 
-                val ref = rootRef.child("users").child(role).child(uidUser!!)
+                val ref = rootRef.child("users").child(role).child(uid)
                 ref.child("$field").setValue(value)
 
             }
@@ -423,68 +422,10 @@ class FunctionsFirebase {
         return ""
     }
 
-    fun setFieldDatabaseChild(childUid: String, field: String, value: Any) {
-        val ref = childRef.child("${childUid}")
-        ref.child("$field").setValue(value)
-    }
-
-    fun setFieldDatabaseParent(parentUid: String, field: String, value: String) {
-        val ref = parentRef.child("${parentUid}")
-        ref.child("$field").setValue(value)
-    }
-
     fun setFieldDatabaseTask(taskId: String, field: String, value: Any) {
         val ref = taskRef.child("${taskId}")
         ref.child("$field").setValue(value)
 
-    }
-
-    fun getFieldDatabaseChild(
-        childUid: String,
-        field: String,
-        firebaseCallBack: FirebaseCallback<String>
-    ) {
-        val ref = childRef.child("${childUid}")
-        var value = ""
-
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    p0.children.forEach {
-                        if (it.key.toString() == field) {
-                            firebaseCallBack.onComplete(it.value.toString())
-                        }
-                    }
-                }
-            }
-        })
-    }
-
-    fun getFieldDatabaseParent(
-        parentUid: String,
-        field: String,
-        firebaseCallBack: FirebaseCallback<String>
-    ) {
-        val ref = parentRef.child("${parentUid}")
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    p0.children.forEach {
-                        if (it.key.toString() == field) {
-                            firebaseCallBack.onComplete(it.value.toString())
-                        }
-                    }
-                }
-            }
-        })
     }
 
     fun getFieldDatabaseTask(
@@ -514,7 +455,7 @@ class FunctionsFirebase {
     fun addPointChild(childUid: String, point: Int) {
         val ref = childRef.child("$childUid")
         Log.d("TAG", childUid)
-        getFieldDatabaseChild(childUid, "point", object : FirebaseCallback<String> {
+        getFieldUserDatabase(childUid, "point", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
                 ref.child("point").setValue(value.toInt() + point)
             }
@@ -532,7 +473,7 @@ class FunctionsFirebase {
                 if (p0.exists()) {
                     val childUid = searchIdChild(p0, editTextId.text.toString())
                     if (childUid.isNotEmpty()) {
-                        getFieldDatabaseChild(
+                        getFieldUserDatabase(
                             childUid,
                             "parentUid",
                             object : FirebaseCallback<String> {
@@ -554,19 +495,19 @@ class FunctionsFirebase {
                                         ).show()
                                     } else {
                                         val firebase = FunctionsFirebase()
-                                        firebase.setFieldDatabaseChild(childUid, "acceptName", "")
-                                        firebase.setFieldDatabaseChild(childUid, "acceptUid", "")
-                                        firebase.getFieldDatabaseParent(
+                                        firebase.setFieldUserDatabase(childUid, "acceptName", "")
+                                        firebase.setFieldUserDatabase(childUid, "acceptUid", "")
+                                        firebase.getFieldUserDatabase(
                                             firebase.uidUser!!,
                                             "username",
                                             object : FirebaseCallback<String> {
                                                 override fun onComplete(value: String) {
-                                                    firebase.setFieldDatabaseChild(
+                                                    firebase.setFieldUserDatabase(
                                                         childUid,
                                                         "acceptName",
                                                         value
                                                     )
-                                                    firebase.setFieldDatabaseChild(
+                                                    firebase.setFieldUserDatabase(
                                                         childUid,
                                                         "acceptUid",
                                                         firebase.uidUser!!
@@ -602,9 +543,9 @@ class FunctionsFirebase {
         val fileRef = FirebaseStorage.getInstance().getReference("/image/$filename")
 
 
-        getFieldDatabase(uidUser!!,"profileImageName", object : FirebaseCallback<Any>{
-            override fun onComplete(value: Any) {
-                if (value.toString().isNotEmpty()){
+        getFieldUserDatabase(uidUser!!,"profileImageName", object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                if (value.isNotEmpty()){
                     val deleteRef = FirebaseStorage.getInstance().getReference("/image/$value")
                     deleteRef.delete()
                 }

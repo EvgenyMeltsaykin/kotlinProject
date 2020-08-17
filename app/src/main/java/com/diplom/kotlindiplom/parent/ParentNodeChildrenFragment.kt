@@ -93,7 +93,7 @@ class ParentNodeChildrenFragment : Fragment() {
                 value.forEach {
                     adapter.add(ChildrenItem(it,object : ChildrenItem.OnClickDeleteButton{
                         override fun onClickDeleteButton(item: Item<ViewHolder>, child: Child) {
-                            firebase.setFieldDatabaseChild(child.childUid,"parentUid","")
+                            firebase.setFieldUserDatabase(child.childUid,"parentUid","")
                             updateRecyclerView(firebase,adapter)
                         }
                     } ))

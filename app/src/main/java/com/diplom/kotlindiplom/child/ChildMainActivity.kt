@@ -83,24 +83,24 @@ class ChildMainActivity : AppCompatActivity() {
                 if (p0.key.toString() == "acceptName") {
                     if (p0.value.toString().isNotEmpty()) {
                         Log.d("TAG", "Найден пользователь")
-                        firebase.getFieldDatabaseChild(
+                        firebase.getFieldUserDatabase(
                             uid!!,
                             "acceptName",
                             object : FirebaseCallback<String> {
-                                override fun onComplete(value: String) {
-                                    view.invitationTextView.setText("Родитель ${value} запрашивает привязку аккаунта")
+                                override fun onComplete(parentName: String) {
+                                    view.invitationTextView.setText("Родитель ${parentName} запрашивает привязку аккаунта")
                                 }
                             })
                         window.contentView = view
                         window.showAtLocation(getWindow().decorView, Gravity.CENTER, 0, 0)
                         view.rejectButton.setOnClickListener {
                             window.dismiss()
-                            firebase.getFieldDatabaseChild(
+                            firebase.getFieldUserDatabase(
                                 uid,
                                 "acceptUid",
                                 object : FirebaseCallback<String> {
-                                    override fun onComplete(value: String) {
-                                        firebase.setFieldDatabaseParent(value, "acceptAnswer", "0")
+                                    override fun onComplete(parentUid: String) {
+                                        firebase.setFieldUserDatabase(parentUid, "acceptAnswer", "0")
                                     }
 
 
@@ -109,14 +109,14 @@ class ChildMainActivity : AppCompatActivity() {
                         }
                         view.acceptButton.setOnClickListener {
                             window.dismiss()
-                            firebase.getFieldDatabaseChild(
+                            firebase.getFieldUserDatabase(
                                 uid,
                                 "acceptUid",
                                 object : FirebaseCallback<String> {
-                                    override fun onComplete(value: String) {
-                                        Log.d("TAG", "$value")
-                                        firebase.setFieldDatabaseChild(uid, "parentUid", value)
-                                        firebase.setFieldDatabaseParent(value, "acceptAnswer", "1")
+                                    override fun onComplete(parentUid: String) {
+                                        Log.d("TAG", "$parentUid")
+                                        firebase.setFieldUserDatabase(uid, "parentUid", parentUid)
+                                        firebase.setFieldUserDatabase(parentUid, "acceptAnswer", "1")
                                     }
                                 })
                             firebase.clearAcceptRequest()
@@ -211,21 +211,10 @@ class ChildMainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.nav_menu, menu)
         val item = menu?.findItem(R.id.menuPointsChild)
-        val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/users/children/$uid")
-
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                p0.children.forEach {
-                    if (it.key.toString() == "point") {
-                        val points = it.value.toString()
-                        item?.setTitle(points)
-                    }
-                }
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-
+        val firebase = FunctionsFirebase()
+        firebase.getFieldUserDatabase(firebase.uidUser!!,"point",object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                item?.setTitle(value)
             }
         })
         return super.onCreateOptionsMenu(menu)

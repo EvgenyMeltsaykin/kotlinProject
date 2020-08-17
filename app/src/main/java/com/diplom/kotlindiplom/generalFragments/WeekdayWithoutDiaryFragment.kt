@@ -1,7 +1,6 @@
 package com.diplom.kotlindiplom.generalFragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import kotlinx.android.synthetic.main.fragment_weekday.diaryTextView
 import kotlinx.android.synthetic.main.fragment_weekday_without_diary.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -95,7 +93,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                         ).show()
                     } else {
                         firebase.setLoginAndPasswordDiary(login,password)
-                        firebase.setFieldDatabase(firebase.uidUser!!, "diary/url", urlDiary)
+                        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", urlDiary)
                         firebase.getRoleByUid(
                             firebase.uidUser!!,
                             object : FirebaseCallback<String> {

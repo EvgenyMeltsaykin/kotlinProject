@@ -23,7 +23,7 @@ class FunctionsUI {
         val NOTIFY_ID = 101
         val CHANNEL_ID = "Task channel"
         val firebase = FunctionsFirebase()
-        firebase.getFieldDatabaseChild(
+        firebase.getFieldUserDatabase(
             firebase.uidUser!!,
             "parentUid",
             object : FirebaseCallback<String> {

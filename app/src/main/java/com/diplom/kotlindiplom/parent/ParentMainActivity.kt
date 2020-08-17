@@ -80,7 +80,7 @@ class ParentMainActivity : AppCompatActivity() {
                             "Ваш запрос отклонен",
                             Toast.LENGTH_SHORT
                         ).show()
-                        firebase.setFieldDatabaseParent(firebase.uidUser!!, "acceptAnswer", "-1")
+                        firebase.setFieldUserDatabase(firebase.uidUser!!, "acceptAnswer", "-1")
                     }
                     if (p0.value.toString() == "1") {
                         Toast.makeText(
@@ -88,7 +88,7 @@ class ParentMainActivity : AppCompatActivity() {
                             "Ваш запрос принят",
                             Toast.LENGTH_SHORT
                         ).show()
-                        firebase.setFieldDatabaseParent(firebase.uidUser!!, "acceptAnswer", "-1")
+                        firebase.setFieldUserDatabase(firebase.uidUser!!, "acceptAnswer", "-1")
                     }
                 }
             }

@@ -59,7 +59,7 @@ class ChildAllTasksFragment : Fragment() {
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
         if (status != 1) {
-            firebase.getFieldDatabaseChild(
+            firebase.getFieldUserDatabase(
                 firebase.uidUser!!,
                 "parentUid",
                 object : FirebaseCallback<String> {
