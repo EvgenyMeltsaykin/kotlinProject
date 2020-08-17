@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
@@ -58,36 +59,16 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
+        progressBar.isVisible = false
         val firebase = FunctionsFirebase()
-        firebase.getLoginAndPasswordAndUrlDiary(
-            firebase.uidUser!!,
-            object : FirebaseCallback<Map<String,String>> {
-                override fun onComplete(value: Map<String,String>) {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        val diary =Diary()
-                        var rightLogin = false
-                        when (value["url"]) {
-                            diary.elschool.url -> rightLogin =
-                                withContext(Dispatchers.IO) { diary.elschool.login(value["login"]!!, value["password"]!!) }
-                        }
-                        if (!rightLogin) {
-                            Toast.makeText(
-                                requireContext(),
-                                "Не верный логин или пароль",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            setupSpinner()
-                            diaryTextView.text =
-                                "Расписание недоступно.\nВыберите электронный дневник"
-                        }else{
-                            Navigation.findNavController(requireActivity(), R.id.navFragment)
-                                .navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
-                        }
-                    }
+        firebase.getFieldDiary(firebase.uidUser!!,"login",object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                if(value.isNotEmpty()){
+                    Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
                 }
-            })
+            }
+        })
+        setupSpinner()
         enterDiaryButton.setOnClickListener {
             if (urlDiary.isEmpty()) {
                 Toast.makeText(requireContext(), "Выберите дневник", Toast.LENGTH_SHORT).show()
@@ -97,19 +78,22 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                 val login = loginDiaryEditText.text.toString()
                 val password = passwordDiaryEditText.text.toString()
                 val diary = Diary()
-
+                enterDiaryButton.isVisible = false
+                progressBar.isVisible = true
                 GlobalScope.launch(Dispatchers.Main) {
                     var rightLogin = false
                     when (urlDiary) {
                         diary.elschool.url -> rightLogin =
                             withContext(Dispatchers.IO) { diary.elschool.login(login, password) }
                     }
-                    if (!rightLogin) Toast.makeText(
-                        requireContext(),
-                        "Не верный логин или пароль",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    else {
+                    if (!rightLogin) {
+                        enterDiaryButton.isVisible = true
+                        Toast.makeText(
+                            requireContext(),
+                            "Не верный логин или пароль",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
                         firebase.setLoginAndPasswordDiary(login,password)
                         firebase.setFieldDatabase(firebase.uidUser!!, "diary/url", urlDiary)
                         firebase.getRoleByUid(
@@ -126,6 +110,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                     }
                 }
             } else {
+                enterDiaryButton.isVisible = true
                 Toast.makeText(requireContext(), "Войти не удалось", Toast.LENGTH_SHORT).show()
             }
         }

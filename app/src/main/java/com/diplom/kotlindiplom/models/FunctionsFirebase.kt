@@ -184,7 +184,6 @@ class FunctionsFirebase {
             }
         })
     }
-
     fun setDateUpdateShedule(year:String,month:String,day:String){
         getRoleByUid(uidUser!!, object : FirebaseCallback<String> {
             override fun onComplete(answer: String) {

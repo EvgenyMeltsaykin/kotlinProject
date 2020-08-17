@@ -222,9 +222,8 @@ class ChildMyProfileFragment : BaseFragment() {
             .setValue(educationalInstitution)
         saveChangeButtonChildMyProfile.isVisible = false
 
-        val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = cm.activeNetworkInfo
-        if (netInfo != null && netInfo.isConnected){
+        val network = Network()
+        if (network.checkConnect(context)){
             Toast.makeText(requireContext(), "Изменения успешно сохранены", Toast.LENGTH_SHORT).show()
         }else{
             Toast.makeText(requireContext(), "Изменения будут сохранены, когда вы подключитесь к интернету", Toast.LENGTH_SHORT).show()

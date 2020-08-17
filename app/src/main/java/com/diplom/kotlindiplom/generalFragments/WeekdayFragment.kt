@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -14,6 +15,7 @@ import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.diplom.kotlindiplom.models.Network
 import kotlinx.android.synthetic.main.fragment_weekday.*
 import java.text.DateFormat
 import java.time.LocalDate
@@ -36,6 +38,7 @@ class WeekdayFragment : Fragment() {
     var role: String = ""
     var selectedWeek = 0
     var selectedYear = 0
+    val calendar = Calendar.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.title = "Дни недели"
@@ -67,17 +70,22 @@ class WeekdayFragment : Fragment() {
 
         setupCalendar()
         val firebase = FunctionsFirebase()
+        firebase.getFieldDiary(firebase.uidUser!!,"url",object :FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                diaryTextView.text = value
+            }
+        })
         deleteDiaryButton.setOnClickListener {
             firebase.deleteDiary()
-            if (role == "child") {
-                Navigation.findNavController(requireActivity(), R.id.navFragment)
+            Navigation.findNavController(requireActivity(), R.id.navFragment)
                     .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
-            if(role == "parent")
-                Navigation.findNavController(requireActivity(), R.id.navFragment)
-                    .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
-            }
         }
         progressBar.isVisible = false
+
+        refreshSheduleButton.setOnClickListener {
+            updateShedule(true,calendar)
+
+        }
         mondayButton.setOnClickListener {
             openFragmentDay("Понедельник")
         }
@@ -99,8 +107,9 @@ class WeekdayFragment : Fragment() {
 
     }
     @ExperimentalStdlibApi
-    private fun updateShedule(calendar: Calendar) {
+    private fun updateShedule(updateWithoutCheck:Boolean,calendar: Calendar) {
         val firebase = FunctionsFirebase()
+
         val showButtons = {
             mondayButton.isVisible = true
             tuesdayButton.isVisible = true
@@ -112,6 +121,7 @@ class WeekdayFragment : Fragment() {
             deleteDiaryButton.isVisible = true
             openCalendarButton.isVisible = true
             dateTextView.isVisible = true
+            refreshSheduleButton.isVisible = true
         }
         val hideButtons ={
             mondayButton.isVisible = false
@@ -124,17 +134,18 @@ class WeekdayFragment : Fragment() {
             deleteDiaryButton.isVisible = false
             openCalendarButton.isVisible = false
             dateTextView.isVisible = false
+            refreshSheduleButton.isVisible = false
         }
+
         firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
-                diaryTextView.text = value
-                if (updateShedule) {
+                if (updateShedule || updateWithoutCheck) {
                     firebase.getFieldShedule(
                         firebase.uidUser!!,
                         "weekUpdate",
                         object : FirebaseCallback<String> {
                             override fun onComplete(answer: String) {
-                                if (selectedWeek != answer.toInt()) {
+                                if (selectedWeek != answer.toInt() || updateWithoutCheck) {
                                     diaryUrl = value
                                     when (value) {
                                         diary.elschool.url -> {
@@ -181,7 +192,6 @@ class WeekdayFragment : Fragment() {
     private fun setupCalendar() {
         calendarView.isVisible = false
         val selectedDate = calendarView.date
-        val calendar = Calendar.getInstance()
         val firebase = FunctionsFirebase()
         val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
         firebase.getDateUpdateInShedule(object : FirebaseCallback<LocalDate> {
@@ -214,10 +224,11 @@ class WeekdayFragment : Fragment() {
             calendarView.isVisible = false
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
+
             diaryUrl = diaryTextView.text.toString()
-            updateShedule(calendar)
+            updateShedule(false,calendar)
         }
-        updateShedule(calendar)
+        updateShedule(false,calendar)
     }
 
     companion object {

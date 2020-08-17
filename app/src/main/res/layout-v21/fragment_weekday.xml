@@ -40,13 +40,12 @@
             android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
             android:text="TextView"
-            app:layout_constraintBottom_toBottomOf="@+id/openCalendarButton"
-            app:layout_constraintStart_toEndOf="@+id/openCalendarButton"
-            app:layout_constraintTop_toTopOf="@+id/openCalendarButton"
-            app:layout_constraintVertical_bias="0.482" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/openCalendarButton" />
 
         <CalendarView
             android:id="@+id/calendarView"
@@ -54,9 +53,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.355"
+            app:layout_constraintHorizontal_bias="0.491"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/openCalendarButton" />
+            app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
 
         <Button
             android:id="@+id/mondayButton"
@@ -187,6 +186,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/openCalendarButton"
             app:layout_constraintVertical_bias="0.5" />
+
+        <Button
+            android:id="@+id/refreshSheduleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:background="@color/colorButton"
+            android:padding="10dp"
+            android:text="Обновить"
+            app:layout_constraintBottom_toBottomOf="@+id/openCalendarButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/openCalendarButton"
+            app:layout_constraintTop_toTopOf="@+id/openCalendarButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
