@@ -10,11 +10,14 @@
         android:id="@+id/childMyProfileFragment"
         android:title="Мой профиль" />
     <item
-        android:id="@+id/weekdayWithoutDiaryFragment"
-        android:title="Расписание" />
+        android:id="@+id/loginDiaryFragment"
+        android:title="Электронный дневник" />
+    <!--<item
+        android:id="@+id/loginDiaryFragment"
+        android:title="Расписание" />-->
 
     <item
-        android:id="@+id/childMarksFragment"
+        android:id="@+id/lessonsMarkFragment"
         android:title="Оценки" />
 
     <item

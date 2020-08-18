@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.generalFragments
+package com.diplom.kotlindiplom.generalFragments.sheduleFragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,7 +14,7 @@ import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import kotlinx.android.synthetic.main.fragment_weekday_without_diary.*
+import kotlinx.android.synthetic.main.fragment_login_diary.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -50,7 +50,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weekday_without_diary, container, false)
+        return inflater.inflate(R.layout.fragment_login_diary, container, false)
     }
 
     var urlDiary: String = ""
@@ -62,7 +62,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
         firebase.getFieldDiary(firebase.uidUser!!,"login",object : FirebaseCallback<String>{
             override fun onComplete(value: String) {
                 if(value.isNotEmpty()){
-                    Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
+                    Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_loginDiaryFragment_to_diaryFragment)
                 }
             }
         })
@@ -102,7 +102,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                                         requireActivity(),
                                         R.id.navFragment
                                     )
-                                        .navigate(R.id.action_weekdayWithoutDiaryFragment_to_weekdayFragment)
+                                        .navigate(R.id.action_loginDiaryFragment_to_diaryFragment)
                                 }
                             })
                     }
@@ -153,7 +153,8 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            WeekdayWithoutDiaryFragment().apply {
+            WeekdayWithoutDiaryFragment()
+                .apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

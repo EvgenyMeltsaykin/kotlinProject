@@ -9,7 +9,7 @@
         android:id="@+id/constraintlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".generalFragments.WeekdayFragment"
+        tools:context=".generalFragments.sheduleFragments.WeekdayFragment"
         android:paddingBottom="10dp">
 
         <include

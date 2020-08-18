@@ -39,28 +39,28 @@
         android:label="fragment_parent_node_children"
         tools:layout="@layout/fragment_parent_node_children" />
     <fragment
-        android:id="@+id/weekdayWithoutDiaryFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.WeekdayWithoutDiaryFragment"
+        android:id="@+id/loginDiaryFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.WeekdayWithoutDiaryFragment"
         android:label="fragment_weekday_without_diary"
-        tools:layout="@layout/fragment_weekday_without_diary" >
+        tools:layout="@layout/fragment_login_diary" >
         <action
-            android:id="@+id/action_weekdayWithoutDiaryFragment_to_weekdayFragment"
+            android:id="@+id/action_loginDiaryFragment_to_weekdayFragment"
             app:destination="@id/weekdayFragment" />
     </fragment>
     <fragment
         android:id="@+id/weekdayFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.WeekdayFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.WeekdayFragment"
         android:label="WeekdayFragment" >
         <action
             android:id="@+id/action_weekdayFragment_to_weekdayWithoutDiaryFragment"
-            app:destination="@id/weekdayWithoutDiaryFragment" />
+            app:destination="@id/loginDiaryFragment" />
         <action
             android:id="@+id/action_weekdayFragment_to_sheduleDayFragment"
             app:destination="@id/sheduleDayFragment" />
     </fragment>
     <fragment
         android:id="@+id/sheduleDayFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.SheduleDayFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.SheduleDayFragment"
         android:label="fragment_shedule_day"
         tools:layout="@layout/fragment_shedule_day" >
         <action
@@ -69,7 +69,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeworkFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.HomeworkFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.HomeworkFragment"
         android:label="fragment_homework"
         tools:layout="@layout/fragment_homework" />
 </navigation>

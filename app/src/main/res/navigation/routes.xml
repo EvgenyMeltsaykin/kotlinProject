@@ -46,28 +46,28 @@
         tools:layout="@layout/fragment_child_task_content" />
     <fragment
         android:id="@+id/weekdayFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.WeekdayFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.WeekdayFragment"
         android:label="fragment_weekday"
         tools:layout="@layout/fragment_weekday" >
         <action
             android:id="@+id/action_weekdayFragment_to_weekdayWithoutDiaryFragment"
-            app:destination="@id/weekdayWithoutDiaryFragment" />
+            app:destination="@id/loginDiaryFragment" />
         <action
             android:id="@+id/action_weekdayFragment_to_sheduleDayFragment"
             app:destination="@id/sheduleDayFragment" />
     </fragment>
     <fragment
-        android:id="@+id/weekdayWithoutDiaryFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.WeekdayWithoutDiaryFragment"
+        android:id="@+id/loginDiaryFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.WeekdayWithoutDiaryFragment"
         android:label="fragment_weekday_without_diary"
-        tools:layout="@layout/fragment_weekday_without_diary" >
+        tools:layout="@layout/fragment_login_diary" >
         <action
-            android:id="@+id/action_weekdayWithoutDiaryFragment_to_weekdayFragment"
-            app:destination="@id/weekdayFragment" />
+            android:id="@+id/action_loginDiaryFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
     </fragment>
     <fragment
         android:id="@+id/sheduleDayFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.SheduleDayFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.SheduleDayFragment"
         android:label="fragment_shedule_day"
         tools:layout="@layout/fragment_shedule_day" >
         <argument android:name="day"
@@ -81,7 +81,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeworkFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.HomeworkFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.HomeworkFragment"
         android:label="fragment_homework"
         tools:layout="@layout/fragment_homework" >
         <action
@@ -116,4 +116,21 @@
         android:name="com.diplom.kotlindiplom.parent.ParentNodeChildrenFragment"
         android:label="fragment_parent_node_children"
         tools:layout="@layout/fragment_parent_node_children" />
+    <fragment
+        android:id="@+id/lessonsMarkFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.markFragments.LessonsMarkFragment"
+        android:label="fragment_lessons_mark"
+        tools:layout="@layout/fragment_lessons_mark" />
+    <fragment
+        android:id="@+id/diaryFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.DiaryFragment"
+        android:label="fragment_diary"
+        tools:layout="@layout/fragment_diary" >
+        <action
+            android:id="@+id/action_diaryFragment_to_weekdayFragment"
+            app:destination="@id/weekdayFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_to_lessonsMarkFragment"
+            app:destination="@id/lessonsMarkFragment" />
+    </fragment>
 </navigation>
