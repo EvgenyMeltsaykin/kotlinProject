@@ -9,11 +9,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
-import com.diplom.kotlindiplom.child.ChildMainActivity
 import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Parent
-import com.diplom.kotlindiplom.parent.ParentMainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -99,8 +97,9 @@ class RegistryActivity : AppCompatActivity() {
                 firebase.createDiary()
                 intent = Intent(
                     this,
-                    ChildMainActivity::class.java
+                    MainActivity::class.java
                 )
+                intent.putExtra("role","child")
                 intent.flags =
                     Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
@@ -119,9 +118,10 @@ class RegistryActivity : AppCompatActivity() {
                 Log.d(TAG, "Пользователь создан: ${firebase.uidUser}")
                 Toast.makeText(this, "Регистрация прошла успешно", Toast.LENGTH_SHORT).show()
                 firebase.createDiary()
-                intent = Intent(this, ParentMainActivity::class.java)
+                intent = Intent(this, MainActivity::class.java)
                 intent.flags =
                     Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.putExtra("role","parent")
                 startActivity(intent)
             }
 

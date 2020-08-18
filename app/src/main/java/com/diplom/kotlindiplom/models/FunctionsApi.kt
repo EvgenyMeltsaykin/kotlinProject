@@ -2,15 +2,11 @@ package com.diplom.kotlindiplom.models
 
 import android.R
 import android.content.Context
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.EditText
-import androidx.core.widget.doAfterTextChanged
 import com.diplom.kotlindiplom.ApiService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.security.AccessControlContext
 
 class FunctionsApi(val cityId: Int?) {
     val api = ApiService.create()
@@ -52,7 +48,7 @@ class FunctionsApi(val cityId: Int?) {
         if (cityId != -1) {
             var adapterEducational: ArrayAdapter<String>
             val response = api.searchSchool(
-                com.diplom.kotlindiplom.child.cityId,
+                com.diplom.kotlindiplom.childFragments.cityId,
                 accessToken,
                 versionVkApi,
                 editText.text.toString()

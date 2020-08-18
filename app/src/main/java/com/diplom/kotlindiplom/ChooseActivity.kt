@@ -6,9 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.core.view.isVisible
-import com.diplom.kotlindiplom.child.ChildMainActivity
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.parent.ParentMainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot

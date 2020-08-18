@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.parent
+package com.diplom.kotlindiplom.parentFragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

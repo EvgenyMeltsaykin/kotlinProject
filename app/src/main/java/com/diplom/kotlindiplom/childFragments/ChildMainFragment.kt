@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.child
+package com.diplom.kotlindiplom.childFragments
 
 import android.content.Context
 import android.net.Uri
@@ -7,10 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.R
-import kotlinx.android.synthetic.main.fragment_child_tasks.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,12 +18,12 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [ChildTasksFragment.OnFragmentInteractionListener] interface
+ * [ChildMainFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [ChildTasksFragment.newInstance] factory method to
+ * Use the [ChildMainFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ChildTasksFragment : Fragment() {
+class ChildMainFragment : BaseFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -33,7 +31,7 @@ class ChildTasksFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.setTitle("Задания")
+        activity?.setTitle("Главная")
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -45,39 +43,9 @@ class ChildTasksFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_child_tasks, container, false)
+        return inflater.inflate(R.layout.fragment_child_main, container, false)
     }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
-        val navController = Navigation.findNavController(
-            requireActivity(),
-            R.id.navFragment
-        )
-
-        unfulfilledButtonChildTasks.setOnClickListener {
-            val bundle : Bundle = bundleOf()
-            bundle.putString("title","Невыполненные")
-            navController.navigate(R.id.childAllTasksFragment,bundle)
-        }
-        completedButtonChildTasks.setOnClickListener {
-            val bundle : Bundle = bundleOf()
-            bundle.putString("title","Выполненные")
-            navController.navigate(R.id.childAllTasksFragment,bundle)
-        }
-        checkButtonChildTasks.setOnClickListener {
-            val bundle : Bundle = bundleOf()
-            bundle.putString("title","На проверке")
-            navController.navigate(R.id.childAllTasksFragment,bundle)
-        }
-        additionalButtonChildTasks.setOnClickListener {
-            val bundle : Bundle = bundleOf()
-            bundle.putString("title","Дополнительные")
-            navController.navigate(R.id.childAllTasksFragment,bundle)
-        }
-    }
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
@@ -92,6 +60,10 @@ class ChildTasksFragment : Fragment() {
         listener = null
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -115,13 +87,12 @@ class ChildTasksFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ChildTasksFragment.
+         * @return A new instance of fragment MainFragment.
          */
-        val TAG = ChildTasksFragment::class.java.simpleName
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            ChildTasksFragment().apply {
+            ChildMainFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.parent
+package com.diplom.kotlindiplom.parentFragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
 
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase

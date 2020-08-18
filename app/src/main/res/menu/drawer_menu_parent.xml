@@ -10,9 +10,8 @@
         android:id="@+id/parentMyProfileFragment"
         android:title="Мой профиль" />
     <item
-        android:id="@+id/loginDiaryFragment"
-        android:title="Расписание" />
-
+        android:id="@+id/diaryFragment"
+        android:title="Электронный дневник" />
     <item
         android:id="@+id/parentTasksFragment"
         android:title="Задания" />

@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.parent
+package com.diplom.kotlindiplom.parentFragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -93,8 +93,12 @@ class ParentNodeChildrenFragment : Fragment() {
                 value.forEach {
                     adapter.add(ChildrenItem(it,object : ChildrenItem.OnClickDeleteButton{
                         override fun onClickDeleteButton(item: Item<ViewHolder>, child: Child) {
-                            firebase.setFieldUserDatabase(child.childUid,"parentUid","")
-                            updateRecyclerView(firebase,adapter)
+                            firebase.setFieldDatabaseUser(child.childUid,"parentUid","", object : FirebaseCallback<Boolean>{
+                                override fun onComplete(value: Boolean) {
+                                    updateRecyclerView(firebase,adapter)
+                                }
+                            })
+
                         }
                     } ))
                 }

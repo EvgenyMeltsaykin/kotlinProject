@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/childMainFragment"
-        android:name="com.diplom.kotlindiplom.child.ChildMainFragment"
+        android:name="com.diplom.kotlindiplom.childFragments.ChildMainFragment"
         android:label="Главная"
         tools:layout="@layout/fragment_child_main" />
     <fragment
         android:id="@+id/childMyProfileFragment"
-        android:name="com.diplom.kotlindiplom.child.ChildMyProfileFragment"
+        android:name="com.diplom.kotlindiplom.childFragments.ChildMyProfileFragment"
         android:label="fragment_my_profile"
         tools:layout="@layout/fragment_child_my_profile" >
         <action
@@ -22,17 +22,17 @@
     </fragment>
     <fragment
         android:id="@+id/childMarksFragment"
-        android:name="com.diplom.kotlindiplom.child.MarksFragment"
+        android:name="com.diplom.kotlindiplom.childFragments.MarksFragment"
         android:label="fragment_child_marks"
         tools:layout="@layout/fragment_child_marks" />
     <fragment
         android:id="@+id/childTasksFragment"
-        android:name="com.diplom.kotlindiplom.child.ChildTasksFragment"
+        android:name="com.diplom.kotlindiplom.childFragments.ChildTasksFragment"
         android:label="fragment_child_tasks"
         tools:layout="@layout/fragment_child_tasks" />
     <fragment
         android:id="@+id/childAllTasksFragment"
-        android:name="com.diplom.kotlindiplom.child.ChildAllTasksFragment"
+        android:name="com.diplom.kotlindiplom.childFragments.ChildAllTasksFragment"
         android:label="fragment_child_all_tasks"
         tools:layout="@layout/fragment_child_all_tasks" >
         <argument
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/childTaskContentFragment"
-        android:name="com.diplom.kotlindiplom.child.ChildTaskContentFragment"
+        android:name="com.diplom.kotlindiplom.childFragments.ChildTaskContentFragment"
         android:label="fragment_child_task_content"
         tools:layout="@layout/fragment_child_task_content" />
     <fragment
@@ -90,30 +90,30 @@
     </fragment>
     <fragment
         android:id="@+id/parentMyProfileFragment"
-        android:name="com.diplom.kotlindiplom.parent.ParentMyProfileFragment"
+        android:name="com.diplom.kotlindiplom.parentFragments.ParentMyProfileFragment"
         android:label="ParentMyProfileFragment" />
     <fragment
         android:id="@+id/parentTasksFragment"
-        android:name="com.diplom.kotlindiplom.parent.ParentTasksFragment"
+        android:name="com.diplom.kotlindiplom.parentFragments.ParentTasksFragment"
         android:label="fragment_parent_tasks"
         tools:layout="@layout/fragment_parent_tasks" />
     <fragment
         android:id="@+id/parentAllTasksFragment"
-        android:name="com.diplom.kotlindiplom.parent.ParentAllTasksFragment"
+        android:name="com.diplom.kotlindiplom.parentFragments.ParentAllTasksFragment"
         android:label="fragment_parent_all_tasks"
         tools:layout="@layout/fragment_parent_all_tasks" />
     <fragment
         android:id="@+id/parentNewTaskFragment"
-        android:name="com.diplom.kotlindiplom.parent.NewTaskFragment"
+        android:name="com.diplom.kotlindiplom.parentFragments.NewTaskFragment"
         android:label="NewTaskFragment" />
     <fragment
         android:id="@+id/parentTaskContentFragment"
-        android:name="com.diplom.kotlindiplom.parent.ParentTaskContentFragment"
+        android:name="com.diplom.kotlindiplom.parentFragments.ParentTaskContentFragment"
         android:label="fragment_parent_task_content"
         tools:layout="@layout/fragment_parent_task_content" />
     <fragment
         android:id="@+id/parentNodeChildrenFragment"
-        android:name="com.diplom.kotlindiplom.parent.ParentNodeChildrenFragment"
+        android:name="com.diplom.kotlindiplom.parentFragments.ParentNodeChildrenFragment"
         android:label="fragment_parent_node_children"
         tools:layout="@layout/fragment_parent_node_children" />
     <fragment

@@ -4,9 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.diplom.kotlindiplom.child.ChildMainActivity
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.parent.ParentMainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -25,10 +23,12 @@ class SplashActivity : AppCompatActivity() {
             firebase.getRoleByUid(uid,object : FirebaseCallback<String>{
                 override fun onComplete(value: String) {
                     if (value == "child"){
-                        intent = Intent(applicationContext, ChildMainActivity::class.java)
+                        intent = Intent(applicationContext, MainActivity::class.java)
+                        intent.putExtra("role", "child")
                     }
                     if (value == "parent"){
-                        intent = Intent(applicationContext, ParentMainActivity::class.java)
+                        intent = Intent(applicationContext, MainActivity::class.java)
+                        intent.putExtra("role", "parent")
                     }
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)

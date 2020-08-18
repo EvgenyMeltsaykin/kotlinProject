@@ -394,15 +394,27 @@ class FunctionsFirebase {
             }
         })
     }
-
+    fun setFieldDatabaseUser(uid: String, field: String, value: Any?, firebaseCallBack: FirebaseCallback<Boolean>){
+        getRoleByUid(uid, object : FirebaseCallback<String> {
+            override fun onComplete(answer: String) {
+                var role = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+                val ref = rootRef.child("users").child(role).child(uid)
+                ref.keepSynced(true)
+                ref.child("$field").setValue(value)
+                firebaseCallBack.onComplete(true)
+            }
+        })
+    }
     fun setFieldUserDatabase(uid: String, field: String, value: Any?) {
         getRoleByUid(uid, object : FirebaseCallback<String> {
             override fun onComplete(answer: String) {
                 var role = ""
                 if (answer == "child") role = "children"
                 else role = "parents"
-
                 val ref = rootRef.child("users").child(role).child(uid)
+                ref.keepSynced(true)
                 ref.child("$field").setValue(value)
 
             }
@@ -634,7 +646,6 @@ class FunctionsFirebase {
         }
         return parent
     }
-
     fun getChild(childUid: String?, firebaseCallBack: FirebaseCallback<Child>) {
         childRef.child("$childUid").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
