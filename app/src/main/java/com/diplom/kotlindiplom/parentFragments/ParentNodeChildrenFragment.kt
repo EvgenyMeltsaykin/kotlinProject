@@ -98,7 +98,6 @@ class ParentNodeChildrenFragment : Fragment() {
                                     updateRecyclerView(firebase,adapter)
                                 }
                             })
-
                         }
                     } ))
                 }

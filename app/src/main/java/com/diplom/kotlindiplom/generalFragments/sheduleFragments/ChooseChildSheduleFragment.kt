@@ -1,6 +1,7 @@
-package com.diplom.kotlindiplom.generalFragments.markFragments
+package com.diplom.kotlindiplom.generalFragments.sheduleFragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,10 +16,9 @@ import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.ChildDiaryItem
 import com.diplom.kotlindiplom.models.ChildForElschool
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.models.FunctionsUI
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
-import kotlinx.android.synthetic.main.fragment_choose_child_mark.*
+import kotlinx.android.synthetic.main.fragment_choose_child_shedule.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,10 +30,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ChooseChildMarkFragment.newInstance] factory method to
+ * Use the [ChooseChildSheduleFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ChooseChildMarkFragment : Fragment() {
+class ChooseChildSheduleFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -52,7 +52,7 @@ class ChooseChildMarkFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_choose_child_mark, container, false)
+        return inflater.inflate(R.layout.fragment_choose_child_shedule, container, false)
     }
 
     @ExperimentalStdlibApi
@@ -64,16 +64,16 @@ class ChooseChildMarkFragment : Fragment() {
         refreshButton.setOnClickListener {
             updateChildFirebase()
         }
-
     }
+
     @ExperimentalStdlibApi
     fun updateChildFirebase(){
         val diary = Diary()
-        Toast.makeText(requireContext(),"Подождите, идет загрузка списка детей",Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(),"Подождите, идет загрузка списка детей", Toast.LENGTH_SHORT).show()
         progressBar.isVisible = true
         refreshButton.isVisible = false
         val firebase = FunctionsFirebase()
-        firebase.getFieldDiary(firebase.uidUser!!,"url",object :FirebaseCallback<String> {
+        firebase.getFieldDiary(firebase.uidUser!!,"url",object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
                 when (value) {
                     diary.elschool.url -> {
@@ -83,14 +83,15 @@ class ChooseChildMarkFragment : Fragment() {
                                 GlobalScope.launch(Dispatchers.Main) {
                                     if (value){
                                         updateRecyclerView()
-                                        progressBar.isVisible = false
-                                        refreshButton.isVisible = true
-                                        Toast.makeText(requireContext(),"Список детей успешно загружен",Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(requireContext(),"Список детей успешно загружен",
+                                            Toast.LENGTH_SHORT).show()
                                     }else{
-                                        Toast.makeText(requireContext(),"Ошибка при загрузке",Toast.LENGTH_SHORT).show()
-                                        progressBar.isVisible = false
-                                        refreshButton.isVisible = true
+                                        Toast.makeText(requireContext(),"Ошибка при загрузке",
+                                            Toast.LENGTH_SHORT).show()
+
                                     }
+                                    progressBar.isVisible = false
+                                    refreshButton.isVisible = true
                                 }
 
                             }
@@ -105,13 +106,13 @@ class ChooseChildMarkFragment : Fragment() {
         val adapter = GroupAdapter<ViewHolder>()
         adapter.clear()
         val diary = Diary()
-        diary.elschool.getChildrenFromFirebase(object : FirebaseCallback<List<ChildForElschool>>{
+        diary.elschool.getChildrenFromFirebase(object : FirebaseCallback<List<ChildForElschool>> {
             override fun onComplete(value: List<ChildForElschool>) {
                 if (value.isNotEmpty()){
                     value.forEach{
                         adapter.add(ChildDiaryItem(it))
                     }
-                    childMarkRecyclerView.adapter = adapter
+                    childSheduleRecyclerView.adapter = adapter
                 }else{
                     updateChildFirebase()
                 }
@@ -119,14 +120,14 @@ class ChooseChildMarkFragment : Fragment() {
             }
         })
         adapter.setOnItemClickListener { item, view ->
-            val firebase = FunctionsFirebase()
             val childDiaryItem = item as ChildDiaryItem
             val bundle = bundleOf()
-            bundle.putString("id","${childDiaryItem.child.id}")
-            firebase.setFieldDiary(firebase.uidUser!!,"idChild",childDiaryItem.child.id)
-            Navigation.findNavController(requireActivity(), R.id.navFragment).navigate(R.id.action_chooseChildMarkFragment_to_chooseSemestrElschoolFragment,bundle)
+            bundle.putString("id",childDiaryItem.child.id)
+            bundle.putBoolean("updateWithoutCheck",true)
+            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_chooseChildSheduleFragment_to_weekdayFragment,bundle)
         }
     }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -134,12 +135,12 @@ class ChooseChildMarkFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ChoodeChildMarkFragment.
+         * @return A new instance of fragment ChooseChildSheduleFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            ChooseChildMarkFragment().apply {
+            ChooseChildSheduleFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
@@ -147,4 +148,3 @@ class ChooseChildMarkFragment : Fragment() {
             }
     }
 }
-

@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.childFragments
+package com.diplom.kotlindiplom.generalFragments
 
 import android.content.Context
 import android.net.Uri
@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -17,12 +18,12 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [MarksFragment.OnFragmentInteractionListener] interface
+ * [MainFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [MarksFragment.newInstance] factory method to
+ * Use the [MainFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MarksFragment : Fragment() {
+class MainFragment : BaseFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -30,7 +31,7 @@ class MarksFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.setTitle("Оценки")
+        activity?.setTitle("Главная")
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -42,7 +43,7 @@ class MarksFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_child_marks, container, false)
+        return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -59,6 +60,10 @@ class MarksFragment : Fragment() {
         listener = null
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -82,12 +87,12 @@ class MarksFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment MarksFragment.
+         * @return A new instance of fragment MainFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            MarksFragment().apply {
+            MainFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

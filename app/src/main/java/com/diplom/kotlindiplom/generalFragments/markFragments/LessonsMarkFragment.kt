@@ -28,6 +28,7 @@ class LessonsMarkFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        activity?.title = "Предметы"
     }
 
     override fun onCreateView(

@@ -3,14 +3,14 @@
 
 
     <item
-        android:id="@+id/parentMainFragment"
+        android:id="@+id/mainFragment"
         android:title="Главная"
         android:icon="@color/colorPrimaryDark"/>
     <item
         android:id="@+id/parentMyProfileFragment"
         android:title="Мой профиль" />
     <item
-        android:id="@+id/diaryFragment"
+        android:id="@+id/loginDiaryFragment"
         android:title="Электронный дневник" />
     <item
         android:id="@+id/parentTasksFragment"

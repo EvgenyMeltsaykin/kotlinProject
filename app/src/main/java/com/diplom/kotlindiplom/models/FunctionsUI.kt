@@ -1,14 +1,15 @@
 package com.diplom.kotlindiplom.models
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import androidx.annotation.RequiresApi
+import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.diaries.Diary
 
 class FunctionsUI {
     fun createNotificationChild(
@@ -100,5 +101,20 @@ class FunctionsUI {
         val notification = builder.build()
         nm.notify(NOTIFY_ID, notification)
         firebase.setFieldDatabaseTask(task.taskId, "showNotification", 1)
+    }
+
+    fun openFragmentSemestr(activity:Activity, bundle: Bundle? = null){
+        val diary = Diary()
+        val firebase = FunctionsFirebase()
+        firebase.getFieldDiary(firebase.uidUser!!,"url",object :FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                when(value){
+                    diary.elschool.url ->{
+                        Navigation.findNavController(activity, R.id.navFragment).navigate(R.id.action_chooseChildMarkFragment_to_chooseSemestrElschoolFragment,bundle)
+                    }
+                }
+            }
+        })
+
     }
 }

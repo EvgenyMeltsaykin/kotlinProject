@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.diplom.kotlindiplom.models.FunctionsUI
 import kotlinx.android.synthetic.main.fragment_diary.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -43,12 +46,39 @@ class DiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val firebase = FunctionsFirebase()
+        firebase.getFieldUserDatabase(firebase.uidUser!!,"role",object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                sheduleButton.setOnClickListener {
+                    if (value == "child"){
+                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_weekdayFragment)
+                    }
+                    if (value == "parent"){
+                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_chooseChildSheduleFragment)
+                    }
 
-        sheduleButton.setOnClickListener {
-            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_weekdayFragment)
-        }
-        marksButton.setOnClickListener {
-            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_lessonsMarkFragment)
+                }
+                marksButton.setOnClickListener {
+                    if (value == "child"){
+                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_chooseSemestrElschoolFragment)
+                    }
+                    if (value == "parent"){
+                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_chooseChildMarkFragment)
+                    }
+                }
+            }
+        })
+
+
+        firebase.getFieldDiary(firebase.uidUser!!,"url",object : FirebaseCallback<String> {
+            override fun onComplete(value: String) {
+                diaryTextView.text = value
+            }
+        })
+        deleteDiaryButton.setOnClickListener {
+            firebase.deleteDiary()
+            Navigation.findNavController(requireActivity(), R.id.navFragment)
+                .navigate(R.id.action_diaryFragment_to_loginDiaryFragment)
         }
     }
 

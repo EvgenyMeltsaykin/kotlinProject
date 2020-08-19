@@ -76,7 +76,17 @@ class FunctionsFirebase {
         setFieldUserDatabase(uidUser!!, "diary/shedule", "")
         setFieldUserDatabase(uidUser!!, "diary/shedule/weekUpdate", 0)
     }
-
+    fun setFieldDiary(uid:String,field: String, value: Any){
+        getRoleByUid(uid,object :FirebaseCallback<String>{
+            override fun onComplete(answer: String) {
+                var role = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+                val ref = rootRef.child("users").child(role).child(uid).child("diary")
+                ref.child(field).setValue(value)
+            }
+        })
+    }
     fun getSheduleDay(uid: String, day: String, firebaseCallBack: FirebaseCallback<List<Lesson>>) {
         val lessons = mutableListOf<Lesson>()
         getRoleByUid(uid, object : FirebaseCallback<String> {
@@ -85,7 +95,7 @@ class FunctionsFirebase {
                 if (answer == "child") role = "children"
                 else role = "parents"
 
-                val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
+                val ref = rootRef.child("users").child(role).child(uid).child("diary")
                     .child("shedule").child(day)
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {

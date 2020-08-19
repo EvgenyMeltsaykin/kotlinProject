@@ -2,6 +2,7 @@ package com.diplom.kotlindiplom.generalFragments.sheduleFragments
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -32,24 +33,19 @@ private const val ARG_PARAM2 = "param2"
 class WeekdayFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var updateShedule: Boolean = true
-    private var param2: String? = null
-    var role: String = ""
+    private var id: String = ""
+    private var updateWithoutCheck: Boolean = false
     var selectedWeek = 0
     var selectedYear = 0
     val calendar = Calendar.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.title = "Дни недели"
+        activity?.title = "Расписание"
         arguments?.let {
             updateShedule = it.getBoolean("updateShedule", true)
+            id = it.getString("id","")
+            updateWithoutCheck = it.getBoolean("updateWithoutCheck",false)
         }
-        val firebase = FunctionsFirebase()
-
-        firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String> {
-            override fun onComplete(value: String) {
-                role = value
-            }
-        })
     }
 
     override fun onCreateView(
@@ -67,22 +63,10 @@ class WeekdayFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupCalendar()
-        val firebase = FunctionsFirebase()
-        firebase.getFieldDiary(firebase.uidUser!!,"url",object :FirebaseCallback<String>{
-            override fun onComplete(value: String) {
-                diaryTextView.text = value
-            }
-        })
-        deleteDiaryButton.setOnClickListener {
-            firebase.deleteDiary()
-            Navigation.findNavController(requireActivity(), R.id.navFragment)
-                    .navigate(R.id.action_weekdayFragment_to_weekdayWithoutDiaryFragment)
-        }
         progressBar.isVisible = false
 
         refreshSheduleButton.setOnClickListener {
             updateShedule(true,calendar)
-
         }
         mondayButton.setOnClickListener {
             openFragmentDay("Понедельник")
@@ -116,7 +100,6 @@ class WeekdayFragment : Fragment() {
             thursdayButton.isVisible = true
             fridayButton.isVisible = true
             saturdayButton.isVisible = true
-            deleteDiaryButton.isVisible = true
             openCalendarButton.isVisible = true
             dateTextView.isVisible = true
             refreshSheduleButton.isVisible = true
@@ -129,7 +112,6 @@ class WeekdayFragment : Fragment() {
             thursdayButton.isVisible = false
             fridayButton.isVisible = false
             saturdayButton.isVisible = false
-            deleteDiaryButton.isVisible = false
             openCalendarButton.isVisible = false
             dateTextView.isVisible = false
             refreshSheduleButton.isVisible = false
@@ -148,6 +130,7 @@ class WeekdayFragment : Fragment() {
                                     when (value) {
                                         diary.elschool.url -> {
                                             diary.elschool.updateShedule(
+                                                id,
                                                 selectedYear,
                                                 selectedWeek,
                                                 requireContext(),
@@ -223,10 +206,9 @@ class WeekdayFragment : Fragment() {
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
 
-            diaryUrl = diaryTextView.text.toString()
-            updateShedule(false,calendar)
+            updateShedule(updateWithoutCheck,calendar)
         }
-        updateShedule(false,calendar)
+        updateShedule(updateWithoutCheck,calendar)
     }
 
     companion object {

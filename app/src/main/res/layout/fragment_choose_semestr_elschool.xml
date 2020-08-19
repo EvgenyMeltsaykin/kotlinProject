@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingTop="70dp"
+    android:paddingRight="16dp"
+    tools:context=".generalFragments.markFragments.ChooseSemestrElschoolFragment">
+
+
+    <Button
+        android:id="@+id/firstSemestrButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorButton"
+        android:text="Первый триместр"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/secondSemestrButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorButton"
+        android:text="Второй триместр"
+        app:layout_constraintEnd_toEndOf="@+id/firstSemestrButton"
+        app:layout_constraintStart_toStartOf="@+id/firstSemestrButton"
+        app:layout_constraintTop_toBottomOf="@+id/firstSemestrButton" />
+
+    <Button
+        android:id="@+id/thirdSemestrButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorButton"
+        android:text="Третий триместр"
+        app:layout_constraintEnd_toEndOf="@+id/secondSemestrButton"
+        app:layout_constraintStart_toStartOf="@+id/secondSemestrButton"
+        app:layout_constraintTop_toBottomOf="@+id/secondSemestrButton" />
+</androidx.constraintlayout.widget.ConstraintLayout>

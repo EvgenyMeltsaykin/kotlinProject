@@ -23,10 +23,8 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
-import com.diplom.kotlindiplom.models.Child
-import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.models.FunctionsUI
-import com.diplom.kotlindiplom.models.Parent
+import com.diplom.kotlindiplom.diaries.Diary
+import com.diplom.kotlindiplom.models.*
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -41,10 +39,14 @@ class MainActivity : AppCompatActivity() {
     private var drawer: DrawerLayout? = null
     private var back_pressed: Long = 0
     var role = ""
+    @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         role = intent.getStringExtra("role")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val diary = Diary()
+        diary.elschool.getMarks("1588026")
         if (role == "child") {
             settingsChild()
         }
@@ -377,7 +379,39 @@ class MainActivity : AppCompatActivity() {
             return
         }
         if (navController?.currentDestination?.id == R.id.weekdayFragment) {
-            navController?.popBackStack()
+            if (role == "child") {
+                navController.navigate(R.id.action_weekdayFragment_to_diaryFragment)
+                setTitle("Электронный дневник")
+            }
+            if (role == "parent"){
+                navController.navigate(R.id.action_weekdayFragment_to_chooseChildSheduleFragment)
+                setTitle("Выберите ребенка")
+            }
+            return
+        }
+        if (navController?.currentDestination?.id == R.id.chooseChildSheduleFragment) {
+            navController.navigate(R.id.action_chooseChildSheduleFragment_to_diaryFragment)
+            setTitle("Электронный дневник")
+            return
+        }
+        if (navController?.currentDestination?.id == R.id.chooseSemestrElschoolFragment) {
+            if (role == "child") {
+                navController.navigate(R.id.action_chooseSemestrElschoolFragment_to_diaryFragment)
+                setTitle("Электронный дневник")
+            }
+            if (role == "parent"){
+                navController.navigate(R.id.action_chooseSemestrElschoolFragment_to_chooseChildMarkFragment)
+                setTitle("Выберите ребенка")
+            }
+            return
+        }
+        if (navController?.currentDestination?.id == R.id.lessonsMarkFragment) {
+            navController.navigate(R.id.action_lessonsMarkFragment_to_chooseSemestrElschoolFragment)
+            setTitle("Выберите семестр")
+            return
+        }
+        if (navController?.currentDestination?.id == R.id.chooseChildMarkFragment) {
+            navController.navigate(R.id.action_chooseChildMarkFragment_to_diaryFragment)
             setTitle("Электронный дневник")
             return
         }
@@ -401,7 +435,7 @@ class MainActivity : AppCompatActivity() {
             val bundle = bundleOf()
             bundle.putBoolean("updateShedule", false)
             navController?.navigate(R.id.action_sheduleDayFragment_to_weekdayFragment, bundle)
-            setTitle("Дни недели")
+            setTitle("Расписание")
             return
         }
         if (navController?.currentDestination?.id == R.id.homeworkFragment) {

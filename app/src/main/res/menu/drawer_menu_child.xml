@@ -12,14 +12,6 @@
     <item
         android:id="@+id/loginDiaryFragment"
         android:title="Электронный дневник" />
-    <!--<item
-        android:id="@+id/loginDiaryFragment"
-        android:title="Расписание" />-->
-
-    <item
-        android:id="@+id/lessonsMarkFragment"
-        android:title="Оценки" />
-
     <item
         android:id="@+id/childTasksFragment"
         android:title="Задания" />

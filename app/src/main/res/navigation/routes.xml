@@ -3,28 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/routesChild"
-    app:startDestination="@id/childMainFragment">
+    app:startDestination="@id/mainFragment">
 
     <fragment
-        android:id="@+id/childMainFragment"
-        android:name="com.diplom.kotlindiplom.childFragments.ChildMainFragment"
+        android:id="@+id/mainFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.MainFragment"
         android:label="Главная"
-        tools:layout="@layout/fragment_child_main" />
+        tools:layout="@layout/fragment_main" />
     <fragment
         android:id="@+id/childMyProfileFragment"
         android:name="com.diplom.kotlindiplom.childFragments.ChildMyProfileFragment"
         android:label="fragment_my_profile"
         tools:layout="@layout/fragment_child_my_profile" >
         <action
-            android:id="@+id/action_childMyProfileFragment_to_childMainFragment2"
-            app:destination="@id/childMainFragment"
-            app:popUpTo="@id/childMainFragment" />
+            android:id="@+id/action_childMyProfileFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/childMarksFragment"
-        android:name="com.diplom.kotlindiplom.childFragments.MarksFragment"
-        android:label="fragment_child_marks"
-        tools:layout="@layout/fragment_child_marks" />
     <fragment
         android:id="@+id/childTasksFragment"
         android:name="com.diplom.kotlindiplom.childFragments.ChildTasksFragment"
@@ -50,15 +44,18 @@
         android:label="fragment_weekday"
         tools:layout="@layout/fragment_weekday" >
         <action
-            android:id="@+id/action_weekdayFragment_to_weekdayWithoutDiaryFragment"
-            app:destination="@id/loginDiaryFragment" />
-        <action
             android:id="@+id/action_weekdayFragment_to_sheduleDayFragment"
             app:destination="@id/sheduleDayFragment" />
+        <action
+            android:id="@+id/action_weekdayFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+        <action
+            android:id="@+id/action_weekdayFragment_to_chooseChildSheduleFragment"
+            app:destination="@id/chooseChildSheduleFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginDiaryFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.WeekdayWithoutDiaryFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.WeekdayWithoutDiaryFragment"
         android:label="fragment_weekday_without_diary"
         tools:layout="@layout/fragment_login_diary" >
         <action
@@ -120,7 +117,11 @@
         android:id="@+id/lessonsMarkFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.markFragments.LessonsMarkFragment"
         android:label="fragment_lessons_mark"
-        tools:layout="@layout/fragment_lessons_mark" />
+        tools:layout="@layout/fragment_lessons_mark" >
+        <action
+            android:id="@+id/action_lessonsMarkFragment_to_chooseSemestrElschoolFragment"
+            app:destination="@id/chooseSemestrElschoolFragment" />
+    </fragment>
     <fragment
         android:id="@+id/diaryFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.DiaryFragment"
@@ -130,7 +131,55 @@
             android:id="@+id/action_diaryFragment_to_weekdayFragment"
             app:destination="@id/weekdayFragment" />
         <action
-            android:id="@+id/action_diaryFragment_to_lessonsMarkFragment"
+            android:id="@+id/action_diaryFragment_to_chooseChildMarkFragment"
+            app:destination="@id/chooseChildMarkFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_to_loginDiaryFragment"
+            app:destination="@id/loginDiaryFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_to_chooseChildSheduleFragment"
+            app:destination="@id/chooseChildSheduleFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_to_chooseSemestrElschoolFragment"
+            app:destination="@id/chooseSemestrElschoolFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseChildMarkFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.markFragments.ChooseChildMarkFragment"
+        android:label="fragment_choose_child_mark"
+        tools:layout="@layout/fragment_choose_child_mark" >
+        <action
+            android:id="@+id/action_chooseChildMarkFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+        <action
+            android:id="@+id/action_chooseChildMarkFragment_to_chooseSemestrElschoolFragment"
+            app:destination="@id/chooseSemestrElschoolFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseChildSheduleFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.ChooseChildSheduleFragment"
+        android:label="fragment_choose_child_shedule"
+        tools:layout="@layout/fragment_choose_child_shedule" >
+        <action
+            android:id="@+id/action_chooseChildSheduleFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+        <action
+            android:id="@+id/action_chooseChildSheduleFragment_to_weekdayFragment"
+            app:destination="@id/weekdayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseSemestrElschoolFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.markFragments.ChooseSemestrElschoolFragment"
+        android:label="fragment_choose_semestr_elschool"
+        tools:layout="@layout/fragment_choose_semestr_elschool" >
+        <action
+            android:id="@+id/action_chooseSemestrElschoolFragment_to_chooseChildMarkFragment"
+            app:destination="@id/chooseChildMarkFragment" />
+        <action
+            android:id="@+id/action_chooseSemestrElschoolFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+        <action
+            android:id="@+id/action_chooseSemestrElschoolFragment_to_lessonsMarkFragment"
             app:destination="@id/lessonsMarkFragment" />
     </fragment>
 </navigation>

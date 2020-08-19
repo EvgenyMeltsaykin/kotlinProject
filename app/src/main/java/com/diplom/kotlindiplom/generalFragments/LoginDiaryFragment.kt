@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.generalFragments.sheduleFragments
+package com.diplom.kotlindiplom.generalFragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
