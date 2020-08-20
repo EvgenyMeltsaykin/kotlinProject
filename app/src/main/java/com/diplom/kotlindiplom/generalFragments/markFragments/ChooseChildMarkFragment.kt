@@ -19,6 +19,7 @@ import com.diplom.kotlindiplom.models.FunctionsUI
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_choose_child_mark.*
+import kotlinx.android.synthetic.main.fragment_lessons_mark.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

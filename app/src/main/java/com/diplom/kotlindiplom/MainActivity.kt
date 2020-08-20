@@ -45,8 +45,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val diary = Diary()
-        diary.elschool.getMarks("1588026")
+        //val diary = Diary()
+        //diary.elschool.getMarks("1588026")
         if (role == "child") {
             settingsChild()
         }
@@ -376,6 +376,11 @@ class MainActivity : AppCompatActivity() {
         if (navController?.currentDestination?.id == R.id.parentAllTasksFragment || navController?.currentDestination?.id == R.id.parentNewTaskFragment) {
             navController?.popBackStack()
             setTitle("Задания")
+            return
+        }
+        if (navController?.currentDestination?.id == R.id.detailsMarksFragment) {
+            navController?.popBackStack()
+            setTitle("Предметы")
             return
         }
         if (navController?.currentDestination?.id == R.id.weekdayFragment) {

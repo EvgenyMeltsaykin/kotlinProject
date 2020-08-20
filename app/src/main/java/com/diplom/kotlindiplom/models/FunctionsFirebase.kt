@@ -37,6 +37,84 @@ class FunctionsFirebase {
         ref.child("acceptUid").setValue("")
     }
 
+    fun getLessonsFromMark(firebaseCallBack: FirebaseCallback<List<String>>){
+        getRoleByUid(uidUser!!,object :FirebaseCallback<String>{
+            override fun onComplete(answer: String) {
+                var role = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+                val ref = rootRef.child("users").child(role).child(uidUser).child("diary").child("marks").orderByKey()
+                val lessons = mutableListOf<String>()
+                ref.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()){
+                            p0.children.forEach {lesson->
+                                lesson.children.forEach {info->
+                                    if (info.key.toString() == "lessonName"){
+                                        lessons.add(info.value.toString())
+                                    }
+                                }
+                            }
+                            firebaseCallBack.onComplete(lessons)
+                        }
+                    }
+
+                    override fun onCancelled(p0: DatabaseError) {
+                        return
+                    }
+
+                })
+            }
+        })
+    }
+    fun getDetailsMarks(lessonName: String, numberSemestr:String,firebaseCallBack: FirebaseCallback<Map<String,String>>){
+        getRoleByUid(uidUser!!,object : FirebaseCallback<String>{
+            override fun onComplete(answer: String) {
+                var role = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+                val ref = rootRef.child("users").child(role).child(uidUser).child("diary").child("marks")
+                val detailMarksMap = mutableMapOf<String,String>()
+                ref.addListenerForSingleValueEvent(object :ValueEventListener{
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if(p0.exists()){
+                            p0.children.forEach {lesson->
+                                lesson.children.forEach{info->
+                                    if (info.value.toString() == lessonName){
+                                        lesson.children.forEach {semestr->
+                                            if (semestr.key.toString() == "semestr$numberSemestr"){
+                                                semestr.children.forEach {mark->
+                                                    Log.d("Tag", mark.key)
+                                                    var date = ""
+                                                    var value = ""
+                                                    mark.children.forEach { detailMark->
+                                                        if(detailMark.key.toString() == "date"){
+                                                            date = detailMark.value.toString()
+                                                        }
+                                                        if (detailMark.key.toString() == "value"){
+                                                            value = detailMark.value.toString()
+                                                        }
+                                                    }
+                                                    detailMarksMap[date] = value
+                                                }
+                                                firebaseCallBack.onComplete(detailMarksMap)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            firebaseCallBack.onComplete(detailMarksMap)
+                        }
+                    }
+
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+            }
+        })
+    }
     fun getLesson(fieldsLesson: DataSnapshot): Lesson {
         var lesson = Lesson()
 

@@ -121,6 +121,9 @@
         <action
             android:id="@+id/action_lessonsMarkFragment_to_chooseSemestrElschoolFragment"
             app:destination="@id/chooseSemestrElschoolFragment" />
+        <action
+            android:id="@+id/action_lessonsMarkFragment_to_detailsMarksFragment"
+            app:destination="@id/detailsMarksFragment" />
     </fragment>
     <fragment
         android:id="@+id/diaryFragment"
@@ -180,6 +183,15 @@
             app:destination="@id/diaryFragment" />
         <action
             android:id="@+id/action_chooseSemestrElschoolFragment_to_lessonsMarkFragment"
+            app:destination="@id/lessonsMarkFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsMarksFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.markFragments.DetailsMarksFragment"
+        android:label="fragment_details_marks"
+        tools:layout="@layout/fragment_details_marks" >
+        <action
+            android:id="@+id/action_detailsMarksFragment_to_lessonsMarkFragment"
             app:destination="@id/lessonsMarkFragment" />
     </fragment>
 </navigation>

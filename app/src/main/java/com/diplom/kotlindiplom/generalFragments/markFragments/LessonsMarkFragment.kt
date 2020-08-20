@@ -1,11 +1,21 @@
 package com.diplom.kotlindiplom.generalFragments.markFragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.diplom.kotlindiplom.models.LessonsMarkItem
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.fragment_lessons_mark.*
+import kotlinx.android.synthetic.main.lessons_mark_item.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -19,14 +29,13 @@ private const val ARG_PARAM2 = "param2"
  */
 class LessonsMarkFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var semestrNumber: String = "1"
+    private var semestrName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            semestrNumber = it.getString("semestrNumber","1")
         }
         activity?.title = "Предметы"
     }
@@ -37,6 +46,33 @@ class LessonsMarkFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_lessons_mark, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val adapter = GroupAdapter<ViewHolder>()
+        adapter.clear()
+        val firebase = FunctionsFirebase()
+
+        firebase.getLessonsFromMark(object : FirebaseCallback<List<String>>{
+            override fun onComplete(value: List<String>) {
+                value.forEach {
+                    if (it.isNotBlank() && it.isNotEmpty()){
+                        //Log.d("Tag","Предмет: $it")
+                        adapter.add(LessonsMarkItem(it))
+                    }
+                    lessonsMarkRecyclerView.adapter = adapter
+                }
+
+            }
+        })
+        adapter.setOnItemClickListener { item, view ->
+            val bundle = bundleOf()
+            val lessonName = view.lessonsNameTextView.text.toString()
+            bundle.putString("lessonName",lessonName)
+            bundle.putString("semestrNumber",semestrNumber)
+            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_lessonsMarkFragment_to_detailsMarksFragment,bundle)
+        }
     }
 
     companion object {

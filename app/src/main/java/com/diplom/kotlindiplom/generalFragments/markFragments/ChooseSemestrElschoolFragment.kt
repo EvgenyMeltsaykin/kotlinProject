@@ -55,7 +55,7 @@ class ChooseSemestrElschoolFragment : Fragment() {
             navigateToLessons(requireActivity(),bundle)
         }
         thirdSemestrButton.setOnClickListener {
-            bundle.putString("semestrNumber","2")
+            bundle.putString("semestrNumber","3")
             navigateToLessons(requireActivity(),bundle)
         }
     }
