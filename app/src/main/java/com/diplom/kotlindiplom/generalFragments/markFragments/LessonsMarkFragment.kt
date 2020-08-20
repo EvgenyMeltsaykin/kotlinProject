@@ -58,7 +58,6 @@ class LessonsMarkFragment : Fragment() {
             override fun onComplete(value: List<String>) {
                 value.forEach {
                     if (it.isNotBlank() && it.isNotEmpty()){
-                        //Log.d("Tag","Предмет: $it")
                         adapter.add(LessonsMarkItem(it))
                     }
                     lessonsMarkRecyclerView.adapter = adapter

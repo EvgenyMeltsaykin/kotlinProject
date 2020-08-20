@@ -1,6 +1,7 @@
 package com.diplom.kotlindiplom.diaries
 
 import android.content.Context
+import android.icu.util.LocaleData
 import android.os.Build
 import android.util.Log
 import android.widget.ProgressBar
@@ -23,6 +24,9 @@ import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.w3c.dom.Document
 import java.io.IOException
+import java.time.LocalDate
+import java.util.*
+import kotlin.collections.HashMap
 
 class Elschool {
     val urlLogin = "https://elschool.ru/Logon/Index"
@@ -64,7 +68,6 @@ class Elschool {
             title = parseDoc.title()
             if (title == "Личный кабинет") {
                 val id = parseDoc.text().substringAfter("ID ").substringBefore(" ")
-                Log.d("Tag",id)
                 return true
             }else{
                 return false
@@ -273,8 +276,6 @@ class Elschool {
                                     var id = ""
                                     urls.forEach {
                                         id =it.attr("href").substringAfterLast("/")
-                                        Log.d("Tag",nameChild)
-                                        Log.d("Tag",id)
                                     }
                                     val childForElschool = ChildForElschool(nameChild,id)
                                     children.add(childForElschool)
@@ -332,7 +333,6 @@ class Elschool {
             ).show()
             return
         }
-        Log.d("Tag",id)
         Toast.makeText(context, "Подождите, идет загрузка расписания", Toast.LENGTH_SHORT).show()
         progressBar.isVisible = true
         hideButtons()
@@ -366,79 +366,106 @@ class Elschool {
             })
     }
 
-    @ExperimentalStdlibApi
-    fun getMarks(idChild :String = ""){
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getMarksFromDiary(idChild: String, login: String, password: String, firebaseCallback: FirebaseCallback<Boolean>){
         val firebase = FunctionsFirebase()
+        GlobalScope.launch(Dispatchers.IO) {
+            val cookies: HashMap<String, String>? = loginReturnCookies(
+                login,
+                password
+            )
 
-        firebase.getLoginAndPasswordAndUrlDiary(firebase.uidUser!!,object : FirebaseCallback<Map<String,String>>{
-            override fun onComplete(value: Map<String, String>) {
-                GlobalScope.launch(Dispatchers.IO) {
-                    val cookies: HashMap<String, String>? = loginReturnCookies(
-                        value["login"],
-                        value["password"]
-                    )
-
-                    try {
-                        val document = Jsoup.connect(urlDiary)
+            try {
+                val document = Jsoup.connect(urlDiary)
+                    .cookies(cookies)
+                    .get()
+                val sheduleHtml: org.jsoup.nodes.Document
+                if (idChild.isEmpty()) {
+                    sheduleHtml =
+                        Jsoup.connect(document.baseUri())
                             .cookies(cookies)
                             .get()
-                        val sheduleHtml: org.jsoup.nodes.Document
-                        if (idChild.isEmpty()) {
-                            sheduleHtml =
-                                Jsoup.connect(document.baseUri())
-                                    .cookies(cookies)
-                                    .get()
-                        } else {
-                            val urlWithoutId = document.baseUri().substringBeforeLast("=")
-                            sheduleHtml =
-                                Jsoup.connect("${urlWithoutId}=$idChild")
-                                    .cookies(cookies)
-                                    .get()
-                        }
-                        val gradeUrl = sheduleHtml.baseUri().replace("details","gradesandabsences")
-                        val gradeHtml = Jsoup.connect(gradeUrl)
+                } else {
+                    val urlWithoutId = document.baseUri().substringBeforeLast("=")
+                    sheduleHtml =
+                        Jsoup.connect("${urlWithoutId}=$idChild")
                             .cookies(cookies)
                             .get()
-                        val gradeTable = gradeHtml.select("div[class=DivForGradesAndAbsencesTable]").select("tbody")
-                        var lessonCount = 1
-                        gradeTable.forEach {
-                            var lessonHtml = it.select("tr[lesson=\"$lessonCount\"]")
-                            while (lessonHtml.isNotEmpty()){
-                                lessonHtml = it.select("tr[lesson=\"$lessonCount\"]")
-                                lessonHtml.forEach {
-                                    val lessonName = it.select("td[class=gradesaa-lesson]").text()
-                                    val gradesMark = it.select("td[class=gradesaa-marks]")
-                                    var semestrCount = 1
-                                    Log.d("Tag",lessonName)
-                                    gradesMark.forEach {marksHtml->
-                                        Log.d("Tag","Semestr $semestrCount")
-                                        val marks = marksHtml.select("span[class=mark-span]")
-                                        //Log.d("Tag",marks.text())
-                                        var markCount = 1
-                                        marks.forEach {
-                                            if(it.text().isNotEmpty()){
-                                                Log.d("Tag","${it.text()} ${it.attr("data-popover-content").substringBefore("<p>").substringAfterLast(" ")}")
-                                                val value = it.text()
-                                                val date = it.attr("data-popover-content").substringBefore("<p>").substringAfterLast(" ")
-                                                firebase.setFieldDiary(firebase.uidUser!!,"marks/lesson$lessonCount/lessonName",lessonName)
-                                                firebase.setFieldDiary(firebase.uidUser!!,"marks/lesson$lessonCount/semestr$semestrCount/mark$markCount/date",date)
-                                                firebase.setFieldDiary(firebase.uidUser!!,"marks/lesson$lessonCount/semestr$semestrCount/mark$markCount/value",value)
-                                                markCount++
-                                            }
-
-                                        }
-                                        semestrCount++
+                }
+                val gradeUrl = sheduleHtml.baseUri().replace("details","gradesandabsences")
+                val gradeHtml = Jsoup.connect(gradeUrl)
+                    .cookies(cookies)
+                    .get()
+                val gradeTable = gradeHtml.select("div[class=DivForGradesAndAbsencesTable]").select("tbody")
+                var lessonCount = 1
+                gradeTable.forEach {
+                    var lessonHtml = it.select("tr[lesson=\"$lessonCount\"]")
+                    while (lessonHtml.isNotEmpty()){
+                        lessonHtml = it.select("tr[lesson=\"$lessonCount\"]")
+                        lessonHtml.forEach {
+                            val lessonName = it.select("td[class=gradesaa-lesson]").text()
+                            val gradesMark = it.select("td[class=gradesaa-marks]")
+                            var semestrCount = 1
+                            gradesMark.forEach {marksHtml->
+                                val marks = marksHtml.select("span[class=mark-span]")
+                                //Log.d("Tag",marks.text())
+                                var markCount = 1
+                                marks.forEach {
+                                    if(it.text().isNotEmpty()){
+                                        val value = it.text()
+                                        val date = it.attr("data-popover-content").substringBefore("<p>").substringAfterLast(" ")
+                                        firebase.setFieldDiary(firebase.uidUser!!,"marks/dateUpdate",LocalDate.now().toString())
+                                        firebase.setFieldDiary(firebase.uidUser!!,"marks/lesson$lessonCount/lessonName",lessonName)
+                                        firebase.setFieldDiary(firebase.uidUser!!,"marks/lesson$lessonCount/semestr$semestrCount/mark$markCount/date",date)
+                                        firebase.setFieldDiary(firebase.uidUser!!,"marks/lesson$lessonCount/semestr$semestrCount/mark$markCount/value",value)
+                                        markCount++
                                     }
+
                                 }
-                                lessonCount++
+                                semestrCount++
                             }
                         }
-
-                    }catch (e:IOException){
-                        e.printStackTrace()
+                        lessonCount++
                     }
-
+                    firebaseCallback.onComplete(true)
                 }
+            }catch (e:IOException){
+                e.printStackTrace()
+                firebaseCallback.onComplete(false)
+            }
+
+        }
+    }
+    @ExperimentalStdlibApi
+    fun getMarks(idChild :String = "", context: Context,progressBar: ProgressBar, hideButtons: () -> Unit,showButtons: () -> Unit){
+        val firebase = FunctionsFirebase()
+        Toast.makeText(context, "Подождите, идет загрузка оценок", Toast.LENGTH_SHORT).show()
+        progressBar.isVisible = true
+        hideButtons()
+        firebase.getLoginAndPasswordAndUrlDiary(firebase.uidUser!!,object : FirebaseCallback<Map<String,String>>{
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onComplete(value: Map<String, String>) {
+                getMarksFromDiary(idChild,value["login"]!!,value["password"]!!,object :FirebaseCallback<Boolean>{
+                    override fun onComplete(value: Boolean) {
+                        GlobalScope.launch(Dispatchers.Main) {
+                            if (value) {
+                                Toast.makeText(
+                                    context,
+                                    "Оценки загружены успешно",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "При загрузке оценок произошла ошибка",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            progressBar.isVisible = false
+                            showButtons()
+                        }
+                    }
+                })
             }
         })
     }

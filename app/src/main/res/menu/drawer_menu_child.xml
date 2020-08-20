@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/childMainFragment"
+        android:id="@+id/mainFragment"
         android:title="Главная"
         android:icon="@color/colorPrimaryDark"/>
     <item

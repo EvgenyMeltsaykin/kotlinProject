@@ -2,14 +2,25 @@ package com.diplom.kotlindiplom.generalFragments.markFragments
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.diaries.Diary
+import com.diplom.kotlindiplom.models.FunctionsFirebase
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_choose_semestr_elschool.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,9 +54,44 @@ class ChooseSemestrElschoolFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_choose_semestr_elschool, container, false)
     }
 
+    @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val bundle = bundleOf()
+        val firebase = FunctionsFirebase()
+        progressBar.isVisible = false
+        val hideButtons = {
+            firstSemestrButton.isVisible = false
+            secondSemestrButton.isVisible = false
+            thirdSemestrButton.isVisible = false
+        }
+        val showButtons = {
+            firstSemestrButton.isVisible = true
+            secondSemestrButton.isVisible = true
+            thirdSemestrButton.isVisible = true
+        }
+        firebase.getFieldMarks("dateUpdate",object :FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                if (value.isEmpty()){
+                    firebase.getFieldDiary(firebase.uidUser!!,"url",object :FirebaseCallback<String>{
+                        override fun onComplete(url: String) {
+                            firebase.getFieldDiary(firebase.uidUser!!,"idChild",object :FirebaseCallback<String>{
+                                override fun onComplete(value: String) {
+                                    val diary = Diary()
+                                    when(url) {
+                                        diary.elschool.url -> {
+                                            diary.elschool.getMarks(value,requireContext(),progressBar,hideButtons, showButtons)
+                                        }
+                                    }
+
+                                }
+                            })
+
+                        }
+                    })
+                }
+            }
+        })
         firstSemestrButton.setOnClickListener {
             bundle.putString("semestrNumber","1")
             navigateToLessons(requireActivity(),bundle)

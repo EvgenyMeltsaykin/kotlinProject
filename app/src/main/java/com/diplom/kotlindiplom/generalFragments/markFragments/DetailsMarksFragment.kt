@@ -57,7 +57,6 @@ class DetailsMarksFragment : Fragment() {
         firebase.getDetailsMarks(lessonName,semestrNumber,object : FirebaseCallback<Map<String,String>>{
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onComplete(value: Map<String, String>) {
-                Log.d("Tag",value.toString())
                 val middleMark = getMiddleMark(value)
                 middleMarkTextView.text = "Средний балл: ${DoubleRounder.round(middleMark.toDouble(),2)}"
                 val detailMark = mutableListOf<String>()

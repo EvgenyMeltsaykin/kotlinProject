@@ -36,7 +36,35 @@ class FunctionsFirebase {
         ref.child("acceptName").setValue("")
         ref.child("acceptUid").setValue("")
     }
+    fun getFieldMarks(field: String,firebaseCallBack: FirebaseCallback<String>){
+        getRoleByUid(uidUser!!,object :FirebaseCallback<String> {
+            override fun onComplete(answer: String) {
+                var role = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+                val ref =
+                    rootRef.child("users").child(role).child(uidUser).child("diary").child("marks")
+                val value = ""
+                ref.keepSynced(true)
+                ref.addListenerForSingleValueEvent(object :ValueEventListener{
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if(p0.exists()){
+                            p0.children.forEach {
+                                if (it.key.toString() == field){
+                                    firebaseCallBack.onComplete(it.value.toString())
+                                }
+                            }
+                        }
+                    }
 
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+            }
+        })
+    }
     fun getLessonsFromMark(firebaseCallBack: FirebaseCallback<List<String>>){
         getRoleByUid(uidUser!!,object :FirebaseCallback<String>{
             override fun onComplete(answer: String) {
@@ -84,7 +112,6 @@ class FunctionsFirebase {
                                         lesson.children.forEach {semestr->
                                             if (semestr.key.toString() == "semestr$numberSemestr"){
                                                 semestr.children.forEach {mark->
-                                                    Log.d("Tag", mark.key)
                                                     var date = ""
                                                     var value = ""
                                                     mark.children.forEach { detailMark->
@@ -145,13 +172,17 @@ class FunctionsFirebase {
         setFieldUserDatabase(uidUser!!, "diary/login", "")
         setFieldUserDatabase(uidUser!!, "diary/password", "")
         setFieldUserDatabase(uidUser!!, "diary/url", "")
+        setFieldUserDatabase(uidUser!!, "diary/idChild", "")
+        setFieldUserDatabase(uidUser!!, "diary/marks/dateUpdate", "")
         setFieldUserDatabase(uidUser!!, "diary/shedule/weekUpdate", 0)
     }
     fun deleteDiary() {
+        setFieldUserDatabase(uidUser!!, "diary/idChild", "")
         setFieldUserDatabase(uidUser!!, "diary/login", "")
         setFieldUserDatabase(uidUser!!, "diary/password", "")
         setFieldUserDatabase(uidUser!!, "diary/url", "")
         setFieldUserDatabase(uidUser!!, "diary/shedule", "")
+        setFieldUserDatabase(uidUser!!, "diary/marks/dateUpdate", "")
         setFieldUserDatabase(uidUser!!, "diary/shedule/weekUpdate", 0)
     }
     fun setFieldDiary(uid:String,field: String, value: Any){

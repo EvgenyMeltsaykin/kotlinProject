@@ -45,8 +45,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //val diary = Diary()
-        //diary.elschool.getMarks("1588026")
         if (role == "child") {
             settingsChild()
         }
