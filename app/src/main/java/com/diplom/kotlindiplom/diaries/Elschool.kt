@@ -13,6 +13,7 @@ import com.diplom.kotlindiplom.models.ChildForElschool
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Lesson
 import com.diplom.kotlindiplom.models.FunctionsNetwork
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -32,26 +33,8 @@ class Elschool {
     val urlLogin = "https://elschool.ru/Logon/Index"
     val urlDiary = "https://elschool.ru/users/diaries"
     val cabinetText = "каб."
+    val keyCookie = "JWToken"
     val url = "elschool.ru"
-    fun loginReturnCookies(login: String?, password: String?): HashMap<String, String>? {
-        var title = ""
-        try {
-            val document = Jsoup.connect(urlLogin)
-                .data("login", login)
-                .data("password", password)
-                .data("GoogleAuthCode", "")
-                .method(Connection.Method.POST)
-                .userAgent("mozilla")
-                .execute()
-            val parseDoc = document.parse()
-            title = parseDoc.title()
-            if (title == "Личный кабинет") return document.cookies() as HashMap<String, String>
-            else return null
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return null
-    }
     fun login(login: String, password: String): Boolean {
         val cookies: HashMap<String, String> = HashMap()
         var title = ""
@@ -68,8 +51,15 @@ class Elschool {
             title = parseDoc.title()
             if (title == "Личный кабинет") {
                 val id = parseDoc.text().substringAfter("ID ").substringBefore(" ")
+                val firebase = FunctionsFirebase()
+                firebase.setFieldDiary(firebase.uidUser!!, "idChild", id)
+                firebase.setFieldDiary(
+                    firebase.uidUser!!,
+                    "cookie",
+                    document.cookies().get(keyCookie).toString()
+                )
                 return true
-            }else{
+            } else {
                 return false
             }
         } catch (e: IOException) {
@@ -77,6 +67,7 @@ class Elschool {
         }
         return false
     }
+
     fun deleteShedule() {
         val firebase = FunctionsFirebase()
         firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String> {
@@ -96,6 +87,7 @@ class Elschool {
             }
         })
     }
+
     @ExperimentalStdlibApi
     fun getShedule(
         year: Int,
@@ -105,16 +97,13 @@ class Elschool {
     ) {
         val firebase = FunctionsFirebase()
         val shedule = mutableMapOf<String, List<Lesson>>()
-        firebase.getLoginAndPasswordAndUrlDiary(firebase.uidUser!!,
-            object : FirebaseCallback<Map<String, String>> {
+        firebase.getFieldDiary(firebase.uidUser!!, "cookie",
+            object : FirebaseCallback<String> {
                 @RequiresApi(Build.VERSION_CODES.N)
-                override fun onComplete(value: Map<String, String>) {
+                override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
-
-                        val cookies: HashMap<String, String>? = loginReturnCookies(
-                            value["login"],
-                            value["password"]
-                        )
+                        var cookies = hashMapOf<String, String>()
+                        cookies[keyCookie] = value
                         if (cookies == null) {
                             firebaseCallback.onComplete(shedule)
                             return@launch
@@ -124,15 +113,17 @@ class Elschool {
                                 .cookies(cookies)
                                 .get()
                             val sheduleHtml: org.jsoup.nodes.Document
-                            if (id.isEmpty()){
-                                sheduleHtml = Jsoup.connect("${document.baseUri()}&year=$year&week=$week&log=false")
-                                    .cookies(cookies)
-                                    .get()
-                            }else{
+                            if (id.isEmpty()) {
+                                sheduleHtml =
+                                    Jsoup.connect("${document.baseUri()}&year=$year&week=$week&log=false")
+                                        .cookies(cookies)
+                                        .get()
+                            } else {
                                 val urlWithoutId = document.baseUri().substringBeforeLast("=")
-                                sheduleHtml = Jsoup.connect("${urlWithoutId}=$id&year=$year&week=$week&log=false")
-                                    .cookies(cookies)
-                                    .get()
+                                sheduleHtml =
+                                    Jsoup.connect("${urlWithoutId}=$id&year=$year&week=$week&log=false")
+                                        .cookies(cookies)
+                                        .get()
                             }
                             val dayOfWeekHtml = sheduleHtml.select("tbody")
                             dayOfWeekHtml.forEach { it ->
@@ -216,58 +207,55 @@ class Elschool {
             })
 
     }
-    fun getChildrenFromFirebase(firebaseCallback: FirebaseCallback<List<ChildForElschool>>){
+
+    fun getChildrenFromFirebase(firebaseCallback: FirebaseCallback<List<ChildForElschool>>) {
         val firebase = FunctionsFirebase()
         val ref = firebase.parentRef.child(firebase.uidUser!!).child("diary").child("children")
         val children = mutableListOf<ChildForElschool>()
-        ref.addListenerForSingleValueEvent(object : ValueEventListener{
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
+                if (p0.exists()) {
                     p0.children.forEach {
                         val childForElschool = ChildForElschool()
-                        it.children.forEach{ childInfo->
-                            if (childInfo.key.toString() == "id"){
+                        it.children.forEach { childInfo ->
+                            if (childInfo.key.toString() == "id") {
                                 childForElschool.id = childInfo.value.toString()
                             }
-                            if (childInfo.key.toString() == "name"){
+                            if (childInfo.key.toString() == "name") {
                                 childForElschool.name = childInfo.value.toString()
                             }
                         }
                         children.add(childForElschool)
                     }
                     firebaseCallback.onComplete(children)
-                }else{
+                } else {
                     firebaseCallback.onComplete(children)
                 }
             }
 
         })
     }
+
     @ExperimentalStdlibApi
-    fun writeChildrenDiaryInFirebase(firebaseCallback: FirebaseCallback<Boolean>){
+    fun writeChildrenDiaryInFirebase(firebaseCallback: FirebaseCallback<Boolean>) {
         val firebase = FunctionsFirebase()
         val children = mutableListOf<ChildForElschool>()
-        firebase.getLoginAndPasswordAndUrlDiary(firebase.uidUser!!,
-            object : FirebaseCallback<Map<String, String>> {
-                override fun onComplete(value: Map<String, String>) {
+        firebase.getFieldDiary(firebase.uidUser!!, "cookie",
+            object : FirebaseCallback<String> {
+                override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
-                        val cookies: HashMap<String, String>? = loginReturnCookies(
-                            value["login"],
-                            value["password"]
-                        )
-                        if (cookies == null) {
-                            firebaseCallback.onComplete(false)
-                            return@launch
-                        }
+                        var cookies = hashMapOf<String, String>()
+                        cookies[keyCookie] = value
                         try {
                             val document = Jsoup.connect("https://$url")
                                 .cookies(cookies)
                                 .get()
-                            val childBlockHtml = document.select("div[class=d-flex align-items-center]")
+                            val childBlockHtml =
+                                document.select("div[class=d-flex align-items-center]")
                             childBlockHtml.forEach {
                                 val nameChildHtml = it.select("p[class=flex-grow-1]")
                                 nameChildHtml.forEach {
@@ -275,21 +263,29 @@ class Elschool {
                                     val urls = it.getElementsByTag("a")
                                     var id = ""
                                     urls.forEach {
-                                        id =it.attr("href").substringAfterLast("/")
+                                        id = it.attr("href").substringAfterLast("/")
                                     }
-                                    val childForElschool = ChildForElschool(nameChild,id)
+                                    val childForElschool = ChildForElschool(nameChild, id)
                                     children.add(childForElschool)
                                 }
                             }
-                            firebase.setFieldDiary(firebase.uidUser!!,"children","")
+                            firebase.setFieldDiary(firebase.uidUser!!, "children", "")
                             var i = 0
                             children.forEach {
                                 i++
-                                firebase.setFieldDiary(firebase.uidUser!!,"children/child$i/id",it.id)
-                                firebase.setFieldDiary(firebase.uidUser!!,"children/child$i/name",it.name)
+                                firebase.setFieldDiary(
+                                    firebase.uidUser!!,
+                                    "children/child$i/id",
+                                    it.id
+                                )
+                                firebase.setFieldDiary(
+                                    firebase.uidUser!!,
+                                    "children/child$i/name",
+                                    it.name
+                                )
                             }
                             firebaseCallback.onComplete(true)
-                        }catch (e:IOException){
+                        } catch (e: IOException) {
                             firebaseCallback.onComplete(false)
                             e.printStackTrace()
                         }
@@ -297,6 +293,7 @@ class Elschool {
                 }
             })
     }
+
     private fun getTime(cabinetAndTime: String?): String {
         if (cabinetAndTime?.substringBefore(" ") == cabinetText) {
             //example каб. 119 10:15 - 10:55
@@ -306,6 +303,7 @@ class Elschool {
         }
         return ""
     }
+
     private fun getCabinet(cabinetAndTime: String?): String {
         if (cabinetAndTime?.substringBefore(" ") == cabinetText) {
             //example каб. 119 10:15 - 10:55
@@ -314,9 +312,10 @@ class Elschool {
             return ""
         }
     }
+
     @ExperimentalStdlibApi
     fun updateShedule(
-        id:String = "",
+        id: String = "",
         selectedYear: Int,
         selectedWeek: Int,
         context: Context,
@@ -367,106 +366,196 @@ class Elschool {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getMarksFromDiary(idChild: String, login: String, password: String, firebaseCallback: FirebaseCallback<Boolean>){
+    fun getMarksFromDiary(
+        idChild: String,
+        login: String,
+        password: String,
+        firebaseCallback: FirebaseCallback<Boolean>
+    ) {
         val firebase = FunctionsFirebase()
+        firebase.setFieldDiary(firebase.uidUser!!, "marks", "")
         GlobalScope.launch(Dispatchers.IO) {
-            val cookies: HashMap<String, String>? = loginReturnCookies(
-                login,
-                password
-            )
-
-            try {
-                val document = Jsoup.connect(urlDiary)
-                    .cookies(cookies)
-                    .get()
-                val sheduleHtml: org.jsoup.nodes.Document
-                if (idChild.isEmpty()) {
-                    sheduleHtml =
-                        Jsoup.connect(document.baseUri())
-                            .cookies(cookies)
-                            .get()
-                } else {
-                    val urlWithoutId = document.baseUri().substringBeforeLast("=")
-                    sheduleHtml =
-                        Jsoup.connect("${urlWithoutId}=$idChild")
-                            .cookies(cookies)
-                            .get()
-                }
-                val gradeUrl = sheduleHtml.baseUri().replace("details","gradesandabsences")
-                val gradeHtml = Jsoup.connect(gradeUrl)
-                    .cookies(cookies)
-                    .get()
-                val gradeTable = gradeHtml.select("div[class=DivForGradesAndAbsencesTable]").select("tbody")
-                var lessonCount = 1
-                gradeTable.forEach {
-                    var lessonHtml = it.select("tr[lesson=\"$lessonCount\"]")
-                    while (lessonHtml.isNotEmpty()){
-                        lessonHtml = it.select("tr[lesson=\"$lessonCount\"]")
-                        lessonHtml.forEach {
-                            val lessonName = it.select("td[class=gradesaa-lesson]").text()
-                            val gradesMark = it.select("td[class=gradesaa-marks]")
-                            var semestrCount = 1
-                            gradesMark.forEach {marksHtml->
-                                val marks = marksHtml.select("span[class=mark-span]")
-                                //Log.d("Tag",marks.text())
-                                var markCount = 1
-                                marks.forEach {
-                                    if(it.text().isNotEmpty()){
-                                        val value = it.text()
-                                        val date = it.attr("data-popover-content").substringBefore("<p>").substringAfterLast(" ")
-                                        firebase.setFieldDiary(firebase.uidUser!!,"marks/dateUpdate",LocalDate.now().toString())
-                                        firebase.setFieldDiary(firebase.uidUser!!,"marks/lesson$lessonCount/lessonName",lessonName)
-                                        firebase.setFieldDiary(firebase.uidUser!!,"marks/lesson$lessonCount/semestr$semestrCount/mark$markCount/date",date)
-                                        firebase.setFieldDiary(firebase.uidUser!!,"marks/lesson$lessonCount/semestr$semestrCount/mark$markCount/value",value)
-                                        markCount++
-                                    }
-
-                                }
-                                semestrCount++
+            firebase.getFieldDiary(firebase.uidUser!!, "cookie", object : FirebaseCallback<String> {
+                override fun onComplete(value: String) {
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val cookies = hashMapOf<String, String>()
+                        cookies[keyCookie] = value
+                        try {
+                            val document = Jsoup.connect(urlDiary)
+                                .cookies(cookies)
+                                .get()
+                            val sheduleHtml: org.jsoup.nodes.Document
+                            if (idChild.isEmpty()) {
+                                sheduleHtml =
+                                    Jsoup.connect(document.baseUri())
+                                        .cookies(cookies)
+                                        .get()
+                            } else {
+                                val urlWithoutId = document.baseUri().substringBeforeLast("=")
+                                sheduleHtml =
+                                    Jsoup.connect("${urlWithoutId}=$idChild")
+                                        .cookies(cookies)
+                                        .get()
                             }
+                            val gradeUrl =
+                                sheduleHtml.baseUri().replace("details", "gradesandabsences")
+                            val gradeHtml = Jsoup.connect(gradeUrl)
+                                .cookies(cookies)
+                                .get()
+                            val gradeTable =
+                                gradeHtml.select("div[class=DivForGradesAndAbsencesTable]")
+                                    .select("tbody")
+                            var lessonCount = 1
+                            gradeTable.forEach {
+                                var i = 0
+                                //var lessonHtml = it.select("tr[lesson=\"$lessonCount\"]")
+                                do {
+                                    i++
+                                    val lessonHtml = it.select("tr[lesson=\"$lessonCount\"]")
+                                    lessonHtml.forEach {
+                                        val lessonName =
+                                            it.select("td[class=gradesaa-lesson]").text()
+                                        val gradesMark =
+                                            it.select("td[class=gradesaa-marks]")
+                                        firebase.setFieldDiary(
+                                            firebase.uidUser,
+                                            "marks/lesson$lessonCount/lessonName",
+                                            lessonName
+                                        )
+                                        var semestrCount = 1
+                                        gradesMark.forEach { marksHtml ->
+                                            val marks =
+                                                marksHtml.select("span[class=mark-span]")
+                                            var markCount = 1
+                                            marks.forEach {
+                                                if (it.text().isNotEmpty()) {
+                                                    val mark = it.text()
+                                                    val date =
+                                                        it.attr("data-popover-content")
+                                                            .substringBefore("<p>")
+                                                            .substringAfterLast(" ")
+                                                    firebase.setFieldDiary(
+                                                        firebase.uidUser,
+                                                        "marks/dateUpdate",
+                                                        LocalDate.now().toString()
+                                                    )
+                                                    firebase.setFieldDiary(
+                                                        firebase.uidUser,
+                                                        "marks/lesson$lessonCount/semestr$semestrCount/mark$markCount/date",
+                                                        date
+                                                    )
+                                                    firebase.setFieldDiary(
+                                                        firebase.uidUser,
+                                                        "marks/lesson$lessonCount/semestr$semestrCount/mark$markCount/value",
+                                                        mark
+                                                    )
+                                                    markCount++
+                                                }
+                                            }
+                                            semestrCount++
+                                        }
+
+                                    }
+                                    lessonCount++
+                                } while (lessonHtml.isNotEmpty())
+                                firebaseCallback.onComplete(true)
+                                return@launch
+                            }
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                            firebaseCallback.onComplete(false)
                         }
-                        lessonCount++
                     }
-                    firebaseCallback.onComplete(true)
+
                 }
-            }catch (e:IOException){
-                e.printStackTrace()
-                firebaseCallback.onComplete(false)
-            }
+            })
+
 
         }
     }
+
     @ExperimentalStdlibApi
-    fun getMarks(idChild :String = "", context: Context,progressBar: ProgressBar, hideButtons: () -> Unit,showButtons: () -> Unit){
+    fun getMarks(
+        idChild: String = "",
+        context: Context,
+        progressBar: ProgressBar,
+        hideButtons: () -> Unit,
+        showButtons: () -> Unit
+    ) {
         val firebase = FunctionsFirebase()
         Toast.makeText(context, "Подождите, идет загрузка оценок", Toast.LENGTH_SHORT).show()
         progressBar.isVisible = true
         hideButtons()
-        firebase.getLoginAndPasswordAndUrlDiary(firebase.uidUser!!,object : FirebaseCallback<Map<String,String>>{
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onComplete(value: Map<String, String>) {
-                getMarksFromDiary(idChild,value["login"]!!,value["password"]!!,object :FirebaseCallback<Boolean>{
-                    override fun onComplete(value: Boolean) {
-                        GlobalScope.launch(Dispatchers.Main) {
-                            if (value) {
-                                Toast.makeText(
-                                    context,
-                                    "Оценки загружены успешно",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "При загрузке оценок произошла ошибка",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+        firebase.getLoginAndPasswordAndUrlDiary(firebase.uidUser!!,
+            object : FirebaseCallback<Map<String, String>> {
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun onComplete(value: Map<String, String>) {
+                    getMarksFromDiary(
+                        idChild,
+                        value["login"]!!,
+                        value["password"]!!,
+                        object : FirebaseCallback<Boolean> {
+                            override fun onComplete(end: Boolean) {
+                                GlobalScope.launch(Dispatchers.Main) {
+                                    firebase.getRoleByUid(firebase.uidUser,object : FirebaseCallback<String>{
+                                        override fun onComplete(answer: String) {
+                                            var role = ""
+                                            if (answer == "child") role = "children"
+                                            else role = "parents"
+
+                                            val ref = firebase.rootRef.child("users").child(role).child(firebase.uidUser).child("diary").child("marks")
+                                            ref.addChildEventListener(object : ChildEventListener{
+                                                override fun onChildAdded(
+                                                    p0: DataSnapshot,
+                                                    p1: String?
+                                                ) {
+                                                    if (end) {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Оценки загружены успешно",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    } else {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "При загрузке оценок произошла ошибка",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                                    progressBar.isVisible = false
+                                                    showButtons()
+                                                }
+
+                                                override fun onChildChanged(
+                                                    p0: DataSnapshot,
+                                                    p1: String?
+                                                ) {
+                                                    return
+                                                }
+
+                                                override fun onChildRemoved(p0: DataSnapshot) {
+                                                    return
+                                                }
+
+                                                override fun onChildMoved(
+                                                    p0: DataSnapshot,
+                                                    p1: String?
+                                                ) {
+                                                    return
+                                                }
+
+                                                override fun onCancelled(p0: DatabaseError) {
+                                                    return
+                                                }
+
+                                            })
+                                        }
+                                    })
+
+                                }
                             }
-                            progressBar.isVisible = false
-                            showButtons()
-                        }
-                    }
-                })
-            }
-        })
+                        })
+                }
+            })
     }
 }

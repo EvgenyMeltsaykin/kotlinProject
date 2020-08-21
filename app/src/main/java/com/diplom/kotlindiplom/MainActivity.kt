@@ -23,7 +23,6 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
-import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.*
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -35,10 +34,14 @@ import kotlinx.android.synthetic.main.accept_parent.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.header.view.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ActivityCallback {
     private var drawer: DrawerLayout? = null
     private var back_pressed: Long = 0
-    var role = ""
+    private var role = ""
+    override fun getRole(): String {
+        return intent.getStringExtra("role")
+    }
+
     @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         role = intent.getStringExtra("role")
@@ -53,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
     fun settingsParent(){
         navView.inflateMenu(R.menu.drawer_menu_parent)
         setupDrawerAndToolbar()

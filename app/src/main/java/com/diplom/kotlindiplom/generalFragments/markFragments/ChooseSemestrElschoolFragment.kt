@@ -1,13 +1,17 @@
 package com.diplom.kotlindiplom.generalFragments.markFragments
 
 import android.app.Activity
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
@@ -21,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,14 +39,13 @@ private const val ARG_PARAM2 = "param2"
  */
 class ChooseSemestrElschoolFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    private var idChild: String = ""
     private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            idChild = it.getString("idChild","")
         }
         activity?.title = "Выберите триместр"
     }
@@ -60,38 +64,25 @@ class ChooseSemestrElschoolFragment : Fragment() {
         val bundle = bundleOf()
         val firebase = FunctionsFirebase()
         progressBar.isVisible = false
-        val hideButtons = {
-            firstSemestrButton.isVisible = false
-            secondSemestrButton.isVisible = false
-            thirdSemestrButton.isVisible = false
-        }
-        val showButtons = {
-            firstSemestrButton.isVisible = true
-            secondSemestrButton.isVisible = true
-            thirdSemestrButton.isVisible = true
-        }
+        val firstSemestrButton = view.findViewById<Button>(R.id.firstSemestrButton)
+        val secondSemestrButton = view.findViewById<Button>(R.id.secondSemestrButton)
+        val thirdSemestrButton = view.findViewById<Button>(R.id.thirdSemestrButton)
+        val refreshMarkButton = view.findViewById<Button>(R.id.refreshMarkButton)
+        val dateUpdateTextView = view.findViewById<TextView>(R.id.dateUpdateTextView)
         firebase.getFieldMarks("dateUpdate",object :FirebaseCallback<String>{
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onComplete(value: String) {
-                if (value.isEmpty()){
-                    firebase.getFieldDiary(firebase.uidUser!!,"url",object :FirebaseCallback<String>{
-                        override fun onComplete(url: String) {
-                            firebase.getFieldDiary(firebase.uidUser!!,"idChild",object :FirebaseCallback<String>{
-                                override fun onComplete(value: String) {
-                                    val diary = Diary()
-                                    when(url) {
-                                        diary.elschool.url -> {
-                                            diary.elschool.getMarks(value,requireContext(),progressBar,hideButtons, showButtons)
-                                        }
-                                    }
-
-                                }
-                            })
-
-                        }
-                    })
+                dateUpdateTextView.text = "Дата обновления: $value"
+                if (value.isEmpty() || idChild.isNotEmpty()){
+                    dateUpdateTextView.text = "Дата обновления: ${LocalDate.now()}"
+                    refreshMarks()
                 }
             }
         })
+
+        refreshMarkButton.setOnClickListener {
+            refreshMarks()
+        }
         firstSemestrButton.setOnClickListener {
             bundle.putString("semestrNumber","1")
             navigateToLessons(requireActivity(),bundle)
@@ -104,6 +95,49 @@ class ChooseSemestrElschoolFragment : Fragment() {
             bundle.putString("semestrNumber","3")
             navigateToLessons(requireActivity(),bundle)
         }
+    }
+    @ExperimentalStdlibApi
+    fun refreshMarks(){
+        val firebase = FunctionsFirebase()
+        val firstSemestrButton = view?.findViewById<Button>(R.id.firstSemestrButton)
+        val secondSemestrButton = view?.findViewById<Button>(R.id.secondSemestrButton)
+        val thirdSemestrButton = view?.findViewById<Button>(R.id.thirdSemestrButton)
+        val refreshMarkButton = view?.findViewById<Button>(R.id.refreshMarkButton)
+        val hideButtons = {
+            refreshMarkButton?.isVisible = false
+            firstSemestrButton?.isVisible = false
+            secondSemestrButton?.isVisible = false
+            thirdSemestrButton?.isVisible = false
+        }
+        val showButtons = {
+            refreshMarkButton?.isVisible = true
+            firstSemestrButton?.isVisible = true
+            secondSemestrButton?.isVisible = true
+            thirdSemestrButton?.isVisible = true
+        }
+        firebase.getFieldDiary(firebase.uidUser!!,"url",object :FirebaseCallback<String>{
+            override fun onComplete(url: String) {
+                firebase.getFieldDiary(firebase.uidUser!!,"idChild",object :FirebaseCallback<String>{
+                    override fun onComplete(value: String) {
+                        if (value != idChild) {
+                            val diary = Diary()
+                            when (url) {
+                                diary.elschool.url -> {
+                                    diary.elschool.getMarks(
+                                        value,
+                                        requireContext(),
+                                        progressBar,
+                                        hideButtons,
+                                        showButtons
+                                    )
+                                }
+                            }
+                        }
+                    }
+                })
+
+            }
+        })
     }
 
     fun navigateToLessons(activity: Activity,bundle: Bundle){

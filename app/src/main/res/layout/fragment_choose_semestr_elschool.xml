@@ -14,11 +14,12 @@
         android:id="@+id/firstSemestrButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:background="@color/colorButton"
         android:text="Первый триместр"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/dateUpdateTextView" />
 
     <Button
         android:id="@+id/secondSemestrButton"
@@ -51,4 +52,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/dateUpdateTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Дата обновления:"
+        app:layout_constraintEnd_toStartOf="@+id/refreshMarkButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/refreshMarkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Обновить оценки"
+        app:layout_constraintBottom_toBottomOf="@+id/dateUpdateTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/dateUpdateTextView"
+        app:layout_constraintVertical_bias="0.413" />
 </androidx.constraintlayout.widget.ConstraintLayout>

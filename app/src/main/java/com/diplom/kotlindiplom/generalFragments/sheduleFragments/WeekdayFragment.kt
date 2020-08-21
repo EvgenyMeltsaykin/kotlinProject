@@ -2,14 +2,15 @@ package com.diplom.kotlindiplom.generalFragments.sheduleFragments
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.fragment_weekday.*
 import java.text.DateFormat
 import java.time.LocalDate
 import java.util.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,8 +45,8 @@ class WeekdayFragment : Fragment() {
         activity?.title = "Расписание"
         arguments?.let {
             updateShedule = it.getBoolean("updateShedule", true)
-            id = it.getString("id","")
-            updateWithoutCheck = it.getBoolean("updateWithoutCheck",false)
+            id = it.getString("id", "")
+            updateWithoutCheck = it.getBoolean("updateWithoutCheck", false)
         }
     }
 
@@ -66,7 +68,7 @@ class WeekdayFragment : Fragment() {
         progressBar.isVisible = false
 
         refreshSheduleButton.setOnClickListener {
-            updateShedule(true,calendar)
+            updateShedule(true, calendar)
         }
         mondayButton.setOnClickListener {
             openFragmentDay("Понедельник")
@@ -89,32 +91,39 @@ class WeekdayFragment : Fragment() {
 
     }
     @ExperimentalStdlibApi
-    private fun updateShedule(updateWithoutCheck:Boolean,calendar: Calendar) {
+    private fun updateShedule(updateWithoutCheck: Boolean, calendar: Calendar) {
         val firebase = FunctionsFirebase()
+        val mondayButton = view?.findViewById<Button>(R.id.mondayButton)
+        val tuesdayButton = view?.findViewById<Button>(R.id.tuesdayButton)
+        val wednesdayButton = view?.findViewById<Button>(R.id.wednesdayButton)
+        val thursdayButton = view?.findViewById<Button>(R.id.thursdayButton)
+        val fridayButton = view?.findViewById<Button>(R.id.fridayButton)
+        val saturdayButton = view?.findViewById<Button>(R.id.saturdayButton)
+        val openCalendarButton = view?.findViewById<Button>(R.id.openCalendarButton)
+        val refreshSheduleButton = view?.findViewById<Button>(R.id.refreshSheduleButton)
+        val dateTextView = view?.findViewById<TextView>(R.id.dateTextView)
 
         val showButtons = {
-            mondayButton.isVisible = true
-            tuesdayButton.isVisible = true
-            mondayButton.isVisible = true
-            wednesdayButton.isVisible = true
-            thursdayButton.isVisible = true
-            fridayButton.isVisible = true
-            saturdayButton.isVisible = true
-            openCalendarButton.isVisible = true
-            dateTextView.isVisible = true
-            refreshSheduleButton.isVisible = true
+            mondayButton?.isVisible = true
+            tuesdayButton?.isVisible = true
+            wednesdayButton?.isVisible = true
+            thursdayButton?.isVisible = true
+            fridayButton?.isVisible = true
+            saturdayButton?.isVisible = true
+            openCalendarButton?.isVisible = true
+            dateTextView?.isVisible = true
+            refreshSheduleButton?.isVisible = true
         }
         val hideButtons ={
-            mondayButton.isVisible = false
-            tuesdayButton.isVisible = false
-            mondayButton.isVisible = false
-            wednesdayButton.isVisible = false
-            thursdayButton.isVisible = false
-            fridayButton.isVisible = false
-            saturdayButton.isVisible = false
-            openCalendarButton.isVisible = false
-            dateTextView.isVisible = false
-            refreshSheduleButton.isVisible = false
+            mondayButton?.isVisible = false
+            tuesdayButton?.isVisible = false
+            wednesdayButton?.isVisible = false
+            thursdayButton?.isVisible = false
+            fridayButton?.isVisible = false
+            saturdayButton?.isVisible = false
+            openCalendarButton?.isVisible = false
+            dateTextView?.isVisible = false
+            refreshSheduleButton?.isVisible = false
         }
 
         firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
@@ -147,7 +156,7 @@ class WeekdayFragment : Fragment() {
                                     )
                                     firebase.setDateUpdateShedule(
                                         calendar.get(Calendar.YEAR).toString(),
-                                        (calendar.get(Calendar.MONTH)+1).toString(),
+                                        (calendar.get(Calendar.MONTH) + 1).toString(),
                                         calendar.get(Calendar.DAY_OF_MONTH).toString()
                                     )
                                 }
@@ -180,8 +189,8 @@ class WeekdayFragment : Fragment() {
             override fun onComplete(value: LocalDate) {
                 if (updateShedule) {
                     calendar.timeInMillis = selectedDate
-                }else{
-                    calendar.set(value.year,value.monthValue-1,value.dayOfMonth)
+                } else {
+                    calendar.set(value.year, value.monthValue - 1, value.dayOfMonth)
                     calendarView.date = calendar.timeInMillis
                 }
                 selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
@@ -206,9 +215,9 @@ class WeekdayFragment : Fragment() {
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
 
-            updateShedule(updateWithoutCheck,calendar)
+            updateShedule(updateWithoutCheck, calendar)
         }
-        updateShedule(updateWithoutCheck,calendar)
+        updateShedule(updateWithoutCheck, calendar)
     }
 
     companion object {

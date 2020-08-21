@@ -8,8 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.text.isDigitsOnly
+import androidx.core.view.isVisible
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -52,6 +56,16 @@ class DetailsMarksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val firebase = FunctionsFirebase()
+
+        val semestrNumberTextView = view.findViewById<TextView>(R.id.semestrNumberTextView)
+        val lessonNameTextView = view.findViewById<TextView>(R.id.lessonNameTextView)
+        val middleMarkTextView = view.findViewById<TextView>(R.id.middleMarkTextView)
+        val progressBar = view.findViewById<ProgressBar>(R.id.detailsMarkProgressBar)
+        val dateMarkListView = view.findViewById<ListView>(R.id.dateMarkListView)
+        semestrNumberTextView.isVisible = false
+        lessonNameTextView.isVisible = false
+        middleMarkTextView.isVisible = false
+
         semestrNumberTextView.text = "Семестр: $semestrNumber"
         lessonNameTextView.text = "Предмет: $lessonName"
         firebase.getDetailsMarks(lessonName,semestrNumber,object : FirebaseCallback<Map<String,String>>{
@@ -65,6 +79,10 @@ class DetailsMarksFragment : Fragment() {
                 }
                 val adapter = ArrayAdapter<String>(requireContext(),android.R.layout.simple_list_item_1,detailMark)
                 dateMarkListView.adapter = adapter
+                progressBar.isVisible = false
+                semestrNumberTextView.isVisible = true
+                lessonNameTextView.isVisible = true
+                middleMarkTextView.isVisible = true
             }
         })
 
