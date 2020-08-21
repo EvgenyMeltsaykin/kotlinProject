@@ -47,7 +47,7 @@ class ChooseSemestrElschoolFragment : Fragment() {
         arguments?.let {
             idChild = it.getString("idChild","")
         }
-        activity?.title = "Выберите триместр"
+        activity?.title = "Выберите"
     }
 
     override fun onCreateView(
@@ -80,6 +80,15 @@ class ChooseSemestrElschoolFragment : Fragment() {
             }
         })
 
+        firebase.getFieldDiary(firebase.uidUser!!,"semestrName",object :FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                firstSemestrButton?.text = "Первый $value"
+                secondSemestrButton?.text = "Второй $value"
+                thirdSemestrButton?.text = "Третий $value"
+                activity?.title = "Выберите $value"
+            }
+        })
+
         refreshMarkButton.setOnClickListener {
             refreshMarks()
         }
@@ -103,6 +112,7 @@ class ChooseSemestrElschoolFragment : Fragment() {
         val secondSemestrButton = view?.findViewById<Button>(R.id.secondSemestrButton)
         val thirdSemestrButton = view?.findViewById<Button>(R.id.thirdSemestrButton)
         val refreshMarkButton = view?.findViewById<Button>(R.id.refreshMarkButton)
+
         val hideButtons = {
             refreshMarkButton?.isVisible = false
             firstSemestrButton?.isVisible = false

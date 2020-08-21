@@ -109,7 +109,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                 }
             } else {
                 enterDiaryButton.isVisible = true
-                Toast.makeText(requireContext(), "Войти не удалось", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
             }
         }
     }

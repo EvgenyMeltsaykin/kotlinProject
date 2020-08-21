@@ -133,8 +133,8 @@ class WeekdayFragment : Fragment() {
                         firebase.uidUser!!,
                         "weekUpdate",
                         object : FirebaseCallback<String> {
-                            override fun onComplete(answer: String) {
-                                if (selectedWeek != answer.toInt() || updateWithoutCheck) {
+                            override fun onComplete(weekUpdate: String) {
+                                if (selectedWeek != weekUpdate.toInt() || updateWithoutCheck) {
                                     diaryUrl = value
                                     when (value) {
                                         diary.elschool.url -> {

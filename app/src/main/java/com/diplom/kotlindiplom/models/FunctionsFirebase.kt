@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.diaries.Diary
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -172,24 +173,25 @@ class FunctionsFirebase {
     }
 
     fun createDiary() {
-        setFieldUserDatabase(uidUser!!, "diary/login", "")
-        setFieldUserDatabase(uidUser!!, "diary/password", "")
-        setFieldUserDatabase(uidUser!!, "diary/url", "")
-        setFieldUserDatabase(uidUser!!, "diary/idChild", "")
-        setFieldUserDatabase(uidUser!!, "diary/marks", "")
-        setFieldUserDatabase(uidUser!!, "diary/marks/dateUpdate", "")
-        setFieldUserDatabase(uidUser!!, "diary/shedule/weekUpdate", 0)
+        getFieldDiary(uidUser!!,"url",object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                val diary = Diary()
+                when(value){
+                    diary.elschool.url -> diary.elschool.createDiary()
+                }
+            }
+        })
     }
 
     fun deleteDiary() {
-        setFieldUserDatabase(uidUser!!, "diary/idChild", "")
-        setFieldUserDatabase(uidUser!!, "diary/login", "")
-        setFieldUserDatabase(uidUser!!, "diary/password", "")
-        setFieldUserDatabase(uidUser!!, "diary/url", "")
-        setFieldUserDatabase(uidUser!!, "diary/shedule", "")
-        setFieldUserDatabase(uidUser!!, "diary/marks", "")
-        setFieldUserDatabase(uidUser!!, "diary/marks/dateUpdate", "")
-        setFieldUserDatabase(uidUser!!, "diary/shedule/weekUpdate", 0)
+        getFieldDiary(uidUser!!,"url",object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                val diary = Diary()
+                when(value){
+                    diary.elschool.url -> diary.elschool.deleteDiary()
+                }
+            }
+        })
     }
 
     fun setFieldDiary(uid: String, field: String, value: Any) {

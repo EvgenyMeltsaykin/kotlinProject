@@ -62,11 +62,17 @@ class DetailsMarksFragment : Fragment() {
         val middleMarkTextView = view.findViewById<TextView>(R.id.middleMarkTextView)
         val progressBar = view.findViewById<ProgressBar>(R.id.detailsMarkProgressBar)
         val dateMarkListView = view.findViewById<ListView>(R.id.dateMarkListView)
+
         semestrNumberTextView.isVisible = false
         lessonNameTextView.isVisible = false
         middleMarkTextView.isVisible = false
 
-        semestrNumberTextView.text = "Семестр: $semestrNumber"
+        firebase.getFieldDiary(firebase.uidUser!!,"semestrName",object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                semestrNumberTextView.text = "${value.capitalize()}: $semestrNumber"
+            }
+        })
+
         lessonNameTextView.text = "Предмет: $lessonName"
         firebase.getDetailsMarks(lessonName,semestrNumber,object : FirebaseCallback<Map<String,String>>{
             @RequiresApi(Build.VERSION_CODES.N)
@@ -85,8 +91,6 @@ class DetailsMarksFragment : Fragment() {
                 middleMarkTextView.isVisible = true
             }
         })
-
-
     }
     @RequiresApi(Build.VERSION_CODES.N)
     fun getMiddleMark(detailsMarks : Map<String,String>) : Float{
@@ -99,6 +103,7 @@ class DetailsMarksFragment : Fragment() {
             }
 
         }
+        if (countMark == 0) return 0f
         return sum/countMark
     }
     companion object {

@@ -122,9 +122,19 @@ class ChooseChildSheduleFragment : Fragment() {
         adapter.setOnItemClickListener { item, view ->
             val childDiaryItem = item as ChildDiaryItem
             val bundle = bundleOf()
+            val firebase = FunctionsFirebase()
             bundle.putString("id",childDiaryItem.child.id)
-            bundle.putBoolean("updateWithoutCheck",true)
-            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_chooseChildSheduleFragment_to_weekdayFragment,bundle)
+            firebase.getFieldDiary(firebase.uidUser!!,"idChild",object :FirebaseCallback<String>{
+                override fun onComplete(idChild: String) {
+                    if (idChild!=childDiaryItem.child.id){
+                        bundle.putBoolean("updateWithoutCheck",true)
+                    }else{
+                        bundle.putBoolean("updateWithoutCheck",false)
+                    }
+                    firebase.setFieldDiary(firebase.uidUser!!,"idChild",childDiaryItem.child.id)
+                    Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_chooseChildSheduleFragment_to_weekdayFragment,bundle)
+                }
+            })
         }
     }
 

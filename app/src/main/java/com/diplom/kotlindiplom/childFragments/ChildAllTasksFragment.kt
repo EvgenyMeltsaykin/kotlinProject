@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.RecyclerView
 import com.diplom.kotlindiplom.FirebaseCallback
 
 import com.diplom.kotlindiplom.R
@@ -51,6 +52,8 @@ class ChildAllTasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
+
+        val taskRecyclerViewChild = view.findViewById<RecyclerView>(R.id.taskRecyclerViewChild)
         var status: Int = -2
         if (title == "Невыполненные") status = -1;
         if (title == "На проверке") status = 0;

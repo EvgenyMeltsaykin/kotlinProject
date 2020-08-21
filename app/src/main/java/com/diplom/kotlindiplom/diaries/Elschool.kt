@@ -35,6 +35,31 @@ class Elschool {
     val cabinetText = "каб."
     val keyCookie = "JWToken"
     val url = "elschool.ru"
+    fun createDiary() {
+        val firebase = FunctionsFirebase()
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/login", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/semestrName", "триместр")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/password", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/idChild", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks/dateUpdate", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/shedule/weekUpdate", 0)
+    }
+
+    fun deleteDiary() {
+        val firebase = FunctionsFirebase()
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/semestrName", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/idChild", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/login", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/password", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/shedule", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks/dateUpdate", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/shedule/weekUpdate", 0)
+    }
+
     fun login(login: String, password: String): Boolean {
         val cookies: HashMap<String, String> = HashMap()
         var title = ""
@@ -509,13 +534,7 @@ class Elschool {
                                                     p0: DataSnapshot,
                                                     p1: String?
                                                 ) {
-                                                    if (end) {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Оценки загружены успешно",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    } else {
+                                                    if (!end) {
                                                         Toast.makeText(
                                                             context,
                                                             "При загрузке оценок произошла ошибка",

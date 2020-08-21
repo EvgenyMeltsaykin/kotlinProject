@@ -44,7 +44,7 @@ class ChildMyProfileFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.setTitle("Мой профиль")
+        activity?.title = "Мой профиль"
 
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -65,6 +65,8 @@ class ChildMyProfileFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
+
+
         changeEmail = false
         loadInformationFromFirebase()
 
@@ -86,7 +88,7 @@ class ChildMyProfileFragment : BaseFragment() {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 val imn =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                //imn.hideSoftInputFromWindow(requireActivity().window.decorView.windowToken, 0)
+                imn.hideSoftInputFromWindow(requireActivity().window.decorView.windowToken, 0)
                 true
             } else {
                 false
