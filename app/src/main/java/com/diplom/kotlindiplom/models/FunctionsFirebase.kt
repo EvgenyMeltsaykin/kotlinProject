@@ -172,15 +172,11 @@ class FunctionsFirebase {
         return lesson
     }
 
-    fun createDiary() {
-        getFieldDiary(uidUser!!,"url",object : FirebaseCallback<String>{
-            override fun onComplete(value: String) {
-                val diary = Diary()
-                when(value){
-                    diary.elschool.url -> diary.elschool.createDiary()
-                }
-            }
-        })
+    fun createDiary(urlDiary: String) {
+        val diary = Diary()
+        when(urlDiary){
+            diary.elschool.url -> diary.elschool.createDiary()
+        }
     }
 
     fun deleteDiary() {

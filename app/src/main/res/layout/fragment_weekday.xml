@@ -22,12 +22,13 @@
 
         <Button
             android:id="@+id/openCalendarButton"
+            android:textColor="@color/colorButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="32dp"
-            android:background="@color/colorButton"
+            android:background="@drawable/simple_button"
             android:paddingLeft="8dp"
             android:paddingTop="8dp"
             android:paddingRight="8dp"
@@ -66,8 +67,9 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/colorButton"
+            android:background="@drawable/simple_button"
             android:text="Понедельник"
+            android:textColor="@color/colorText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,10 +77,11 @@
 
         <Button
             android:id="@+id/tuesdayButton"
+            android:textColor="@color/colorButtonText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@color/colorButton"
+            android:background="@drawable/simple_button"
             android:text="Вторник"
             app:layout_constraintEnd_toEndOf="@+id/mondayButton"
             app:layout_constraintStart_toStartOf="@+id/mondayButton"
@@ -86,10 +89,11 @@
 
         <Button
             android:id="@+id/wednesdayButton"
+            android:textColor="@color/colorButtonText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@color/colorButton"
+            android:background="@drawable/simple_button"
             android:text="Среда"
             app:layout_constraintEnd_toEndOf="@+id/tuesdayButton"
             app:layout_constraintStart_toStartOf="@+id/tuesdayButton"
@@ -97,10 +101,11 @@
 
         <Button
             android:id="@+id/thursdayButton"
+            android:textColor="@color/colorButtonText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@color/colorButton"
+            android:background="@drawable/simple_button"
             android:text="Четверг"
             app:layout_constraintEnd_toEndOf="@+id/wednesdayButton"
             app:layout_constraintHorizontal_bias="0.0"
@@ -109,10 +114,11 @@
 
         <Button
             android:id="@+id/fridayButton"
+            android:textColor="@color/colorButtonText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@color/colorButton"
+            android:background="@drawable/simple_button"
             android:text="Пятница"
             app:layout_constraintEnd_toEndOf="@+id/thursdayButton"
             app:layout_constraintHorizontal_bias="0.0"
@@ -121,10 +127,11 @@
 
         <Button
             android:id="@+id/saturdayButton"
+            android:textColor="@color/colorButtonText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@color/colorButton"
+            android:background="@drawable/simple_button"
             android:text="Суббота"
             app:layout_constraintEnd_toEndOf="@+id/fridayButton"
             app:layout_constraintHorizontal_bias="0.0"
@@ -133,29 +140,28 @@
 
 
         <ProgressBar
-
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-
             android:elevation="2dp"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weekdayToolbar" />
 
         <Button
             android:id="@+id/refreshSheduleButton"
+            android:textColor="@color/colorButtonText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/colorButton"
+            android:background="@drawable/simple_button"
             android:padding="10dp"
             android:text="Обновить"
             app:layout_constraintBottom_toBottomOf="@+id/openCalendarButton"

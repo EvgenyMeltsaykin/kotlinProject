@@ -37,12 +37,11 @@ class Elschool {
     val url = "elschool.ru"
     fun createDiary() {
         val firebase = FunctionsFirebase()
+        Log.d("Tag","Create")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/login", "")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/semestrName", "триместр")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/password", "")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/idChild", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks", "")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks/dateUpdate", "")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/shedule/weekUpdate", 0)
     }
@@ -170,6 +169,9 @@ class Elschool {
                                     lesson.homework =
                                         item.select("div[class=diary__homework-text]").text()
                                     lesson.mark = item.select("span[class=diary__mark]").text()
+                                    if (lesson.mark.isEmpty()){
+                                        lesson.mark = item.select("span[class=diary__mark diary__mark-not-seen-before]").text()
+                                    }
                                     if (lesson.name.isNotEmpty()) {
                                         lessons.add(lesson)
                                     }
@@ -177,7 +179,7 @@ class Elschool {
                                 shedule[dayDate] = lessons
                             }
                             deleteShedule()
-                            shedule.forEach { s, list ->
+                            shedule.forEach { (s, list) ->
                                 var i = 0
                                 val day = s.substringBefore(" ")
                                 val date = s.substringAfter(" ")

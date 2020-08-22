@@ -107,6 +107,7 @@
 
         <Button
             android:id="@+id/addTaskButtonParent"
+            android:textColor="@color/colorButtonText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -115,7 +116,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="24dp"
-            android:background="@color/colorButton"
+            android:background="@drawable/simple_button"
             android:text="Добавить задание"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

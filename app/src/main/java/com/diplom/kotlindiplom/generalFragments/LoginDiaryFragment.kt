@@ -35,7 +35,6 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
     private var param1: String? = null
     private var param2: String? = null
 
-    var role: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.title = "Вход в дневник"
@@ -59,13 +58,6 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
         super.onViewCreated(view, savedInstanceState)
         progressBar.isVisible = false
         val firebase = FunctionsFirebase()
-        firebase.getFieldDiary(firebase.uidUser!!,"login",object : FirebaseCallback<String>{
-            override fun onComplete(value: String) {
-                if(value.isNotEmpty()){
-                    Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_loginDiaryFragment_to_diaryFragment)
-                }
-            }
-        })
         setupSpinner()
         enterDiaryButton.setOnClickListener {
             if (urlDiary.isEmpty()) {
@@ -92,6 +84,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
+                        firebase.createDiary(urlDiary)
                         firebase.setLoginAndPasswordDiary(login,password)
                         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", urlDiary)
                         firebase.getRoleByUid(
@@ -112,6 +105,13 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
             }
         }
+        firebase.getFieldDiary(firebase.uidUser!!,"login",object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                if(value.isNotEmpty()){
+                    Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_loginDiaryFragment_to_diaryFragment)
+                }
+            }
+        })
     }
 
     fun setupSpinner() {

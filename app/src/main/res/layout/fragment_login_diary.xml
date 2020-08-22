@@ -61,6 +61,7 @@
 
     <Button
         android:id="@+id/enterDiaryButton"
+        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -68,7 +69,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:background="@color/colorButton"
+        android:background="@drawable/simple_button"
         android:text="Войти"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

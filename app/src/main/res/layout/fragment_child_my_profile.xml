@@ -27,6 +27,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginTop="48dp"
+            android:textColor="@color/colorButtonText"
             android:background="@drawable/rounded_select_photo_button"
             android:text="Выбрать\nизображение"
             app:layout_constraintEnd_toEndOf="parent"
@@ -125,6 +126,7 @@
             app:layout_constraintTop_toTopOf="@+id/balanceTextviewChildMyProfile" />
 
         <Button
+            android:textColor="@color/colorButtonText"
             android:id="@+id/saveChangeButtonChildMyProfile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -134,7 +136,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@color/colorButton"
+            android:background="@drawable/simple_button"
             android:text="Сохранить изменения"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

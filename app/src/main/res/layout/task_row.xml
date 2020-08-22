@@ -5,44 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    android:background="@color/colorButton">
+    android:background="@drawable/simple_row_recycler_view">
 
     <TextView
         android:id="@+id/nameTaskTextViewParent"
+        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="24dp"
         android:text="Title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/costTaskTextViewParent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTaskTextViewParent"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/costTaskTextViewParent"
+        android:textColor="@color/colorButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:text="cost"
-        app:layout_constraintBottom_toBottomOf="@+id/nameTaskTextViewParent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/nameTaskTextViewParent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/dateTaskTextViewParent"
-        android:layout_width="379dp"
+        android:textColor="@color/colorButtonText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
         android:text="time"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"

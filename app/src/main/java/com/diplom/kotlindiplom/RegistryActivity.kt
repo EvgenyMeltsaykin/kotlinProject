@@ -94,7 +94,6 @@ class RegistryActivity : AppCompatActivity() {
             .addOnCompleteListener {
                 Log.d(TAG, "Пользователь создан: ${firebase.uidUser}")
                 Toast.makeText(this, "Регистрация прошла успешно!", Toast.LENGTH_SHORT).show()
-                firebase.createDiary()
                 firebase.setFieldUserDatabase(firebase.uidUser!!,"role","child")
                 intent = Intent(
                     this,
@@ -118,7 +117,6 @@ class RegistryActivity : AppCompatActivity() {
             .addOnCompleteListener {
                 Log.d(TAG, "Пользователь создан: ${firebase.uidUser}")
                 Toast.makeText(this, "Регистрация прошла успешно", Toast.LENGTH_SHORT).show()
-                firebase.createDiary()
                 firebase.setFieldUserDatabase(firebase.uidUser!!,"role","parent")
                 intent = Intent(this, MainActivity::class.java)
                 intent.flags =

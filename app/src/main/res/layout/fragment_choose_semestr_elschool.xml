@@ -12,10 +12,12 @@
 
     <Button
         android:id="@+id/firstSemestrButton"
+        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:background="@color/colorButton"
+        android:elevation="20dp"
+        android:background="@drawable/simple_button"
         android:text="Первый триместр"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,10 +25,11 @@
 
     <Button
         android:id="@+id/secondSemestrButton"
+        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@color/colorButton"
+        android:background="@drawable/simple_button"
         android:text="Второй триместр"
         app:layout_constraintEnd_toEndOf="@+id/firstSemestrButton"
         app:layout_constraintStart_toStartOf="@+id/firstSemestrButton"
@@ -34,10 +37,11 @@
 
     <Button
         android:id="@+id/thirdSemestrButton"
+        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@color/colorButton"
+        android:background="@drawable/simple_button"
         android:text="Третий триместр"
         app:layout_constraintEnd_toEndOf="@+id/secondSemestrButton"
         app:layout_constraintStart_toStartOf="@+id/secondSemestrButton"

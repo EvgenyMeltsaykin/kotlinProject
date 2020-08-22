@@ -45,10 +45,11 @@
 
     <Button
         android:id="@+id/sheduleButton"
+        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:background="@color/colorButton"
+        android:background="@drawable/simple_button"
         android:text="Расписание"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,10 +57,11 @@
 
     <Button
         android:id="@+id/marksButton"
+        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@color/colorButton"
+        android:background="@drawable/simple_button"
         android:text="Оценки"
         app:layout_constraintEnd_toEndOf="@+id/sheduleButton"
         app:layout_constraintStart_toStartOf="@+id/sheduleButton"
