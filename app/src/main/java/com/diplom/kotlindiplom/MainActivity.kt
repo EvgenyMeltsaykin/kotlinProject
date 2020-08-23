@@ -375,6 +375,17 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             this,
             R.id.navFragment
         )
+        if (navController?.currentDestination?.id == R.id.listSubjectsFragment) {
+            navController?.popBackStack()
+            title = "Выберите класс"
+            return
+        }
+        if (navController?.currentDestination?.id == R.id.schoolBooksFragment) {
+            navController?.popBackStack()
+            title = "Выберите предмет"
+            return
+        }
+
         if (navController?.currentDestination?.id == R.id.parentAllTasksFragment || navController?.currentDestination?.id == R.id.parentNewTaskFragment) {
             navController?.popBackStack()
             setTitle("Задания")

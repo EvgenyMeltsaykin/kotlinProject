@@ -12,7 +12,13 @@
     <item
         android:id="@+id/loginDiaryFragment"
         android:title="Электронный дневник"
-        android:icon="@drawable/ic_diary"/>/>
+        android:icon="@drawable/ic_diary"/>
+
+    <item
+        android:id="@+id/listClassesFragment"
+        android:title="Учебники"
+        android:icon="@drawable/ic_school_books"/>
+
     <item
         android:id="@+id/childTasksFragment"
         android:title="Задания"

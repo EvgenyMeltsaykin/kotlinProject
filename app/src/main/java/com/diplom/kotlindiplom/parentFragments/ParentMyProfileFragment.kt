@@ -104,6 +104,9 @@ class ParentMyProfileFragment : BaseFragment() {
             saveChangeInParentProfile()
         }
 
+        usernameEditTextParentMyProfile.doAfterTextChanged {
+            saveChangeButtonParentMyProfile.isVisible = true
+        }
         emailEditTextParentMyProfile.doAfterTextChanged {
             saveChangeButtonParentMyProfile.isVisible = true
         }

@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Уже зарегистрированы?"
-        android:textColor="@android:color/black"
+        android:textColor="@color/colorText"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@+id/registryButtonRegistry"
         app:layout_constraintStart_toStartOf="@+id/registryButtonRegistry"

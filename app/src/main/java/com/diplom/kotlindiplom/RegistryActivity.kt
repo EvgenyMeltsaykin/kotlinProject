@@ -75,6 +75,7 @@ class RegistryActivity : AppCompatActivity() {
         firebase.rolesRef.child("${firebase.uidUser}").setValue("child")
         val user = Child(firebase.uidUser!!, username, email)
         val refCount = FirebaseDatabase.getInstance().getReference("/users")
+        refCount.keepSynced(true)
         refCount.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 p0.children.forEach {

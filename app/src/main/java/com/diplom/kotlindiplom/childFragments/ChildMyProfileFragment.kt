@@ -36,6 +36,7 @@ private const val ARG_PARAM2 = "param2"
 var changeEmail: Boolean = false
 var cityId: Int? = -1
 var schoolId: Int? = -1
+
 class ChildMyProfileFragment : BaseFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -82,7 +83,9 @@ class ChildMyProfileFragment : BaseFragment() {
         emailEditTextChildmyprofile.setOnClickListener {
             changeEmail = true
         }
-
+        usernameEditTextChildMyProfile.doAfterTextChanged {
+            saveChangeButtonChildMyProfile.isVisible = true
+        }
         emailEditTextChildmyprofile.setOnKeyListener { v, keyCode, event ->
             v.emailEditTextChildmyprofile.isCursorVisible = true
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -96,7 +99,7 @@ class ChildMyProfileFragment : BaseFragment() {
         }
 
         saveChangeButtonChildMyProfile.setOnClickListener {
-            firebase.uploadImageToFirebase(selectedPhotoUri, requireActivity(),"children")
+            firebase.uploadImageToFirebase(selectedPhotoUri, requireActivity(), "children")
             saveChangeInChildProfile()
         }
 
@@ -104,12 +107,12 @@ class ChildMyProfileFragment : BaseFragment() {
             saveChangeButtonChildMyProfile.isVisible = true
         }
 
-        val  cities: MutableList<City> = mutableListOf()
+        val cities: MutableList<City> = mutableListOf()
         cityEditTextChildMyProfile.doAfterTextChanged {
             saveChangeButtonChildMyProfile.isVisible = true
             educationalInstitutionEditTextChildMyProfile.text.clear()
             schoolId = -1
-            network.getNodeCities(cityEditTextChildMyProfile,requireContext(),cities)
+            network.getNodeCities(cityEditTextChildMyProfile, requireContext(), cities)
         }
         cityEditTextChildMyProfile.setOnItemClickListener { parent, view, position, id ->
             cityId = cities[id.toInt()].id
@@ -118,7 +121,12 @@ class ChildMyProfileFragment : BaseFragment() {
         val schools: MutableList<SchoolClass> = mutableListOf()
         educationalInstitutionEditTextChildMyProfile.doAfterTextChanged {
             saveChangeButtonChildMyProfile.isVisible = true
-            network.getNodeSchools(educationalInstitutionEditTextChildMyProfile,requireContext(),schools,cityId)
+            network.getNodeSchools(
+                educationalInstitutionEditTextChildMyProfile,
+                requireContext(),
+                schools,
+                cityId
+            )
         }
         educationalInstitutionEditTextChildMyProfile.setOnItemClickListener { parent, view, position, id ->
             schoolId = schools[id.toInt()].id
@@ -145,13 +153,14 @@ class ChildMyProfileFragment : BaseFragment() {
             selectphotoButtonChildmyprofile.alpha = 0f
         }
     }
-    var childId : Int = 0
+
+    var childId: Int = 0
     private fun loadInformationFromFirebase() {
         val firebase = FunctionsFirebase()
 
-        firebase.getChild(firebase.uidUser!!,object : FirebaseCallback<Child>{
+        firebase.getChild(firebase.uidUser!!, object : FirebaseCallback<Child> {
             override fun onComplete(value: Child) {
-                if (value.profileImageUrl.isNotEmpty()){
+                if (value.profileImageUrl.isNotEmpty()) {
                     val header = requireActivity().navView.getHeaderView(0);
                     val photo =
                         header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
@@ -170,7 +179,7 @@ class ChildMyProfileFragment : BaseFragment() {
                 cityEditTextChildMyProfile.setText(value.city)
                 educationalInstitutionEditTextChildMyProfile.setText(value.educationalInstitution)
                 cityId = value.cityId.toString().toInt()
-                schoolId =value.educationalInstitutionId.toString().toInt()
+                schoolId = value.educationalInstitutionId.toString().toInt()
                 idTextViewChildMyProfile.text = "id: " + value.id;
                 saveChangeButtonChildMyProfile.isVisible = false
             }
@@ -179,8 +188,8 @@ class ChildMyProfileFragment : BaseFragment() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun saveChangeInChildProfile() {
-        val username =  usernameEditTextChildMyProfile.text.toString();
-        val city =  cityEditTextChildMyProfile.text.toString()
+        val username = usernameEditTextChildMyProfile.text.toString();
+        val city = cityEditTextChildMyProfile.text.toString()
         val educationalInstitution = educationalInstitutionEditTextChildMyProfile.text.toString()
         val email = emailEditTextChildmyprofile.text.toString()
         val point = pointTextViewChildMyProfile.text.toString().toInt()
@@ -192,7 +201,7 @@ class ChildMyProfileFragment : BaseFragment() {
                 ?.addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
                     if (emailEditTextChildmyprofile.text != null) {
-                        firebase.setFieldUserDatabase(firebase.uidUser!!,"email",email)
+                        firebase.setFieldUserDatabase(firebase.uidUser!!, "email", email)
                     }
                     Toast.makeText(
                         requireContext(),
@@ -213,18 +222,27 @@ class ChildMyProfileFragment : BaseFragment() {
                     ).show()
                 }
         }
-        firebase.setFieldUserDatabase(firebase.uidUser!!,"username",username)
-        firebase.setFieldUserDatabase(firebase.uidUser!!,"cityId", cityId)
-        firebase.setFieldUserDatabase(firebase.uidUser!!,"city",city)
-        firebase.setFieldUserDatabase(firebase.uidUser!!,"educationalInstitutionId", schoolId)
-        firebase.setFieldUserDatabase(firebase.uidUser!!,"educationalInstitution",educationalInstitution)
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "username", username)
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "cityId", cityId)
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "city", city)
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "educationalInstitutionId", schoolId)
+        firebase.setFieldUserDatabase(
+            firebase.uidUser!!,
+            "educationalInstitution",
+            educationalInstitution
+        )
         saveChangeButtonChildMyProfile.isVisible = false
 
         val network = FunctionsNetwork()
-        if (network.checkConnect(context)){
-            Toast.makeText(requireContext(), "Изменения успешно сохранены", Toast.LENGTH_SHORT).show()
-        }else{
-            Toast.makeText(requireContext(), "Изменения будут сохранены, когда вы подключитесь к интернету", Toast.LENGTH_SHORT).show()
+        if (network.checkConnect(context)) {
+            Toast.makeText(requireContext(), "Изменения успешно сохранены", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Изменения будут сохранены, когда вы подключитесь к интернету",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
     }

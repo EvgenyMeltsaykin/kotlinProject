@@ -1,9 +1,11 @@
 package com.diplom.kotlindiplom.models
 
 import android.app.Activity
+import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
@@ -11,6 +13,7 @@ import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.diaries.Diary
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,6 +22,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.header.*
 import org.cryptonode.jncryptor.AES256JNCryptor
+import java.io.File
 import java.time.LocalDate
 import java.util.*
 
@@ -36,6 +40,66 @@ class FunctionsFirebase {
         val ref = rootRef.child("users").child("children").child("$uidUser")
         ref.child("acceptName").setValue("")
         ref.child("acceptUid").setValue("")
+    }
+
+    fun downloadSchoolBook(book: SchoolBook, context: Context) {
+        val ref = FirebaseStorage.getInstance().getReferenceFromUrl(book.url)
+        ref.downloadUrl.addOnSuccessListener { uri ->
+            Toast.makeText(context,"Загрузка началась",Toast.LENGTH_SHORT).show()
+            val downloadManager =
+                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val request = DownloadManager.Request(uri)
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            request.setDestinationInExternalFilesDir(
+                context,
+                DIRECTORY_DOWNLOADS,
+                book.name + "pdf"
+            )
+            downloadManager.enqueue(request)
+        }.addOnFailureListener {
+            Toast.makeText(context,"Ошибка при загрузке",Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    fun getDetailsBook(bookSnap: DataSnapshot): SchoolBook {
+        var schoolBook = SchoolBook()
+        bookSnap.children.forEach { detail ->
+            if (detail.key.toString() == "name") {
+                schoolBook.name = detail.value.toString()
+            }
+            if (detail.key.toString() == "cover") {
+                schoolBook.cover = detail.value.toString()
+            }
+            if (detail.key.toString() == "url") {
+                schoolBook.url = detail.value.toString()
+            }
+        }
+        return schoolBook
+    }
+
+    fun getSchoolBooks(
+        numberClass: String?,
+        subjectName: String?,
+        firebaseCallBack: FirebaseCallback<List<SchoolBook>>
+    ) {
+        val ref = rootRef.child("schoolBooks").child("${numberClass}class").child(subjectName!!)
+        val books = mutableListOf<SchoolBook>()
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    p0.children.forEach { book ->
+                        books.add(getDetailsBook(book))
+                    }
+                    firebaseCallBack.onComplete(books)
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     fun getFieldMarks(field: String, firebaseCallBack: FirebaseCallback<String>) {
@@ -174,16 +238,16 @@ class FunctionsFirebase {
 
     fun createDiary(urlDiary: String) {
         val diary = Diary()
-        when(urlDiary){
+        when (urlDiary) {
             diary.elschool.url -> diary.elschool.createDiary()
         }
     }
 
     fun deleteDiary() {
-        getFieldDiary(uidUser!!,"url",object : FirebaseCallback<String>{
+        getFieldDiary(uidUser!!, "url", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
                 val diary = Diary()
-                when(value){
+                when (value) {
                     diary.elschool.url -> diary.elschool.deleteDiary()
                 }
             }
