@@ -4,18 +4,21 @@
 
     <item
         android:id="@+id/mainFragment"
-        android:title="Главная"
-        android:icon="@color/colorPrimaryDark"/>
+        android:title="Главная" />
     <item
         android:id="@+id/childMyProfileFragment"
-        android:title="Мой профиль" />
+        android:title="Мой профиль"
+        android:icon="@drawable/ic_profile"/>
     <item
         android:id="@+id/loginDiaryFragment"
-        android:title="Электронный дневник" />
+        android:title="Электронный дневник"
+        android:icon="@drawable/ic_diary"/>/>
     <item
         android:id="@+id/childTasksFragment"
-        android:title="Задания" />
+        android:title="Задания"
+        android:icon="@drawable/ic_tasks"/>
     <item
         android:id="@+id/childExitApplication"
-        android:title="Выйти" />
+        android:title="Выйти"
+        android:icon="@drawable/ic_exit" />
 </menu>

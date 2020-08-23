@@ -211,7 +211,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                             "acceptName",
                             object : FirebaseCallback<String> {
                                 override fun onComplete(parentName: String) {
-                                    view.invitationTextView.setText("Родитель ${parentName} запрашивает привязку аккаунта")
+                                    view.invitationTextView.setText("Пользователь ${parentName} запрашивает привязку аккаунта")
                                 }
                             })
                         window.contentView = view

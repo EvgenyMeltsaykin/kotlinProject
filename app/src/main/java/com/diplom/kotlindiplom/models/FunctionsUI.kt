@@ -39,6 +39,7 @@ class FunctionsUI {
                         val nm = context.getSystemService(NotificationManager::class.java)
                         nm.createNotificationChannel(channel1)
                         val intent = Intent(context, intentClass)
+                        intent.putExtra("role","child")
                         val pendingIntent = PendingIntent.getActivity(
                             context,
                             0,
@@ -84,6 +85,7 @@ class FunctionsUI {
         val nm = context.getSystemService(NotificationManager::class.java)
         nm.createNotificationChannel(channel1)
         val intent = Intent(context, intentClass)
+        intent.putExtra("role","parent")
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
@@ -103,18 +105,5 @@ class FunctionsUI {
         firebase.setFieldDatabaseTask(task.taskId, "showNotification", 1)
     }
 
-    fun openFragmentSemestr(activity:Activity, bundle: Bundle? = null){
-        val diary = Diary()
-        val firebase = FunctionsFirebase()
-        firebase.getFieldDiary(firebase.uidUser!!,"url",object :FirebaseCallback<String>{
-            override fun onComplete(value: String) {
-                when(value){
-                    diary.elschool.url ->{
-                        Navigation.findNavController(activity, R.id.navFragment).navigate(R.id.action_chooseChildMarkFragment_to_chooseSemestrElschoolFragment,bundle)
-                    }
-                }
-            }
-        })
 
-    }
 }
