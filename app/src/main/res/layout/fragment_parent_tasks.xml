@@ -4,36 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="70dp"
     tools:context=".parentFragments.ParentTasksFragment">
-
-    <include
-        android:id="@+id/parentToolbar"
-        layout="@layout/toolbar"
-        android:layout_width="399dp"
-        android:layout_height="47dp"
-        tools:layout_editor_absoluteX="6dp"
-        tools:layout_editor_absoluteY="6dp" />
 
     <Button
         android:id="@+id/unfulfilledButtonParentTasks"
-        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:background="@drawable/simple_button"
         android:text="Невыполненные задания"
+        android:textColor="@color/colorButtonText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/parentToolbar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/checkButtonParentTasks"
-        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -43,6 +32,7 @@
         android:layout_marginRight="16dp"
         android:background="@drawable/simple_button"
         android:text="Задания на проверке"
+        android:textColor="@color/colorButtonText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +40,6 @@
 
     <Button
         android:id="@+id/completedButtonParentTasks"
-        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -60,6 +49,7 @@
         android:layout_marginRight="16dp"
         android:background="@drawable/simple_button"
         android:text="Выполненные задания"
+        android:textColor="@color/colorButtonText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +57,6 @@
 
     <Button
         android:id="@+id/addButtonParentTasks"
-        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -75,6 +64,7 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/simple_button"
         android:text="Добавить задание"
+        android:textColor="@color/colorButtonText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -69,7 +69,7 @@
             android:layout_marginRight="16dp"
             android:background="@drawable/simple_button"
             android:text="Понедельник"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"

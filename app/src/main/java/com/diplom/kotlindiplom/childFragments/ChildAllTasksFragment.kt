@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.diplom.kotlindiplom.FirebaseCallback
@@ -54,11 +55,11 @@ class ChildAllTasksFragment : Fragment() {
         requireActivity().invalidateOptionsMenu()
 
         val taskRecyclerViewChild = view.findViewById<RecyclerView>(R.id.taskRecyclerViewChild)
+        tasksEmptyTextView.isVisible = false
         var status: Int = -2
         if (title == "Невыполненные") status = -1;
         if (title == "На проверке") status = 0;
         if (title == "Выполненные") status = 1;
-
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
         if (status != 1) {
@@ -69,6 +70,10 @@ class ChildAllTasksFragment : Fragment() {
                     override fun onComplete(value: String) {
                         firebase.getTasksParentUid(value, status, object : FirebaseCallback<List<Task>> {
                             override fun onComplete(value: List<Task>) {
+                                if (value.isEmpty()){
+                                    tasksEmptyTextView.isVisible = true
+                                    //taskRecyclerViewChild.isVisible = false
+                                }
                                 value.forEach {
                                     adapter.add(TaskItem(it))
                                 }
@@ -92,6 +97,10 @@ class ChildAllTasksFragment : Fragment() {
         }else{
             firebase.getTasksChildUid(firebase.uidUser!!,status,object : FirebaseCallback<List<Task>>{
                 override fun onComplete(value: List<Task>) {
+                    if (value.isEmpty()){
+                        tasksEmptyTextView.isVisible = true
+                       // taskRecyclerViewChild.isVisible = false
+                    }
                     value.forEach {
                         adapter.add(TaskItem(it))
                     }

@@ -8,16 +8,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="70dp"
         android:paddingBottom="10dp"
         tools:context=".generalFragments.sheduleFragments.SheduleDayFragment">
-
-        <include
-            android:id="@+id/childToolbar"
-            layout="@layout/toolbar"
-            android:layout_width="399dp"
-            android:layout_height="47dp"
-            tools:layout_editor_absoluteX="6dp"
-            tools:layout_editor_absoluteY="6dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/lessonsRecyclerView"
@@ -37,12 +30,11 @@
             android:id="@+id/messageTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:text="Занятий нет"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/childToolbar" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.RecyclerView
 import com.diplom.kotlindiplom.FirebaseCallback
 
 import com.diplom.kotlindiplom.R
@@ -53,15 +55,17 @@ class ParentAllTasksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
         var status : Int = -2
+        val taskRecyclerViewParent = view.findViewById<RecyclerView>(R.id.taskRecyclerViewParent)
         if (param1 == "Невыполненные")status = -1;
         if (param1 == "На проверке")status = 0;
         if (param1 == "Выполненные")status = 1;
-
+        taskEmptyTextViewParent.isVisible = false
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
         firebase.getTasksParentUid(firebase.uidUser!!,status,object: FirebaseCallback<List<Task>>{
 
             override fun onComplete(value: List<Task>) {
+                if (value.isEmpty())taskEmptyTextViewParent.isVisible = true
                 value.forEach {
                     adapter.add(TaskItem(it))
                 }

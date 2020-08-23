@@ -24,6 +24,8 @@
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_red"
+        android:textColor="@color/colorButtonText"
         android:text="Удалить"
         app:layout_constraintBottom_toBottomOf="@+id/nameChildTextView"
         app:layout_constraintEnd_toEndOf="parent"

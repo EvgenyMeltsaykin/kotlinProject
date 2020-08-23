@@ -3,13 +3,13 @@
     <color name="colorPrimary">#03A9F4</color>
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#0288D1</color>
-    <color name="colorText">#FFFFFF</color>
+    <color name="colorText">#000000</color>
     <color name="colorButtonText">#FFFFFF</color>
+    <color name="colorButtonRed">#f44336</color>
+    <color name="colorButtonGreen">#4caf50</color>
     <color name="colorButton">#2196f3</color>
     <color name="colorBackground">#BBDEFB</color>
     <color name="colorLeftMenuBackground">#BBDEFB</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorButtonAccept">#14D564</color>
-    <color name="colorButtonReject">#EA0E36</color>
 </resources>

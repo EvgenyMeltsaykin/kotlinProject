@@ -4,29 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="70dp"
     tools:context=".generalFragments.WeekdayWithoutDiaryFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <include
-        android:id="@+id/weekdayToolbar"
-        layout="@layout/toolbar"
-        android:layout_width="399dp"
-        android:layout_height="47dp"
-        tools:layout_editor_absoluteX="6dp"
-        tools:layout_editor_absoluteY="6dp" />
 
     <Spinner
         android:id="@+id/diariesSpinnerWeekday"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weekdayToolbar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/loginDiaryEditText"
@@ -61,7 +52,6 @@
 
     <Button
         android:id="@+id/enterDiaryButton"
-        android:textColor="@color/colorButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -71,6 +61,7 @@
         android:layout_marginRight="16dp"
         android:background="@drawable/simple_button"
         android:text="Войти"
+        android:textColor="@color/colorButtonText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordDiaryEditText" />
