@@ -9,7 +9,14 @@
         android:id="@+id/mainFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.MainFragment"
         android:label="Главная"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_childTaskContentFragment"
+            app:destination="@id/childTaskContentFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_parentTaskContentFragment"
+            app:destination="@id/parentTaskContentFragment" />
+    </fragment>
     <fragment
         android:id="@+id/childMyProfileFragment"
         android:name="com.diplom.kotlindiplom.childFragments.ChildMyProfileFragment"

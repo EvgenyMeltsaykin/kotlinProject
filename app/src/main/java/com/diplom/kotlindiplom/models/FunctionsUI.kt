@@ -40,6 +40,8 @@ class FunctionsUI {
                         nm.createNotificationChannel(channel1)
                         val intent = Intent(context, intentClass)
                         intent.putExtra("role","child")
+                        intent.putExtra("taskId",task.taskId)
+                        intent.putExtra("title",task.title)
                         val pendingIntent = PendingIntent.getActivity(
                             context,
                             0,
@@ -86,6 +88,8 @@ class FunctionsUI {
         nm.createNotificationChannel(channel1)
         val intent = Intent(context, intentClass)
         intent.putExtra("role","parent")
+        intent.putExtra("taskId",task.taskId)
+        intent.putExtra("title",task.title)
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,

@@ -35,7 +35,6 @@ class ParentTaskContentFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             title = it.get("title").toString()
-            activity?.setTitle(title)
             taskId = it.get("taskId").toString()
         }
     }
@@ -51,7 +50,7 @@ class ParentTaskContentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
-
+        activity?.title = title
         val navController = Navigation.findNavController(requireActivity(),R.id.navFragment)
         val firebase = FunctionsFirebase()
         firebase.getTask(taskId.toString(), object: FirebaseCallback<Task>{

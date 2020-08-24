@@ -158,9 +158,15 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             override fun onChildRemoved(p0: DataSnapshot) {
                 return
             }
-
-
         })
+        if (!intent.getStringExtra("taskId").isNullOrBlank()){
+            val bundle = bundleOf()
+            val navHostFragment = supportFragmentManager.findFragmentById(R.id.navFragment) as NavHostFragment
+            val navController = navHostFragment.navController
+            bundle.putString("taskId",intent.getStringExtra("taskId"))
+            bundle.putString("title",intent.getStringExtra("title"))
+            navController.navigate(R.id.action_mainFragment_to_parentTaskContentFragment,bundle)
+        }
     }
     fun settingsChild(){
         navView.inflateMenu(R.menu.drawer_menu_child)
@@ -315,6 +321,14 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             }
 
         })
+        if (!intent.getStringExtra("taskId").isNullOrBlank()){
+            val bundle = bundleOf()
+            val navHostFragment = supportFragmentManager.findFragmentById(R.id.navFragment) as NavHostFragment
+            val navController = navHostFragment.navController
+            bundle.putString("taskId",intent.getStringExtra("taskId"))
+            bundle.putString("title",intent.getStringExtra("title"))
+            navController.navigate(R.id.action_mainFragment_to_childTaskContentFragment,bundle)
+        }
 
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -1,6 +1,7 @@
 package com.diplom.kotlindiplom.childFragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +35,7 @@ class ChildTaskContentFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             title = it.get("title").toString()
-            activity?.setTitle(title)
+            activity?.title = title
             taskId = it.get("taskId").toString()
         }
     }
@@ -50,6 +51,7 @@ class ChildTaskContentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
+        activity?.title = title
         val navController = Navigation.findNavController(requireActivity(), R.id.navFragment)
         val firebase = FunctionsFirebase()
         firebase.getTask(taskId.toString(), object : FirebaseCallback<Task> {

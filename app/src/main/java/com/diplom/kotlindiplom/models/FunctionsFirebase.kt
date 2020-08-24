@@ -108,8 +108,8 @@ class FunctionsFirebase {
                     p0.children.forEach { book ->
                         books.add(getDetailsBook(book))
                     }
-                    firebaseCallBack.onComplete(books)
                 }
+                firebaseCallBack.onComplete(books)
             }
 
             override fun onCancelled(p0: DatabaseError) {
@@ -198,7 +198,17 @@ class FunctionsFirebase {
                         p0.children.forEach {lesson->
                             lesson.children.forEach {info->
                                 if (info.value.toString() == lessonName) {
-
+                                    lesson.children.forEach {semestr->
+                                        if (semestr.key.toString() == "semestr$semestrNumber"){
+                                            var mark = ""
+                                            semestr.children.forEach {middleMark->
+                                                if (middleMark.key.toString() == "middleMark"){
+                                                    mark = middleMark.value.toString()
+                                                    firebaseCallBack.onComplete(mark)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
 

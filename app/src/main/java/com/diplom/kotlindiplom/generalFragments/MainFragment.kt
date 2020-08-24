@@ -31,7 +31,7 @@ class MainFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.setTitle("Главная")
+
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -43,7 +43,9 @@ class MainFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        activity?.title = "Главная"
         return inflater.inflate(R.layout.fragment_main, container, false)
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -62,7 +64,6 @@ class MainFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
     }
     /**
      * This interface must be implemented by activities that contain this
