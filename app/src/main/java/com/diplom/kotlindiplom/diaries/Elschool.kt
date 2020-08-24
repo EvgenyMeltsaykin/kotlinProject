@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.models.ChildForElschool
@@ -21,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.decimal4j.util.DoubleRounder
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.w3c.dom.Document
@@ -453,10 +455,17 @@ class Elschool {
                                         gradesMark.forEach { marksHtml ->
                                             val marks =
                                                 marksHtml.select("span[class=mark-span]")
+                                            var markCountForMiddleMark = 0
                                             var markCount = 1
+                                            var middleMark = 0f
                                             marks.forEach {
                                                 if (it.text().isNotEmpty()) {
                                                     val mark = it.text()
+                                                    if (mark.isDigitsOnly()){
+                                                        middleMark+=mark.toInt()
+                                                        markCountForMiddleMark++
+                                                        Log.d("Tag","$lessonName markcount="+markCountForMiddleMark.toString() +" middleMark = $middleMark")
+                                                    }
                                                     val date =
                                                         it.attr("data-popover-content")
                                                             .substringBefore("<p>")
@@ -479,6 +488,16 @@ class Elschool {
                                                     markCount++
                                                 }
                                             }
+                                            if (markCountForMiddleMark == 0){
+                                                middleMark = 0f
+                                            }else{
+                                                middleMark = middleMark/(markCountForMiddleMark)
+                                            }
+                                            firebase.setFieldDiary(
+                                                firebase.uidUser,
+                                                "marks/lesson$lessonCount/semestr$semestrCount/middleMark",
+                                                DoubleRounder.round(middleMark.toDouble(),2)
+                                            )
                                             semestrCount++
                                         }
 

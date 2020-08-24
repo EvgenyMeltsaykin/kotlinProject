@@ -1,8 +1,10 @@
 package com.diplom.kotlindiplom.childFragments
 
+import android.Manifest
 import android.content.Context
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -10,8 +12,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.bumptech.glide.Glide
@@ -73,13 +78,27 @@ class ChildMyProfileFragment : BaseFragment() {
 
         val network = FunctionsApi(cityId)
         val firebase = FunctionsFirebase()
-
-        selectphotoButtonChildmyprofile.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, 0)
+/*
+      selectphotoButtonChildmyprofile.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.type = "image/*"
+                startActivityForResult(intent, 0)
+            }else{
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    1
+                )
+            }
         }
-
+        */
+ */
         emailEditTextChildmyprofile.setOnClickListener {
             changeEmail = true
         }
@@ -140,7 +159,7 @@ class ChildMyProfileFragment : BaseFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
+        /*if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
             Log.d(TAG, "Photo was select")
             saveChangeButtonChildMyProfile.isVisible = true
             //Новый способ загрузки картинки из галереи
@@ -151,7 +170,7 @@ class ChildMyProfileFragment : BaseFragment() {
             selectphotoImageviewChildmyprofile.setImageBitmap(bitmap)
             requireActivity().photoImageviewDrawer.setImageBitmap(bitmap)
             selectphotoButtonChildmyprofile.alpha = 0f
-        }
+        }*/
     }
 
     var childId: Int = 0
@@ -160,7 +179,7 @@ class ChildMyProfileFragment : BaseFragment() {
 
         firebase.getChild(firebase.uidUser!!, object : FirebaseCallback<Child> {
             override fun onComplete(value: Child) {
-                if (value.profileImageUrl.isNotEmpty()) {
+                /*if (value.profileImageUrl.isNotEmpty()) {
                     val header = requireActivity().navView.getHeaderView(0);
                     val photo =
                         header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
@@ -172,7 +191,10 @@ class ChildMyProfileFragment : BaseFragment() {
                             DiskCacheStrategy.ALL
                         ).into(selectphotoImageviewChildmyprofile)
                     selectphotoButtonChildmyprofile.alpha = 0f
-                }
+                }*/
+                val header = requireActivity().navView.getHeaderView(0);
+                val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
+                userNameHeader.text = value.username
                 usernameEditTextChildMyProfile.setText(value.username)
                 emailEditTextChildmyprofile.setText(value.email)
                 pointTextViewChildMyProfile.text = value.point.toString()
@@ -222,6 +244,9 @@ class ChildMyProfileFragment : BaseFragment() {
                     ).show()
                 }
         }
+        val header = requireActivity().navView.getHeaderView(0);
+        val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
+        userNameHeader.text = username
         firebase.setFieldUserDatabase(firebase.uidUser!!, "username", username)
         firebase.setFieldUserDatabase(firebase.uidUser!!, "cityId", cityId)
         firebase.setFieldUserDatabase(firebase.uidUser!!, "city", city)

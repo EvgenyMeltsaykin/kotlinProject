@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="7dp"
-    android:scrollbars="none">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".childFragments.ChildMyProfileFragment">
-
-        <!-- TODO: Update blank fragment layout -->
-
-
-        <Button
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="70dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/background_text"
+    android:paddingBottom="16dp"
+    tools:context=".childFragments.ChildMyProfileFragment">
+        <!--<Button
             android:id="@+id/selectphotoButtonChildmyprofile"
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -26,36 +21,9 @@
             android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/idTextViewChildMyProfile" />
+            app:layout_constraintTop_toBottomOf="@+id/idTextViewChildMyProfile" />-->
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/appCompatImageView"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/colorPrimaryDark"
-            app:layout_constraintTop_toBottomOf="@+id/usernameEditTextChildMyProfile"
-            tools:layout_editor_absoluteX="-16dp" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/appCompatImageView2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="60dp"
-            android:background="@color/colorPrimaryDark"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView"
-            tools:layout_editor_absoluteX="0dp" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/appCompatImageView3"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="60dp"
-            android:background="@color/colorPrimaryDark"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView2"
-            tools:layout_editor_absoluteX="0dp" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
+        <!--<de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/selectphotoImageviewChildmyprofile"
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -63,167 +31,176 @@
             app:layout_constraintBottom_toBottomOf="@+id/selectphotoButtonChildmyprofile"
             app:layout_constraintEnd_toEndOf="@+id/selectphotoButtonChildmyprofile"
             app:layout_constraintStart_toStartOf="@+id/selectphotoButtonChildmyprofile"
-            app:layout_constraintTop_toTopOf="@+id/selectphotoButtonChildmyprofile" />
+            app:layout_constraintTop_toTopOf="@+id/selectphotoButtonChildmyprofile" />-->
 
         <EditText
             android:id="@+id/emailEditTextChildmyprofile"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:cursorVisible="true"
+            android:background="@drawable/simple_edit_text"
             android:ems="10"
             android:inputType="textEmailAddress"
-            app:layout_constraintBottom_toBottomOf="@+id/emailTextViewChildmyprofile"
+            android:paddingLeft="47dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/emailTextViewChildmyprofile"
-            app:layout_constraintTop_toTopOf="@+id/emailTextViewChildmyprofile" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/usernameEditTextChildMyProfile" />
 
         <TextView
             android:id="@+id/emailTextViewChildmyprofile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="3dp"
             android:text="Email:"
             android:textColor="@color/colorText"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/appCompatImageView2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView" />
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/emailEditTextChildmyprofile"
+            app:layout_constraintStart_toStartOf="@+id/emailEditTextChildmyprofile"
+            app:layout_constraintTop_toTopOf="@+id/emailEditTextChildmyprofile" />
 
         <TextView
             android:id="@+id/balanceTextviewChildMyProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:text="Баланс:"
             android:textColor="@color/colorText"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/appCompatImageView3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView2" />
+            app:layout_constraintEnd_toStartOf="@+id/pointTextViewChildMyProfile"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/pointTextViewChildMyProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
             android:text="0"
             android:textColor="@color/colorText"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/balanceTextviewChildMyProfile"
-            app:layout_constraintStart_toEndOf="@+id/balanceTextviewChildMyProfile"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/balanceTextviewChildMyProfile" />
 
         <Button
-            android:textColor="@color/colorButtonText"
             android:id="@+id/saveChangeButtonChildMyProfile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
             android:background="@drawable/simple_button"
             android:text="Сохранить изменения"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/educationalInstitutionEditTextChildMyProfile" />
+            app:layout_constraintTop_toBottomOf="@+id/educationalInstitutionEditTextChildMyProfile"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/cityEditTextChildMyProfile"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/simple_edit_text"
+            android:completionThreshold="1"
+            android:ems="10"
+            android:hint="Введите город"
+            android:inputType="textPersonName"
+            android:paddingLeft="51dp"
+            android:selectAllOnFocus="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailEditTextChildmyprofile" />
 
         <TextView
             android:id="@+id/cityTextViewChildMyProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="3dp"
             android:text="Город:"
             android:textColor="@color/colorText"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView3" />
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cityEditTextChildMyProfile"
+            app:layout_constraintStart_toStartOf="@+id/cityEditTextChildMyProfile"
+            app:layout_constraintTop_toTopOf="@+id/cityEditTextChildMyProfile" />
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/cityEditTextChildMyProfile"
+            android:id="@+id/educationalInstitutionEditTextChildMyProfile"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:background="@drawable/simple_edit_text"
             android:completionThreshold="1"
             android:ems="10"
-            android:hint="Введите город"
+            android:hint="Школа/лицей/гимназия"
             android:inputType="textPersonName"
-            android:selectAllOnFocus="false"
-            app:layout_constraintBottom_toBottomOf="@+id/cityTextViewChildMyProfile"
+            android:paddingLeft="141dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/cityTextViewChildMyProfile"
-            app:layout_constraintTop_toTopOf="@+id/cityTextViewChildMyProfile" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cityEditTextChildMyProfile" />
 
         <TextView
             android:id="@+id/educationalInstitutionTextViewChildMyProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="3dp"
             android:text="Учебное заведение:"
             android:textColor="@color/colorText"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cityTextViewChildMyProfile" />
-
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/educationalInstitutionEditTextChildMyProfile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:completionThreshold="1"
-            android:ems="10"
-            android:hint="Школа/лицей/гимназия"
-            android:inputType="textPersonName"
-            android:text=""
-            app:layout_constraintBottom_toBottomOf="@+id/educationalInstitutionTextViewChildMyProfile"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/educationalInstitutionTextViewChildMyProfile"
-            app:layout_constraintTop_toTopOf="@+id/educationalInstitutionTextViewChildMyProfile" />
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/educationalInstitutionEditTextChildMyProfile"
+            app:layout_constraintStart_toStartOf="@+id/educationalInstitutionEditTextChildMyProfile"
+            app:layout_constraintTop_toTopOf="@+id/educationalInstitutionEditTextChildMyProfile" />
 
         <EditText
             android:id="@+id/usernameEditTextChildMyProfile"
-            android:layout_width="277dp"
-            android:layout_height="23dp"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/transparent"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/simple_edit_text"
+            android:cursorVisible="true"
             android:ems="10"
-            android:gravity="center"
-            android:inputType="textPersonName"
-            android:text=""
-            android:textSize="18sp"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="40dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/selectphotoButtonChildmyprofile" />
+            app:layout_constraintTop_toBottomOf="@+id/idTextViewChildMyProfile" />
 
         <TextView
             android:id="@+id/idTextViewChildMyProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="16dp"
             android:text="0"
             android:textColor="@color/colorText"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/userNameTextViewChild"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:text="Имя:"
+            android:textColor="@color/colorText"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/usernameEditTextChildMyProfile"
+            app:layout_constraintStart_toStartOf="@+id/usernameEditTextChildMyProfile"
+            app:layout_constraintTop_toTopOf="@+id/usernameEditTextChildMyProfile"
+            app:layout_constraintVertical_bias="0.5" />
 
         <!--<TextView
             android:id="@+id/countryTextViewChildMyProfile"
@@ -255,5 +232,4 @@
             app:layout_constraintStart_toEndOf="@+id/countryTextViewChildMyProfile"
             app:layout_constraintTop_toTopOf="@+id/countryTextViewChildMyProfile" />
 -->
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

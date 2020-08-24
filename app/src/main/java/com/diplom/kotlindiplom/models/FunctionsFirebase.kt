@@ -1,15 +1,21 @@
 package com.diplom.kotlindiplom.models
 
+import android.Manifest
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 import com.bumptech.glide.Glide
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.diaries.Diary
@@ -42,24 +48,34 @@ class FunctionsFirebase {
         ref.child("acceptUid").setValue("")
     }
 
-    fun downloadSchoolBook(book: SchoolBook, context: Context) {
+    fun downloadSchoolBook(book: SchoolBook, context: Context, activity: Activity) {
         val ref = FirebaseStorage.getInstance().getReferenceFromUrl(book.url)
         ref.downloadUrl.addOnSuccessListener { uri ->
-            Toast.makeText(context,"Загрузка началась",Toast.LENGTH_SHORT).show()
             val downloadManager =
                 context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val request = DownloadManager.Request(uri)
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            request.setDestinationInExternalFilesDir(
-                context,
-                DIRECTORY_DOWNLOADS,
-                book.name + "pdf"
-            )
-            downloadManager.enqueue(request)
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (checkSelfPermission(context, WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED
+                ) {
+                    Toast.makeText(context, "Загрузка началась", Toast.LENGTH_SHORT).show()
+                    request.setDestinationInExternalPublicDir(
+                        DIRECTORY_DOWNLOADS,
+                        book.name + ".pdf"
+                    )
+                    downloadManager.enqueue(request)
+                } else {
+                    ActivityCompat.requestPermissions(
+                        activity,
+                        arrayOf(WRITE_EXTERNAL_STORAGE),
+                        1
+                    )
+                }
+            }
         }.addOnFailureListener {
-            Toast.makeText(context,"Ошибка при загрузке",Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Ошибка при загрузке", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     fun getDetailsBook(bookSnap: DataSnapshot): SchoolBook {
@@ -84,6 +100,7 @@ class FunctionsFirebase {
         firebaseCallBack: FirebaseCallback<List<SchoolBook>>
     ) {
         val ref = rootRef.child("schoolBooks").child("${numberClass}class").child(subjectName!!)
+        ref.keepSynced(true)
         val books = mutableListOf<SchoolBook>()
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
@@ -110,7 +127,6 @@ class FunctionsFirebase {
                 else role = "parents"
                 val ref =
                     rootRef.child("users").child(role).child(uidUser).child("diary").child("marks")
-                val value = ""
                 ref.keepSynced(true)
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(p0: DataSnapshot) {
@@ -132,16 +148,29 @@ class FunctionsFirebase {
         })
     }
 
-    fun getLessonsFromMark(role: String, firebaseCallBack: FirebaseCallback<List<String>>) {
+    fun getLessonsAndMiddleMark(role: String,semestrNumber: String, firebaseCallBack: FirebaseCallback<Map<String,String>>) {
         val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary").child("marks")
-        val lessons = mutableListOf<String>()
+        val lessons = mutableMapOf<String,String>()
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
                     p0.children.forEach { lesson ->
+                        var lessonName = ""
                         lesson.children.forEach { info ->
                             if (info.key.toString() == "lessonName") {
-                                lessons.add(info.value.toString())
+                                lessonName = info.value.toString()
+                                lesson.children.forEach {semestr->
+                                    if (semestr.key.toString() == "semestr$semestrNumber"){
+                                        var mark = ""
+                                        semestr.children.forEach {middleMark->
+                                            if (middleMark.key.toString() == "middleMark"){
+                                                mark = middleMark.value.toString()
+                                                lessons[lessonName] = mark
+                                            }
+                                        }
+                                    }
+                                }
+
                             }
                         }
                     }
@@ -156,7 +185,33 @@ class FunctionsFirebase {
         })
     }
 
+    fun getMiddleMark(lessonName:String,semestrNumber:String,firebaseCallBack: FirebaseCallback<String>){
+        getRoleByUid(uidUser!!, object : FirebaseCallback<String> {
+            override fun onComplete(answer: String) {
+                var role = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+                val ref =
+                    rootRef.child("users").child(role).child(uidUser).child("diary").child("marks")
+                ref.addListenerForSingleValueEvent(object :ValueEventListener{
+                    override fun onDataChange(p0: DataSnapshot) {
+                        p0.children.forEach {lesson->
+                            lesson.children.forEach {info->
+                                if (info.value.toString() == lessonName) {
 
+                                }
+                            }
+
+                        }
+                    }
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+            }
+        })
+    }
     fun getDetailsMarks(
         lessonName: String,
         numberSemestr: String,
@@ -785,8 +840,8 @@ class FunctionsFirebase {
                     ref.child("profileImageUrl").setValue(it.toString())
                     ref.child("profileImageName").setValue(filename)
 
-                    Glide.with(activity).load(it.toString())
-                        .into(activity.photoImageviewDrawer)
+                    /*Glide.with(activity).load(it.toString())
+                        .into(activity.photoImageviewDrawer)*/
                 }
             }
             .addOnFailureListener {

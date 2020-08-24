@@ -72,16 +72,19 @@ class DetailsMarksFragment : Fragment() {
                 semestrNumberTextView.text = "${value.capitalize()}: $semestrNumber"
             }
         })
-
+        firebase.getMiddleMark(lessonName,semestrNumber,object :FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                middleMarkTextView.text = "Средний балл: $value"
+            }
+        })
         lessonNameTextView.text = "Предмет: $lessonName"
         firebase.getDetailsMarks(lessonName,semestrNumber,object : FirebaseCallback<Map<String,String>>{
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onComplete(value: Map<String, String>) {
-                val middleMark = getMiddleMark(value)
-                middleMarkTextView.text = "Средний балл: ${DoubleRounder.round(middleMark.toDouble(),2)}"
                 val detailMark = mutableListOf<String>()
                 value.forEach { s, s1 ->
-                    detailMark.add("Дата урока:$s.Оценка: $s1")
+                    if (s.isNotEmpty())
+                        detailMark.add("Дата урока:$s.Оценка: $s1")
                 }
                 val adapter = ArrayAdapter<String>(requireContext(),android.R.layout.simple_list_item_1,detailMark)
                 dateMarkListView.adapter = adapter
@@ -91,20 +94,6 @@ class DetailsMarksFragment : Fragment() {
                 middleMarkTextView.isVisible = true
             }
         })
-    }
-    @RequiresApi(Build.VERSION_CODES.N)
-    fun getMiddleMark(detailsMarks : Map<String,String>) : Float{
-        var sum = 0f
-        var countMark = 0
-        detailsMarks.forEach { s, s1 ->
-            if (s1.isDigitsOnly()){
-                sum+=s1.toInt()
-                countMark++
-            }
-
-        }
-        if (countMark == 0) return 0f
-        return sum/countMark
     }
     companion object {
         /**

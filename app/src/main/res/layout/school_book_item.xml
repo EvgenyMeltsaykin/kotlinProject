@@ -16,7 +16,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
-        android:textColor="@color/colorText"
+        android:textColor="@color/colorButtonText"
         app:layout_constraintBottom_toTopOf="@+id/downloadButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -46,4 +46,5 @@
         app:layout_constraintStart_toEndOf="@+id/coverSchoolBookImageView"
         app:layout_constraintTop_toTopOf="@+id/coverSchoolBookImageView"
         app:layout_constraintVertical_bias="1.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

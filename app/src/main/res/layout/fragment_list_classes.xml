@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="70dp"
         android:paddingLeft="16dp"
+        android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="8dp">
 
@@ -21,6 +22,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/simple_button"
             android:text="1 класс"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,6 +34,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/simple_button"
             android:text="2 класс"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="@+id/firstClassButton"
             app:layout_constraintStart_toStartOf="@+id/firstClassButton"
             app:layout_constraintTop_toBottomOf="@+id/firstClassButton" />
@@ -43,6 +46,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/simple_button"
             android:text="3 класс"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="@+id/secondClassButton"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/secondClassButton"
@@ -55,6 +59,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/simple_button"
             android:text="4 класс"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="@+id/thirdClassButton"
             app:layout_constraintStart_toStartOf="@+id/thirdClassButton"
             app:layout_constraintTop_toBottomOf="@+id/thirdClassButton" />
@@ -66,6 +71,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/simple_button"
             android:text="5 класс"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="@+id/fourethClassButton"
             app:layout_constraintStart_toStartOf="@+id/fourethClassButton"
             app:layout_constraintTop_toBottomOf="@+id/fourethClassButton" />
@@ -77,6 +83,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/simple_button"
             android:text="6 класс"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="@+id/fifthClassButton"
             app:layout_constraintStart_toStartOf="@+id/fifthClassButton"
             app:layout_constraintTop_toBottomOf="@+id/fifthClassButton" />
@@ -88,6 +95,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/simple_button"
             android:text="7 класс"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="@+id/sixthClassButton"
             app:layout_constraintStart_toStartOf="@+id/sixthClassButton"
             app:layout_constraintTop_toBottomOf="@+id/sixthClassButton" />
@@ -99,6 +107,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/simple_button"
             android:text="8 класс"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="@+id/seventhClassButton"
             app:layout_constraintStart_toStartOf="@+id/seventhClassButton"
             app:layout_constraintTop_toBottomOf="@+id/seventhClassButton" />
@@ -110,6 +119,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/simple_button"
             android:text="9 класс"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="@+id/eighthClassButton"
             app:layout_constraintStart_toStartOf="@+id/eighthClassButton"
             app:layout_constraintTop_toBottomOf="@+id/eighthClassButton" />
@@ -121,6 +131,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/simple_button"
             android:text="10 класс"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="@+id/ninthClassButton"
             app:layout_constraintStart_toStartOf="@+id/ninthClassButton"
             app:layout_constraintTop_toBottomOf="@+id/ninthClassButton" />
@@ -132,6 +143,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/simple_button"
             android:text="11 класс"
+            android:textColor="@color/colorButtonText"
             app:layout_constraintEnd_toEndOf="@+id/tenthClassButton"
             app:layout_constraintStart_toStartOf="@+id/tenthClassButton"
             app:layout_constraintTop_toBottomOf="@+id/tenthClassButton" />

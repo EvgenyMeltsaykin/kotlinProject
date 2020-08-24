@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="7dp"
-    android:paddingTop="0dp"
-    android:paddingRight="7dp"
-    android:paddingBottom="7dp"
-    android:scrollbars="none">
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="70dp"
-        tools:context="parentFragments.ParentMyProfileFragment">
-
-        <Button
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="70dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/background_text"
+    android:paddingBottom="16dp"
+    tools:context="parentFragments.ParentMyProfileFragment">
+    <!--<Button
             android:id="@+id/selectPhotoButtonParentMyProfile"
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -37,121 +30,105 @@
             app:layout_constraintBottom_toBottomOf="@+id/selectPhotoButtonParentMyProfile"
             app:layout_constraintEnd_toEndOf="@+id/selectPhotoButtonParentMyProfile"
             app:layout_constraintStart_toStartOf="@+id/selectPhotoButtonParentMyProfile"
-            app:layout_constraintTop_toTopOf="@+id/selectPhotoButtonParentMyProfile" />
+            app:layout_constraintTop_toTopOf="@+id/selectPhotoButtonParentMyProfile" />-->
 
-        <EditText
-            android:id="@+id/usernameEditTextParentMyProfile"
-            android:layout_width="277dp"
-            android:layout_height="23dp"
-            android:layout_marginTop="24dp"
-            android:background="@android:color/transparent"
-            android:ems="10"
-            android:gravity="center"
-            android:inputType="textPersonName"
-            android:text=""
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/selectPhotoButtonParentMyProfile" />
+    <EditText
+        android:id="@+id/usernameEditTextParentMyProfile"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/simple_edit_text"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingLeft="40dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/appCompatImageView"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="30dp"
-            android:background="@color/colorPrimaryDark"
-            app:layout_constraintTop_toBottomOf="@+id/usernameEditTextParentMyProfile"
-            tools:layout_editor_absoluteX="-16dp" />
+    <EditText
+        android:id="@+id/emailEditTextParentMyProfile"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/simple_edit_text"
+        android:cursorVisible="true"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="47dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameEditTextParentMyProfile" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/appCompatImageView2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="60dp"
-            android:background="@color/colorPrimaryDark"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView"
-            tools:layout_editor_absoluteX="0dp" />
+    <TextView
+        android:id="@+id/emailTextViewParentMyProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:text="Email:"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/emailEditTextParentMyProfile"
+        app:layout_constraintStart_toStartOf="@+id/emailEditTextParentMyProfile"
+        app:layout_constraintTop_toTopOf="@+id/emailEditTextParentMyProfile"
+        app:layout_constraintVertical_bias="0.538" />
 
-        <TextView
-            android:id="@+id/emailTextViewParentMyProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Email:"
-            android:textColor="@color/colorText"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/appCompatImageView2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView" />
+    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+        android:id="@+id/cityEditTextParentMyProfile"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/simple_edit_text"
+        android:completionThreshold="0"
+        android:ems="10"
+        android:hint="Введите город"
+        android:inputType="textPersonName"
+        android:paddingLeft="51dp"
+        android:selectAllOnFocus="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailEditTextParentMyProfile" />
 
-        <EditText
-            android:id="@+id/emailEditTextParentMyProfile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:cursorVisible="true"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            app:layout_constraintBottom_toBottomOf="@+id/emailTextViewParentMyProfile"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/emailTextViewParentMyProfile"
-            app:layout_constraintTop_toTopOf="@+id/emailTextViewParentMyProfile" />
+    <TextView
+        android:id="@+id/cityTextViewParentMyProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:text="Город:"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cityEditTextParentMyProfile"
+        app:layout_constraintStart_toStartOf="@+id/cityEditTextParentMyProfile"
+        app:layout_constraintTop_toTopOf="@+id/cityEditTextParentMyProfile" />
 
-        <TextView
-            android:id="@+id/cityTextViewParentMyProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
-            android:text="Город:"
-            android:textColor="@color/colorText"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView2" />
+    <Button
+        android:id="@+id/saveChangeButtonParentMyProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/simple_button"
+        android:text="Сохранить изменения"
+        android:textColor="@color/colorButtonText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/cityEditTextParentMyProfile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:completionThreshold="0"
-            android:ems="10"
-            android:hint="Введите город"
-            android:inputType="textPersonName"
-            android:selectAllOnFocus="false"
-            app:layout_constraintBottom_toBottomOf="@+id/cityTextViewParentMyProfile"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/cityTextViewParentMyProfile"
-            app:layout_constraintTop_toTopOf="@+id/cityTextViewParentMyProfile" />
-
-        <Button
-            android:id="@+id/saveChangeButtonParentMyProfile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/simple_button"
-            android:text="Сохранить изменения"
-            android:textColor="@color/colorButtonText"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cityEditTextParentMyProfile"
-            app:layout_constraintVertical_bias="0.375" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+    <TextView
+        android:id="@+id/userNameTextViewMyProfileParent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:text="Имя:"
+        android:textColor="@color/colorText"
+        app:layout_constraintBottom_toBottomOf="@+id/usernameEditTextParentMyProfile"
+        app:layout_constraintStart_toStartOf="@+id/usernameEditTextParentMyProfile"
+        app:layout_constraintTop_toTopOf="@+id/usernameEditTextParentMyProfile" />
+</androidx.constraintlayout.widget.ConstraintLayout>

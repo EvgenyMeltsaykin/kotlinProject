@@ -6,7 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
@@ -17,6 +21,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_school_books.*
+import kotlinx.android.synthetic.main.school_book_item.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -52,27 +57,35 @@ class SchoolBooksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        emptySchoolBooksTextView.isVisible = false
-        val listSchoolBooksRecyclerView = view.findViewById<RecyclerView>(R.id.listSchoolBooksRecyclerView)
+        emptySchoolBooksTextView.isVisible = true
+        val listSchoolBooksRecyclerView =
+            view.findViewById<RecyclerView>(R.id.listSchoolBooksRecyclerView)
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
-        firebase.getSchoolBooks(numberClass,subjectName,object :FirebaseCallback<List<SchoolBook>>{
-            override fun onComplete(value: List<SchoolBook>) {
-                if (value.isEmpty())emptySchoolBooksTextView.isVisible = true
-                value.forEach {
-                    adapter.add(SchoolBookItem(it,requireContext(),object :
-                        SchoolBookItem.OnClickDownloadButton{
-                        override fun onClickDownloadButton(
-                            item: Item<ViewHolder>,
-                            book: SchoolBook
-                        ) {
-                            firebase.downloadSchoolBook(book,requireContext())
-                        }
-                    }))
+        firebase.getSchoolBooks(
+            numberClass,
+            subjectName,
+            object : FirebaseCallback<List<SchoolBook>> {
+                override fun onComplete(value: List<SchoolBook>) {
+                    value.forEach {
+                        emptySchoolBooksTextView.isVisible = false
+                        adapter.add(
+                            SchoolBookItem(it, requireContext(),
+                                object : SchoolBookItem.OnClickDownloadButton {
+                                override fun onClickDownloadButton(
+                                    viewHolder: ViewHolder,
+                                    book: SchoolBook
+                                ) {
+                                    val animAlpha = AnimationUtils.loadAnimation(context, R.anim.alpha)
+                                    viewHolder.itemView.downloadButton.startAnimation(animAlpha)
+                                    firebase.downloadSchoolBook(book,requireContext(),requireActivity())
+                                }
+                            })
+                        )
+                    }
+                    listSchoolBooksRecyclerView.adapter = adapter
                 }
-                listSchoolBooksRecyclerView.adapter = adapter
-            }
-        })
+            })
     }
 
     companion object {

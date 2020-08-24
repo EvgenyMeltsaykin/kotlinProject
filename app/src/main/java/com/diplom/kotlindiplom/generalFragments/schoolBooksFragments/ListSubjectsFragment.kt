@@ -45,11 +45,32 @@ class ListSchoolBooksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mathSubjectButton.setOnClickListener {
+        mathsButton.setOnClickListener {
             navigateNextFragment("maths")
         }
-        russiaLanguageSubjestButton.setOnClickListener {
-            navigateNextFragment("russian language")
+        russianLanguageButton.setOnClickListener {
+            navigateNextFragment("russianLanguage")
+        }
+        geometryButton.setOnClickListener {
+            navigateNextFragment("geometry")
+        }
+        literatureButton.setOnClickListener {
+            navigateNextFragment("literature")
+        }
+        biologyButton.setOnClickListener {
+            navigateNextFragment("biology")
+        }
+        geographyButton.setOnClickListener {
+            navigateNextFragment("geography")
+        }
+        computerScienceButton.setOnClickListener {
+            navigateNextFragment("computerScience")
+        }
+        historyOfRussiaButton.setOnClickListener {
+            navigateNextFragment("historyOfRussia")
+        }
+        socialScienceButton.setOnClickListener {
+            navigateNextFragment("socialScienceButton")
         }
     }
 

@@ -1,8 +1,10 @@
 package com.diplom.kotlindiplom.parentFragments
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -14,8 +16,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.bumptech.glide.Glide
@@ -76,13 +81,26 @@ class ParentMyProfileFragment : BaseFragment() {
 
         val network = FunctionsApi(cityId)
         val firebase = FunctionsFirebase()
-        selectPhotoButtonParentMyProfile.setOnClickListener {
-            Log.d("TAG", "Click on select photo")
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, 0)
-        }
+        /*selectPhotoButtonParentMyProfile.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.type = "image/*"
+                startActivityForResult(intent, 0)
+            }else{
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    1
+                )
+            }
+        }*/
 
+         */
         emailEditTextParentMyProfile.setOnClickListener {
             changeEmail = true
         }
@@ -128,7 +146,7 @@ class ParentMyProfileFragment : BaseFragment() {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
+        /*(if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
             Log.d("TAG", "Photo was select")
             saveChangeButtonParentMyProfile.isVisible = true
             //Новый способ загрузки картинки из галереи
@@ -139,14 +157,14 @@ class ParentMyProfileFragment : BaseFragment() {
             selectPhotoImageviewParentMyProfile.setImageBitmap(bitmap)
             requireActivity().photoImageviewDrawer.setImageBitmap(bitmap)
             selectPhotoButtonParentMyProfile.alpha = 0f
-        }
+        }*/
     }
 
     private fun loadInformationFromFirebase() {
         val firebase = FunctionsFirebase()
         firebase.getParent(firebase.uidUser, object : FirebaseCallback<Parent> {
             override fun onComplete(value: Parent) {
-                if (value.profileImageUrl.isNotEmpty()) {
+                /*if (value.profileImageUrl.isNotEmpty()) {
                     //Загрузка изображения в боковое меню
                     val header = requireActivity().navView.getHeaderView(0);
                     val photo =
@@ -159,7 +177,7 @@ class ParentMyProfileFragment : BaseFragment() {
                             DiskCacheStrategy.ALL
                         ).into(selectPhotoImageviewParentMyProfile)
                     selectPhotoButtonParentMyProfile.alpha = 0f
-                }
+                }*/
                 usernameEditTextParentMyProfile.setText(value.username)
                 emailEditTextParentMyProfile.setText(value.email)
                 cityEditTextParentMyProfile.setText(value.city)
@@ -205,6 +223,9 @@ class ParentMyProfileFragment : BaseFragment() {
         firebase.setFieldUserDatabase(firebase.uidUser!!,"username",username)
         firebase.setFieldUserDatabase(firebase.uidUser!!,"cityId",cityId)
         firebase.setFieldUserDatabase(firebase.uidUser!!,"city",city)
+        val header = requireActivity().navView.getHeaderView(0);
+        val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
+        userNameHeader.text = username
         saveChangeButtonParentMyProfile.isVisible = false
 
         val network = FunctionsNetwork()

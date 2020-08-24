@@ -1,13 +1,16 @@
 package com.diplom.kotlindiplom.generalFragments.markFragments
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
+import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -20,6 +23,7 @@ import com.diplom.kotlindiplom.models.LessonsMarkItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.lessons_mark_item.view.*
+import org.decimal4j.util.DoubleRounder
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,14 +63,14 @@ class LessonsMarkFragment : Fragment() {
         adapter.clear()
         val firebase = FunctionsFirebase()
         val lessonsMarkRecyclerView = view.findViewById<RecyclerView>(R.id.lessonsMarkRecyclerView)
-        firebase.getLessonsFromMark(role,object : FirebaseCallback<List<String>> {
-            override fun onComplete(value: List<String>) {
-                value.forEach {
-                    adapter.add(LessonsMarkItem(it))
+        firebase.getLessonsAndMiddleMark(role,semestrNumber,object : FirebaseCallback<Map<String,String>> {
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onComplete(value: Map<String,String>) {
+                value.forEach { (lessonName, middleMark) ->
+                    adapter.add(LessonsMarkItem(lessonName,middleMark))
                 }
                 lessonsMarkRecyclerView.adapter = adapter
                 progressBar.isVisible = false
-
             }
         })
         adapter.setOnItemClickListener { item, view ->

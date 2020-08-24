@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         setupDrawerAndToolbar()
         //Нажатие на аватарку в боковом меню
         val header = navView.getHeaderView(0);
-        val photo = header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
+        /*val photo = header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
         photo.setOnClickListener {
             val navController = Navigation.findNavController(
                 this,
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             navController?.navigate(R.id.parentMyProfileFragment)
             drawer = findViewById(R.id.drawerLayout)
             drawer?.closeDrawer(GravityCompat.START)
-        }
+        }*/
         //Обработка нажатия выхода в боковом меню
         val menu = navView.menu
         val quit = menu.findItem(R.id.parentExitApplication)
@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         navView.inflateMenu(R.menu.drawer_menu_child)
         //Нажатие на аватарку в боковом меню
         val header = navView.getHeaderView(0);
-        val photo = header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
+        /*val photo = header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
         photo.setOnClickListener {
             val navController = Navigation.findNavController(
                 this,
@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             navController?.navigate(R.id.childMyProfileFragment)
             drawer = findViewById(R.id.drawerLayout)
             drawer?.closeDrawer(GravityCompat.START)
-        }
+        }*/
         setupDrawerAndToolbar()
         //Обработка нажатия выхода в боковом меню
         val menu = navView.menu
@@ -385,7 +385,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             title = "Выберите предмет"
             return
         }
-
         if (navController?.currentDestination?.id == R.id.parentAllTasksFragment || navController?.currentDestination?.id == R.id.parentNewTaskFragment) {
             navController?.popBackStack()
             setTitle("Задания")
@@ -495,11 +494,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         if (role == "child"){
             firebase.getChild(firebase.uidUser!!, object : FirebaseCallback<Child> {
                 override fun onComplete(value: Child) {
-                    header.usernameTextviewDrawer.text = value.username.toUpperCase()
-                    if (value.profileImageUrl.isNotEmpty()) {
+                    header.usernameTextviewDrawer.text = value.username
+                    /*if (value.profileImageUrl.isNotEmpty()) {
                         Glide.with(this@MainActivity).load(value.profileImageUrl)
                             .into(header.photoImageviewDrawer)
-                    }
+                    }*/
                 }
             })
         }
@@ -507,11 +506,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             firebase.getParent(firebase.uidUser!!, object : FirebaseCallback<Parent> {
                 override fun onComplete(value: Parent) {
 
-                    header.usernameTextviewDrawer.text = value.username.toUpperCase()
-                    if (value.profileImageUrl.isNotEmpty()) {
+                    header.usernameTextviewDrawer.text = value.username
+                    /*if (value.profileImageUrl.isNotEmpty()) {
                         Glide.with(this@MainActivity).load(value.profileImageUrl)
                             .into(header.photoImageviewDrawer)
-                    }
+                    }*/
                 }
             })
         }
