@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
@@ -49,7 +50,7 @@ class DiaryFragment : Fragment() {
         val firebase = FunctionsFirebase()
         firebase.getFieldUserDatabase(firebase.uidUser!!,"role",object : FirebaseCallback<String>{
             override fun onComplete(value: String) {
-                sheduleButton.setOnClickListener {
+                sheduleButton?.setOnClickListener {
                     if (value == "child"){
                         Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_weekdayFragment)
                     }
@@ -58,7 +59,7 @@ class DiaryFragment : Fragment() {
                     }
 
                 }
-                marksButton.setOnClickListener {
+                marksButton?.setOnClickListener {
                     if (value == "child"){
                         Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_chooseSemestrElschoolFragment)
                     }
@@ -72,13 +73,15 @@ class DiaryFragment : Fragment() {
 
         firebase.getFieldDiary(firebase.uidUser!!,"url",object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
-                diaryTextView.text = value
+                diaryTextView?.text = value
             }
         })
-        deleteDiaryButton.setOnClickListener {
+        deleteDiaryButton?.setOnClickListener {
             firebase.deleteDiary()
+            val bundle = bundleOf()
+            bundle.putBoolean("deletedDiary",true)
             Navigation.findNavController(requireActivity(), R.id.navFragment)
-                .navigate(R.id.action_diaryFragment_to_loginDiaryFragment)
+                .navigate(R.id.action_diaryFragment_to_loginDiaryFragment,bundle)
         }
     }
 

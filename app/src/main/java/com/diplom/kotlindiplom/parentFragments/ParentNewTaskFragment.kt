@@ -52,19 +52,19 @@ class NewTaskFragment : Fragment() {
         val time = Calendar.getInstance().time
         val currentTime = time.toLocaleString()
         addTaskButtonParent.setOnClickListener {
-            if (titleTaskEditTextParent.text.isEmpty()){
+            if (titleTaskEditTextParent?.text?.isEmpty()!!){
                 Toast.makeText(requireContext(),"Заполните поле название",Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (costTaskEditTextParent.text.isEmpty()){
+            if (costTaskEditTextParent?.text?.isEmpty()!!){
                 Toast.makeText(requireContext(),"Заполните поле стоимость",Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             firebase.addNewTaskDatabase(
                 requireContext(),
-                titleTaskEditTextParent.text.toString(),
-                descriptionTaskEditTextParent.text.toString(),
-                costTaskEditTextParent.text.toString().toInt(),
+                titleTaskEditTextParent?.text.toString(),
+                descriptionTaskEditTextParent?.text.toString(),
+                costTaskEditTextParent?.text.toString().toInt(),
                 firebase.uidUser.toString(),
                 currentTime.toString()
             )

@@ -8,7 +8,7 @@
     tools:context=".RegistryActivity">
 
     <EditText
-        android:id="@+id/usernameEditеextRegistry"
+        android:id="@+id/usernameEditTextRegistry"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -27,7 +27,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/emailEdittextRegistry"
+        android:id="@+id/emailEditTextRegistry"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
@@ -36,12 +36,12 @@
         android:hint="E-mail"
         android:inputType="textEmailAddress"
         android:paddingLeft="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/usernameEditеextRegistry"
-        app:layout_constraintStart_toStartOf="@+id/usernameEditеextRegistry"
-        app:layout_constraintTop_toBottomOf="@+id/usernameEditеextRegistry" />
+        app:layout_constraintEnd_toEndOf="@+id/usernameEditTextRegistry"
+        app:layout_constraintStart_toStartOf="@+id/usernameEditTextRegistry"
+        app:layout_constraintTop_toBottomOf="@+id/usernameEditTextRegistry" />
 
     <EditText
-        android:id="@+id/passwordEdittextRegistry"
+        android:id="@+id/passwordEditTextRegistry"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
@@ -50,9 +50,9 @@
         android:hint="Пароль"
         android:inputType="textPassword"
         android:paddingLeft="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/emailEdittextRegistry"
-        app:layout_constraintStart_toStartOf="@+id/emailEdittextRegistry"
-        app:layout_constraintTop_toBottomOf="@+id/emailEdittextRegistry" />
+        app:layout_constraintEnd_toEndOf="@+id/emailEditTextRegistry"
+        app:layout_constraintStart_toStartOf="@+id/emailEditTextRegistry"
+        app:layout_constraintTop_toBottomOf="@+id/emailEditTextRegistry" />
 
     <Button
         android:id="@+id/registryButtonRegistry"
@@ -70,10 +70,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEdittextRegistry" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditTextRegistry" />
 
     <TextView
-        android:id="@+id/alreadyRegistryRextviewRegistry"
+        android:id="@+id/alreadyRegistryTextViewRegistry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -92,7 +92,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintBottom_toTopOf="@+id/usernameEditеextRegistry"
+        app:layout_constraintBottom_toTopOf="@+id/usernameEditTextRegistry"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

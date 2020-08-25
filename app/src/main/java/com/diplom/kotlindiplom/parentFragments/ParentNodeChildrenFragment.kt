@@ -54,8 +54,8 @@ class ParentNodeChildrenFragment : Fragment() {
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
         updateRecyclerView(firebase,adapter)
-        childrenRecyclerViewParent.adapter = adapter
-        addChildButton.setOnClickListener {
+        childrenRecyclerViewParent?.adapter = adapter
+        addChildButton?.setOnClickListener {
             firebase.sendRequestChild(childIdEditTextParent,requireContext())
         }
 

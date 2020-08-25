@@ -57,22 +57,22 @@ class ChildTasksFragment : Fragment() {
             R.id.navFragment
         )
 
-        unfulfilledButtonChildTasks.setOnClickListener {
+        unfulfilledButtonChildTasks?.setOnClickListener {
             val bundle : Bundle = bundleOf()
             bundle.putString("title","Невыполненные")
             navController.navigate(R.id.childAllTasksFragment,bundle)
         }
-        completedButtonChildTasks.setOnClickListener {
+        completedButtonChildTasks?.setOnClickListener {
             val bundle : Bundle = bundleOf()
             bundle.putString("title","Выполненные")
             navController.navigate(R.id.childAllTasksFragment,bundle)
         }
-        checkButtonChildTasks.setOnClickListener {
+        checkButtonChildTasks?.setOnClickListener {
             val bundle : Bundle = bundleOf()
             bundle.putString("title","На проверке")
             navController.navigate(R.id.childAllTasksFragment,bundle)
         }
-        additionalButtonChildTasks.setOnClickListener {
+        additionalButtonChildTasks?.setOnClickListener {
             val bundle : Bundle = bundleOf()
             bundle.putString("title","Дополнительные")
             navController.navigate(R.id.childAllTasksFragment,bundle)

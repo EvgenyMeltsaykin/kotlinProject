@@ -56,18 +56,13 @@ class ChooseSemestrElschoolFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val bundle = bundleOf()
         val firebase = FunctionsFirebase()
-        progressBar.isVisible = false
-        val firstSemestrButton = view.findViewById<Button>(R.id.firstSemestrButton)
-        val secondSemestrButton = view.findViewById<Button>(R.id.secondSemestrButton)
-        val thirdSemestrButton = view.findViewById<Button>(R.id.thirdSemestrButton)
-        val refreshMarkButton = view.findViewById<Button>(R.id.refreshMarkButton)
-        val dateUpdateTextView = view.findViewById<TextView>(R.id.dateUpdateTextView)
+        progressBar?.isVisible = false
         firebase.getFieldMarks("dateUpdate",object :FirebaseCallback<String>{
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onComplete(value: String) {
-                dateUpdateTextView.text = "Дата обновления: $value"
+                dateUpdateTextView?.text = "Дата обновления: $value"
                 if (value.isEmpty() || idChild.isNotEmpty()){
-                    dateUpdateTextView.text = "Дата обновления: ${LocalDate.now()}"
+                    dateUpdateTextView?.text = "Дата обновления: ${LocalDate.now()}"
                     refreshMarks()
                 }
             }
@@ -82,18 +77,18 @@ class ChooseSemestrElschoolFragment : Fragment() {
             }
         })
 
-        refreshMarkButton.setOnClickListener {
+        refreshMarkButton?.setOnClickListener {
             refreshMarks()
         }
-        firstSemestrButton.setOnClickListener {
+        firstSemestrButton?.setOnClickListener {
             bundle.putString("semestrNumber","1")
             navigateToLessons(requireActivity(),bundle)
         }
-        secondSemestrButton.setOnClickListener {
+        secondSemestrButton?.setOnClickListener {
             bundle.putString("semestrNumber","2")
             navigateToLessons(requireActivity(),bundle)
         }
-        thirdSemestrButton.setOnClickListener {
+        thirdSemestrButton?.setOnClickListener {
             bundle.putString("semestrNumber","3")
             navigateToLessons(requireActivity(),bundle)
         }
@@ -101,10 +96,6 @@ class ChooseSemestrElschoolFragment : Fragment() {
     @ExperimentalStdlibApi
     fun refreshMarks(){
         val firebase = FunctionsFirebase()
-        val firstSemestrButton = view?.findViewById<Button>(R.id.firstSemestrButton)
-        val secondSemestrButton = view?.findViewById<Button>(R.id.secondSemestrButton)
-        val thirdSemestrButton = view?.findViewById<Button>(R.id.thirdSemestrButton)
-        val refreshMarkButton = view?.findViewById<Button>(R.id.refreshMarkButton)
 
         val hideButtons = {
             refreshMarkButton?.isVisible = false

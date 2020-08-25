@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupWindow
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -19,6 +20,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -36,6 +38,9 @@ import kotlinx.android.synthetic.main.header.view.*
 
 class MainActivity : AppCompatActivity(), ActivityCallback {
     private var drawer: DrawerLayout? = null
+    var navHostFragment: NavHostFragment? = null
+    var navController :NavController? = null
+    var menu :Menu? = null
     private var back_pressed: Long = 0
     private var role = ""
     override fun getRole(): String {
@@ -47,6 +52,10 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         role = intent.getStringExtra("role")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.navFragment) as NavHostFragment
+        navController = navHostFragment?.navController
+        drawer = findViewById(R.id.drawerLayout)
+        menu = navView.menu
 
         if (role == "child") {
             settingsChild()
@@ -54,14 +63,18 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         if (role == "parent"){
             settingsParent()
         }
-
     }
 
     fun settingsParent(){
         navView.inflateMenu(R.menu.drawer_menu_parent)
         setupDrawerAndToolbar()
         //Нажатие на аватарку в боковом меню
-        val header = navView.getHeaderView(0);
+        val header = navView.getHeaderView(0)
+        val usernameTextViewHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
+        usernameTextViewHeader.setOnClickListener {
+            navController?.navigate(R.id.parentMyProfileFragment)
+            drawer?.closeDrawer(GravityCompat.START)
+        }
         /*val photo = header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
         photo.setOnClickListener {
             val navController = Navigation.findNavController(
@@ -72,16 +85,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             drawer = findViewById(R.id.drawerLayout)
             drawer?.closeDrawer(GravityCompat.START)
         }*/
-        //Обработка нажатия выхода в боковом меню
-        val menu = navView.menu
-        val quit = menu.findItem(R.id.parentExitApplication)
-        quit.setOnMenuItemClickListener {
-            FirebaseAuth.getInstance().signOut()
-            intent = Intent(this, ChooseActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            return@setOnMenuItemClickListener true
-        }
         val firebase = FunctionsFirebase()
         val uiFunctions = FunctionsUI()
         val ref = firebase.parentRef.child(firebase.uidUser!!)
@@ -161,17 +164,20 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         })
         if (!intent.getStringExtra("taskId").isNullOrBlank()){
             val bundle = bundleOf()
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.navFragment) as NavHostFragment
-            val navController = navHostFragment.navController
             bundle.putString("taskId",intent.getStringExtra("taskId"))
             bundle.putString("title",intent.getStringExtra("title"))
-            navController.navigate(R.id.action_mainFragment_to_parentTaskContentFragment,bundle)
+            navController?.navigate(R.id.action_mainFragment_to_parentTaskContentFragment,bundle)
         }
     }
     fun settingsChild(){
         navView.inflateMenu(R.menu.drawer_menu_child)
         //Нажатие на аватарку в боковом меню
-        val header = navView.getHeaderView(0);
+        val header = navView.getHeaderView(0)
+        val usernameTextViewHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
+        usernameTextViewHeader.setOnClickListener {
+            navController?.navigate(R.id.childMyProfileFragment)
+            drawer?.closeDrawer(GravityCompat.START)
+        }
         /*val photo = header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
         photo.setOnClickListener {
             val navController = Navigation.findNavController(
@@ -183,17 +189,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             drawer?.closeDrawer(GravityCompat.START)
         }*/
         setupDrawerAndToolbar()
-        //Обработка нажатия выхода в боковом меню
-        val menu = navView.menu
-        val quit = menu.findItem(R.id.childExitApplication)
-        quit.setOnMenuItemClickListener {
-            FirebaseAuth.getInstance().signOut()
-            intent = Intent(this, ChooseActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            return@setOnMenuItemClickListener true
-        }
-
         val firebase = FunctionsFirebase()
         val uiFunctions = FunctionsUI()
         val requestRef = firebase.childRef.child(firebase.uidUser!!)
@@ -323,19 +318,13 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         })
         if (!intent.getStringExtra("taskId").isNullOrBlank()){
             val bundle = bundleOf()
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.navFragment) as NavHostFragment
-            val navController = navHostFragment.navController
             bundle.putString("taskId",intent.getStringExtra("taskId"))
             bundle.putString("title",intent.getStringExtra("title"))
-            navController.navigate(R.id.action_mainFragment_to_childTaskContentFragment,bundle)
+            navController?.navigate(R.id.action_mainFragment_to_childTaskContentFragment,bundle)
         }
 
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val navController = Navigation.findNavController(
-            this,
-            R.id.navFragment
-        )
         when (item.itemId) {
             R.id.menuPointsChild -> navController?.navigate(
                 R.id.childMyProfileFragment
@@ -385,10 +374,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
     override fun onBackPressed() {
-        val navController = Navigation.findNavController(
-            this,
-            R.id.navFragment
-        )
         if (navController?.currentDestination?.id == R.id.listSubjectsFragment) {
             navController?.popBackStack()
             title = "Выберите класс"
@@ -411,38 +396,38 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         }
         if (navController?.currentDestination?.id == R.id.weekdayFragment) {
             if (role == "child") {
-                navController.navigate(R.id.action_weekdayFragment_to_diaryFragment)
+                navController?.navigate(R.id.action_weekdayFragment_to_diaryFragment)
                 setTitle("Электронный дневник")
             }
             if (role == "parent"){
-                navController.navigate(R.id.action_weekdayFragment_to_chooseChildSheduleFragment)
+                navController?.navigate(R.id.action_weekdayFragment_to_chooseChildSheduleFragment)
                 setTitle("Выберите ребенка")
             }
             return
         }
         if (navController?.currentDestination?.id == R.id.chooseChildSheduleFragment) {
-            navController.navigate(R.id.action_chooseChildSheduleFragment_to_diaryFragment)
+            navController?.navigate(R.id.action_chooseChildSheduleFragment_to_diaryFragment)
             setTitle("Электронный дневник")
             return
         }
         if (navController?.currentDestination?.id == R.id.chooseSemestrElschoolFragment) {
             if (role == "child") {
-                navController.navigate(R.id.action_chooseSemestrElschoolFragment_to_diaryFragment)
+                navController?.navigate(R.id.action_chooseSemestrElschoolFragment_to_diaryFragment)
                 setTitle("Электронный дневник")
             }
             if (role == "parent"){
-                navController.navigate(R.id.action_chooseSemestrElschoolFragment_to_chooseChildMarkFragment)
+                navController?.navigate(R.id.action_chooseSemestrElschoolFragment_to_chooseChildMarkFragment)
                 setTitle("Выберите ребенка")
             }
             return
         }
         if (navController?.currentDestination?.id == R.id.lessonsMarkFragment) {
-            navController.navigate(R.id.action_lessonsMarkFragment_to_chooseSemestrElschoolFragment)
+            navController?.navigate(R.id.action_lessonsMarkFragment_to_chooseSemestrElschoolFragment)
             setTitle("Выберите семестр")
             return
         }
         if (navController?.currentDestination?.id == R.id.chooseChildMarkFragment) {
-            navController.navigate(R.id.action_chooseChildMarkFragment_to_diaryFragment)
+            navController?.navigate(R.id.action_chooseChildMarkFragment_to_diaryFragment)
             setTitle("Электронный дневник")
             return
         }
@@ -487,14 +472,10 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
     private fun setupDrawerAndToolbar() {
-        val host: NavHostFragment = supportFragmentManager
-            .findFragmentById(R.id.navFragment) as NavHostFragment? ?: return
-        val navController = host.navController
         val sideBar = findViewById<NavigationView>(R.id.navView)
-        sideBar?.setupWithNavController(navController)
+        sideBar?.setupWithNavController(navController!!)
         val toolBar = findViewById<Toolbar>(R.id.Toolbar)
         setSupportActionBar(toolBar)
-        drawer = findViewById(R.id.drawerLayout)
         val toggle = ActionBarDrawerToggle(
             this,
             drawer,
@@ -505,10 +486,24 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         val header = navView.getHeaderView(0)
         val firebase = FunctionsFirebase()
         //Загрузка фото и имени в боковое меню при запуске приложения
-        if (role == "child"){
+        firebase.getFieldUserDatabase(firebase.uidUser!!,"username",object :FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                header.usernameTextviewDrawer.text = value
+            }
+        })
+        //Обработка нажатия выхода в боковом меню
+        val quit = menu?.findItem(R.id.exitApplication)
+        quit?.setOnMenuItemClickListener {
+            FirebaseAuth.getInstance().signOut()
+            intent = Intent(this, ChooseActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            return@setOnMenuItemClickListener true
+        }
+        /*if (role == "child"){
             firebase.getChild(firebase.uidUser!!, object : FirebaseCallback<Child> {
                 override fun onComplete(value: Child) {
-                    header.usernameTextviewDrawer.text = value.username
+
                     /*if (value.profileImageUrl.isNotEmpty()) {
                         Glide.with(this@MainActivity).load(value.profileImageUrl)
                             .into(header.photoImageviewDrawer)
@@ -527,7 +522,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                     }*/
                 }
             })
-        }
+        }*/
         drawer?.addDrawerListener(toggle)
         toggle.syncState()
     }

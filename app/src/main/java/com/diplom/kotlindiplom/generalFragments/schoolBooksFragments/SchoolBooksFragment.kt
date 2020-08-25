@@ -57,18 +57,16 @@ class SchoolBooksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        emptySchoolBooksTextView.isVisible = false
-        val listSchoolBooksRecyclerView =
-            view.findViewById<RecyclerView>(R.id.listSchoolBooksRecyclerView)
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
-        schoolBooksProgressBar.isVisible = true
+        emptySchoolBooksTextView?.isVisible = false
+        schoolBooksProgressBar?.isVisible = true
         firebase.getSchoolBooks(
             numberClass,
             subjectName,
             object : FirebaseCallback<List<SchoolBook>> {
                 override fun onComplete(value: List<SchoolBook>) {
-                    if (value.isEmpty())emptySchoolBooksTextView.isVisible = true
+                    if (value.isEmpty())emptySchoolBooksTextView?.isVisible = true
                     value.forEach {
                         adapter.add(
                             SchoolBookItem(it, requireContext(),
@@ -84,8 +82,8 @@ class SchoolBooksFragment : Fragment() {
                             })
                         )
                     }
-                    listSchoolBooksRecyclerView.adapter = adapter
-                    schoolBooksProgressBar.isVisible = false
+                    listSchoolBooksRecyclerView?.adapter = adapter
+                    schoolBooksProgressBar?.isVisible = false
                 }
             })
     }

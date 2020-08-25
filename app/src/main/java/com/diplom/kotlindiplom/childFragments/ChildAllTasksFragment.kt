@@ -54,8 +54,7 @@ class ChildAllTasksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
 
-        val taskRecyclerViewChild = view.findViewById<RecyclerView>(R.id.taskRecyclerViewChild)
-        tasksEmptyTextView.isVisible = false
+        tasksEmptyTextView?.isVisible = false
         var status: Int = -2
         if (title == "Невыполненные") status = -1;
         if (title == "На проверке") status = 0;
@@ -71,13 +70,13 @@ class ChildAllTasksFragment : Fragment() {
                         firebase.getTasksParentUid(value, status, object : FirebaseCallback<List<Task>> {
                             override fun onComplete(value: List<Task>) {
                                 if (value.isEmpty()){
-                                    tasksEmptyTextView.isVisible = true
+                                    tasksEmptyTextView?.isVisible = true
                                     //taskRecyclerViewChild.isVisible = false
                                 }
                                 value.forEach {
                                     adapter.add(TaskItem(it))
                                 }
-                                taskRecyclerViewChild.adapter = adapter
+                                taskRecyclerViewChild?.adapter = adapter
                                 adapter.setOnItemClickListener { item, view ->
                                     val taskItem = item as TaskItem
                                     val bundle: Bundle = bundleOf()
@@ -98,13 +97,13 @@ class ChildAllTasksFragment : Fragment() {
             firebase.getTasksChildUid(firebase.uidUser!!,status,object : FirebaseCallback<List<Task>>{
                 override fun onComplete(value: List<Task>) {
                     if (value.isEmpty()){
-                        tasksEmptyTextView.isVisible = true
+                        tasksEmptyTextView?.isVisible = true
                        // taskRecyclerViewChild.isVisible = false
                     }
                     value.forEach {
                         adapter.add(TaskItem(it))
                     }
-                    taskRecyclerViewChild.adapter = adapter
+                    taskRecyclerViewChild?.adapter = adapter
                     adapter.setOnItemClickListener { item, view ->
                         val taskItem = item as TaskItem
                         val bundle: Bundle = bundleOf()

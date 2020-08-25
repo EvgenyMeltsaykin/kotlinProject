@@ -8,7 +8,7 @@
     tools:context=".LoginActivity">
 
     <EditText
-        android:id="@+id/emailEdittextLogin"
+        android:id="@+id/emailEditTextLogin"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -27,7 +27,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/passwordEdittextLogin"
+        android:id="@+id/passwordEditTextLogin"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
@@ -36,9 +36,9 @@
         android:hint="Пароль"
         android:inputType="textPassword"
         android:paddingLeft="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/emailEdittextLogin"
-        app:layout_constraintStart_toStartOf="@+id/emailEdittextLogin"
-        app:layout_constraintTop_toBottomOf="@+id/emailEdittextLogin" />
+        app:layout_constraintEnd_toEndOf="@+id/emailEditTextLogin"
+        app:layout_constraintStart_toStartOf="@+id/emailEditTextLogin"
+        app:layout_constraintTop_toBottomOf="@+id/emailEditTextLogin" />
 
     <Button
         android:id="@+id/loginButtonLogin"
@@ -54,10 +54,10 @@
         android:textColor="@color/colorButtonText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEdittextLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditTextLogin" />
 
     <TextView
-        android:id="@+id/backregistryTextviewLogin"
+        android:id="@+id/backregistryTextViewLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -76,13 +76,13 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintBottom_toTopOf="@+id/emailEdittextLogin"
+        app:layout_constraintBottom_toTopOf="@+id/emailEditTextLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/loginTextviewLogin"
+        android:id="@+id/loginTextViewLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -103,6 +103,6 @@
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEdittextLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditTextLogin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,14 +32,14 @@ private const val ARG_PARAM2 = "param2"
  */
 class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    private var deletedDiary: Boolean = false
     private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.title = "Вход в дневник"
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
+            deletedDiary = it.getBoolean("deletedDiary",false)
             param2 = it.getString(ARG_PARAM2)
         }
     }
@@ -56,20 +56,20 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progressBar.isVisible = false
+        progressBar?.isVisible = false
         val firebase = FunctionsFirebase()
         setupSpinner()
-        enterDiaryButton.setOnClickListener {
+        enterDiaryButton?.setOnClickListener {
             if (urlDiary.isEmpty()) {
                 Toast.makeText(requireContext(), "Выберите дневник", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (loginDiaryEditText.text.isNotEmpty() && passwordDiaryEditText.text.isNotEmpty()) {
-                val login = loginDiaryEditText.text.toString()
-                val password = passwordDiaryEditText.text.toString()
+            if (loginDiaryEditText?.text?.isNotEmpty()!! && passwordDiaryEditText?.text?.isNotEmpty()!!) {
+                val login = loginDiaryEditText?.text.toString()
+                val password = passwordDiaryEditText?.text.toString()
                 val diary = Diary()
-                enterDiaryButton.isVisible = false
-                progressBar.isVisible = true
+                enterDiaryButton?.isVisible = false
+                progressBar?.isVisible = true
                 GlobalScope.launch(Dispatchers.Main) {
                     var rightLogin = false
                     when (urlDiary) {
@@ -77,7 +77,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                             withContext(Dispatchers.IO) { diary.elschool.login(login, password) }
                     }
                     if (!rightLogin) {
-                        enterDiaryButton.isVisible = true
+                        enterDiaryButton?.isVisible = true
                         Toast.makeText(
                             requireContext(),
                             "Не верный логин или пароль",
@@ -101,14 +101,16 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                     }
                 }
             } else {
-                enterDiaryButton.isVisible = true
+                enterDiaryButton?.isVisible = true
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
             }
         }
         firebase.getFieldDiary(firebase.uidUser!!,"login",object : FirebaseCallback<String>{
             override fun onComplete(value: String) {
                 if(value.isNotEmpty()){
-                    Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_loginDiaryFragment_to_diaryFragment)
+                    if (!deletedDiary){
+                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_loginDiaryFragment_to_diaryFragment)
+                    }
                 }
             }
         })
@@ -122,10 +124,10 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                 arrayAdapter =
                     ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, value)
                 arrayAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                diariesSpinnerWeekday.adapter = arrayAdapter
+                diariesSpinnerWeekday?.adapter = arrayAdapter
             }
         })
-        diariesSpinnerWeekday.onItemSelectedListener = this
+        diariesSpinnerWeekday?.onItemSelectedListener = this
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

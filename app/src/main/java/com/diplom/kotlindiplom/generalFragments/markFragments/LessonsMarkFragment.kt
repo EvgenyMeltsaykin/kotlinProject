@@ -22,6 +22,7 @@ import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.LessonsMarkItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.fragment_lessons_mark.*
 import kotlinx.android.synthetic.main.lessons_mark_item.view.*
 import org.decimal4j.util.DoubleRounder
 
@@ -58,19 +59,17 @@ class LessonsMarkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val progressBar = view.findViewById<ProgressBar>(R.id.lessonsMarkProgressBar)
         val adapter = GroupAdapter<ViewHolder>()
         adapter.clear()
         val firebase = FunctionsFirebase()
-        val lessonsMarkRecyclerView = view.findViewById<RecyclerView>(R.id.lessonsMarkRecyclerView)
         firebase.getLessonsAndMiddleMark(role,semestrNumber,object : FirebaseCallback<Map<String,String>> {
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onComplete(value: Map<String,String>) {
                 value.forEach { (lessonName, middleMark) ->
                     adapter.add(LessonsMarkItem(lessonName,middleMark))
                 }
-                lessonsMarkRecyclerView.adapter = adapter
-                progressBar.isVisible = false
+                lessonsMarkRecyclerView?.adapter = adapter
+                lessonsMarkProgressBar?.isVisible = false
             }
         })
         adapter.setOnItemClickListener { item, view ->

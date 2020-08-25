@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -28,10 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.FirebaseCallback
-
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.childFragments.changeEmail
-import com.diplom.kotlindiplom.childFragments.cityId
 import com.diplom.kotlindiplom.models.*
 import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
@@ -51,7 +49,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 var cityId: Int? = -1
-
+var changeEmail = false
 class ParentMyProfileFragment : BaseFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -101,11 +99,11 @@ class ParentMyProfileFragment : BaseFragment() {
         }*/
 
          */
-        emailEditTextParentMyProfile.setOnClickListener {
+        emailEditTextParentMyProfile?.setOnClickListener {
             changeEmail = true
         }
-        emailEditTextParentMyProfile.setOnKeyListener { v, keyCode, event ->
-            v.emailEditTextParentMyProfile.isCursorVisible = true
+        emailEditTextParentMyProfile?.setOnKeyListener { v, keyCode, event ->
+            v.emailEditTextParentMyProfile?.isCursorVisible = true
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 val imn =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -117,25 +115,25 @@ class ParentMyProfileFragment : BaseFragment() {
         }
 
 
-        saveChangeButtonParentMyProfile.setOnClickListener {
+        saveChangeButtonParentMyProfile?.setOnClickListener {
             firebase.uploadImageToFirebase(selectedPhotoUri, requireActivity(), "parents")
             saveChangeInParentProfile()
         }
 
-        usernameEditTextParentMyProfile.doAfterTextChanged {
-            saveChangeButtonParentMyProfile.isVisible = true
+        usernameEditTextParentMyProfile?.doAfterTextChanged {
+            saveChangeButtonParentMyProfile?.isVisible = true
         }
-        emailEditTextParentMyProfile.doAfterTextChanged {
-            saveChangeButtonParentMyProfile.isVisible = true
+        emailEditTextParentMyProfile?.doAfterTextChanged {
+            saveChangeButtonParentMyProfile?.isVisible = true
         }
 
         val cities: MutableList<City> = mutableListOf()
-        cityEditTextParentMyProfile.doAfterTextChanged {
-            saveChangeButtonParentMyProfile.isVisible = true
+        cityEditTextParentMyProfile?.doAfterTextChanged {
+            saveChangeButtonParentMyProfile?.isVisible = true
             network.getNodeCities(cityEditTextParentMyProfile, requireContext(), cities)
         }
 
-        cityEditTextParentMyProfile.setOnItemClickListener { parent, view, position, id ->
+        cityEditTextParentMyProfile?.setOnItemClickListener { parent, view, position, id ->
             cityId = cities[id.toInt()].id
         }
 
@@ -148,7 +146,7 @@ class ParentMyProfileFragment : BaseFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         /*(if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
             Log.d("TAG", "Photo was select")
-            saveChangeButtonParentMyProfile.isVisible = true
+            saveChangeButtonParentMyProfile?.isVisible = true
             //Новый способ загрузки картинки из галереи
             selectedPhotoUri = data.data
             val source =
@@ -178,27 +176,27 @@ class ParentMyProfileFragment : BaseFragment() {
                         ).into(selectPhotoImageviewParentMyProfile)
                     selectPhotoButtonParentMyProfile.alpha = 0f
                 }*/
-                usernameEditTextParentMyProfile.setText(value.username)
-                emailEditTextParentMyProfile.setText(value.email)
-                cityEditTextParentMyProfile.setText(value.city)
+                usernameEditTextParentMyProfile?.setText(value.username)
+                emailEditTextParentMyProfile?.setText(value.email)
+                cityEditTextParentMyProfile?.setText(value.city)
                 cityId = value.cityId.toString().toInt()
-                saveChangeButtonParentMyProfile.isVisible = false
+                saveChangeButtonParentMyProfile?.isVisible = false
             }
         })
     }
 
     private fun saveChangeInParentProfile() {
         val user = FirebaseAuth.getInstance().currentUser
-        val email = emailEditTextParentMyProfile.text.toString()
-        val username = usernameEditTextParentMyProfile.text.toString()
-        val city = cityEditTextParentMyProfile.text.toString()
+        val email = emailEditTextParentMyProfile?.text.toString()
+        val username = usernameEditTextParentMyProfile?.text.toString()
+        val city = cityEditTextParentMyProfile?.text.toString()
         //val ref = FirebaseDatabase.getInstance().getReference("/users/parents/$uid")
         val firebase = FunctionsFirebase()
         if (changeEmail) {
-            user?.updateEmail(emailEditTextParentMyProfile.text.toString())
+            user?.updateEmail(emailEditTextParentMyProfile?.text.toString())
                 ?.addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
-                    if (emailEditTextParentMyProfile.text != null) {
+                    if (emailEditTextParentMyProfile?.text != null) {
                         firebase.setFieldUserDatabase(firebase.uidUser!!,"email",email)
                     }
                     Toast.makeText(
@@ -210,6 +208,7 @@ class ParentMyProfileFragment : BaseFragment() {
                         requireActivity(),
                         ChooseActivity::class.java
                     )
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
                 }
                 ?.addOnFailureListener {
@@ -226,7 +225,7 @@ class ParentMyProfileFragment : BaseFragment() {
         val header = requireActivity().navView.getHeaderView(0);
         val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         userNameHeader.text = username
-        saveChangeButtonParentMyProfile.isVisible = false
+        saveChangeButtonParentMyProfile?.isVisible = false
 
         val network = FunctionsNetwork()
         if(network.checkConnect(context)){

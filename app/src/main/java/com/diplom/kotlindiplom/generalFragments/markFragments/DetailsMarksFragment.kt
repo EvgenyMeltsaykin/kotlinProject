@@ -57,27 +57,21 @@ class DetailsMarksFragment : Fragment() {
 
         val firebase = FunctionsFirebase()
 
-        val semestrNumberTextView = view.findViewById<TextView>(R.id.semestrNumberTextView)
-        val lessonNameTextView = view.findViewById<TextView>(R.id.lessonNameTextView)
-        val middleMarkTextView = view.findViewById<TextView>(R.id.middleMarkTextView)
-        val progressBar = view.findViewById<ProgressBar>(R.id.detailsMarkProgressBar)
-        val dateMarkListView = view.findViewById<ListView>(R.id.dateMarkListView)
-
-        semestrNumberTextView.isVisible = false
-        lessonNameTextView.isVisible = false
-        middleMarkTextView.isVisible = false
+        semestrNumberTextView?.isVisible = false
+        lessonNameTextView?.isVisible = false
+        middleMarkTextView?.isVisible = false
 
         firebase.getFieldDiary(firebase.uidUser!!,"semestrName",object : FirebaseCallback<String>{
             override fun onComplete(value: String) {
-                semestrNumberTextView.text = "${value.capitalize()}: $semestrNumber"
+                semestrNumberTextView?.text = "${value.capitalize()}: $semestrNumber"
             }
         })
         firebase.getMiddleMark(lessonName,semestrNumber,object :FirebaseCallback<String>{
             override fun onComplete(value: String) {
-                middleMarkTextView.text = "Средний балл: $value"
+                middleMarkTextView?.text = "Средний балл: $value"
             }
         })
-        lessonNameTextView.text = "Предмет: $lessonName"
+        lessonNameTextView?.text = "Предмет: $lessonName"
         firebase.getDetailsMarks(lessonName,semestrNumber,object : FirebaseCallback<Map<String,String>>{
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onComplete(value: Map<String, String>) {
@@ -87,11 +81,11 @@ class DetailsMarksFragment : Fragment() {
                         detailMark.add("Дата урока:$s.Оценка: $s1")
                 }
                 val adapter = ArrayAdapter<String>(requireContext(),android.R.layout.simple_list_item_1,detailMark)
-                dateMarkListView.adapter = adapter
-                progressBar.isVisible = false
-                semestrNumberTextView.isVisible = true
-                lessonNameTextView.isVisible = true
-                middleMarkTextView.isVisible = true
+                dateMarkListView?.adapter = adapter
+                detailsMarkProgressBar?.isVisible = false
+                semestrNumberTextView?.isVisible = true
+                lessonNameTextView?.isVisible = true
+                middleMarkTextView?.isVisible = true
             }
         })
     }

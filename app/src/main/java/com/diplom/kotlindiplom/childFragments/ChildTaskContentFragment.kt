@@ -56,20 +56,20 @@ class ChildTaskContentFragment : Fragment() {
         val firebase = FunctionsFirebase()
         firebase.getTask(taskId.toString(), object : FirebaseCallback<Task> {
             override fun onComplete(value: Task) {
-                titleContentTaskTextViewChild.setText(value.title)
-                costContentTaskTextViewChild.setText("Стоимость: " + value.cost.toString())
-                descriptionTaskContentTextViewChild.setText(value.description)
+                titleContentTaskTextViewChild?.setText("Название:" +value.title)
+                costContentTaskTextViewChild?.setText("Стоимость: " + value.cost.toString())
+                descriptionTaskContentTextViewChild?.setText(value.description)
                 if (value.status == -1) {
-                    statusContentTaskTextViewChild.setText("Не выполнено")
-                    sendTaskButtonChild.isVisible = true
+                    statusContentTaskTextViewChild?.setText("Не выполнено")
+                    sendTaskButtonChild?.isVisible = true
                 }
                 if (value.status == 0) {
-                    statusContentTaskTextViewChild.setText("На проверке")
+                    statusContentTaskTextViewChild?.setText("На проверке")
                 }
-                if (value.status == 1) statusContentTaskTextViewChild.setText("Выполнено")
+                if (value.status == 1) statusContentTaskTextViewChild?.setText("Выполнено")
             }
         })
-        sendTaskButtonChild.setOnClickListener {
+        sendTaskButtonChild?.setOnClickListener {
             firebase.setFieldDatabaseTask(taskId.toString(),"status",0)
             firebase.setFieldDatabaseTask(taskId.toString(),"showNotification",0)
             firebase.setFieldDatabaseTask(taskId.toString(),"childUid",firebase.uidUser!!)

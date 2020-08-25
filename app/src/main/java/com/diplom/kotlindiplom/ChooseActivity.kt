@@ -19,13 +19,13 @@ class ChooseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose)
-        childButtonChoose.setOnClickListener {
+        childButtonChoose?.setOnClickListener {
             intent = Intent(this, RegistryActivity::class.java)
             intent.putExtra("parentOrNot", false)
             startActivity(intent)
         }
 
-        parentButtonChoose.setOnClickListener {
+        parentButtonChoose?.setOnClickListener {
             intent = Intent(this, RegistryActivity::class.java)
             intent.putExtra("parentOrNot", true)
             startActivity(intent)

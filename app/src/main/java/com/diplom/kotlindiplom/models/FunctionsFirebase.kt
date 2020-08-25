@@ -748,7 +748,7 @@ class FunctionsFirebase {
         })
     }
 
-    fun sendRequestChild(editTextId: EditText, context: Context) {
+    fun sendRequestChild(editTextId: EditText?, context: Context) {
         val childRef = rootRef.child("users").child("children")
         childRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -757,7 +757,7 @@ class FunctionsFirebase {
 
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
-                    val childUid = searchIdChild(p0, editTextId.text.toString())
+                    val childUid = searchIdChild(p0, editTextId?.text.toString())
                     if (childUid.isNotEmpty()) {
                         getFieldUserDatabase(
                             childUid,

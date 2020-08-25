@@ -65,27 +65,27 @@ class WeekdayFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupCalendar()
-        progressBar.isVisible = false
+        progressBar?.isVisible = false
 
-        refreshSheduleButton.setOnClickListener {
+        refreshSheduleButton?.setOnClickListener {
             updateShedule(true, calendar)
         }
-        mondayButton.setOnClickListener {
+        mondayButton?.setOnClickListener {
             openFragmentDay("Понедельник")
         }
-        tuesdayButton.setOnClickListener {
+        tuesdayButton?.setOnClickListener {
             openFragmentDay("Вторник")
         }
-        wednesdayButton.setOnClickListener {
+        wednesdayButton?.setOnClickListener {
             openFragmentDay("Среда")
         }
-        thursdayButton.setOnClickListener {
+        thursdayButton?.setOnClickListener {
             openFragmentDay("Четверг")
         }
-        fridayButton.setOnClickListener {
+        fridayButton?.setOnClickListener {
             openFragmentDay("Пятница")
         }
-        saturdayButton.setOnClickListener {
+        saturdayButton?.setOnClickListener {
             openFragmentDay("Суббота")
         }
 
@@ -93,15 +93,6 @@ class WeekdayFragment : Fragment() {
     @ExperimentalStdlibApi
     private fun updateShedule(updateWithoutCheck: Boolean, calendar: Calendar) {
         val firebase = FunctionsFirebase()
-        val mondayButton = view?.findViewById<Button>(R.id.mondayButton)
-        val tuesdayButton = view?.findViewById<Button>(R.id.tuesdayButton)
-        val wednesdayButton = view?.findViewById<Button>(R.id.wednesdayButton)
-        val thursdayButton = view?.findViewById<Button>(R.id.thursdayButton)
-        val fridayButton = view?.findViewById<Button>(R.id.fridayButton)
-        val saturdayButton = view?.findViewById<Button>(R.id.saturdayButton)
-        val openCalendarButton = view?.findViewById<Button>(R.id.openCalendarButton)
-        val refreshSheduleButton = view?.findViewById<Button>(R.id.refreshSheduleButton)
-        val dateTextView = view?.findViewById<TextView>(R.id.dateTextView)
 
         val showButtons = {
             mondayButton?.isVisible = true
@@ -180,38 +171,38 @@ class WeekdayFragment : Fragment() {
 
     @ExperimentalStdlibApi
     private fun setupCalendar() {
-        calendarView.isVisible = false
-        val selectedDate = calendarView.date
+        calendarView?.isVisible = false
+        val selectedDate = calendarView?.date
         val firebase = FunctionsFirebase()
         val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
         firebase.getDateUpdateInShedule(object : FirebaseCallback<LocalDate> {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onComplete(value: LocalDate) {
                 if (updateShedule) {
-                    calendar.timeInMillis = selectedDate
+                    calendar.timeInMillis = selectedDate!!
                 } else {
                     calendar.set(value.year, value.monthValue - 1, value.dayOfMonth)
-                    calendarView.date = calendar.timeInMillis
+                    calendarView?.date = calendar.timeInMillis
                 }
                 selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
                 selectedYear = calendar.get(Calendar.YEAR)
-                dateTextView.text = dateFormatter.format(calendar.time)
+                dateTextView?.text = dateFormatter.format(calendar.time)
             }
         })
-        openCalendarButton.setOnClickListener {
-            if (!calendarView.isVisible) {
-                openCalendarButton.text = "Закрыть календарь"
-                calendarView.isVisible = true
+        openCalendarButton?.setOnClickListener {
+            if (!calendarView?.isVisible!!) {
+                openCalendarButton?.text = "Закрыть календарь"
+                calendarView?.isVisible = true
             } else {
-                openCalendarButton.text = "Открыть календарь"
-                calendarView.isVisible = false
+                openCalendarButton?.text = "Открыть календарь"
+                calendarView?.isVisible = false
             }
         }
-        calendarView.setOnDateChangeListener { calendarView, year, month, dayOfMonth ->
+        calendarView?.setOnDateChangeListener { calendarView, year, month, dayOfMonth ->
             calendar.set(year, month, dayOfMonth)
-            dateTextView.text = dateFormatter.format(calendar.time)
-            openCalendarButton.text = "Открыть календарь"
-            calendarView.isVisible = false
+            dateTextView?.text = dateFormatter.format(calendar.time)
+            openCalendarButton?.text = "Открыть календарь"
+            calendarView?.isVisible = false
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
 

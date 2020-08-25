@@ -49,7 +49,7 @@ class SheduleDayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        messageTextView.isVisible  =false
+        messageTextView?.isVisible  =false
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
         val day = activity?.title.toString().substringBefore(" ")
@@ -71,8 +71,8 @@ class SheduleDayFragment : Fragment() {
                         fl = false
                     }
                 }
-                if (fl)messageTextView.isVisible  =true
-                lessonsRecyclerView.adapter = adapter
+                if (fl)messageTextView?.isVisible  =true
+                lessonsRecyclerView?.adapter = adapter
             }
         })
 

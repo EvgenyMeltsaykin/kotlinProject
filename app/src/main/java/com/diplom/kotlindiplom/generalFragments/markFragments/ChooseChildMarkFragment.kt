@@ -59,10 +59,10 @@ class ChooseChildMarkFragment : Fragment() {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progressBar.isVisible= false
+        progressBar?.isVisible= false
         updateRecyclerView()
 
-        refreshButton.setOnClickListener {
+        refreshButton?.setOnClickListener {
             updateChildFirebase()
         }
 
@@ -71,8 +71,8 @@ class ChooseChildMarkFragment : Fragment() {
     fun updateChildFirebase(){
         val diary = Diary()
         Toast.makeText(requireContext(),"Подождите, идет загрузка списка детей",Toast.LENGTH_SHORT).show()
-        progressBar.isVisible = true
-        refreshButton.isVisible = false
+        progressBar?.isVisible = true
+        refreshButton?.isVisible = false
         val firebase = FunctionsFirebase()
         firebase.getFieldDiary(firebase.uidUser!!,"url",object :FirebaseCallback<String> {
             override fun onComplete(value: String) {
@@ -84,13 +84,13 @@ class ChooseChildMarkFragment : Fragment() {
                                 GlobalScope.launch(Dispatchers.Main) {
                                     if (value){
                                         updateRecyclerView()
-                                        progressBar.isVisible = false
-                                        refreshButton.isVisible = true
+                                        progressBar?.isVisible = false
+                                        refreshButton?.isVisible = true
                                         Toast.makeText(requireContext(),"Список детей успешно загружен",Toast.LENGTH_SHORT).show()
                                     }else{
                                         Toast.makeText(requireContext(),"Ошибка при загрузке",Toast.LENGTH_SHORT).show()
-                                        progressBar.isVisible = false
-                                        refreshButton.isVisible = true
+                                        progressBar?.isVisible = false
+                                        refreshButton?.isVisible = true
                                     }
                                 }
 
@@ -112,7 +112,7 @@ class ChooseChildMarkFragment : Fragment() {
                     value.forEach{
                         adapter.add(ChildDiaryItem(it))
                     }
-                    childMarkRecyclerView.adapter = adapter
+                    childMarkRecyclerView?.adapter = adapter
                 }else{
                     updateChildFirebase()
                 }

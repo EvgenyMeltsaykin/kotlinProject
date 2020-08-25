@@ -22,7 +22,7 @@
         android:title="Список детей"
         android:icon="@drawable/ic_child"/>
     <item
-        android:id="@+id/parentExitApplication"
+        android:id="@+id/exitApplication"
         android:title="Выйти"
         android:icon="@drawable/ic_exit"/>
 

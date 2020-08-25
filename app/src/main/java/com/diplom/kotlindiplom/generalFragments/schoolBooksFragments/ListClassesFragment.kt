@@ -45,37 +45,37 @@ class ListClassesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        firstClassButton.setOnClickListener {
+        firstClassButton?.setOnClickListener {
             navigateNextFragment(1)
         }
-        secondClassButton.setOnClickListener {
+        secondClassButton?.setOnClickListener {
             navigateNextFragment(2)
         }
-        thirdClassButton.setOnClickListener {
+        thirdClassButton?.setOnClickListener {
             navigateNextFragment(3)
         }
-        fourethClassButton.setOnClickListener {
+        fourethClassButton?.setOnClickListener {
             navigateNextFragment(4)
         }
-        fifthClassButton.setOnClickListener {
+        fifthClassButton?.setOnClickListener {
             navigateNextFragment(5)
         }
-        sixthClassButton.setOnClickListener {
+        sixthClassButton?.setOnClickListener {
             navigateNextFragment(6)
         }
-        seventhClassButton.setOnClickListener {
+        seventhClassButton?.setOnClickListener {
             navigateNextFragment(7)
         }
-        eighthClassButton.setOnClickListener {
+        eighthClassButton?.setOnClickListener {
             navigateNextFragment(8)
         }
-        ninthClassButton.setOnClickListener {
+        ninthClassButton?.setOnClickListener {
             navigateNextFragment(9)
         }
-        tenthClassButton.setOnClickListener {
+        tenthClassButton?.setOnClickListener {
             navigateNextFragment(10)
         }
-        eleventhClassButton.setOnClickListener {
+        eleventhClassButton?.setOnClickListener {
             navigateNextFragment(11)
         }
     }

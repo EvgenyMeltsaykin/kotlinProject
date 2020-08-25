@@ -24,7 +24,7 @@
         android:title="Задания"
         android:icon="@drawable/ic_tasks"/>
     <item
-        android:id="@+id/childExitApplication"
+        android:id="@+id/exitApplication"
         android:title="Выйти"
         android:icon="@drawable/ic_exit" />
 </menu>

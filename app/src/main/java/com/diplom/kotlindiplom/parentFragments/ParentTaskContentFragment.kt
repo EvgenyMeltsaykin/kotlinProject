@@ -55,19 +55,19 @@ class ParentTaskContentFragment : Fragment() {
         val firebase = FunctionsFirebase()
         firebase.getTask(taskId.toString(), object: FirebaseCallback<Task>{
             override fun onComplete(value: Task) {
-                titleTaskContentTextViewParent.setText(value.title)
-                costTaskContentTextViewParent.setText("Стоимость: " + value.cost.toString())
-                descriptionTaskContentTextViewParent.setText(value.description)
-                if (value.status == -1) statusContentTastTextViewParent.setText("Не выполнено")
+                titleTaskContentTextViewParent?.setText("Название:" + value.title)
+                costTaskContentTextViewParent?.setText("Стоимость: " + value.cost.toString())
+                descriptionTaskContentTextViewParent?.setText(value.description)
+                if (value.status == -1) statusContentTastTextViewParent?.setText("Не выполнено")
                 if (value.status == 0){
-                    statusContentTastTextViewParent.setText("На проверке")
-                    acceptContentTaskButtonParent.isVisible = true
-                    rejectContentTaskButtonParent.isVisible = true
+                    statusContentTastTextViewParent?.setText("На проверке")
+                    acceptContentTaskButtonParent?.isVisible = true
+                    rejectContentTaskButtonParent?.isVisible = true
                 }
-                if (value.status == 1) statusContentTastTextViewParent.setText("Выполнено")
+                if (value.status == 1) statusContentTastTextViewParent?.setText("Выполнено")
             }
         })
-        acceptContentTaskButtonParent.setOnClickListener {
+        acceptContentTaskButtonParent?.setOnClickListener {
             firebase.setFieldDatabaseTask(taskId.toString(),"status",1)
             firebase.setFieldDatabaseTask(taskId.toString(),"showNotification",0)
             Toast.makeText(requireContext(),"Задание принято",Toast.LENGTH_SHORT).show()
@@ -82,7 +82,7 @@ class ParentTaskContentFragment : Fragment() {
             })
 
         }
-        rejectContentTaskButtonParent.setOnClickListener {
+        rejectContentTaskButtonParent?.setOnClickListener {
             firebase.setFieldDatabaseTask(taskId.toString(),"status",-1)
             firebase.setFieldDatabaseTask(taskId.toString(),"showNotification",2)
             firebase.setFieldDatabaseTask(taskId.toString(),"childUid","")

@@ -42,7 +42,7 @@ class HomeworkFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        homeworkTextView.text = homework
+        homeworkTextView?.text = homework
     }
 
     companion object {

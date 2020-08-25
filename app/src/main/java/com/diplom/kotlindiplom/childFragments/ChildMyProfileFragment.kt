@@ -12,8 +12,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -30,8 +29,10 @@ import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_child_my_profile.*
+//import kotlinx.android.synthetic.main.fragment_child_my_profile.*
 import kotlinx.android.synthetic.main.fragment_child_my_profile.view.*
 import kotlinx.android.synthetic.main.header.*
+import org.w3c.dom.Text
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -71,8 +72,6 @@ class ChildMyProfileFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
-
-
         changeEmail = false
         loadInformationFromFirebase()
 
@@ -99,14 +98,14 @@ class ChildMyProfileFragment : BaseFragment() {
         }
         */
  */
-        emailEditTextChildmyprofile.setOnClickListener {
+        emailEditTextChildmyprofile?.setOnClickListener {
             changeEmail = true
         }
-        usernameEditTextChildMyProfile.doAfterTextChanged {
-            saveChangeButtonChildMyProfile.isVisible = true
+        usernameEditTextChildMyProfile?.doAfterTextChanged {
+            saveChangeButtonChildMyProfile?.isVisible = true
         }
-        emailEditTextChildmyprofile.setOnKeyListener { v, keyCode, event ->
-            v.emailEditTextChildmyprofile.isCursorVisible = true
+        emailEditTextChildmyprofile?.setOnKeyListener { v, keyCode, event ->
+            v.emailEditTextChildmyprofile?.isCursorVisible = true
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 val imn =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -117,37 +116,37 @@ class ChildMyProfileFragment : BaseFragment() {
             }
         }
 
-        saveChangeButtonChildMyProfile.setOnClickListener {
+        saveChangeButtonChildMyProfile?.setOnClickListener {
             firebase.uploadImageToFirebase(selectedPhotoUri, requireActivity(), "children")
             saveChangeInChildProfile()
         }
 
-        emailEditTextChildmyprofile.doAfterTextChanged {
-            saveChangeButtonChildMyProfile.isVisible = true
+        emailEditTextChildmyprofile?.doAfterTextChanged {
+            saveChangeButtonChildMyProfile?.isVisible = true
         }
 
         val cities: MutableList<City> = mutableListOf()
-        cityEditTextChildMyProfile.doAfterTextChanged {
-            saveChangeButtonChildMyProfile.isVisible = true
-            educationalInstitutionEditTextChildMyProfile.text.clear()
+        cityEditTextChildMyProfile?.doAfterTextChanged {
+            saveChangeButtonChildMyProfile?.isVisible = true
+            educationalInstitutionEditTextChildMyProfile?.text?.clear()
             schoolId = -1
-            network.getNodeCities(cityEditTextChildMyProfile, requireContext(), cities)
+            network.getNodeCities(cityEditTextChildMyProfile!!, requireContext(), cities)
         }
-        cityEditTextChildMyProfile.setOnItemClickListener { parent, view, position, id ->
+        cityEditTextChildMyProfile?.setOnItemClickListener { parent, view, position, id ->
             cityId = cities[id.toInt()].id
         }
 
         val schools: MutableList<SchoolClass> = mutableListOf()
-        educationalInstitutionEditTextChildMyProfile.doAfterTextChanged {
-            saveChangeButtonChildMyProfile.isVisible = true
+        educationalInstitutionEditTextChildMyProfile?.doAfterTextChanged {
+            saveChangeButtonChildMyProfile?.isVisible = true
             network.getNodeSchools(
-                educationalInstitutionEditTextChildMyProfile,
+                educationalInstitutionEditTextChildMyProfile!!,
                 requireContext(),
                 schools,
                 cityId
             )
         }
-        educationalInstitutionEditTextChildMyProfile.setOnItemClickListener { parent, view, position, id ->
+        educationalInstitutionEditTextChildMyProfile?.setOnItemClickListener { parent, view, position, id ->
             schoolId = schools[id.toInt()].id
         }
 
@@ -161,7 +160,7 @@ class ChildMyProfileFragment : BaseFragment() {
 
         /*if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
             Log.d(TAG, "Photo was select")
-            saveChangeButtonChildMyProfile.isVisible = true
+            saveChangeButtonChildMyProfile?.isVisible = true
             //Новый способ загрузки картинки из галереи
             selectedPhotoUri = data.data
             val source =
@@ -195,26 +194,26 @@ class ChildMyProfileFragment : BaseFragment() {
                 val header = requireActivity().navView.getHeaderView(0);
                 val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
                 userNameHeader.text = value.username
-                usernameEditTextChildMyProfile.setText(value.username)
-                emailEditTextChildmyprofile.setText(value.email)
-                pointTextViewChildMyProfile.text = value.point.toString()
-                cityEditTextChildMyProfile.setText(value.city)
-                educationalInstitutionEditTextChildMyProfile.setText(value.educationalInstitution)
+                usernameEditTextChildMyProfile?.setText(value.username)
+                emailEditTextChildmyprofile?.setText(value.email)
+                pointTextViewChildMyProfile?.text = value.point.toString()
+                cityEditTextChildMyProfile?.setText(value.city)
+                educationalInstitutionEditTextChildMyProfile?.setText(value.educationalInstitution)
                 cityId = value.cityId.toString().toInt()
                 schoolId = value.educationalInstitutionId.toString().toInt()
-                idTextViewChildMyProfile.text = "id: " + value.id;
-                saveChangeButtonChildMyProfile.isVisible = false
+                idTextViewChildMyProfile?.text = "id: " + value.id;
+                saveChangeButtonChildMyProfile?.isVisible = false
             }
         })
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun saveChangeInChildProfile() {
-        val username = usernameEditTextChildMyProfile.text.toString();
-        val city = cityEditTextChildMyProfile.text.toString()
-        val educationalInstitution = educationalInstitutionEditTextChildMyProfile.text.toString()
-        val email = emailEditTextChildmyprofile.text.toString()
-        val point = pointTextViewChildMyProfile.text.toString().toInt()
+        val username = usernameEditTextChildMyProfile?.text.toString();
+        val city = cityEditTextChildMyProfile?.text.toString()
+        val educationalInstitution = educationalInstitutionEditTextChildMyProfile?.text.toString()
+        val email = emailEditTextChildmyprofile?.text.toString()
+        val point = pointTextViewChildMyProfile?.text.toString().toInt()
 
         val user = FirebaseAuth.getInstance().currentUser
         val firebase = FunctionsFirebase()
@@ -222,7 +221,7 @@ class ChildMyProfileFragment : BaseFragment() {
             user?.updateEmail(email)
                 ?.addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
-                    if (emailEditTextChildmyprofile.text != null) {
+                    if (emailEditTextChildmyprofile?.text != null) {
                         firebase.setFieldUserDatabase(firebase.uidUser!!, "email", email)
                     }
                     Toast.makeText(
@@ -234,6 +233,7 @@ class ChildMyProfileFragment : BaseFragment() {
                         requireActivity(),
                         ChooseActivity::class.java
                     )
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
                 }
                 ?.addOnFailureListener {
@@ -256,7 +256,7 @@ class ChildMyProfileFragment : BaseFragment() {
             "educationalInstitution",
             educationalInstitution
         )
-        saveChangeButtonChildMyProfile.isVisible = false
+        saveChangeButtonChildMyProfile?.isVisible = false
 
         val network = FunctionsNetwork()
         if (network.checkConnect(context)) {
