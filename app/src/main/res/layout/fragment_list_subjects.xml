@@ -15,113 +15,14 @@
         android:paddingBottom="10dp">
 
 
-        <Button
-            android:id="@+id/mathsButton"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/subjectsRecyclerView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/simple_button"
-            android:text="Математика"
-            android:textColor="@color/colorButtonText"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/russianLanguageButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/simple_button"
-            android:text="Русский язык"
-            android:textColor="@color/colorButtonText"
-            app:layout_constraintEnd_toEndOf="@+id/mathsButton"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/mathsButton"
-            app:layout_constraintTop_toBottomOf="@+id/geometryButton" />
-
-        <Button
-            android:id="@+id/literatureButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/simple_button"
-            android:text="Литература"
-            android:textColor="@color/colorButtonText"
-            app:layout_constraintEnd_toEndOf="@+id/russianLanguageButton"
-            app:layout_constraintStart_toStartOf="@+id/russianLanguageButton"
-            app:layout_constraintTop_toBottomOf="@+id/russianLanguageButton" />
-
-        <Button
-            android:id="@+id/geometryButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/simple_button"
-            android:text="Геометрия"
-            android:textColor="@color/colorButtonText"
-            app:layout_constraintEnd_toEndOf="@+id/mathsButton"
-            app:layout_constraintStart_toStartOf="@+id/mathsButton"
-            app:layout_constraintTop_toBottomOf="@+id/mathsButton" />
-
-        <Button
-            android:id="@+id/biologyButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/simple_button"
-            android:text="Биология"
-            android:textColor="@color/colorButtonText"
-            app:layout_constraintEnd_toEndOf="@+id/literatureButton"
-            app:layout_constraintStart_toStartOf="@+id/literatureButton"
-            app:layout_constraintTop_toBottomOf="@+id/literatureButton" />
-
-        <Button
-            android:id="@+id/geographyButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/simple_button"
-            android:text="География"
-            android:textColor="@color/colorButtonText"
-            app:layout_constraintEnd_toEndOf="@+id/biologyButton"
-            app:layout_constraintStart_toStartOf="@+id/biologyButton"
-            app:layout_constraintTop_toBottomOf="@+id/biologyButton" />
-
-        <Button
-            android:id="@+id/computerScienceButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/simple_button"
-            android:text="Информатика"
-            android:textColor="@color/colorButtonText"
-            app:layout_constraintEnd_toEndOf="@+id/geographyButton"
-            app:layout_constraintStart_toStartOf="@+id/geographyButton"
-            app:layout_constraintTop_toBottomOf="@+id/geographyButton" />
-
-        <Button
-            android:id="@+id/historyOfRussiaButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/simple_button"
-            android:text="История России"
-            android:textColor="@color/colorButtonText"
-            app:layout_constraintEnd_toEndOf="@+id/computerScienceButton"
-            app:layout_constraintStart_toStartOf="@+id/computerScienceButton"
-            app:layout_constraintTop_toBottomOf="@+id/computerScienceButton" />
-
-        <Button
-            android:id="@+id/socialScienceButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/simple_button"
-            android:text="Обществознание"
-            android:textColor="@color/colorButtonText"
-            app:layout_constraintEnd_toEndOf="@+id/historyOfRussiaButton"
-            app:layout_constraintStart_toStartOf="@+id/historyOfRussiaButton"
-            app:layout_constraintTop_toBottomOf="@+id/historyOfRussiaButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

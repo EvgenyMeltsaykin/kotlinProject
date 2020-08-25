@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.Child
@@ -53,6 +54,7 @@ class ParentNodeChildrenFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
+        emptyChildTextView?.isVisible = false
         updateRecyclerView(firebase,adapter)
         childrenRecyclerViewParent?.adapter = adapter
         addChildButton?.setOnClickListener {
@@ -90,6 +92,7 @@ class ParentNodeChildrenFragment : Fragment() {
         adapter.clear()
         firebase.getChildrenByParentUid(firebase.uidUser!!,object : FirebaseCallback<List<Child>>{
             override fun onComplete(value: List<Child>) {
+                emptyChildTextView?.isVisible = value.isEmpty()
                 value.forEach {
                     adapter.add(ChildrenItem(it,object : ChildrenItem.OnClickDeleteButton{
                         override fun onClickDeleteButton(item: Item<ViewHolder>, child: Child) {

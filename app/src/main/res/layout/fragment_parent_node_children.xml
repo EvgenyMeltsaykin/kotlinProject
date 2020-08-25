@@ -28,30 +28,28 @@
     <EditText
         android:id="@+id/childIdEditTextParent"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:background="@drawable/simple_edit_text"
         android:completionThreshold="0"
         android:ems="10"
         android:hint="id"
         android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="@+id/idChildTextView"
+        android:paddingLeft="81dp"
         app:layout_constraintEnd_toStartOf="@+id/addChildButton"
-        app:layout_constraintStart_toEndOf="@+id/idChildTextView"
-        app:layout_constraintTop_toTopOf="@+id/idChildTextView" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/addChildButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:background="@drawable/button_green"
+        android:text="Добавить"
         android:textColor="@color/colorButtonText"
-        android:text="Запрос"
         app:layout_constraintBottom_toBottomOf="@+id/childIdEditTextParent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/childIdEditTextParent" />
@@ -60,13 +58,28 @@
         android:id="@+id/idChildTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="3dp"
         android:text="id ребенка:"
         android:textColor="@color/colorText"
-        android:textSize="18sp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/childIdEditTextParent"
+        app:layout_constraintStart_toStartOf="@+id/childIdEditTextParent"
+        app:layout_constraintTop_toTopOf="@+id/childIdEditTextParent" />
+
+    <TextView
+        android:id="@+id/emptyChildTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center|center_horizontal|center_vertical"
+        android:text="Вы можете узнать id ребенка из его профиля"
+        android:textColor="@color/colorText"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/childIdEditTextParent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,7 +17,16 @@
     <string name="biology"> Биология</string>
     <string name="geography"> География</string>
     <string name="historyOfRussia"> История России</string>
-    <string name="socialScienceButton"> Обществознание</string>
+    <string name="history"> История</string>
+    <string name="socialScience"> Обществознание</string>
+    <string name="surroundingWorld"> Окружающий мир</string>
+    <string name="nativeLanguage"> Родной язык</string>
+    <string name="literaryReading"> Литературное чтение</string>
+    <string name="englishLanguage"> Английский язык</string>
+    <string name="germanLanguage"> Немецкий язык</string>
+    <string name="frenchLanguage"> Французский язык</string>
+    <string name="physics"> Физика</string>
+    <string name="chemistry"> Химия</string>
 
 
     socialScienceButton?.setOnClickListener {

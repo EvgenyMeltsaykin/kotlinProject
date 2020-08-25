@@ -86,7 +86,15 @@ class MailFragment : Fragment() {
             "biology" -> name = resources.getString(R.string.biology)
             "geography" -> name = resources.getString(R.string.geography)
             "historyOfRussia" -> name = resources.getString(R.string.historyOfRussia)
-            "socialScienceButton" -> name = resources.getString(R.string.socialScienceButton)
+            "socialScience" -> name = resources.getString(R.string.socialScience)
+            "surroundingWorld" -> name = resources.getString(R.string.surroundingWorld)
+            "nativeLanguage" -> name = resources.getString(R.string.nativeLanguage)
+            "literaryReading" -> name = resources.getString(R.string.literaryReading)
+            "englishLanguage" -> name = resources.getString(R.string.englishLanguage)
+            "germanLanguage" -> name = resources.getString(R.string.germanLanguage)
+            "frenchLanguage" -> name = resources.getString(R.string.frenchLanguage)
+            "physics" -> name = resources.getString(R.string.physics)
+            "chemistry" -> name = resources.getString(R.string.chemistry)
         }
         messageUserTextView?.isVisible = true
         messageUserTextView?.text = "Основную информацию мы заполнили за Вас! Осталось ввести только фамилию автора"

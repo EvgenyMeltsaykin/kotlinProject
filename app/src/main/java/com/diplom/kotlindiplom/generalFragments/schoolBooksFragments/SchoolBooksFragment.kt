@@ -55,6 +55,8 @@ class SchoolBooksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
+        messageStaticTextView?.isVisible = false
+        writeEmailButton?.isVisible = false
         emptySchoolBooksTextView?.isVisible = false
         schoolBooksProgressBar?.isVisible = true
         firebase.getSchoolBooks(
@@ -80,6 +82,8 @@ class SchoolBooksFragment : Fragment() {
                     }
                     listSchoolBooksRecyclerView?.adapter = adapter
                     schoolBooksProgressBar?.isVisible = false
+                    messageStaticTextView?.isVisible = true
+                    writeEmailButton?.isVisible = true
                 }
             })
         writeEmailButton?.setOnClickListener {

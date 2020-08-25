@@ -376,14 +376,14 @@ class Elschool {
                         if (value.isNullOrEmpty()) {
                             Toast.makeText(
                                 context,
-                                "Не удалось загрузить расписание. Авторизуйтесь снова, если Вы недавно сменили пароль ",
+                                "Не удалось загрузить расписание. Сайт не отвечает.Если вы недавно сменили пароль, авторизуйтесь заново.",
                                 Toast.LENGTH_LONG
                             ).show()
                         } else {
                             Toast.makeText(
                                 context,
                                 "Раписание загружено успешно",
-                                Toast.LENGTH_SHORT
+                                Toast.LENGTH_LONG
                             ).show()
                         }
                     }
