@@ -1,12 +1,10 @@
-package com.diplom.kotlindiplom.generalFragments.sheduleFragments
+package com.diplom.kotlindiplom.generalFragments.scheduleFragments
 
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -34,7 +32,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class WeekdayFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var updateShedule: Boolean = true
+    private var updateSchedule: Boolean = true
     private var id: String = ""
     private var updateWithoutCheck: Boolean = false
     var selectedWeek = 0
@@ -44,7 +42,7 @@ class WeekdayFragment : Fragment() {
         super.onCreate(savedInstanceState)
         activity?.title = "Расписание"
         arguments?.let {
-            updateShedule = it.getBoolean("updateShedule", true)
+            updateSchedule = it.getBoolean("updateSchedule", true)
             id = it.getString("id", "")
             updateWithoutCheck = it.getBoolean("updateWithoutCheck", false)
         }
@@ -67,8 +65,8 @@ class WeekdayFragment : Fragment() {
         setupCalendar()
         progressBar?.isVisible = false
 
-        refreshSheduleButton?.setOnClickListener {
-            updateShedule(true, calendar)
+        refreshScheduleButton?.setOnClickListener {
+            updateSchedule(true, calendar)
         }
         mondayButton?.setOnClickListener {
             openFragmentDay("Понедельник")
@@ -91,7 +89,7 @@ class WeekdayFragment : Fragment() {
 
     }
     @ExperimentalStdlibApi
-    private fun updateShedule(updateWithoutCheck: Boolean, calendar: Calendar) {
+    private fun updateSchedule(updateWithoutCheck: Boolean, calendar: Calendar) {
         val firebase = FunctionsFirebase()
 
         val showButtons = {
@@ -103,7 +101,7 @@ class WeekdayFragment : Fragment() {
             saturdayButton?.isVisible = true
             openCalendarButton?.isVisible = true
             dateTextView?.isVisible = true
-            refreshSheduleButton?.isVisible = true
+            refreshScheduleButton?.isVisible = true
         }
         val hideButtons ={
             mondayButton?.isVisible = false
@@ -114,13 +112,13 @@ class WeekdayFragment : Fragment() {
             saturdayButton?.isVisible = false
             openCalendarButton?.isVisible = false
             dateTextView?.isVisible = false
-            refreshSheduleButton?.isVisible = false
+            refreshScheduleButton?.isVisible = false
         }
 
         firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
-                if (updateShedule || updateWithoutCheck) {
-                    firebase.getFieldShedule(
+                if (updateSchedule || updateWithoutCheck) {
+                    firebase.getFieldSchedule(
                         firebase.uidUser!!,
                         "weekUpdate",
                         object : FirebaseCallback<String> {
@@ -129,7 +127,7 @@ class WeekdayFragment : Fragment() {
                                     diaryUrl = value
                                     when (value) {
                                         diary.elschool.url -> {
-                                            diary.elschool.updateShedule(
+                                            diary.elschool.updateSchedule(
                                                 id,
                                                 selectedYear,
                                                 selectedWeek,
@@ -140,12 +138,12 @@ class WeekdayFragment : Fragment() {
                                             )
                                         }
                                     }
-                                    firebase.setFieldShedule(
+                                    firebase.setFieldSchedule(
                                         firebase.uidUser!!,
                                         "weekUpdate",
                                         selectedWeek
                                     )
-                                    firebase.setDateUpdateShedule(
+                                    firebase.setDateUpdateSсhedule(
                                         calendar.get(Calendar.YEAR).toString(),
                                         (calendar.get(Calendar.MONTH) + 1).toString(),
                                         calendar.get(Calendar.DAY_OF_MONTH).toString()
@@ -154,7 +152,7 @@ class WeekdayFragment : Fragment() {
                             }
                         })
                 } else {
-                    updateShedule = true
+                    updateSchedule = true
                 }
 
             }
@@ -165,7 +163,7 @@ class WeekdayFragment : Fragment() {
         val bundle: Bundle = bundleOf()
         bundle.putString("title", day)
             Navigation.findNavController(requireActivity(), R.id.navFragment)
-                .navigate(R.id.action_weekdayFragment_to_sheduleDayFragment, bundle)
+                .navigate(R.id.action_weekdayFragment_to_scheduleDayFragment, bundle)
     }
 
 
@@ -175,10 +173,10 @@ class WeekdayFragment : Fragment() {
         val selectedDate = calendarView?.date
         val firebase = FunctionsFirebase()
         val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
-        firebase.getDateUpdateInShedule(object : FirebaseCallback<LocalDate> {
+        firebase.getDateUpdateInSchedule(object : FirebaseCallback<LocalDate> {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onComplete(value: LocalDate) {
-                if (updateShedule) {
+                if (updateSchedule) {
                     calendar.timeInMillis = selectedDate!!
                 } else {
                     calendar.set(value.year, value.monthValue - 1, value.dayOfMonth)
@@ -206,9 +204,9 @@ class WeekdayFragment : Fragment() {
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
 
-            updateShedule(updateWithoutCheck, calendar)
+            updateSchedule(updateWithoutCheck, calendar)
         }
-        updateShedule(updateWithoutCheck, calendar)
+        updateSchedule(updateWithoutCheck, calendar)
     }
 
     companion object {

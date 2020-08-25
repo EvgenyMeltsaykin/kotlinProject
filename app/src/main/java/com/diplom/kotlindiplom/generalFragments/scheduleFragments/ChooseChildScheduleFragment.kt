@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.generalFragments.sheduleFragments
+package com.diplom.kotlindiplom.generalFragments.scheduleFragments
 
 import android.os.Bundle
 import android.util.Log
@@ -18,7 +18,7 @@ import com.diplom.kotlindiplom.models.ChildForElschool
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
-import kotlinx.android.synthetic.main.fragment_choose_child_shedule.*
+import kotlinx.android.synthetic.main.fragment_choose_child_schedule.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,10 +30,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ChooseChildSheduleFragment.newInstance] factory method to
+ * Use the [ChooseChildScheduleFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ChooseChildSheduleFragment : Fragment() {
+class ChooseChildScheduleFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -52,7 +52,7 @@ class ChooseChildSheduleFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_choose_child_shedule, container, false)
+        return inflater.inflate(R.layout.fragment_choose_child_schedule, container, false)
     }
 
     @ExperimentalStdlibApi
@@ -106,13 +106,15 @@ class ChooseChildSheduleFragment : Fragment() {
         val adapter = GroupAdapter<ViewHolder>()
         adapter.clear()
         val diary = Diary()
+        childScheduleRecyclerView?.isVisible = false
         diary.elschool.getChildrenFromFirebase(object : FirebaseCallback<List<ChildForElschool>> {
             override fun onComplete(value: List<ChildForElschool>) {
                 if (value.isNotEmpty()){
                     value.forEach{
                         adapter.add(ChildDiaryItem(it))
                     }
-                    childSheduleRecyclerView?.adapter = adapter
+                    childScheduleRecyclerView?.adapter = adapter
+                    childScheduleRecyclerView?.isVisible = true
                 }else{
                     updateChildFirebase()
                 }
@@ -132,7 +134,7 @@ class ChooseChildSheduleFragment : Fragment() {
                         bundle.putBoolean("updateWithoutCheck",false)
                     }
                     firebase.setFieldDiary(firebase.uidUser!!,"idChild",childDiaryItem.child.id)
-                    Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_chooseChildSheduleFragment_to_weekdayFragment,bundle)
+                    Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_chooseChildScheduleFragment_to_weekdayFragment,bundle)
                 }
             })
         }
@@ -145,12 +147,12 @@ class ChooseChildSheduleFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ChooseChildSheduleFragment.
+         * @return A new instance of fragment ChooseChildScheduleFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            ChooseChildSheduleFragment().apply {
+            ChooseChildScheduleFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

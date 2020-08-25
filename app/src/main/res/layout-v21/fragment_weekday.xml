@@ -9,7 +9,7 @@
         android:id="@+id/constraintlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".generalFragments.sheduleFragments.WeekdayFragment"
+        tools:context=".generalFragments.scheduleFragments.WeekdayFragment"
         android:paddingBottom="10dp">
 
         <include
@@ -154,7 +154,7 @@
             app:layout_constraintTop_toBottomOf="@+id/weekdayToolbar" />
 
         <Button
-            android:id="@+id/refreshSheduleButton"
+            android:id="@+id/refreshScheduleButton"
             android:textColor="@color/colorButtonText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

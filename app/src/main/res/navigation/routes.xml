@@ -47,18 +47,18 @@
         tools:layout="@layout/fragment_child_task_content" />
     <fragment
         android:id="@+id/weekdayFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.WeekdayFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.scheduleFragments.WeekdayFragment"
         android:label="fragment_weekday"
         tools:layout="@layout/fragment_weekday" >
         <action
-            android:id="@+id/action_weekdayFragment_to_sheduleDayFragment"
-            app:destination="@id/sheduleDayFragment" />
+            android:id="@+id/action_weekdayFragment_to_scheduleDayFragment"
+            app:destination="@id/scheduleDayFragment" />
         <action
             android:id="@+id/action_weekdayFragment_to_diaryFragment"
             app:destination="@id/diaryFragment" />
         <action
-            android:id="@+id/action_weekdayFragment_to_chooseChildSheduleFragment"
-            app:destination="@id/chooseChildSheduleFragment" />
+            android:id="@+id/action_weekdayFragment_to_chooseChildScheduleFragment"
+            app:destination="@id/chooseChildScheduleFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginDiaryFragment"
@@ -70,27 +70,27 @@
             app:destination="@id/diaryFragment" />
     </fragment>
     <fragment
-        android:id="@+id/sheduleDayFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.SheduleDayFragment"
-        android:label="fragment_shedule_day"
-        tools:layout="@layout/fragment_shedule_day" >
+        android:id="@+id/scheduleDayFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.scheduleFragments.ScheduleDayFragment"
+        android:label="fragment_schedule_day"
+        tools:layout="@layout/fragment_schedule_day" >
         <argument android:name="day"
             app:argType="string" />
         <action
-            android:id="@+id/action_sheduleDayFragment_to_weekdayFragment"
+            android:id="@+id/action_scheduleDayFragment_to_weekdayFragment"
             app:destination="@id/weekdayFragment" />
         <action
-            android:id="@+id/action_sheduleDayFragment_to_homeworkFragment"
+            android:id="@+id/action_scheduleDayFragment_to_homeworkFragment"
             app:destination="@id/homeworkFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeworkFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.HomeworkFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.scheduleFragments.HomeworkFragment"
         android:label="fragment_homework"
         tools:layout="@layout/fragment_homework" >
         <action
-            android:id="@+id/action_homeworkFragment_to_sheduleDayFragment"
-            app:destination="@id/sheduleDayFragment" />
+            android:id="@+id/action_homeworkFragment_to_scheduleDayFragment"
+            app:destination="@id/scheduleDayFragment" />
     </fragment>
     <fragment
         android:id="@+id/parentMyProfileFragment"
@@ -147,8 +147,8 @@
             android:id="@+id/action_diaryFragment_to_loginDiaryFragment"
             app:destination="@id/loginDiaryFragment" />
         <action
-            android:id="@+id/action_diaryFragment_to_chooseChildSheduleFragment"
-            app:destination="@id/chooseChildSheduleFragment" />
+            android:id="@+id/action_diaryFragment_to_chooseChildScheduleFragment"
+            app:destination="@id/chooseChildScheduleFragment" />
         <action
             android:id="@+id/action_diaryFragment_to_chooseSemestrElschoolFragment"
             app:destination="@id/chooseSemestrElschoolFragment" />
@@ -166,15 +166,15 @@
             app:destination="@id/chooseSemestrElschoolFragment" />
     </fragment>
     <fragment
-        android:id="@+id/chooseChildSheduleFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.sheduleFragments.ChooseChildSheduleFragment"
-        android:label="fragment_choose_child_shedule"
-        tools:layout="@layout/fragment_choose_child_shedule" >
+        android:id="@+id/chooseChildScheduleFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.scheduleFragments.ChooseChildScheduleFragment"
+        android:label="fragment_choose_child_schedule"
+        tools:layout="@layout/fragment_choose_child_schedule" >
         <action
-            android:id="@+id/action_chooseChildSheduleFragment_to_diaryFragment"
+            android:id="@+id/action_chooseChildScheduleFragment_to_diaryFragment"
             app:destination="@id/diaryFragment" />
         <action
-            android:id="@+id/action_chooseChildSheduleFragment_to_weekdayFragment"
+            android:id="@+id/action_chooseChildScheduleFragment_to_weekdayFragment"
             app:destination="@id/weekdayFragment" />
     </fragment>
     <fragment

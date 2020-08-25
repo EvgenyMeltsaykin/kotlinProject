@@ -11,7 +11,7 @@
     android:background="@drawable/background_text"
     android:padding="16dp"
     app:layout_goneMarginBottom="200dp"
-    tools:context=".generalFragments.sheduleFragments.HomeworkFragment">
+    tools:context=".generalFragments.scheduleFragments.HomeworkFragment">
 
     <TextView
         android:id="@+id/homeworkTextView"

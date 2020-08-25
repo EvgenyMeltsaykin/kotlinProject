@@ -105,6 +105,7 @@ class ChooseChildMarkFragment : Fragment() {
     fun updateRecyclerView(){
         val adapter = GroupAdapter<ViewHolder>()
         adapter.clear()
+        childMarkRecyclerView?.isVisible = false
         val diary = Diary()
         diary.elschool.getChildrenFromFirebase(object : FirebaseCallback<List<ChildForElschool>>{
             override fun onComplete(value: List<ChildForElschool>) {
@@ -113,6 +114,7 @@ class ChooseChildMarkFragment : Fragment() {
                         adapter.add(ChildDiaryItem(it))
                     }
                     childMarkRecyclerView?.adapter = adapter
+                    childMarkRecyclerView?.isVisible = true
                 }else{
                     updateChildFirebase()
                 }

@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.generalFragments.sheduleFragments
+package com.diplom.kotlindiplom.generalFragments.scheduleFragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

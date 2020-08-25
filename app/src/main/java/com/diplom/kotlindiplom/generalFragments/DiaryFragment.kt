@@ -50,12 +50,12 @@ class DiaryFragment : Fragment() {
         val firebase = FunctionsFirebase()
         firebase.getFieldUserDatabase(firebase.uidUser!!,"role",object : FirebaseCallback<String>{
             override fun onComplete(value: String) {
-                sheduleButton?.setOnClickListener {
+                scheduleButton?.setOnClickListener {
                     if (value == "child"){
                         Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_weekdayFragment)
                     }
                     if (value == "parent"){
-                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_chooseChildSheduleFragment)
+                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_chooseChildScheduleFragment)
                     }
 
                 }

@@ -400,13 +400,13 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 setTitle("Электронный дневник")
             }
             if (role == "parent"){
-                navController?.navigate(R.id.action_weekdayFragment_to_chooseChildSheduleFragment)
+                navController?.navigate(R.id.action_weekdayFragment_to_chooseChildScheduleFragment)
                 setTitle("Выберите ребенка")
             }
             return
         }
-        if (navController?.currentDestination?.id == R.id.chooseChildSheduleFragment) {
-            navController?.navigate(R.id.action_chooseChildSheduleFragment_to_diaryFragment)
+        if (navController?.currentDestination?.id == R.id.chooseChildScheduleFragment) {
+            navController?.navigate(R.id.action_chooseChildScheduleFragment_to_diaryFragment)
             setTitle("Электронный дневник")
             return
         }
@@ -447,15 +447,15 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             setTitle("")
             return
         }
-        if (navController?.currentDestination?.id == R.id.sheduleDayFragment) {
+        if (navController?.currentDestination?.id == R.id.scheduleDayFragment) {
             val bundle = bundleOf()
-            bundle.putBoolean("updateShedule", false)
-            navController?.navigate(R.id.action_sheduleDayFragment_to_weekdayFragment, bundle)
+            bundle.putBoolean("updateSchedule", false)
+            navController?.navigate(R.id.action_scheduleDayFragment_to_weekdayFragment, bundle)
             setTitle("Расписание")
             return
         }
         if (navController?.currentDestination?.id == R.id.homeworkFragment) {
-            navController?.navigate(R.id.action_homeworkFragment_to_sheduleDayFragment)
+            navController?.navigate(R.id.action_homeworkFragment_to_scheduleDayFragment)
             return
         }
 

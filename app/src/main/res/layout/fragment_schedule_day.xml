@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:paddingTop="70dp"
         android:paddingBottom="10dp"
-        tools:context=".generalFragments.sheduleFragments.SheduleDayFragment">
+        tools:context=".generalFragments.scheduleFragments.ScheduleDayFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/lessonsRecyclerView"

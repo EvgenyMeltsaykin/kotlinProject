@@ -33,16 +33,26 @@ class LoginActivity : AppCompatActivity() {
                     if(!it.isSuccessful){
                         return@addOnCompleteListener
                     }
-                    val firebase = FunctionsFirebase()
-                    firebase.getRoleByUid(firebase.uidUser!!,object : FirebaseCallback<String>{
-                        override fun onComplete(value: String) {
-                            Toast.makeText(this@LoginActivity,"Вход выполнен успешно!", Toast.LENGTH_SHORT).show()
-                            intent = Intent(this@LoginActivity, MainActivity::class.java)
-                            intent.putExtra("role","$value")
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                            startActivity(intent)
-                        }
-                    })
+                    val user = FirebaseAuth.getInstance().currentUser
+                    if (user!!.isEmailVerified){
+                        val firebase = FunctionsFirebase()
+                        firebase.getRoleByUid(firebase.uidUser!!,object : FirebaseCallback<String>{
+                            override fun onComplete(value: String) {
+                                Toast.makeText(this@LoginActivity,"Вход выполнен успешно!", Toast.LENGTH_SHORT).show()
+                                intent = Intent(this@LoginActivity, MainActivity::class.java)
+                                intent.putExtra("role","$value")
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                startActivity(intent)
+                            }
+                        })
+                    }else{
+                        Toast.makeText(applicationContext,"Подтвердите электронную почту",Toast.LENGTH_LONG).show()
+                        FirebaseAuth.getInstance().signOut()
+                        loginButtonLogin?.isVisible = true
+                        backregistryTextViewLogin?.isVisible = true
+                        loginProgressBar?.isVisible = false
+                    }
+
 
                 }
                 .addOnFailureListener{

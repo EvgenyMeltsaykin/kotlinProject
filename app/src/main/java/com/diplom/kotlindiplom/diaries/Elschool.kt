@@ -45,7 +45,7 @@ class Elschool {
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/password", "")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", "")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks/dateUpdate", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/shedule/weekUpdate", 0)
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/schedule/weekUpdate", 0)
     }
 
     fun deleteDiary() {
@@ -55,10 +55,10 @@ class Elschool {
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/login", "")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/password", "")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/shedule", "")
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/schedule", "")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks", "")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks/dateUpdate", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/shedule/weekUpdate", 0)
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/schedule/weekUpdate", 0)
     }
 
     fun login(login: String, password: String): Boolean {
@@ -94,7 +94,7 @@ class Elschool {
         return false
     }
 
-    fun deleteShedule() {
+    fun deleteSchedule() {
         val firebase = FunctionsFirebase()
         firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String> {
             override fun onComplete(answer: String) {
@@ -103,7 +103,7 @@ class Elschool {
                 else role = "parents"
 
                 val ref = firebase.rootRef.child("users").child(role).child(firebase.uidUser!!)
-                    .child("diary").child("shedule")
+                    .child("diary").child("schedule")
                 ref.child("понедельник").setValue("")
                 ref.child("вторник").setValue("")
                 ref.child("среда").setValue("")
@@ -115,14 +115,14 @@ class Elschool {
     }
 
     @ExperimentalStdlibApi
-    fun getShedule(
+    fun getSchedule(
         year: Int,
         week: Int,
         id: String = "",
         firebaseCallback: FirebaseCallback<MutableMap<String, List<Lesson>>>
     ) {
         val firebase = FunctionsFirebase()
-        val shedule = mutableMapOf<String, List<Lesson>>()
+        val schedule = mutableMapOf<String, List<Lesson>>()
         firebase.getFieldDiary(firebase.uidUser!!, "cookie",
             object : FirebaseCallback<String> {
                 @RequiresApi(Build.VERSION_CODES.N)
@@ -131,27 +131,27 @@ class Elschool {
                         var cookies = hashMapOf<String, String>()
                         cookies[keyCookie] = value
                         if (cookies == null) {
-                            firebaseCallback.onComplete(shedule)
+                            firebaseCallback.onComplete(schedule)
                             return@launch
                         }
                         try {
                             val document = Jsoup.connect(urlDiary)
                                 .cookies(cookies)
                                 .get()
-                            val sheduleHtml: org.jsoup.nodes.Document
+                            val scheduleHtml: org.jsoup.nodes.Document
                             if (id.isEmpty()) {
-                                sheduleHtml =
+                                scheduleHtml =
                                     Jsoup.connect("${document.baseUri()}&year=$year&week=$week&log=false")
                                         .cookies(cookies)
                                         .get()
                             } else {
                                 val urlWithoutId = document.baseUri().substringBeforeLast("=")
-                                sheduleHtml =
+                                scheduleHtml =
                                     Jsoup.connect("${urlWithoutId}=$id&year=$year&week=$week&log=false")
                                         .cookies(cookies)
                                         .get()
                             }
-                            val dayOfWeekHtml = sheduleHtml.select("tbody")
+                            val dayOfWeekHtml = scheduleHtml.select("tbody")
                             dayOfWeekHtml.forEach { it ->
                                 //example понедельник 17.08
                                 val dayDate =
@@ -178,10 +178,10 @@ class Elschool {
                                         lessons.add(lesson)
                                     }
                                 }
-                                shedule[dayDate] = lessons
+                                schedule[dayDate] = lessons
                             }
-                            deleteShedule()
-                            shedule.forEach { (s, list) ->
+                            deleteSchedule()
+                            schedule.forEach { (s, list) ->
                                 var i = 0
                                 val day = s.substringBefore(" ")
                                 val date = s.substringAfter(" ")
@@ -190,45 +190,45 @@ class Elschool {
                                         i++
                                         firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
-                                            "diary/shedule/$day/lesson$i/lessonName",
+                                            "diary/schedule/$day/lesson$i/lessonName",
                                             it.name
                                         )
                                         firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
-                                            "diary/shedule/$day/lesson$i/time",
+                                            "diary/schedule/$day/lesson$i/time",
                                             it.time
                                         )
                                         firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
-                                            "diary/shedule/$day/lesson$i/cabinet",
+                                            "diary/schedule/$day/lesson$i/cabinet",
                                             it.cabinet
                                         )
                                         firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
-                                            "diary/shedule/$day/lesson$i/form",
+                                            "diary/schedule/$day/lesson$i/form",
                                             it.form
                                         )
                                         firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
-                                            "diary/shedule/$day/lesson$i/homework",
+                                            "diary/schedule/$day/lesson$i/homework",
                                             it.homework
                                         )
                                         firebase.setFieldUserDatabase(
                                             firebase.uidUser!!,
-                                            "diary/shedule/$day/lesson$i/mark",
+                                            "diary/schedule/$day/lesson$i/mark",
                                             it.mark
                                         )
                                     }
                                     firebase.setFieldUserDatabase(
                                         firebase.uidUser!!,
-                                        "diary/shedule/$day/date",
+                                        "diary/schedule/$day/date",
                                         date
                                     )
                                 }
                             }
-                            firebaseCallback.onComplete(shedule)
+                            firebaseCallback.onComplete(schedule)
                         } catch (e: IOException) {
-                            firebaseCallback.onComplete(shedule)
+                            firebaseCallback.onComplete(schedule)
                             e.printStackTrace()
                         }
                     }
@@ -260,10 +260,8 @@ class Elschool {
                         }
                         children.add(childForElschool)
                     }
-                    firebaseCallback.onComplete(children)
-                } else {
-                    firebaseCallback.onComplete(children)
                 }
+                firebaseCallback.onComplete(children)
             }
 
         })
@@ -343,7 +341,7 @@ class Elschool {
     }
 
     @ExperimentalStdlibApi
-    fun updateShedule(
+    fun updateSchedule(
         id: String = "",
         selectedYear: Int,
         selectedWeek: Int,
@@ -364,7 +362,7 @@ class Elschool {
         Toast.makeText(context, "Подождите, идет загрузка расписания", Toast.LENGTH_SHORT).show()
         progressBar.isVisible = true
         hideButtons()
-        getShedule(
+        getSchedule(
             selectedYear,
             selectedWeek,
             id,
@@ -413,21 +411,21 @@ class Elschool {
                             val document = Jsoup.connect(urlDiary)
                                 .cookies(cookies)
                                 .get()
-                            val sheduleHtml: org.jsoup.nodes.Document
+                            val scheduleHtml: org.jsoup.nodes.Document
                             if (idChild.isEmpty()) {
-                                sheduleHtml =
+                                scheduleHtml =
                                     Jsoup.connect(document.baseUri())
                                         .cookies(cookies)
                                         .get()
                             } else {
                                 val urlWithoutId = document.baseUri().substringBeforeLast("=")
-                                sheduleHtml =
+                                scheduleHtml =
                                     Jsoup.connect("${urlWithoutId}=$idChild")
                                         .cookies(cookies)
                                         .get()
                             }
                             val gradeUrl =
-                                sheduleHtml.baseUri().replace("details", "gradesandabsences")
+                                scheduleHtml.baseUri().replace("details", "gradesandabsences")
                             val gradeHtml = Jsoup.connect(gradeUrl)
                                 .cookies(cookies)
                                 .get()

@@ -7,10 +7,10 @@
     android:paddingLeft="16dp"
     android:paddingTop="70dp"
     android:paddingRight="16dp"
-    tools:context=".generalFragments.sheduleFragments.ChooseChildSheduleFragment">
+    tools:context=".generalFragments.scheduleFragments.ChooseChildScheduleFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/childSheduleRecyclerView"
+        android:id="@+id/childScheduleRecyclerView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
