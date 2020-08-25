@@ -1,10 +1,10 @@
-package com.diplom.kotlindiplom.models
+package com.diplom.kotlindiplom.models.recyclerViewItems
 
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.models.Lesson
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.lesson_row.view.*
-import kotlinx.android.synthetic.main.task_row.view.*
 
 class LessonItem(val lesson: Lesson) : Item<ViewHolder>() {
     override fun getLayout(): Int {

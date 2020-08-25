@@ -1,19 +1,21 @@
 package com.diplom.kotlindiplom
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         verifyUserIsLoggedIn()
     }
 
@@ -23,13 +25,13 @@ class SplashActivity : AppCompatActivity() {
         if (uid != null) {
             if (user!!.isEmailVerified){
                 val firebase = FunctionsFirebase()
-                firebase.getRoleByUid(uid,object : FirebaseCallback<String>{
+                firebase.getRoleByUid(uid, object : FirebaseCallback<String> {
                     override fun onComplete(value: String) {
-                        if (value == "child"){
+                        if (value == "child") {
                             intent = Intent(applicationContext, MainActivity::class.java)
                             intent.putExtra("role", "child")
                         }
-                        if (value == "parent"){
+                        if (value == "parent") {
                             intent = Intent(applicationContext, MainActivity::class.java)
                             intent.putExtra("role", "parent")
                         }
@@ -40,7 +42,11 @@ class SplashActivity : AppCompatActivity() {
 
                 })
             }else{
-                Toast.makeText(applicationContext,"Подтвердите электронную почту",Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    applicationContext,
+                    "Подтвердите электронную почту",
+                    Toast.LENGTH_LONG
+                ).show()
                 FirebaseAuth.getInstance().signOut()
                 intent = Intent(this, ChooseActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)

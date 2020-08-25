@@ -1,17 +1,18 @@
-package com.diplom.kotlindiplom.models
+package com.diplom.kotlindiplom.models.recyclerViewItems
 
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.models.Child
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.child_row.view.*
 
-class ChildrenItem(val child:Child, val deleteListener: OnClickDeleteButton?): Item<ViewHolder>() {
+class ChildrenItem(val child: Child, val deleteListener: OnClickDeleteButton?): Item<ViewHolder>() {
     override fun getLayout(): Int {
         return R.layout.child_row
     }
 
     interface OnClickDeleteButton{
-        fun onClickDeleteButton(item: Item<ViewHolder>,child:Child)
+        fun onClickDeleteButton(item: Item<ViewHolder>,child: Child)
     }
 
     override fun bind(viewHolder: ViewHolder, position: Int) {

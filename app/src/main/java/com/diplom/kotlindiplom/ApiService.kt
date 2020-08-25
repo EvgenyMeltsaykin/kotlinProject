@@ -1,9 +1,8 @@
 package com.diplom.kotlindiplom
 
-import com.diplom.kotlindiplom.models.CitiesResponse
-import com.diplom.kotlindiplom.models.SearchCitiesResponse
-import com.diplom.kotlindiplom.models.SearchCountryResponse
-import com.diplom.kotlindiplom.models.SearchSchoolClassResponse
+import com.diplom.kotlindiplom.models.apiResponse.cities.SearchCitiesResponse
+import com.diplom.kotlindiplom.models.apiResponse.country.SearchCountryResponse
+import com.diplom.kotlindiplom.models.apiResponse.schoolClass.SearchSchoolClassResponse
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory

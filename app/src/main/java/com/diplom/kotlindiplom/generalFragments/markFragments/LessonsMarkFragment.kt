@@ -3,28 +3,23 @@ package com.diplom.kotlindiplom.generalFragments.markFragments
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
-import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.RecyclerView
 import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.models.LessonsMarkItem
+import com.diplom.kotlindiplom.models.recyclerViewItems.LessonsMarkItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_lessons_mark.*
 import kotlinx.android.synthetic.main.lessons_mark_item.view.*
-import org.decimal4j.util.DoubleRounder
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

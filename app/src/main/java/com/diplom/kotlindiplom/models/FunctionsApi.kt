@@ -5,6 +5,8 @@ import android.content.Context
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import com.diplom.kotlindiplom.ApiService
+import com.diplom.kotlindiplom.models.apiResponse.cities.City
+import com.diplom.kotlindiplom.models.apiResponse.schoolClass.SchoolClass
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 

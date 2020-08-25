@@ -47,6 +47,18 @@ class FunctionsFirebase {
         ref.child("acceptName").setValue("")
         ref.child("acceptUid").setValue("")
     }
+    fun getCountChildren(firebaseCallBack: FirebaseCallback<String>){
+        childRef.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(p0: DataSnapshot) {
+                firebaseCallBack.onComplete(p0.childrenCount.toString())
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
 
     fun downloadSchoolBook(book: SchoolBook, context: Context, activity: Activity) {
         val ref = FirebaseStorage.getInstance().getReferenceFromUrl(book.url)
@@ -700,7 +712,6 @@ class FunctionsFirebase {
                 val ref = rootRef.child("users").child(role).child(uid)
                 ref.keepSynced(true)
                 ref.child("$field").setValue(value)
-
             }
         })
     }

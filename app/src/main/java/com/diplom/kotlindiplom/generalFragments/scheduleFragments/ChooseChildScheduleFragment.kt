@@ -1,7 +1,6 @@
 package com.diplom.kotlindiplom.generalFragments.scheduleFragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,7 @@ import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
-import com.diplom.kotlindiplom.models.ChildDiaryItem
+import com.diplom.kotlindiplom.models.recyclerViewItems.ChildDiaryItem
 import com.diplom.kotlindiplom.models.ChildForElschool
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.xwray.groupie.GroupAdapter

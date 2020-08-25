@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.models
+package com.diplom.kotlindiplom.models.recyclerViewItems
 
 import android.util.Log
 import com.diplom.kotlindiplom.R

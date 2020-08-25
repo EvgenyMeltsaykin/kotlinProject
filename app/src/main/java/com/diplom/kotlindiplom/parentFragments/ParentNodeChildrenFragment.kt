@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.Child
-import com.diplom.kotlindiplom.models.ChildrenItem
+import com.diplom.kotlindiplom.models.recyclerViewItems.ChildrenItem
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot

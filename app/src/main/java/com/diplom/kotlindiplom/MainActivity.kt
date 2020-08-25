@@ -37,10 +37,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.header.view.*
 
 class MainActivity : AppCompatActivity(), ActivityCallback {
+
     private var drawer: DrawerLayout? = null
     var navHostFragment: NavHostFragment? = null
-    var navController :NavController? = null
-    var menu :Menu? = null
+    var navController: NavController? = null
+    var menu: Menu? = null
     private var back_pressed: Long = 0
     private var role = ""
     override fun getRole(): String {
@@ -49,10 +50,12 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
 
     @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
+
         role = intent.getStringExtra("role")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        navHostFragment = supportFragmentManager.findFragmentById(R.id.navFragment) as NavHostFragment
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.navFragment) as NavHostFragment
         navController = navHostFragment?.navController
         drawer = findViewById(R.id.drawerLayout)
         menu = navView.menu
@@ -60,12 +63,12 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         if (role == "child") {
             settingsChild()
         }
-        if (role == "parent"){
+        if (role == "parent") {
             settingsParent()
         }
     }
 
-    fun settingsParent(){
+    fun settingsParent() {
         navView.inflateMenu(R.menu.drawer_menu_parent)
         setupDrawerAndToolbar()
         //Нажатие на аватарку в боковом меню
@@ -162,14 +165,15 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 return
             }
         })
-        if (!intent.getStringExtra("taskId").isNullOrBlank()){
+        if (!intent.getStringExtra("taskId").isNullOrBlank()) {
             val bundle = bundleOf()
-            bundle.putString("taskId",intent.getStringExtra("taskId"))
-            bundle.putString("title",intent.getStringExtra("title"))
-            navController?.navigate(R.id.action_mainFragment_to_parentTaskContentFragment,bundle)
+            bundle.putString("taskId", intent.getStringExtra("taskId"))
+            bundle.putString("title", intent.getStringExtra("title"))
+            navController?.navigate(R.id.action_mainFragment_to_parentTaskContentFragment, bundle)
         }
     }
-    fun settingsChild(){
+
+    fun settingsChild() {
         navView.inflateMenu(R.menu.drawer_menu_child)
         //Нажатие на аватарку в боковом меню
         val header = navView.getHeaderView(0)
@@ -238,8 +242,16 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                                 object : FirebaseCallback<String> {
                                     override fun onComplete(parentUid: String) {
                                         Log.d("TAG", "$parentUid")
-                                        firebase.setFieldUserDatabase(firebase.uidUser!!, "parentUid", parentUid)
-                                        firebase.setFieldUserDatabase(parentUid, "acceptAnswer", "1")
+                                        firebase.setFieldUserDatabase(
+                                            firebase.uidUser!!,
+                                            "parentUid",
+                                            parentUid
+                                        )
+                                        firebase.setFieldUserDatabase(
+                                            parentUid,
+                                            "acceptAnswer",
+                                            "1"
+                                        )
                                         firebase.clearAcceptRequest()
                                     }
                                 })
@@ -316,14 +328,15 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             }
 
         })
-        if (!intent.getStringExtra("taskId").isNullOrBlank()){
+        if (!intent.getStringExtra("taskId").isNullOrBlank()) {
             val bundle = bundleOf()
-            bundle.putString("taskId",intent.getStringExtra("taskId"))
-            bundle.putString("title",intent.getStringExtra("title"))
-            navController?.navigate(R.id.action_mainFragment_to_childTaskContentFragment,bundle)
+            bundle.putString("taskId", intent.getStringExtra("taskId"))
+            bundle.putString("title", intent.getStringExtra("title"))
+            navController?.navigate(R.id.action_mainFragment_to_childTaskContentFragment, bundle)
         }
 
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menuPointsChild -> navController?.navigate(
@@ -338,11 +351,14 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             menuInflater.inflate(R.menu.nav_menu, menu)
             val item = menu?.findItem(R.id.menuPointsChild)
             val firebase = FunctionsFirebase()
-            firebase.getFieldUserDatabase(firebase.uidUser!!,"point",object : FirebaseCallback<String>{
-                override fun onComplete(value: String) {
-                    item?.title = value
-                }
-            })
+            firebase.getFieldUserDatabase(
+                firebase.uidUser!!,
+                "point",
+                object : FirebaseCallback<String> {
+                    override fun onComplete(value: String) {
+                        item?.title = value
+                    }
+                })
         }
         return super.onCreateOptionsMenu(menu)
     }
@@ -352,14 +368,17 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if (role == "child"){
+        if (role == "child") {
             val item = menu?.findItem(R.id.menuPointsChild)
             val firebase = FunctionsFirebase()
-            firebase.getFieldUserDatabase(firebase.uidUser!!,"point",object : FirebaseCallback<String>{
-                override fun onComplete(value: String) {
-                    item?.title = value
-                }
-            })
+            firebase.getFieldUserDatabase(
+                firebase.uidUser!!,
+                "point",
+                object : FirebaseCallback<String> {
+                    override fun onComplete(value: String) {
+                        item?.title = value
+                    }
+                })
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -374,6 +393,10 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
     override fun onBackPressed() {
+        if (drawer?.isDrawerOpen(GravityCompat.START) == true) {
+            drawer?.closeDrawer(GravityCompat.START)
+            return
+        }
         if (navController?.currentDestination?.id == R.id.listSubjectsFragment) {
             navController?.popBackStack()
             title = "Выберите класс"
@@ -399,7 +422,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 navController?.navigate(R.id.action_weekdayFragment_to_diaryFragment)
                 setTitle("Электронный дневник")
             }
-            if (role == "parent"){
+            if (role == "parent") {
                 navController?.navigate(R.id.action_weekdayFragment_to_chooseChildScheduleFragment)
                 setTitle("Выберите ребенка")
             }
@@ -415,7 +438,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 navController?.navigate(R.id.action_chooseSemestrElschoolFragment_to_diaryFragment)
                 setTitle("Электронный дневник")
             }
-            if (role == "parent"){
+            if (role == "parent") {
                 navController?.navigate(R.id.action_chooseSemestrElschoolFragment_to_chooseChildMarkFragment)
                 setTitle("Выберите ребенка")
             }
@@ -447,6 +470,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             setTitle("")
             return
         }
+        if (navController?.currentDestination?.id == R.id.mailFragment) {
+            navController?.popBackStack()
+            title = "Выберите учебник"
+            return
+        }
         if (navController?.currentDestination?.id == R.id.scheduleDayFragment) {
             val bundle = bundleOf()
             bundle.putBoolean("updateSchedule", false)
@@ -458,12 +486,15 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             navController?.navigate(R.id.action_homeworkFragment_to_scheduleDayFragment)
             return
         }
-
+        if (navController?.currentDestination?.id != R.id.mainFragment) {
+            navController?.navigate(R.id.mainFragment)
+            return
+        }
         if (drawer?.isDrawerOpen(GravityCompat.START) == true) {
             drawer?.closeDrawer(GravityCompat.START)
         } else if (back_pressed + 2000 > System.currentTimeMillis()) {
-            super.onBackPressed()
             finishAffinity()
+            super.onBackPressed()
         } else {
             Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
         }
@@ -486,11 +517,14 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         val header = navView.getHeaderView(0)
         val firebase = FunctionsFirebase()
         //Загрузка фото и имени в боковое меню при запуске приложения
-        firebase.getFieldUserDatabase(firebase.uidUser!!,"username",object :FirebaseCallback<String>{
-            override fun onComplete(value: String) {
-                header.usernameTextviewDrawer.text = value
-            }
-        })
+        firebase.getFieldUserDatabase(
+            firebase.uidUser!!,
+            "username",
+            object : FirebaseCallback<String> {
+                override fun onComplete(value: String) {
+                    header.usernameTextviewDrawer.text = value
+                }
+            })
         //Обработка нажатия выхода в боковом меню
         val quit = menu?.findItem(R.id.exitApplication)
         quit?.setOnMenuItemClickListener {

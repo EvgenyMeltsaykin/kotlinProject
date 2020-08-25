@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.models
+package com.diplom.kotlindiplom.models.apiResponse.schoolClass
 
 class SchoolClass {
     val id: Int? = null

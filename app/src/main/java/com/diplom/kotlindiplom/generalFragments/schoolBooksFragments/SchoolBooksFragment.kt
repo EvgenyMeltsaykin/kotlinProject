@@ -1,24 +1,20 @@
 package com.diplom.kotlindiplom.generalFragments.schoolBooksFragments
 
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.RecyclerView
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.SchoolBook
-import com.diplom.kotlindiplom.models.SchoolBookItem
+import com.diplom.kotlindiplom.models.recyclerViewItems.SchoolBookItem
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_school_books.*
 import kotlinx.android.synthetic.main.school_book_item.view.*
@@ -86,8 +82,14 @@ class SchoolBooksFragment : Fragment() {
                     schoolBooksProgressBar?.isVisible = false
                 }
             })
+        writeEmailButton?.setOnClickListener {
+            val bundle = bundleOf()
+            bundle.putString("numberClass",numberClass)
+            bundle.putString("subjectName",subjectName)
+            bundle.putString("topic","Добавить учебник")
+            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_schoolBooksFragment_to_mailFragment,bundle)
+        }
     }
-
     companion object {
         /**
          * Use this factory method to create a new instance of

@@ -1,38 +1,28 @@
 package com.diplom.kotlindiplom.childFragments
 
-import android.Manifest
 import android.content.Context
-import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.*
+import com.diplom.kotlindiplom.models.apiResponse.cities.City
+import com.diplom.kotlindiplom.models.apiResponse.schoolClass.SchoolClass
 import com.google.firebase.auth.FirebaseAuth
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_child_my_profile.*
 //import kotlinx.android.synthetic.main.fragment_child_my_profile.*
 import kotlinx.android.synthetic.main.fragment_child_my_profile.view.*
-import kotlinx.android.synthetic.main.header.*
-import org.w3c.dom.Text
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

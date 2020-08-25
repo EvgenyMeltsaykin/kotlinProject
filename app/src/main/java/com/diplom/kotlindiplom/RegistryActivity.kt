@@ -63,10 +63,10 @@ class RegistryActivity : AppCompatActivity() {
                 else saveParentToFirebaseDatabase(username, email)
                 val mAuthListener = FirebaseAuth.AuthStateListener {
                     val user = FirebaseAuth.getInstance().currentUser
-                    Log.d("Tag","user = " + user.toString())
-                    if (user != null){
+                    Log.d("Tag", "user = " + user.toString())
+                    if (user != null) {
                         sendVerificationEmail()
-                    }else{
+                    } else {
                         FirebaseAuth.getInstance().signOut()
                     }
                 }
@@ -81,92 +81,60 @@ class RegistryActivity : AppCompatActivity() {
 
     }
 
-    fun sendVerificationEmail(){
+    private fun sendVerificationEmail() {
         val user = FirebaseAuth.getInstance().currentUser
 
         user!!.sendEmailVerification()
-            .addOnCompleteListener(object : OnCompleteListener<Void?> {
-                override fun onComplete(task: Task<Void?>) {
-                    Log.d("Tag","emailSend")
-                    if (task.isSuccessful){
-                        Toast.makeText(applicationContext,"На почту отправлено письмо с подтверждением почты",Toast.LENGTH_SHORT).show()
-                        FirebaseAuth.getInstance().signOut()
-                        val intent = Intent(this@RegistryActivity,LoginActivity::class.java)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                    }else{
-                        Toast.makeText(applicationContext,"При отправке сообщения на электронную почту произошла ошибка",Toast.LENGTH_SHORT).show()
-                        overridePendingTransition(0, 0);
-                        finish()
-                        overridePendingTransition(0, 0);
-                        startActivity(intent)
-                    }
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(
+                        applicationContext,
+                        "На почту отправлено письмо с подтверждением почты",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    FirebaseAuth.getInstance().signOut()
+                    val intent = Intent(this@RegistryActivity, ChooseActivity::class.java)
+                    intent.flags =
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(
+                        applicationContext,
+                        "При отправке сообщения на электронную почту произошла ошибка",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    overridePendingTransition(0, 0);
+                    finish()
+                    overridePendingTransition(0, 0);
+                    startActivity(intent)
                 }
-            })
-            .addOnFailureListener {
-                Log.d("Tag",it.toString())
             }
     }
 
     private fun saveChildToFirebaseDatabase(username: String, email: String) {
         val firebase = FunctionsFirebase()
 
-        var countChildren = 0
         val ref = firebase.childRef.child("${firebase.uidUser}")
         firebase.rolesRef.child("${firebase.uidUser}").setValue("child")
         val user = Child(firebase.uidUser!!, username, email)
         val refCount = FirebaseDatabase.getInstance().getReference("/users")
         refCount.keepSynced(true)
-        refCount.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                p0.children.forEach {
-                    if (it.key.toString() == "countChildren") {
-                        countChildren = it.value.toString().toInt() + 1
-                        refCount.child("countChildren").setValue(countChildren)
-                        ref.child("id").setValue(countChildren)
-                    }
-                }
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-
+        firebase.getCountChildren(object :FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                val countChildren = value.toInt() + 1
+                firebase.setFieldUserDatabase(firebase.uidUser,"id",countChildren)
             }
         })
         ref.setValue(user)
-            .addOnCompleteListener {
-                Log.d(TAG, "Пользователь создан: ${firebase.uidUser}")
-                //Toast.makeText(this, "Регистрация прошла успешно!", Toast.LENGTH_SHORT).show()
-                firebase.setFieldUserDatabase(firebase.uidUser!!, "role", "child")
-                /*intent = Intent(
-                    this,
-                    MainActivity::class.java
-                )
-                intent.putExtra("role", "child")
-                intent.flags =
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)*/
-            }
-
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "role", "child")
     }
-
     private fun saveParentToFirebaseDatabase(username: String, email: String) {
         val firebase = FunctionsFirebase()
         val ref = FirebaseDatabase.getInstance().getReference("/users/parents/${firebase.uidUser}")
         firebase.rolesRef.child("${firebase.uidUser}").setValue("parent")
         val user = Parent(firebase.uidUser!!, username, email)
         ref.setValue(user)
-            .addOnCompleteListener {
-                Log.d(TAG, "Пользователь создан: ${firebase.uidUser}")
-                //Toast.makeText(this, "Регистрация прошла успешно", Toast.LENGTH_SHORT).show()
-                firebase.setFieldUserDatabase(firebase.uidUser!!, "role", "parent")
-                /*intent = Intent(this, MainActivity::class.java)
-                intent.flags =
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.putExtra("role", "parent")
-                startActivity(intent)*/
-            }
-
+        firebase.setFieldUserDatabase(firebase.uidUser!!, "role", "parent")
     }
 }
 

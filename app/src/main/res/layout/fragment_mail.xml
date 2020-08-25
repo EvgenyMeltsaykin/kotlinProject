@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="70dp"
+    android:paddingBottom="10dp"
+    tools:context=".generalFragments.MailFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/topicMessageEditText"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/simple_edit_text"
+            android:ems="10"
+            android:hint="Тема"
+            android:inputType="textPersonName"
+            android:paddingLeft="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topicStaticTextView" />
+
+        <EditText
+            android:id="@+id/contentMessageEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/simple_edit_text"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Сообщение"
+            android:inputType="textMultiLine"
+            android:minHeight="50dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/topicMessageEditText"
+            app:layout_constraintStart_toStartOf="@+id/topicMessageEditText"
+            app:layout_constraintTop_toBottomOf="@+id/contentMessageTextView" />
+
+        <Button
+            android:id="@+id/sendEmailButton"
+            android:background="@drawable/simple_button"
+            android:textColor="@color/colorButtonText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Отправить"
+            app:layout_constraintEnd_toEndOf="@+id/contentMessageEditText"
+            app:layout_constraintStart_toStartOf="@+id/contentMessageEditText"
+            app:layout_constraintTop_toBottomOf="@+id/contentMessageEditText" />
+
+        <TextView
+            android:id="@+id/messageUserTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/colorText"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/topicStaticTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Тема:"
+            android:textColor="@color/colorText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/messageUserTextView" />
+
+        <TextView
+            android:id="@+id/contentMessageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Сообщение:"
+            android:textColor="@color/colorText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topicMessageEditText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.core.widget.NestedScrollView>

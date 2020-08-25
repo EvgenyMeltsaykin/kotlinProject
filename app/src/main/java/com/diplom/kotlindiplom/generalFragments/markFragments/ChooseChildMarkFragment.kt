@@ -12,14 +12,12 @@ import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
-import com.diplom.kotlindiplom.models.ChildDiaryItem
+import com.diplom.kotlindiplom.models.recyclerViewItems.ChildDiaryItem
 import com.diplom.kotlindiplom.models.ChildForElschool
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.models.FunctionsUI
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_choose_child_mark.*
-import kotlinx.android.synthetic.main.fragment_lessons_mark.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

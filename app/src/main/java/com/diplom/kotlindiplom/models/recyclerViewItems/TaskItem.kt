@@ -1,11 +1,12 @@
-package com.diplom.kotlindiplom.models
+package com.diplom.kotlindiplom.models.recyclerViewItems
 
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.models.Task
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.task_row.view.*
 
-class TaskItem(val task:Task): Item<ViewHolder>() {
+class TaskItem(val task: Task): Item<ViewHolder>() {
     override fun getLayout(): Int {
         return R.layout.task_row
     }

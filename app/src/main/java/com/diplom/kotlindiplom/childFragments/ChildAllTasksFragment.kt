@@ -8,13 +8,12 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.RecyclerView
 import com.diplom.kotlindiplom.FirebaseCallback
 
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Task
-import com.diplom.kotlindiplom.models.TaskItem
+import com.diplom.kotlindiplom.models.recyclerViewItems.TaskItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_child_all_tasks.*

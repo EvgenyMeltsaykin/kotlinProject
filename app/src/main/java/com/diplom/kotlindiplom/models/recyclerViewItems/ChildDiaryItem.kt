@@ -1,6 +1,7 @@
-package com.diplom.kotlindiplom.models
+package com.diplom.kotlindiplom.models.recyclerViewItems
 
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.models.ChildForElschool
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.child_diary_elschool_item.view.*

@@ -1,4 +1,4 @@
-package com.diplom.kotlindiplom.models
+package com.diplom.kotlindiplom.models.apiResponse.country
 
 class Country {
     var id: Int? = null

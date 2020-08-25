@@ -1,14 +1,11 @@
-package com.diplom.kotlindiplom.models
+package com.diplom.kotlindiplom.models.recyclerViewItems
 
-import android.R.attr.button
-import android.animation.ArgbEvaluator
-import android.animation.ObjectAnimator
 import android.content.Context
-import android.view.MotionEvent
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.models.SchoolBook
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.school_book_item.view.*

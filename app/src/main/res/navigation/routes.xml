@@ -231,16 +231,16 @@
             android:id="@+id/action_schoolBooksFragment_to_listSubjectsFragment"
             app:destination="@id/listSubjectsFragment" />
         <action
-            android:id="@+id/action_schoolBooksFragment_to_openSchoolBookFragment"
-            app:destination="@id/openSchoolBookFragment" />
+            android:id="@+id/action_schoolBooksFragment_to_mailFragment"
+            app:destination="@id/mailFragment" />
     </fragment>
     <fragment
-        android:id="@+id/openSchoolBookFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.schoolBooksFragments.OpenSchoolBookFragment"
-        android:label="fragment_open_school_book"
-        tools:layout="@layout/fragment_open_school_book" >
+        android:id="@+id/mailFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.MailFragment"
+        android:label="fragment_mail"
+        tools:layout="@layout/fragment_mail" >
         <action
-            android:id="@+id/action_openSchoolBookFragment_to_schoolBooksFragment"
+            android:id="@+id/action_mailFragment_to_schoolBooksFragment"
             app:destination="@id/schoolBooksFragment" />
     </fragment>
 </navigation>
