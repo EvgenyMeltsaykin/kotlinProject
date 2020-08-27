@@ -52,6 +52,9 @@ class MailFragment : Fragment() {
         if (topic == "Добавить учебник"){
             addSchoolBook()
         }
+        if (topic == "Добавить дневник"){
+            addDiary()
+        }
         sendEmailButton?.setOnClickListener {
             if (contentMessageEditText?.text?.isEmpty()!! || topicMessageEditText?.text?.isEmpty()!!){
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
@@ -74,7 +77,10 @@ class MailFragment : Fragment() {
 
         }
     }
-
+    fun addDiary(){
+        topicMessageEditText?.setText(topic.toString())
+        contentMessageEditText?.hint = "Введите электронный адрес или название электронного дневника"
+    }
     fun addSchoolBook(){
         var name = ""
         when(subjectName){

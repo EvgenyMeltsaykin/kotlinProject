@@ -89,7 +89,7 @@ class RegistryActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     Toast.makeText(
                         applicationContext,
-                        "На почту отправлено письмо с подтверждением почты",
+                        "На email ${emailEditTextRegistry?.text.toString()} отправлено письмо. Перейдите по ссылке в письме для подтверждения своего email.",
                         Toast.LENGTH_SHORT
                     ).show()
                     FirebaseAuth.getInstance().signOut()

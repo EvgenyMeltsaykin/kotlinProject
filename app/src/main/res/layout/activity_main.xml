@@ -6,7 +6,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/Toolbar"
+    android:layout_below="@+id/myToolbar"
     android:background="@color/colorBackground"
     android:fitsSystemWindows="true">
 
@@ -23,6 +23,20 @@
         android:layout_height="match_parent"
         tools:context = ".MainActivity">
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include
+                android:id="@+id/myToolbar"
+                layout="@layout/toolbar" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/navFragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
@@ -33,9 +47,6 @@
 
         </androidx.fragment.app.FragmentContainerView>
 
-        <include
-            android:id="@+id/Toolbar"
-            layout="@layout/toolbar" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

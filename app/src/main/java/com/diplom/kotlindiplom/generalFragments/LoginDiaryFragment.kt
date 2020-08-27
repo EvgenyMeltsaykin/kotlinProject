@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -37,7 +38,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.title = "Вход в дневник"
+        activity?.title = "Электронный дневник"
         arguments?.let {
             deletedDiary = it.getBoolean("deletedDiary",false)
             param2 = it.getString(ARG_PARAM2)
@@ -57,8 +58,22 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         progressBar?.isVisible = false
+
         val firebase = FunctionsFirebase()
-        setupSpinner()
+        firebase.getFieldDiary(firebase.uidUser!!,"login",object : FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                if(value.isNotEmpty()){
+                    if (!deletedDiary){
+                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_loginDiaryFragment_to_diaryFragment)
+                    }else{
+                        setupSpinner()
+                    }
+                }else{
+                    setupSpinner()
+                }
+            }
+        })
+
         enterDiaryButton?.setOnClickListener {
             if (urlDiary.isEmpty()) {
                 Toast.makeText(requireContext(), "Выберите дневник", Toast.LENGTH_SHORT).show()
@@ -105,18 +120,22 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
             }
         }
-        firebase.getFieldDiary(firebase.uidUser!!,"login",object : FirebaseCallback<String>{
-            override fun onComplete(value: String) {
-                if(value.isNotEmpty()){
-                    if (!deletedDiary){
-                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_loginDiaryFragment_to_diaryFragment)
-                    }
-                }
-            }
-        })
+
+        writeMailButton?.setOnClickListener {
+            val bundle = bundleOf()
+            bundle.putString("topic","Добавить дневник")
+            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_loginDiaryFragment_to_mailFragment,bundle)
+        }
     }
 
     fun setupSpinner() {
+        activity?.title = "Вход в дневник"
+        diariesSpinnerLoginDiary?.isVisible = true
+        loginDiaryEditText?.isVisible = true
+        passwordDiaryEditText?.isVisible = true
+        enterDiaryButton?.isVisible = true
+        writeMailButton?.isVisible = true
+        staticMessageTextView?.isVisible = true
         val firebase = FunctionsFirebase()
         var arrayAdapter: ArrayAdapter<String>? = null
         firebase.getDiaries(object : FirebaseCallback<List<String>> {
@@ -124,10 +143,10 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
                 arrayAdapter =
                     ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, value)
                 arrayAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                diariesSpinnerWeekday?.adapter = arrayAdapter
+                diariesSpinnerLoginDiary?.adapter = arrayAdapter
             }
         })
-        diariesSpinnerWeekday?.onItemSelectedListener = this
+        diariesSpinnerLoginDiary?.onItemSelectedListener = this
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

@@ -19,19 +19,17 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.bumptech.glide.Glide
 import com.diplom.kotlindiplom.models.*
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.accept_parent.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.header.view.*
@@ -43,15 +41,14 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     var navController: NavController? = null
     var menu: Menu? = null
     private var back_pressed: Long = 0
-    private var role = ""
-    override fun getRole(): String {
-        return intent.getStringExtra("role")
+    private var roleUser = ""
+    override fun getRoleUser(): String? {
+        return intent.getStringExtra("role").toString()
     }
-
     @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        role = intent.getStringExtra("role")
+        roleUser = intent.getStringExtra("role").toString()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         navHostFragment =
@@ -59,11 +56,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         navController = navHostFragment?.navController
         drawer = findViewById(R.id.drawerLayout)
         menu = navView.menu
-
-        if (role == "child") {
+        MenuCompat.setGroupDividerEnabled(menu, true);
+        if (roleUser == "child") {
             settingsChild()
         }
-        if (role == "parent") {
+        if (roleUser == "parent") {
             settingsParent()
         }
     }
@@ -347,7 +344,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (role == "child") {
+        if (roleUser == "child") {
             menuInflater.inflate(R.menu.nav_menu, menu)
             val item = menu?.findItem(R.id.menuPointsChild)
             val firebase = FunctionsFirebase()
@@ -368,7 +365,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if (role == "child") {
+        if (roleUser == "child") {
             val item = menu?.findItem(R.id.menuPointsChild)
             val firebase = FunctionsFirebase()
             firebase.getFieldUserDatabase(
@@ -418,11 +415,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             return
         }
         if (navController?.currentDestination?.id == R.id.weekdayFragment) {
-            if (role == "child") {
+            if (roleUser == "child") {
                 navController?.navigate(R.id.action_weekdayFragment_to_diaryFragment)
                 setTitle("Электронный дневник")
             }
-            if (role == "parent") {
+            if (roleUser == "parent") {
                 navController?.navigate(R.id.action_weekdayFragment_to_chooseChildScheduleFragment)
                 setTitle("Выберите ребенка")
             }
@@ -434,11 +431,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             return
         }
         if (navController?.currentDestination?.id == R.id.chooseSemestrElschoolFragment) {
-            if (role == "child") {
+            if (roleUser == "child") {
                 navController?.navigate(R.id.action_chooseSemestrElschoolFragment_to_diaryFragment)
                 setTitle("Электронный дневник")
             }
-            if (role == "parent") {
+            if (roleUser == "parent") {
                 navController?.navigate(R.id.action_chooseSemestrElschoolFragment_to_chooseChildMarkFragment)
                 setTitle("Выберите ребенка")
             }
@@ -505,12 +502,12 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     private fun setupDrawerAndToolbar() {
         val sideBar = findViewById<NavigationView>(R.id.navView)
         sideBar?.setupWithNavController(navController!!)
-        val toolBar = findViewById<Toolbar>(R.id.Toolbar)
-        setSupportActionBar(toolBar)
+        val myToolBar = findViewById<Toolbar>(R.id.myToolbar)
+        setSupportActionBar(myToolBar)
         val toggle = ActionBarDrawerToggle(
             this,
             drawer,
-            toolBar,
+            myToolBar,
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )

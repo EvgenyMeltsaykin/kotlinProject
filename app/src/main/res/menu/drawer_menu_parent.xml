@@ -1,33 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group
+        android:id="@+id/grp1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/mainFragment"
+            android:icon="@drawable/ic_home"
+            android:title="Главная" />
+        <item
+            android:id="@+id/parentMyProfileFragment"
+            android:icon="@drawable/ic_profile"
+            android:title="Мой профиль" />
+    </group>
+    <group
+        android:id="@+id/grp2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/loginDiaryFragment"
+            android:icon="@drawable/ic_diary"
+            android:title="Электронный дневник" />
+    </group>
 
-    <item
-        android:id="@+id/mainFragment"
-        android:title="Главная"/>
-    <item
-        android:id="@+id/parentMyProfileFragment"
-        android:title="Мой профиль"
-        android:icon="@drawable/ic_profile"/>
-    <item
-        android:id="@+id/loginDiaryFragment"
-        android:title="Электронный дневник"
-        android:icon="@drawable/ic_diary"/>
-    <item
-        android:id="@+id/parentTasksFragment"
-        android:title="Задания"
-        android:icon="@drawable/ic_tasks"/>
-    <item
-        android:id="@+id/parentNodeChildrenFragment"
-        android:title="Список детей"
-        android:icon="@drawable/ic_child"/>
-    <item
-        android:id="@+id/mailFragment"
-        android:title="Обратная связь"
-        android:icon="@drawable/ic_feedback"/>
-    <item
-        android:id="@+id/exitApplication"
-        android:title="Выйти"
-        android:icon="@drawable/ic_exit"/>
+    <group
+        android:id="@+id/grp3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/parentTasksFragment"
+            android:icon="@drawable/ic_tasks"
+            android:title="Задания" />
+        <item
+            android:id="@+id/parentNodeChildrenFragment"
+            android:icon="@drawable/ic_child"
+            android:title="Список детей" />
+    </group>
+    <group android:checkableBehavior="single" android:id="@+id/grp4">
+        <item
+            android:id="@+id/mailFragment"
+            android:icon="@drawable/ic_feedback"
+            android:title="Обратная связь" />
+        <item
+            android:id="@+id/exitApplication"
+            android:icon="@drawable/ic_exit"
+            android:title="Выйти" />
+
+    </group>
+
 
 </menu>

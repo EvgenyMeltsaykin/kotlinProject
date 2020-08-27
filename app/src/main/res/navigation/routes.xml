@@ -68,6 +68,9 @@
         <action
             android:id="@+id/action_loginDiaryFragment_to_diaryFragment"
             app:destination="@id/diaryFragment" />
+        <action
+            android:id="@+id/action_loginDiaryFragment_to_mailFragment"
+            app:destination="@id/mailFragment" />
     </fragment>
     <fragment
         android:id="@+id/scheduleDayFragment"

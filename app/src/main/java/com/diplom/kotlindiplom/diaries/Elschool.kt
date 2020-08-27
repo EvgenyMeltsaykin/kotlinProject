@@ -546,20 +546,21 @@ class Elschool {
                                             var role = ""
                                             if (answer == "child") role = "children"
                                             else role = "parents"
-
+                                            if (!end) {
+                                                Toast.makeText(
+                                                    context,
+                                                    "При загрузке оценок произошла ошибка",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                progressBar.isVisible = false
+                                                showButtons()
+                                            }
                                             val ref = firebase.rootRef.child("users").child(role).child(firebase.uidUser).child("diary").child("marks")
                                             ref.addChildEventListener(object : ChildEventListener{
                                                 override fun onChildAdded(
                                                     p0: DataSnapshot,
                                                     p1: String?
                                                 ) {
-                                                    if (!end) {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "При загрузке оценок произошла ошибка",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
                                                     progressBar.isVisible = false
                                                     showButtons()
                                                 }

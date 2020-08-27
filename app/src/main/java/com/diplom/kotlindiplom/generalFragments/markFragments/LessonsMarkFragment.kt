@@ -83,7 +83,7 @@ class LessonsMarkFragment : Fragment() {
         super.onAttach(context)
 
         val activityCallback = context as ActivityCallback
-        role = activityCallback.getRole()
+        role = activityCallback.getRoleUser().toString()
         if (role == "child") role = "children"
         else role = "parents"
     }

@@ -578,10 +578,10 @@ class FunctionsFirebase {
                             p0.children.forEach {
                                 if (it.key.toString() == field) {
                                     value = it.value.toString()
-                                    firebaseCallBack.onComplete(value)
                                 }
                             }
                         }
+                        firebaseCallBack.onComplete(value)
                     }
                 })
             }

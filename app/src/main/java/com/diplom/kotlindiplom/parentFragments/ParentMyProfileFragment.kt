@@ -26,6 +26,9 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_parent_my_profile.*
 import kotlinx.android.synthetic.main.fragment_parent_my_profile.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,8 +67,8 @@ class ParentMyProfileFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         changeEmail = false
-        loadInformationFromFirebase()
 
+        loadInformationFromFirebase()
         val network = FunctionsApi(cityId)
         val firebase = FunctionsFirebase()
         /*selectPhotoButtonParentMyProfile.setOnClickListener {
@@ -105,7 +108,7 @@ class ParentMyProfileFragment : BaseFragment() {
 
 
         saveChangeButtonParentMyProfile?.setOnClickListener {
-            firebase.uploadImageToFirebase(selectedPhotoUri, requireActivity(), "parents")
+            //firebase.uploadImageToFirebase(selectedPhotoUri, requireActivity(), "parents")
             saveChangeInParentProfile()
         }
 
@@ -128,7 +131,7 @@ class ParentMyProfileFragment : BaseFragment() {
 
     }
 
-    var selectedPhotoUri: Uri? = null
+    //var selectedPhotoUri: Uri? = null
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
