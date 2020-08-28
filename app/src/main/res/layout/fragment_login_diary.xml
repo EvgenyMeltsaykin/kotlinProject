@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingTop="70dp"
     android:fillViewport="true"
-    tools:context=".generalFragments.WeekdayWithoutDiaryFragment">
+    tools:context=".generalFragments.LoginDiaryFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

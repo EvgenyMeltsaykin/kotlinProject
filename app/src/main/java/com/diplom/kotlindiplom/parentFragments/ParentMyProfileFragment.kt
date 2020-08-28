@@ -2,9 +2,10 @@ package com.diplom.kotlindiplom.parentFragments
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
+import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,7 +17,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
@@ -26,9 +26,6 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_parent_my_profile.*
 import kotlinx.android.synthetic.main.fragment_parent_my_profile.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,18 +39,14 @@ private const val ARG_PARAM2 = "param2"
  */
 var cityId: Int? = -1
 var changeEmail = false
-class ParentMyProfileFragment : BaseFragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class ParentMyProfileFragment : Fragment() {
+    object Network {
+        val network = FunctionsApi(cityId)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.setTitle("Мой профиль")
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        activity?.title = "Мой профиль"
     }
 
     override fun onCreateView(
@@ -67,10 +60,7 @@ class ParentMyProfileFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         changeEmail = false
-
         loadInformationFromFirebase()
-        val network = FunctionsApi(cityId)
-        val firebase = FunctionsFirebase()
         /*selectPhotoButtonParentMyProfile.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
                     requireContext(),
@@ -122,13 +112,13 @@ class ParentMyProfileFragment : BaseFragment() {
         val cities: MutableList<City> = mutableListOf()
         cityEditTextParentMyProfile?.doAfterTextChanged {
             saveChangeButtonParentMyProfile?.isVisible = true
-            network.getNodeCities(cityEditTextParentMyProfile, requireContext(), cities)
+            Network.network.cityId = cityId
+            Network.network.getNodeCities(cityEditTextParentMyProfile, requireContext(), cities)
         }
 
         cityEditTextParentMyProfile?.setOnItemClickListener { parent, view, position, id ->
             cityId = cities[id.toInt()].id
         }
-
     }
 
     //var selectedPhotoUri: Uri? = null
@@ -173,6 +163,7 @@ class ParentMyProfileFragment : BaseFragment() {
                 cityEditTextParentMyProfile?.setText(value.city)
                 cityId = value.cityId.toString().toInt()
                 saveChangeButtonParentMyProfile?.isVisible = false
+                Network.network.cityId = cityId
             }
         })
     }
@@ -227,23 +218,4 @@ class ParentMyProfileFragment : BaseFragment() {
         }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ParentMyProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ParentMyProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

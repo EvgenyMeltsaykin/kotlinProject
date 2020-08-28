@@ -62,7 +62,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginDiaryFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.WeekdayWithoutDiaryFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.LoginDiaryFragment"
         android:label="fragment_weekday_without_diary"
         tools:layout="@layout/fragment_login_diary" >
         <action
@@ -245,5 +245,38 @@
         <action
             android:id="@+id/action_mailFragment_to_schoolBooksFragment"
             app:destination="@id/schoolBooksFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listAwardsFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.awardFragments.ListAwardsFragment"
+        android:label="fragment_list_awards"
+        tools:layout="@layout/fragment_list_awards" >
+        <action
+            android:id="@+id/action_listAwardsFragment_to_newAwardFragment"
+            app:destination="@id/newAwardFragment" />
+        <action
+            android:id="@+id/action_listAwardsFragment_to_detailAwardFragment"
+            app:destination="@id/detailAwardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newAwardFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.awardFragments.NewAwardFragment"
+        android:label="fragment_new_award"
+        tools:layout="@layout/fragment_new_award" >
+        <action
+            android:id="@+id/action_newAwardFragment_to_listAwardsFragment"
+            app:destination="@id/listAwardsFragment" />
+        <action
+            android:id="@+id/action_newAwardFragment_to_detailAwardFragment"
+            app:destination="@id/detailAwardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailAwardFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.awardFragments.DetailAwardFragment"
+        android:label="fragment_detail_award"
+        tools:layout="@layout/fragment_detail_award" >
+        <action
+            android:id="@+id/action_detailAwardFragment_to_listAwardsFragment"
+            app:destination="@id/listAwardsFragment" />
     </fragment>
 </navigation>

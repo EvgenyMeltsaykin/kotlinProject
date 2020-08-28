@@ -37,6 +37,10 @@
             android:id="@+id/childTasksFragment"
             android:icon="@drawable/ic_tasks"
             android:title="Задания" />
+        <item
+            android:id="@+id/listAwardsFragment"
+            android:icon="@drawable/ic_award"
+            android:title="Вознаграждение" />
     </group>
     <group
         android:id="@+id/grp4"

@@ -10,46 +10,37 @@
     android:background="@color/colorBackground"
     android:fitsSystemWindows="true">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/navFragmentScreen"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/routes" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context = ".MainActivity">
-
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <include
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/myToolbar"
-                layout="@layout/toolbar" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                >
 
+            </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
+    </LinearLayout>
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/navFragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/routes">
-
-        </androidx.fragment.app.FragmentContainerView>
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/navFragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/routes">
+    </androidx.fragment.app.FragmentContainerView>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navView"
@@ -59,6 +50,7 @@
         android:background="@color/colorLeftMenuBackground"
         app:headerLayout="@layout/header"
         app:itemTextColor="@color/colorBlack">
-
     </com.google.android.material.navigation.NavigationView>
+
+
 </androidx.drawerlayout.widget.DrawerLayout>

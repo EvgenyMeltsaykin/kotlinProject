@@ -10,13 +10,13 @@ import com.diplom.kotlindiplom.models.apiResponse.schoolClass.SchoolClass
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class FunctionsApi(val cityId: Int?) {
+class FunctionsApi(var cityId: Int?) {
     val api = ApiService.create()
     val accessToken = "82ec654d82ec654d82ec654d1d829c76b5882ec82ec654ddcb339961b9dc274bcd1e19a"
     val versionVkApi = "5.103"
     fun getNodeCities(editText: AutoCompleteTextView, context: Context, cities:MutableList<City>){
 
-        var citiesString: MutableList<String> = mutableListOf()
+        val citiesString: MutableList<String> = mutableListOf()
         var adapterCity: ArrayAdapter<String>
         val response = api.searchCity(
             1,
@@ -46,7 +46,7 @@ class FunctionsApi(val cityId: Int?) {
             })
     }
     fun getNodeSchools (editText: AutoCompleteTextView, context: Context, schools:MutableList<SchoolClass>, cityId : Int?){
-        var schoolString: MutableList<String> = mutableListOf()
+        val schoolString: MutableList<String> = mutableListOf()
         if (cityId != -1) {
             var adapterEducational: ArrayAdapter<String>
             val response = api.searchSchool(

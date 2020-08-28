@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.os.Environment.DIRECTORY_DOWNLOADS
+import android.provider.ContactsContract
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
@@ -42,6 +43,82 @@ class FunctionsFirebase {
     val taskRef = rootRef.child("tasks")
     val rolesRef = rootRef.child("roles")
     val uidUser = FirebaseAuth.getInstance().uid
+
+    fun deleteAward(awardId:String){
+        val ref = rootRef.child("awards").child(awardId)
+        ref.removeValue()
+    }
+    fun getAllFieldAward(award:DataSnapshot):Map<String,String>{
+        val awardField = mutableMapOf<String,String>()
+        award.children.forEach {
+            if (it.key.toString() == "awardId"){
+                awardField["awardId"]=it.value.toString()
+            }
+            if (it.key.toString() == "cost"){
+                awardField["cost"]=it.value.toString()
+            }
+            if (it.key.toString() == "name"){
+                awardField["name"]=it.value.toString()
+            }
+            if (it.key.toString() == "parentUid"){
+                awardField["parentUid"]=it.value.toString()
+            }
+            if (it.key.toString() == "status"){
+                awardField["status"]=it.value.toString()
+            }
+        }
+        return awardField
+    }
+    fun getAwardOutFirebaseWithAwardID(awardId:String, firebaseCallBack: FirebaseCallback<Map<String,String>>){
+        val ref = rootRef.child("awards").child(awardId)
+        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val award = getAllFieldAward(snapshot)
+                firebaseCallBack.onComplete(award)
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+    }
+    fun getAwardOutFirebaseWithParentUid(parentUid:String, firebaseCallBack: FirebaseCallback<Map<String,String>>){
+        val ref = rootRef.child("awards")
+        var award = mapOf<String,String>()
+        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    snapshot.children.forEach {awardItem->
+                        awardItem.children.forEach {awardField->
+                            if (awardField.key.toString() == "parentUid"){
+                                if (awardField.value.toString() == parentUid){
+                                    award = getAllFieldAward(awardItem)
+                                    firebaseCallBack.onComplete(award)
+                                }
+                            }
+                        }
+                    }
+                    return
+                }
+                firebaseCallBack.onComplete(award)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+    fun addAwardInFirebase(nameAward:String,cost:String){
+        val awardId = UUID.randomUUID().toString()
+        val ref = rootRef.child("awards").child(awardId)
+        ref.child("parentUid").setValue(uidUser)
+        ref.child("cost").setValue(cost)
+        ref.child("awardId").setValue(awardId)
+        ref.child("name").setValue(nameAward)
+        ref.child("status").setValue(0)
+    }
     fun clearAcceptRequest() {
         val ref = rootRef.child("users").child("children").child("$uidUser")
         ref.child("acceptName").setValue("")

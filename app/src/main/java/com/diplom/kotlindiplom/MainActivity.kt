@@ -3,8 +3,8 @@ package com.diplom.kotlindiplom
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Gravity
 import android.view.Menu
@@ -16,15 +16,21 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
-import androidx.core.view.MenuCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.diplom.kotlindiplom.models.*
+import co.metalab.asyncawait.async
+import com.diplom.kotlindiplom.childFragments.ChildMyProfileFragment
+import com.diplom.kotlindiplom.generalFragments.DiaryFragment
+import com.diplom.kotlindiplom.generalFragments.LoginDiaryFragment
+import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -33,13 +39,15 @@ import com.google.firebase.database.DatabaseError
 import kotlinx.android.synthetic.main.accept_parent.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.header.view.*
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity(), ActivityCallback {
 
-    private var drawer: DrawerLayout? = null
-    var navHostFragment: NavHostFragment? = null
-    var navController: NavController? = null
-    var menu: Menu? = null
+    private lateinit var drawer: DrawerLayout
+    private lateinit var navHostFragment: NavHostFragment
+    private lateinit var navController: NavController
+    private lateinit var navigationView: NavigationView
+    private lateinit var menu: Menu
     private var back_pressed: Long = 0
     private var roleUser = ""
     override fun getRoleUser(): String? {
@@ -53,10 +61,12 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         setContentView(R.layout.activity_main)
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navFragment) as NavHostFragment
-        navController = navHostFragment?.navController
+        navController = navHostFragment.navController
         drawer = findViewById(R.id.drawerLayout)
-        menu = navView.menu
-        MenuCompat.setGroupDividerEnabled(menu, true);
+
+        navigationView = findViewById(R.id.navView)
+        navigationView.setupWithNavController(navController)
+        menu = navigationView.menu
         if (roleUser == "child") {
             settingsChild()
         }
@@ -390,27 +400,37 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
     override fun onBackPressed() {
-        if (drawer?.isDrawerOpen(GravityCompat.START) == true) {
-            drawer?.closeDrawer(GravityCompat.START)
+        if (drawer.isDrawerOpen(GravityCompat.START) == true) {
+            drawer.closeDrawer(GravityCompat.START)
             return
         }
-        if (navController?.currentDestination?.id == R.id.listSubjectsFragment) {
-            navController?.popBackStack()
+        if (navController.currentDestination?.id == R.id.newAwardFragment) {
+            navController.popBackStack()
+            title = "Вознаграждение"
+            return
+        }
+        if (navController.currentDestination?.id == R.id.detailAwardFragment) {
+            navController.popBackStack()
+            title = "Вознаграждение"
+            return
+        }
+        if (navController.currentDestination?.id == R.id.listSubjectsFragment) {
+            navController.popBackStack()
             title = "Выберите класс"
             return
         }
-        if (navController?.currentDestination?.id == R.id.schoolBooksFragment) {
-            navController?.popBackStack()
+        if (navController.currentDestination?.id == R.id.schoolBooksFragment) {
+            navController.popBackStack()
             title = "Выберите предмет"
             return
         }
-        if (navController?.currentDestination?.id == R.id.parentAllTasksFragment || navController?.currentDestination?.id == R.id.parentNewTaskFragment) {
-            navController?.popBackStack()
+        if (navController.currentDestination?.id == R.id.parentAllTasksFragment || navController.currentDestination?.id == R.id.parentNewTaskFragment) {
+            navController.popBackStack()
             setTitle("Задания")
             return
         }
-        if (navController?.currentDestination?.id == R.id.detailsMarksFragment) {
-            navController?.popBackStack()
+        if (navController.currentDestination?.id == R.id.detailsMarksFragment) {
+            navController.popBackStack()
             setTitle("Предметы")
             return
         }
@@ -500,8 +520,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
     private fun setupDrawerAndToolbar() {
-        val sideBar = findViewById<NavigationView>(R.id.navView)
-        sideBar?.setupWithNavController(navController!!)
         val myToolBar = findViewById<Toolbar>(R.id.myToolbar)
         setSupportActionBar(myToolBar)
         val toggle = ActionBarDrawerToggle(
@@ -557,4 +575,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         drawer?.addDrawerListener(toggle)
         toggle.syncState()
     }
+
 }
+

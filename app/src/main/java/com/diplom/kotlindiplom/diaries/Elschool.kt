@@ -39,7 +39,7 @@ class Elschool {
     val url = "elschool.ru"
     fun createDiary() {
         val firebase = FunctionsFirebase()
-        Log.d("Tag","Create")
+        Log.d("Tag", "Create")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/login", "")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/semestrName", "триместр")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/password", "")
@@ -104,12 +104,12 @@ class Elschool {
 
                 val ref = firebase.rootRef.child("users").child(role).child(firebase.uidUser!!)
                     .child("diary").child("schedule")
-                ref.child("понедельник").setValue("")
-                ref.child("вторник").setValue("")
-                ref.child("среда").setValue("")
-                ref.child("четверг").setValue("")
-                ref.child("пятница").setValue("")
-                ref.child("суббота").setValue("")
+                ref.child("понедельник").removeValue()
+                ref.child("вторник").removeValue()
+                ref.child("среда").removeValue()
+                ref.child("четверг").removeValue()
+                ref.child("пятница").removeValue()
+                ref.child("суббота").removeValue()
             }
         })
     }
@@ -171,8 +171,10 @@ class Elschool {
                                     lesson.homework =
                                         item.select("div[class=diary__homework-text]").text()
                                     lesson.mark = item.select("span[class=diary__mark]").text()
-                                    if (lesson.mark.isEmpty()){
-                                        lesson.mark = item.select("span[class=diary__mark diary__mark-not-seen-before]").text()
+                                    if (lesson.mark.isEmpty()) {
+                                        lesson.mark =
+                                            item.select("span[class=diary__mark diary__mark-not-seen-before]")
+                                                .text()
                                     }
                                     if (lesson.name.isNotEmpty()) {
                                         lessons.add(lesson)
@@ -395,8 +397,6 @@ class Elschool {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getMarksFromDiary(
         idChild: String,
-        login: String,
-        password: String,
         firebaseCallback: FirebaseCallback<Boolean>
     ) {
         val firebase = FunctionsFirebase()
@@ -433,6 +433,7 @@ class Elschool {
                                 gradeHtml.select("div[class=DivForGradesAndAbsencesTable]")
                                     .select("tbody")
                             var lessonCount = 1
+                            var add = false
                             gradeTable.forEach {
                                 var i = 0
                                 //var lessonHtml = it.select("tr[lesson=\"$lessonCount\"]")
@@ -459,15 +460,19 @@ class Elschool {
                                             marks.forEach {
                                                 if (it.text().isNotEmpty()) {
                                                     val mark = it.text()
-                                                    if (mark.isDigitsOnly()){
-                                                        middleMark+=mark.toInt()
+                                                    if (mark.isDigitsOnly()) {
+                                                        middleMark += mark.toInt()
                                                         markCountForMiddleMark++
-                                                        Log.d("Tag","$lessonName markcount="+markCountForMiddleMark.toString() +" middleMark = $middleMark")
+                                                        Log.d(
+                                                            "Tag",
+                                                            "$lessonName markcount=" + markCountForMiddleMark.toString() + " middleMark = $middleMark"
+                                                        )
                                                     }
                                                     val date =
                                                         it.attr("data-popover-content")
                                                             .substringBefore("<p>")
                                                             .substringAfterLast(" ")
+                                                    add = true
                                                     firebase.setFieldDiary(
                                                         firebase.uidUser,
                                                         "marks/dateUpdate",
@@ -486,15 +491,15 @@ class Elschool {
                                                     markCount++
                                                 }
                                             }
-                                            if (markCountForMiddleMark == 0){
+                                            if (markCountForMiddleMark == 0) {
                                                 middleMark = 0f
-                                            }else{
-                                                middleMark = middleMark/(markCountForMiddleMark)
+                                            } else {
+                                                middleMark = middleMark / (markCountForMiddleMark)
                                             }
                                             firebase.setFieldDiary(
                                                 firebase.uidUser,
                                                 "marks/lesson$lessonCount/semestr$semestrCount/middleMark",
-                                                DoubleRounder.round(middleMark.toDouble(),2)
+                                                DoubleRounder.round(middleMark.toDouble(), 2)
                                             )
                                             semestrCount++
                                         }
@@ -502,7 +507,7 @@ class Elschool {
                                     }
                                     lessonCount++
                                 } while (lessonHtml.isNotEmpty())
-                                firebaseCallback.onComplete(true)
+                                firebaseCallback.onComplete(add)
                                 return@launch
                             }
                         } catch (e: IOException) {
@@ -518,6 +523,7 @@ class Elschool {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @ExperimentalStdlibApi
     fun getMarks(
         idChild: String = "",
@@ -530,71 +536,65 @@ class Elschool {
         Toast.makeText(context, "Подождите, идет загрузка оценок", Toast.LENGTH_SHORT).show()
         progressBar.isVisible = true
         hideButtons()
-        firebase.getLoginAndPasswordAndUrlDiary(firebase.uidUser!!,
-            object : FirebaseCallback<Map<String, String>> {
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun onComplete(value: Map<String, String>) {
-                    getMarksFromDiary(
-                        idChild,
-                        value["login"]!!,
-                        value["password"]!!,
-                        object : FirebaseCallback<Boolean> {
-                            override fun onComplete(end: Boolean) {
-                                GlobalScope.launch(Dispatchers.Main) {
-                                    firebase.getRoleByUid(firebase.uidUser,object : FirebaseCallback<String>{
-                                        override fun onComplete(answer: String) {
-                                            var role = ""
-                                            if (answer == "child") role = "children"
-                                            else role = "parents"
-                                            if (!end) {
-                                                Toast.makeText(
-                                                    context,
-                                                    "При загрузке оценок произошла ошибка",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                                progressBar.isVisible = false
-                                                showButtons()
-                                            }
-                                            val ref = firebase.rootRef.child("users").child(role).child(firebase.uidUser).child("diary").child("marks")
-                                            ref.addChildEventListener(object : ChildEventListener{
-                                                override fun onChildAdded(
-                                                    p0: DataSnapshot,
-                                                    p1: String?
-                                                ) {
-                                                    progressBar.isVisible = false
-                                                    showButtons()
-                                                }
-
-                                                override fun onChildChanged(
-                                                    p0: DataSnapshot,
-                                                    p1: String?
-                                                ) {
-                                                    return
-                                                }
-
-                                                override fun onChildRemoved(p0: DataSnapshot) {
-                                                    return
-                                                }
-
-                                                override fun onChildMoved(
-                                                    p0: DataSnapshot,
-                                                    p1: String?
-                                                ) {
-                                                    return
-                                                }
-
-                                                override fun onCancelled(p0: DatabaseError) {
-                                                    return
-                                                }
-
-                                            })
-                                        }
-                                    })
-
+        getMarksFromDiary(
+            idChild,
+            object : FirebaseCallback<Boolean> {
+                override fun onComplete(end: Boolean) {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String> {
+                            override fun onComplete(answer: String) {
+                                var role = ""
+                                if (answer == "child") role = "children"
+                                else role = "parents"
+                                if (!end) {
+                                    Toast.makeText(
+                                        context,
+                                        "При загрузке оценок произошла ошибка. Возможно, оценки еще не добавлены.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    progressBar.isVisible = false
+                                    showButtons()
                                 }
+                                val ref = firebase.rootRef.child("users").child(role)
+                                    .child(firebase.uidUser).child("diary").child("marks")
+                                ref.addChildEventListener(object : ChildEventListener {
+                                    override fun onChildAdded(
+                                        p0: DataSnapshot,
+                                        p1: String?
+                                    ) {
+                                        progressBar.isVisible = false
+                                        showButtons()
+                                    }
+
+                                    override fun onChildChanged(
+                                        p0: DataSnapshot,
+                                        p1: String?
+                                    ) {
+                                        return
+                                    }
+
+                                    override fun onChildRemoved(p0: DataSnapshot) {
+                                        return
+                                    }
+
+                                    override fun onChildMoved(
+                                        p0: DataSnapshot,
+                                        p1: String?
+                                    ) {
+                                        return
+                                    }
+
+                                    override fun onCancelled(p0: DatabaseError) {
+                                        return
+                                    }
+
+                                })
                             }
                         })
+
+                    }
                 }
             })
+
     }
 }

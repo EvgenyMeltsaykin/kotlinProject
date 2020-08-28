@@ -30,6 +30,10 @@
             android:icon="@drawable/ic_tasks"
             android:title="Задания" />
         <item
+            android:id="@+id/listAwardsFragment"
+            android:icon="@drawable/ic_award"
+            android:title="Вознаграждение" />
+        <item
             android:id="@+id/parentNodeChildrenFragment"
             android:icon="@drawable/ic_child"
             android:title="Список детей" />

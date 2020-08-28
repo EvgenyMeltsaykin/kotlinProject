@@ -28,10 +28,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [WeekdayWithoutDiaryFragment.newInstance] factory method to
+ * Use the [LoginDiaryFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
+class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
     // TODO: Rename and change types of parameters
     private var deletedDiary: Boolean = false
     private var param2: String? = null
@@ -174,7 +174,7 @@ class WeekdayWithoutDiaryFragment : Fragment(), AdapterView.OnItemSelectedListen
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            WeekdayWithoutDiaryFragment()
+            LoginDiaryFragment()
                 .apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
