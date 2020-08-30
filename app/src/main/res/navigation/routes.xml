@@ -134,6 +134,9 @@
         <action
             android:id="@+id/action_lessonsMarkFragment_to_detailsMarksFragment"
             app:destination="@id/detailsMarksFragment" />
+        <action
+            android:id="@+id/action_lessonsMarkFragment_to_detailsFinalMarkFragment2"
+            app:destination="@id/detailsFinalMarkFragment2" />
     </fragment>
     <fragment
         android:id="@+id/diaryFragment"
@@ -277,4 +280,9 @@
             android:id="@+id/action_detailAwardFragment_to_listAwardsFragment"
             app:destination="@id/listAwardsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/detailsFinalMarkFragment2"
+        android:name="com.diplom.kotlindiplom.generalFragments.markFragments.DetailsFinalMarkFragment"
+        android:label="fragment_details_final_mark"
+        tools:layout="@layout/fragment_details_final_mark" />
 </navigation>

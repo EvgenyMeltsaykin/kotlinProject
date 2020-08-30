@@ -35,11 +35,14 @@ class LessonsMarkFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var semestrNumber: String = "1"
     private var semestrName: String? = null
+    private var finalGrades: Boolean= false
+
     var role = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             semestrNumber = it.getString("semestrNumber", "1")
+            finalGrades = it.getBoolean("finalGrades", false)
         }
     }
 
@@ -53,30 +56,56 @@ class LessonsMarkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.title = "Предметы"
+
         val adapter = GroupAdapter<ViewHolder>()
         adapter.clear()
         val firebase = FunctionsFirebase()
-        firebase.getLessonsAndMiddleMark(role,semestrNumber,object : FirebaseCallback<Map<String,String>> {
-            @RequiresApi(Build.VERSION_CODES.N)
-            override fun onComplete(value: Map<String,String>) {
-                value.forEach { (lessonName, middleMark) ->
-                    adapter.add(LessonsMarkItem(lessonName,middleMark))
+        if (finalGrades){
+            activity?.title = "Итоговые оценки"
+            firebase.getLessonsAndFinalMark(role,object : FirebaseCallback<Map<String,String>>{
+                override fun onComplete(value: Map<String, String>) {
+                    value.forEach { (lessonName, middleMark) ->
+                        adapter.add(LessonsMarkItem(lessonName,middleMark))
+                    }
+                    lessonsMarkRecyclerView?.adapter = adapter
+                    lessonsMarkProgressBar?.isVisible = false
                 }
-                lessonsMarkRecyclerView?.adapter = adapter
-                lessonsMarkProgressBar?.isVisible = false
+            })
+            adapter.setOnItemClickListener { item, view ->
+                val bundle = bundleOf()
+                val lessonName = view.lessonsNameTextView.text.toString()
+                val yearMark = view.middleMarkTextView.text.toString()
+                bundle.putString("lessonName", lessonName)
+                bundle.putString("yearMark", yearMark)
+                Navigation.findNavController(requireActivity(), R.id.navFragment).navigate(
+                    R.id.action_lessonsMarkFragment_to_detailsFinalMarkFragment2,
+                    bundle
+                )
             }
-        })
-        adapter.setOnItemClickListener { item, view ->
-            val bundle = bundleOf()
-            val lessonName = view.lessonsNameTextView.text.toString()
-            bundle.putString("lessonName", lessonName)
-            bundle.putString("semestrNumber", semestrNumber)
-            Navigation.findNavController(requireActivity(), R.id.navFragment).navigate(
-                R.id.action_lessonsMarkFragment_to_detailsMarksFragment,
-                bundle
-            )
+        }else{
+            activity?.title = "Предметы"
+            firebase.getLessonsAndMiddleMark(role,semestrNumber,object : FirebaseCallback<Map<String,String>> {
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onComplete(value: Map<String,String>) {
+                    value.forEach { (lessonName, middleMark) ->
+                        adapter.add(LessonsMarkItem(lessonName,middleMark))
+                    }
+                    lessonsMarkRecyclerView?.adapter = adapter
+                    lessonsMarkProgressBar?.isVisible = false
+                }
+            })
+            adapter.setOnItemClickListener { item, view ->
+                val bundle = bundleOf()
+                val lessonName = view.lessonsNameTextView.text.toString()
+                bundle.putString("lessonName", lessonName)
+                bundle.putString("semestrNumber", semestrNumber)
+                Navigation.findNavController(requireActivity(), R.id.navFragment).navigate(
+                    R.id.action_lessonsMarkFragment_to_detailsMarksFragment,
+                    bundle
+                )
+            }
         }
+
     }
 
     override fun onAttach(context: Context) {

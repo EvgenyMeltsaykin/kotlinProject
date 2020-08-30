@@ -32,6 +32,7 @@ import org.cryptonode.jncryptor.AES256JNCryptor
 import java.io.File
 import java.time.LocalDate
 import java.util.*
+import kotlin.math.roundToInt
 
 
 class FunctionsFirebase {
@@ -44,42 +45,50 @@ class FunctionsFirebase {
     val rolesRef = rootRef.child("roles")
     val uidUser = FirebaseAuth.getInstance().uid
 
-    fun deleteAward(awardId:String){
+    fun deleteAward(awardId: String) {
         val ref = rootRef.child("awards").child(awardId)
         ref.removeValue()
     }
-    fun setFieldAward(awardId: String, field: String, value: Any){
+
+    fun setFieldAward(awardId: String, field: String, value: Any) {
         val ref = rootRef.child("awards").child(awardId)
         ref.child(field).setValue(value)
     }
-    fun getAllFieldAward(award:DataSnapshot):Map<String,String>{
-        val awardField = mutableMapOf<String,String>()
+
+    fun getAllFieldAward(award: DataSnapshot): Map<String, String> {
+        val awardField = mutableMapOf<String, String>()
         award.children.forEach {
-            if (it.key.toString() == "awardId"){
-                awardField["awardId"]=it.value.toString()
+            if (it.key.toString() == "awardId") {
+                awardField["awardId"] = it.value.toString()
             }
-            if (it.key.toString() == "cost"){
-                awardField["cost"]=it.value.toString()
+            if (it.key.toString() == "cost") {
+                awardField["cost"] = it.value.toString()
             }
-            if (it.key.toString() == "name"){
-                awardField["name"]=it.value.toString()
+            if (it.key.toString() == "name") {
+                awardField["name"] = it.value.toString()
             }
-            if (it.key.toString() == "parentUid"){
-                awardField["parentUid"]=it.value.toString()
+            if (it.key.toString() == "parentUid") {
+                awardField["parentUid"] = it.value.toString()
             }
-            if (it.key.toString() == "status"){
-                awardField["status"]=it.value.toString()
+            if (it.key.toString() == "status") {
+                awardField["status"] = it.value.toString()
             }
         }
         return awardField
     }
-    fun getAwardOutFirebaseWithAwardID(awardId:String, firebaseCallBack: FirebaseCallback<Map<String,String>>){
+
+    fun getAwardOutFirebaseWithAwardID(
+        awardId: String,
+        firebaseCallBack: FirebaseCallback<Map<String, String>>
+    ) {
         val ref = rootRef.child("awards").child(awardId)
-        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+        ref.keepSynced(true)
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val award = getAllFieldAward(snapshot)
                 firebaseCallBack.onComplete(award)
             }
+
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -87,16 +96,20 @@ class FunctionsFirebase {
         })
 
     }
-    fun getAwardOutFirebaseWithParentUid(parentUid:String, firebaseCallBack: FirebaseCallback<Map<String,String>>){
+
+    fun getAwardOutFirebaseWithParentUid(
+        parentUid: String,
+        firebaseCallBack: FirebaseCallback<Map<String, String>>
+    ) {
         val ref = rootRef.child("awards")
-        var award = mapOf<String,String>()
-        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+        var award = mapOf<String, String>()
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()){
-                    snapshot.children.forEach {awardItem->
-                        awardItem.children.forEach {awardField->
-                            if (awardField.key.toString() == "parentUid"){
-                                if (awardField.value.toString() == parentUid){
+                if (snapshot.exists()) {
+                    snapshot.children.forEach { awardItem ->
+                        awardItem.children.forEach { awardField ->
+                            if (awardField.key.toString() == "parentUid") {
+                                if (awardField.value.toString() == parentUid) {
                                     award = getAllFieldAward(awardItem)
                                     firebaseCallBack.onComplete(award)
                                 }
@@ -114,7 +127,8 @@ class FunctionsFirebase {
 
         })
     }
-    fun addAwardInFirebase(nameAward:String,cost:String){
+
+    fun addAwardInFirebase(nameAward: String, cost: String) {
         val awardId = UUID.randomUUID().toString()
         val ref = rootRef.child("awards").child(awardId)
         ref.child("parentUid").setValue(uidUser)
@@ -123,13 +137,15 @@ class FunctionsFirebase {
         ref.child("name").setValue(nameAward)
         ref.child("status").setValue(0)
     }
+
     fun clearAcceptRequest() {
         val ref = rootRef.child("users").child("children").child("$uidUser")
         ref.child("acceptName").setValue("")
         ref.child("acceptUid").setValue("")
     }
-    fun getCountChildren(firebaseCallBack: FirebaseCallback<String>){
-        childRef.addListenerForSingleValueEvent(object :ValueEventListener{
+
+    fun getCountChildren(firebaseCallBack: FirebaseCallback<String>) {
+        childRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 firebaseCallBack.onComplete(p0.childrenCount.toString())
             }
@@ -212,6 +228,48 @@ class FunctionsFirebase {
         })
     }
 
+    fun getMarksLessonSemestr(
+        role: String,
+        lessonName: String,
+        firebaseCallBack: FirebaseCallback<List<Int>>
+    ) {
+        var roleFirebase = ""
+        if (role == "child")roleFirebase = "children"
+        else roleFirebase = "parents"
+        val ref =
+            rootRef.child("users").child(roleFirebase).child(uidUser!!).child("diary").child("marks")
+        ref.keepSynced(true)
+        val marksSemestr = mutableListOf<Int>()
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    snapshot.children.forEach { lesson ->
+                        lesson.children.forEach { info ->
+                            if (info.key.toString() == "lessonName" && info.value.toString() == lessonName) {
+                                lesson.children.forEach { semestr ->
+                                    semestr.children.forEach {
+                                        if (it.key.toString() == "middleMark") {
+                                            marksSemestr.add(
+                                                it.value.toString().toFloat().roundToInt()
+                                            )
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                    firebaseCallBack.onComplete(marksSemestr)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
     fun getFieldMarks(field: String, firebaseCallBack: FirebaseCallback<String>) {
         getRoleByUid(uidUser!!, object : FirebaseCallback<String> {
             override fun onComplete(answer: String) {
@@ -238,6 +296,50 @@ class FunctionsFirebase {
 
                 })
             }
+        })
+    }
+
+    fun getLessonsAndFinalMark(
+        role: String,
+        firebaseCallBack: FirebaseCallback<Map<String, String>>
+    ) {
+        val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary").child("marks")
+        val lessons = mutableMapOf<String, String>()
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    snapshot.children.forEach { lesson ->
+                        var lessonName = ""
+                        val middleMarks = mutableListOf<Float>()
+                        lesson.children.forEach { info ->
+                            if (info.key.toString() == "lessonName") {
+                                lessonName = info.value.toString()
+                            }
+                            info.children.forEach { semestr ->
+                                if (semestr.key.toString() == "middleMark") {
+                                    middleMarks.add(semestr.value.toString().toFloat())
+                                }
+                            }
+                        }
+                        var summa = 0f
+                        middleMarks.forEach {
+                            summa += it.roundToInt()
+                        }
+                        if (middleMarks.size != 0) {
+                            summa /= middleMarks.size
+                            if (summa.roundToInt() != 0) {
+                                lessons[lessonName] = summa.roundToInt().toString()
+                            }
+                        }
+                    }
+                }
+                firebaseCallBack.onComplete(lessons)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
         })
     }
 
@@ -474,7 +576,7 @@ class FunctionsFirebase {
 
     }
 
-    fun getPointChild(uid: String,firebaseCallBack: FirebaseCallback<String>){
+    fun getPointChild(uid: String, firebaseCallBack: FirebaseCallback<String>) {
         getRoleByUid(uid, object : FirebaseCallback<String> {
             override fun onComplete(answer: String) {
                 var role = ""
@@ -500,6 +602,7 @@ class FunctionsFirebase {
             }
         })
     }
+
     fun getFieldUserDatabase(
         uid: String,
         field: String,

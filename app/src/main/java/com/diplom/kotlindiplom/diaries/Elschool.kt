@@ -419,8 +419,10 @@ class Elschool {
                                         .cookies(cookies)
                                         .get()
                             }
-                            val gradeUrl =
+                            var gradeUrl =
                                 scheduleHtml.baseUri().replace("details", "gradesandabsences")
+                            Log.d("Tag",gradeUrl)
+                            gradeUrl = "https://elschool.ru/users/diaries/gradesandabsences?rooId=18&instituteId=233&departmentId=91120&pupilId=1588026"
                             val gradeHtml = Jsoup.connect(gradeUrl)
                                 .cookies(cookies)
                                 .get()

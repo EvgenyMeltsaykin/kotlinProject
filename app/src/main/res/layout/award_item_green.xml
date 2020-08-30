@@ -6,11 +6,11 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:elevation="8dp"
-    android:background="@drawable/background_text">
+    android:background="@drawable/button_green">
 
     <TextView
         android:id="@+id/nameAwardTextView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/costAwardTextView"
         android:layout_marginStart="16dp"
@@ -18,7 +18,7 @@
         android:layout_marginEnd="16dp"
         android:gravity="center|center_horizontal|center_vertical"
         android:text="TextView"
-        android:textColor="@color/colorText"
+        android:textColor="@color/colorButtonText"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
         android:layout_marginBottom="8dp"
         android:gravity="center|center_horizontal|center_vertical"
         android:text="TextView"
-        android:textColor="@color/colorText"
+        android:textColor="@color/colorButtonText"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -83,4 +83,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/dateUpdateTextView"
         app:layout_constraintVertical_bias="0.413" />
+
+    <Button
+        android:id="@+id/yearsMarksButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/simple_button"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="Годовые оценки"
+        android:textColor="@color/colorButtonText"
+        app:layout_constraintEnd_toEndOf="@+id/thirdSemestrButton"
+        app:layout_constraintStart_toStartOf="@+id/thirdSemestrButton"
+        app:layout_constraintTop_toBottomOf="@+id/thirdSemestrButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>

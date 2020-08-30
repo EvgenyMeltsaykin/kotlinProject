@@ -2,6 +2,7 @@ package com.diplom.kotlindiplom.generalFragments.awardFragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -17,6 +18,7 @@ import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_detail_award.*
+import kotlinx.android.synthetic.main.fragment_list_awards.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,6 +35,7 @@ class DetailAwardFragment : Fragment() {
     private lateinit var awardId: String
     private lateinit var nameAward: String
     private lateinit var costAward: String
+    private lateinit var status: String
     private lateinit var role:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,7 @@ class DetailAwardFragment : Fragment() {
             awardId = it.getString("awardId","")
             nameAward = it.getString("nameAward","")
             costAward = it.getString("costAward","")
+            status = it.getString("status","")
         }
     }
 
@@ -60,15 +64,27 @@ class DetailAwardFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        childTakeAwardTextView?.isVisible = false
         val firebase = FunctionsFirebase()
         awardNameTextView?.text = "Вознаграждение: $nameAward"
         costAwardTxtView?.text = "Стоимость: $costAward"
         if (role == "children"){
             deleteButton?.isVisible = false
+            if (status == "1"){
+                takeButton?.text = "Выдано"
+            }
+
         }
-        if (role == "parent"){
+        if (role == "parents"){
             takeButton?.isVisible = false
+            if (status != "0"){
+                deleteButton?.isVisible = false
+            }
+            if (status == "1"){
+                Log.d("Tag",status)
+                childTakeAwardTextView?.isVisible = true
+            }
+
         }
         deleteButton?.setOnClickListener {
             Toast.makeText(requireContext(),"Успешно",Toast.LENGTH_SHORT).show()
@@ -76,21 +92,29 @@ class DetailAwardFragment : Fragment() {
             Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailAwardFragment_to_listAwardsFragment)
         }
         takeButton?.setOnClickListener {
-            firebase.getFieldUserDatabase(
-                firebase.uidUser!!,
-                "point",
-                object : FirebaseCallback<String> {
-                    override fun onComplete(value: String) {
-                        if (value.toInt()>= costAward.toInt()){
-                            Toast.makeText(requireContext(),"Успешно",Toast.LENGTH_SHORT).show()
-                            firebase.setFieldAward(awardId,"status","1")
-                            firebase.setFieldUserDatabase(firebase.uidUser!!,"point",value.toInt() - costAward.toInt())
-                            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailAwardFragment_to_listAwardsFragment)
-                        }else{
-                            Toast.makeText(requireContext(),"У Вас не хватает баллов",Toast.LENGTH_SHORT).show()
+            if (takeButton?.text == "Забрать"){
+                firebase.getFieldUserDatabase(
+                    firebase.uidUser!!,
+                    "point",
+                    object : FirebaseCallback<String> {
+                        override fun onComplete(value: String) {
+                            if (value.toInt()>= costAward.toInt()){
+                                Toast.makeText(requireContext(),"Успешно",Toast.LENGTH_SHORT).show()
+                                firebase.setFieldAward(awardId,"status","1")
+                                firebase.setFieldUserDatabase(firebase.uidUser!!,"point",value.toInt() - costAward.toInt())
+                                Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailAwardFragment_to_listAwardsFragment)
+                            }else{
+                                Toast.makeText(requireContext(),"У Вас не хватает баллов",Toast.LENGTH_SHORT).show()
+                            }
                         }
-                    }
-                })
+                    })
+            }else {
+                Toast.makeText(requireContext(), "Успешно", Toast.LENGTH_SHORT).show()
+                firebase.deleteAward(awardId)
+                Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailAwardFragment_to_listAwardsFragment)
+            }
+
+
 
         }
 
