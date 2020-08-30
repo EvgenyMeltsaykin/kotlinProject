@@ -54,6 +54,7 @@ class ParentMyProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         activity?.title = "Мой профиль"
         changeEmail = false
         loadInformationFromFirebase()

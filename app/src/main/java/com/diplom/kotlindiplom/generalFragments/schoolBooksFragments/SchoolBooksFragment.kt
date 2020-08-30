@@ -52,6 +52,7 @@ class SchoolBooksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         activity?.title = "Выберите учебник"
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()

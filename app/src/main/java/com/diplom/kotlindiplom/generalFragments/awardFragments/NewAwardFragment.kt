@@ -44,7 +44,9 @@ class NewAwardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         activity?.title = "Новое вознаграждение"
+
 
         addNewAwardButton?.setOnClickListener {
             val nameAward = nameAwardEditText?.text.toString()

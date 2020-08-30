@@ -56,6 +56,7 @@ class ChooseChildMarkFragment : Fragment() {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         progressBar?.isVisible= false
         activity?.title = "Выберите ребенка"
         updateRecyclerView()

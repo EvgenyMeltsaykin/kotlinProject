@@ -56,7 +56,7 @@ class LessonsMarkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        requireActivity().invalidateOptionsMenu()
         val adapter = GroupAdapter<ViewHolder>()
         adapter.clear()
         val firebase = FunctionsFirebase()

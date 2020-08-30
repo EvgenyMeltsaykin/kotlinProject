@@ -47,6 +47,7 @@ class ScheduleDayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         if(!title.isNullOrBlank()) {
             activity?.title = title
         }

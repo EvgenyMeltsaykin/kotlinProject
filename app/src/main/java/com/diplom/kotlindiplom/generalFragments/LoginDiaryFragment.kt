@@ -54,6 +54,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         progressBar?.isVisible = false
         activity?.title = "Электронный дневник"
         val firebase = FunctionsFirebase()

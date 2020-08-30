@@ -56,6 +56,7 @@ class ChooseChildScheduleFragment : Fragment() {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         activity?.title = "Выберите ребенка"
         progressBar?.isVisible = false
         updateRecyclerView()
@@ -139,6 +140,7 @@ class ChooseChildScheduleFragment : Fragment() {
                 "idChild",
                 object : FirebaseCallback<String> {
                     override fun onComplete(idChild: String) {
+                        bundle.putBoolean("updateSchedule",false)
                         if (idChild != childDiaryItem.child.id) {
                             bundle.putBoolean("updateWithoutCheck", true)
                         } else {

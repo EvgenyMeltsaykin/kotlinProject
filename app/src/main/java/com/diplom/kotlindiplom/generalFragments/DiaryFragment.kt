@@ -46,13 +46,16 @@ class DiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         activity?.title = "Электронный дневник"
         val firebase = FunctionsFirebase()
         firebase.getFieldUserDatabase(firebase.uidUser!!,"role",object : FirebaseCallback<String>{
             override fun onComplete(value: String) {
                 scheduleButton?.setOnClickListener {
                     if (value == "child"){
-                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_weekdayFragment)
+                        val bundle = bundleOf()
+                        bundle.putBoolean("updateSchedule",true)
+                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_weekdayFragment,bundle)
                     }
                     if (value == "parent"){
                         Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_chooseChildScheduleFragment)

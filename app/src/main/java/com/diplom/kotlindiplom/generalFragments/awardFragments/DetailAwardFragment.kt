@@ -64,6 +64,7 @@ class DetailAwardFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         childTakeAwardTextView?.isVisible = false
         val firebase = FunctionsFirebase()
         awardNameTextView?.text = "Вознаграждение: $nameAward"

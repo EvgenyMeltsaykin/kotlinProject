@@ -51,6 +51,7 @@ class ListSchoolBooksFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         val adapter = GroupAdapter<ViewHolder>()
         activity?.title = "Выберите предмет"
 

@@ -42,6 +42,7 @@ class ParentNodeChildrenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         activity?.title = "Список детей"
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()

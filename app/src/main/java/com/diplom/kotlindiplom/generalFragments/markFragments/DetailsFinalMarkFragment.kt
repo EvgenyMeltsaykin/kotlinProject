@@ -53,7 +53,7 @@ class DetailsFinalMarkFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        requireActivity().invalidateOptionsMenu()
         lessonNameTextView?.text = "Предмет: $lessonName"
         yearMarkTextView?.text = "Годовая оценка: $yearMark"
 

@@ -56,6 +56,7 @@ class ListAwardsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         activity?.title = "Вознаграждение"
         emptyListAwardTextView?.isVisible = false
         if (role == "children"){
@@ -64,6 +65,7 @@ class ListAwardsFragment : Fragment() {
         addAwardButton?.setOnClickListener {
             Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_listAwardsFragment_to_newAwardFragment)
         }
+        //item.isVisible = true
         updateAwardList()
 
     }

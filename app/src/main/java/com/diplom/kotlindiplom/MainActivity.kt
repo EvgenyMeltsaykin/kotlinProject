@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.Gravity
 import android.view.Menu
@@ -21,14 +20,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import co.metalab.asyncawait.async
-import com.diplom.kotlindiplom.childFragments.ChildMyProfileFragment
-import com.diplom.kotlindiplom.generalFragments.DiaryFragment
-import com.diplom.kotlindiplom.generalFragments.LoginDiaryFragment
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
@@ -39,7 +33,6 @@ import com.google.firebase.database.DatabaseError
 import kotlinx.android.synthetic.main.accept_parent.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.header.view.*
-import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity(), ActivityCallback {
 
@@ -47,12 +40,14 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
     private lateinit var navigationView: NavigationView
-    private lateinit var menu: Menu
+    private lateinit var menuNavigationView: Menu
+    private lateinit var optionsMenu: MenuItem
     private var back_pressed: Long = 0
     private var roleUser = ""
     override fun getRoleUser(): String? {
         return intent.getStringExtra("role").toString()
     }
+
     @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -66,7 +61,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
 
         navigationView = findViewById(R.id.navView)
         navigationView.setupWithNavController(navController)
-        menu = navigationView.menu
+        menuNavigationView = navigationView.menu
         if (roleUser == "child") {
             settingsChild()
         }
@@ -349,13 +344,18 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             R.id.menuPointsChild -> navController.navigate(
                 R.id.childMyProfileFragment
             )
+            R.id.updateInformation -> {
+                if (navController.currentDestination?.id  == R.id.listAwardsFragment){
+                    navController.navigate(R.id.listAwardsFragment)
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.nav_menu, menu)
         if (roleUser == "child") {
-            menuInflater.inflate(R.menu.nav_menu, menu)
             val item = menu?.findItem(R.id.menuPointsChild)
             val firebase = FunctionsFirebase()
             firebase.getPointChild(
@@ -365,6 +365,9 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                         item?.title = value
                     }
                 })
+        }else{
+            val item = menu?.findItem(R.id.menuPointsChild)
+            item?.isVisible = false
         }
         return super.onCreateOptionsMenu(menu)
     }
@@ -385,6 +388,10 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                     }
                 })
         }
+        if (navController.currentDestination?.id == R.id.listAwardsFragment){
+            val item = menu?.findItem(R.id.updateInformation)
+            item?.isVisible = true
+        }
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -400,6 +407,12 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     override fun onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
+            return
+        }
+        if (navController.currentDestination?.id == R.id.scheduleDayFragment){
+            val bundle = bundleOf()
+            bundle.putBoolean("updateSchedule",false)
+            navController.navigate(R.id.action_scheduleDayFragment_to_weekdayFragment,bundle)
             return
         }
         if (navController.currentDestination?.id == R.id.parentMyProfileFragment || navController.currentDestination?.id == R.id.childMyProfileFragment || navController.currentDestination?.id == R.id.childTasksFragment
@@ -445,7 +458,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 }
             })
         //Обработка нажатия выхода в боковом меню
-        val quit = menu.findItem(R.id.exitApplication)
+        val quit = menuNavigationView.findItem(R.id.exitApplication)
         quit?.setOnMenuItemClickListener {
             FirebaseAuth.getInstance().signOut()
             intent = Intent(this, ChooseActivity::class.java)

@@ -2,6 +2,7 @@ package com.diplom.kotlindiplom.generalFragments.scheduleFragments
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class WeekdayFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var updateSchedule: Boolean = true
+    private var updateSchedule: Boolean = false
     private var id: String = ""
     private var updateWithoutCheck: Boolean = false
     var selectedWeek = 0
@@ -41,7 +42,7 @@ class WeekdayFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            updateSchedule = it.getBoolean("updateSchedule", true)
+            updateSchedule = it.getBoolean("updateSchedule", false)
             id = it.getString("id", "")
             updateWithoutCheck = it.getBoolean("updateWithoutCheck", false)
         }
@@ -60,6 +61,7 @@ class WeekdayFragment : Fragment() {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         activity?.title = "Расписание"
         setupCalendar()
         progressBar?.isVisible = false
@@ -116,6 +118,7 @@ class WeekdayFragment : Fragment() {
 
         firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
+                Log.d("Tag", "${updateWithoutCheck} $updateSchedule")
                 if (updateSchedule || updateWithoutCheck) {
                     firebase.getFieldSchedule(
                         firebase.uidUser,
