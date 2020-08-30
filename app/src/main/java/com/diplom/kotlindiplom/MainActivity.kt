@@ -82,8 +82,8 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         val header = navView.getHeaderView(0)
         val usernameTextViewHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         usernameTextViewHeader.setOnClickListener {
-            navController?.navigate(R.id.parentMyProfileFragment)
-            drawer?.closeDrawer(GravityCompat.START)
+            navController.navigate(R.id.parentMyProfileFragment)
+            drawer.closeDrawer(GravityCompat.START)
         }
         /*val photo = header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
         photo.setOnClickListener {
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                             "Ваш запрос отклонен",
                             Toast.LENGTH_SHORT
                         ).show()
-                        firebase.setFieldUserDatabase(firebase.uidUser!!, "acceptAnswer", "-1")
+                        firebase.setFieldUserDatabase(firebase.uidUser, "acceptAnswer", "-1")
                     }
                     if (p0.value.toString() == "1") {
                         Toast.makeText(
@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                             "Ваш запрос принят",
                             Toast.LENGTH_SHORT
                         ).show()
-                        firebase.setFieldUserDatabase(firebase.uidUser!!, "acceptAnswer", "-1")
+                        firebase.setFieldUserDatabase(firebase.uidUser, "acceptAnswer", "-1")
                     }
                 }
             }
@@ -176,7 +176,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             val bundle = bundleOf()
             bundle.putString("taskId", intent.getStringExtra("taskId"))
             bundle.putString("title", intent.getStringExtra("title"))
-            navController?.navigate(R.id.action_mainFragment_to_parentTaskContentFragment, bundle)
+            navController.navigate(R.id.action_mainFragment_to_parentTaskContentFragment, bundle)
         }
     }
 
@@ -186,8 +186,8 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         val header = navView.getHeaderView(0)
         val usernameTextViewHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         usernameTextViewHeader.setOnClickListener {
-            navController?.navigate(R.id.childMyProfileFragment)
-            drawer?.closeDrawer(GravityCompat.START)
+            navController.navigate(R.id.childMyProfileFragment)
+            drawer.closeDrawer(GravityCompat.START)
         }
         /*val photo = header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
         photo.setOnClickListener {
@@ -213,7 +213,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                var window = PopupWindow(this@MainActivity)
+                val window = PopupWindow(this@MainActivity)
                 val view = layoutInflater.inflate(R.layout.accept_parent, null)
                 if (p0.key.toString() == "acceptName") {
                     if (p0.value.toString().isNotEmpty()) {
@@ -231,7 +231,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                         view.rejectButton.setOnClickListener {
                             window.dismiss()
                             firebase.getFieldUserDatabase(
-                                firebase.uidUser!!,
+                                firebase.uidUser,
                                 "acceptUid",
                                 object : FirebaseCallback<String> {
                                     override fun onComplete(value: String) {
@@ -244,7 +244,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                         view.acceptButton.setOnClickListener {
                             window.dismiss()
                             firebase.getFieldUserDatabase(
-                                firebase.uidUser!!,
+                                firebase.uidUser,
                                 "acceptUid",
                                 object : FirebaseCallback<String> {
                                     override fun onComplete(parentUid: String) {
@@ -339,14 +339,14 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             val bundle = bundleOf()
             bundle.putString("taskId", intent.getStringExtra("taskId"))
             bundle.putString("title", intent.getStringExtra("title"))
-            navController?.navigate(R.id.action_mainFragment_to_childTaskContentFragment, bundle)
+            navController.navigate(R.id.action_mainFragment_to_childTaskContentFragment, bundle)
         }
 
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menuPointsChild -> navController?.navigate(
+            R.id.menuPointsChild -> navController.navigate(
                 R.id.childMyProfileFragment
             )
         }
@@ -358,9 +358,8 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             menuInflater.inflate(R.menu.nav_menu, menu)
             val item = menu?.findItem(R.id.menuPointsChild)
             val firebase = FunctionsFirebase()
-            firebase.getFieldUserDatabase(
+            firebase.getPointChild(
                 firebase.uidUser!!,
-                "point",
                 object : FirebaseCallback<String> {
                     override fun onComplete(value: String) {
                         item?.title = value
@@ -378,9 +377,8 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         if (roleUser == "child") {
             val item = menu?.findItem(R.id.menuPointsChild)
             val firebase = FunctionsFirebase()
-            firebase.getFieldUserDatabase(
+            firebase.getPointChild(
                 firebase.uidUser!!,
-                "point",
                 object : FirebaseCallback<String> {
                     override fun onComplete(value: String) {
                         item?.title = value
@@ -400,121 +398,27 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
     override fun onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START) == true) {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
             return
         }
-        if (navController.currentDestination?.id == R.id.newAwardFragment) {
-            navController.popBackStack()
-            title = "Вознаграждение"
+        if (navController.currentDestination?.id == R.id.parentMyProfileFragment || navController.currentDestination?.id == R.id.childMyProfileFragment || navController.currentDestination?.id == R.id.childTasksFragment
+            || navController.currentDestination?.id == R.id.listAwardsFragment || navController.currentDestination?.id == R.id.diaryFragment || navController.currentDestination?.id == R.id.loginDiaryFragment
+            || navController.currentDestination?.id == R.id.mailFragment || navController.currentDestination?.id == R.id.parentTasksFragment || navController.currentDestination?.id == R.id.parentNodeChildrenFragment){
+            navController.navigate(R.id.mainFragment)
             return
         }
-        if (navController.currentDestination?.id == R.id.detailAwardFragment) {
-            navController.popBackStack()
-            title = "Вознаграждение"
-            return
-        }
-        if (navController.currentDestination?.id == R.id.listSubjectsFragment) {
-            navController.popBackStack()
-            title = "Выберите класс"
-            return
-        }
-        if (navController.currentDestination?.id == R.id.schoolBooksFragment) {
-            navController.popBackStack()
-            title = "Выберите предмет"
-            return
-        }
-        if (navController.currentDestination?.id == R.id.parentAllTasksFragment || navController.currentDestination?.id == R.id.parentNewTaskFragment) {
-            navController.popBackStack()
-            setTitle("Задания")
-            return
-        }
-        if (navController.currentDestination?.id == R.id.detailsMarksFragment) {
-            navController.popBackStack()
-            setTitle("Предметы")
-            return
-        }
-        if (navController?.currentDestination?.id == R.id.weekdayFragment) {
-            if (roleUser == "child") {
-                navController?.navigate(R.id.action_weekdayFragment_to_diaryFragment)
-                setTitle("Электронный дневник")
+        if (navController.currentDestination?.id == R.id.mainFragment){
+            if (back_pressed + 2000 > System.currentTimeMillis()) {
+                finishAffinity()
+                //super.onBackPressed()
+            } else {
+                Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
             }
-            if (roleUser == "parent") {
-                navController?.navigate(R.id.action_weekdayFragment_to_chooseChildScheduleFragment)
-                setTitle("Выберите ребенка")
-            }
-            return
-        }
-        if (navController?.currentDestination?.id == R.id.chooseChildScheduleFragment) {
-            navController?.navigate(R.id.action_chooseChildScheduleFragment_to_diaryFragment)
-            setTitle("Электронный дневник")
-            return
-        }
-        if (navController?.currentDestination?.id == R.id.chooseSemestrElschoolFragment) {
-            if (roleUser == "child") {
-                navController?.navigate(R.id.action_chooseSemestrElschoolFragment_to_diaryFragment)
-                setTitle("Электронный дневник")
-            }
-            if (roleUser == "parent") {
-                navController?.navigate(R.id.action_chooseSemestrElschoolFragment_to_chooseChildMarkFragment)
-                setTitle("Выберите ребенка")
-            }
-            return
-        }
-        if (navController?.currentDestination?.id == R.id.lessonsMarkFragment) {
-            navController?.navigate(R.id.action_lessonsMarkFragment_to_chooseSemestrElschoolFragment)
-            setTitle("Выберите семестр")
-            return
-        }
-        if (navController?.currentDestination?.id == R.id.chooseChildMarkFragment) {
-            navController?.navigate(R.id.action_chooseChildMarkFragment_to_diaryFragment)
-            setTitle("Электронный дневник")
-            return
-        }
-        if (navController?.currentDestination?.id == R.id.parentTaskContentFragment) {
-            navController?.popBackStack()
-            setTitle("")
-            return
+        }else{
+            navController.popBackStack()
         }
 
-        if (navController?.currentDestination?.id == R.id.childAllTasksFragment) {
-            navController?.popBackStack()
-            setTitle("Задания")
-            return
-        }
-        if (navController?.currentDestination?.id == R.id.childTaskContentFragment) {
-            navController?.popBackStack()
-            setTitle("")
-            return
-        }
-        if (navController?.currentDestination?.id == R.id.mailFragment) {
-            navController?.popBackStack()
-            title = "Выберите учебник"
-            return
-        }
-        if (navController?.currentDestination?.id == R.id.scheduleDayFragment) {
-            val bundle = bundleOf()
-            bundle.putBoolean("updateSchedule", false)
-            navController?.navigate(R.id.action_scheduleDayFragment_to_weekdayFragment, bundle)
-            setTitle("Расписание")
-            return
-        }
-        if (navController?.currentDestination?.id == R.id.homeworkFragment) {
-            navController?.navigate(R.id.action_homeworkFragment_to_scheduleDayFragment)
-            return
-        }
-        if (navController?.currentDestination?.id != R.id.mainFragment) {
-            navController?.navigate(R.id.mainFragment)
-            return
-        }
-        if (drawer?.isDrawerOpen(GravityCompat.START) == true) {
-            drawer?.closeDrawer(GravityCompat.START)
-        } else if (back_pressed + 2000 > System.currentTimeMillis()) {
-            finishAffinity()
-            super.onBackPressed()
-        } else {
-            Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
-        }
         back_pressed = System.currentTimeMillis()
 
     }
@@ -541,7 +445,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 }
             })
         //Обработка нажатия выхода в боковом меню
-        val quit = menu?.findItem(R.id.exitApplication)
+        val quit = menu.findItem(R.id.exitApplication)
         quit?.setOnMenuItemClickListener {
             FirebaseAuth.getInstance().signOut()
             intent = Intent(this, ChooseActivity::class.java)
@@ -572,7 +476,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 }
             })
         }*/
-        drawer?.addDrawerListener(toggle)
+        drawer.addDrawerListener(toggle)
         toggle.syncState()
     }
 

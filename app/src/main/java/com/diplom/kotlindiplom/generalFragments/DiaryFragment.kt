@@ -34,7 +34,6 @@ class DiaryFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        activity?.title = "Электронный дневник"
     }
 
     override fun onCreateView(
@@ -47,6 +46,7 @@ class DiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.title = "Электронный дневник"
         val firebase = FunctionsFirebase()
         firebase.getFieldUserDatabase(firebase.uidUser!!,"role",object : FirebaseCallback<String>{
             override fun onComplete(value: String) {
@@ -85,23 +85,4 @@ class DiaryFragment : Fragment() {
         }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DiaryFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DiaryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

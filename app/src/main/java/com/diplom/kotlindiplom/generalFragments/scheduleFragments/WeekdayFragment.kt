@@ -40,7 +40,6 @@ class WeekdayFragment : Fragment() {
     val calendar = Calendar.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.title = "Расписание"
         arguments?.let {
             updateSchedule = it.getBoolean("updateSchedule", true)
             id = it.getString("id", "")
@@ -61,7 +60,7 @@ class WeekdayFragment : Fragment() {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        activity?.title = "Расписание"
         setupCalendar()
         progressBar?.isVisible = false
 
@@ -119,7 +118,7 @@ class WeekdayFragment : Fragment() {
             override fun onComplete(value: String) {
                 if (updateSchedule || updateWithoutCheck) {
                     firebase.getFieldSchedule(
-                        firebase.uidUser!!,
+                        firebase.uidUser,
                         "weekUpdate",
                         object : FirebaseCallback<String> {
                             override fun onComplete(weekUpdate: String) {
@@ -200,7 +199,7 @@ class WeekdayFragment : Fragment() {
             calendar.set(year, month, dayOfMonth)
             dateTextView?.text = dateFormatter.format(calendar.time)
             openCalendarButton?.text = "Открыть календарь"
-            calendarView?.isVisible = false
+            calendarView.isVisible = false
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
 

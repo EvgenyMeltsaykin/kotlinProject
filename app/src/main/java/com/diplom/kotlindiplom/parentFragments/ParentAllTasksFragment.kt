@@ -31,14 +31,13 @@ private const val ARG_PARAM2 = "param2"
  */
 class ParentAllTasksFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    private var title: String? = null
     private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.get("title").toString()
-            activity?.setTitle(param1)
+            title = it.get("title").toString()
         }
     }
 
@@ -53,10 +52,11 @@ class ParentAllTasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
+        activity?.title = title
         var status : Int = -2
-        if (param1 == "Невыполненные")status = -1;
-        if (param1 == "На проверке")status = 0;
-        if (param1 == "Выполненные")status = 1;
+        if (title == "Невыполненные")status = -1;
+        if (title == "На проверке")status = 0;
+        if (title == "Выполненные")status = 1;
         taskEmptyTextViewParent?.isVisible = false
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
@@ -79,25 +79,5 @@ class ParentAllTasksFragment : Fragment() {
                 }
             }
         })
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ParentAllTasksFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ParentAllTasksFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

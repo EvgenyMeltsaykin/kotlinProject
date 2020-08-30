@@ -43,7 +43,6 @@ class ChooseChildScheduleFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        activity?.title = "Выберите ребенка"
     }
 
     override fun onCreateView(
@@ -57,7 +56,8 @@ class ChooseChildScheduleFragment : Fragment() {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progressBar?.isVisible= false
+        activity?.title = "Выберите ребенка"
+        progressBar?.isVisible = false
         updateRecyclerView()
 
         refreshButton?.setOnClickListener {
@@ -66,13 +66,17 @@ class ChooseChildScheduleFragment : Fragment() {
     }
 
     @ExperimentalStdlibApi
-    fun updateChildFirebase(){
+    fun updateChildFirebase() {
         val diary = Diary()
-        Toast.makeText(requireContext(),"Подождите, идет загрузка списка детей", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            requireContext(),
+            "Подождите, идет загрузка списка детей",
+            Toast.LENGTH_SHORT
+        ).show()
         progressBar?.isVisible = true
         refreshButton?.isVisible = false
         val firebase = FunctionsFirebase()
-        firebase.getFieldDiary(firebase.uidUser!!,"url",object : FirebaseCallback<String> {
+        firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
                 when (value) {
                     diary.elschool.url -> {
@@ -80,13 +84,17 @@ class ChooseChildScheduleFragment : Fragment() {
                             FirebaseCallback<Boolean> {
                             override fun onComplete(value: Boolean) {
                                 GlobalScope.launch(Dispatchers.Main) {
-                                    if (value){
+                                    if (value) {
                                         updateRecyclerView()
-                                        Toast.makeText(requireContext(),"Список детей успешно загружен",
-                                            Toast.LENGTH_SHORT).show()
-                                    }else{
-                                        Toast.makeText(requireContext(),"Ошибка при загрузке",
-                                            Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            requireContext(), "Список детей успешно загружен",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            requireContext(), "Ошибка при загрузке",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
 
                                     }
                                     progressBar?.isVisible = false
@@ -100,21 +108,22 @@ class ChooseChildScheduleFragment : Fragment() {
             }
         })
     }
+
     @ExperimentalStdlibApi
-    fun updateRecyclerView(){
+    fun updateRecyclerView() {
         val adapter = GroupAdapter<ViewHolder>()
         adapter.clear()
         val diary = Diary()
         childScheduleRecyclerView?.isVisible = false
         diary.elschool.getChildrenFromFirebase(object : FirebaseCallback<List<ChildForElschool>> {
             override fun onComplete(value: List<ChildForElschool>) {
-                if (value.isNotEmpty()){
-                    value.forEach{
+                if (value.isNotEmpty()) {
+                    value.forEach {
                         adapter.add(ChildDiaryItem(it))
                     }
                     childScheduleRecyclerView?.adapter = adapter
                     childScheduleRecyclerView?.isVisible = true
-                }else{
+                } else {
                     updateChildFirebase()
                 }
 
@@ -124,38 +133,28 @@ class ChooseChildScheduleFragment : Fragment() {
             val childDiaryItem = item as ChildDiaryItem
             val bundle = bundleOf()
             val firebase = FunctionsFirebase()
-            bundle.putString("id",childDiaryItem.child.id)
-            firebase.getFieldDiary(firebase.uidUser!!,"idChild",object :FirebaseCallback<String>{
-                override fun onComplete(idChild: String) {
-                    if (idChild!=childDiaryItem.child.id){
-                        bundle.putBoolean("updateWithoutCheck",true)
-                    }else{
-                        bundle.putBoolean("updateWithoutCheck",false)
+            bundle.putString("id", childDiaryItem.child.id)
+            firebase.getFieldDiary(
+                firebase.uidUser!!,
+                "idChild",
+                object : FirebaseCallback<String> {
+                    override fun onComplete(idChild: String) {
+                        if (idChild != childDiaryItem.child.id) {
+                            bundle.putBoolean("updateWithoutCheck", true)
+                        } else {
+                            bundle.putBoolean("updateWithoutCheck", false)
+                        }
+                        firebase.setFieldDiary(
+                            firebase.uidUser,
+                            "idChild",
+                            childDiaryItem.child.id
+                        )
+                        Navigation.findNavController(requireActivity(), R.id.navFragment).navigate(
+                            R.id.action_chooseChildScheduleFragment_to_weekdayFragment,
+                            bundle
+                        )
                     }
-                    firebase.setFieldDiary(firebase.uidUser!!,"idChild",childDiaryItem.child.id)
-                    Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_chooseChildScheduleFragment_to_weekdayFragment,bundle)
-                }
-            })
+                })
         }
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ChooseChildScheduleFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ChooseChildScheduleFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

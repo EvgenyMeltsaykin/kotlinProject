@@ -48,6 +48,10 @@ class FunctionsFirebase {
         val ref = rootRef.child("awards").child(awardId)
         ref.removeValue()
     }
+    fun setFieldAward(awardId: String, field: String, value: Any){
+        val ref = rootRef.child("awards").child(awardId)
+        ref.child(field).setValue(value)
+    }
     fun getAllFieldAward(award:DataSnapshot):Map<String,String>{
         val awardField = mutableMapOf<String,String>()
         award.children.forEach {
@@ -168,7 +172,7 @@ class FunctionsFirebase {
     }
 
     fun getDetailsBook(bookSnap: DataSnapshot): SchoolBook {
-        var schoolBook = SchoolBook()
+        val schoolBook = SchoolBook()
         bookSnap.children.forEach { detail ->
             if (detail.key.toString() == "name") {
                 schoolBook.name = detail.value.toString()
@@ -375,7 +379,7 @@ class FunctionsFirebase {
     }
 
     fun getLesson(fieldsLesson: DataSnapshot): Lesson {
-        var lesson = Lesson()
+        val lesson = Lesson()
 
         fieldsLesson.children.forEach {
             if (it.key.toString() == "lessonName") {
@@ -463,13 +467,39 @@ class FunctionsFirebase {
     fun setLoginAndPasswordDiary(login: String, password: String) {
         val cryptor = AES256JNCryptor()
         val cipherText = cryptor.encryptData(password.toByteArray(), secretKey.toCharArray())
-        var temp = Arrays.toString(cipherText)
+        val temp = Arrays.toString(cipherText)
         setFieldUserDatabase(uidUser!!, "diary/login", login)
         setFieldUserDatabase(uidUser!!, "diary/password", temp)
 
 
     }
 
+    fun getPointChild(uid: String,firebaseCallBack: FirebaseCallback<String>){
+        getRoleByUid(uid, object : FirebaseCallback<String> {
+            override fun onComplete(answer: String) {
+                var role = ""
+                if (answer == "child") role = "children"
+                else role = "parents"
+                val ref = rootRef.child("users").child(role).child(uid)
+                ref.addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            p0.children.forEach {
+                                if (it.key.toString() == "point") {
+                                    firebaseCallBack.onComplete(it.value.toString())
+                                    return
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        })
+    }
     fun getFieldUserDatabase(
         uid: String,
         field: String,
@@ -878,23 +908,22 @@ class FunctionsFirebase {
                                             Toast.LENGTH_LONG
                                         ).show()
                                     } else {
-                                        val firebase = FunctionsFirebase()
-                                        firebase.setFieldUserDatabase(childUid, "acceptName", "")
-                                        firebase.setFieldUserDatabase(childUid, "acceptUid", "")
-                                        firebase.getFieldUserDatabase(
-                                            firebase.uidUser!!,
+                                        setFieldUserDatabase(childUid, "acceptName", "")
+                                        setFieldUserDatabase(childUid, "acceptUid", "")
+                                        getFieldUserDatabase(
+                                            uidUser!!,
                                             "username",
                                             object : FirebaseCallback<String> {
                                                 override fun onComplete(value: String) {
-                                                    firebase.setFieldUserDatabase(
+                                                    setFieldUserDatabase(
                                                         childUid,
                                                         "acceptName",
                                                         value
                                                     )
-                                                    firebase.setFieldUserDatabase(
+                                                    setFieldUserDatabase(
                                                         childUid,
                                                         "acceptUid",
-                                                        firebase.uidUser!!
+                                                        uidUser!!
                                                     )
                                                 }
                                             })
@@ -991,7 +1020,7 @@ class FunctionsFirebase {
     }
 
     fun getAllFieldsParent(p0: DataSnapshot): Parent {
-        var parent = Parent("", "", "")
+        val parent = Parent("", "", "")
         p0.children.forEach {
             if (it.key.toString() == "acceptAnswer") {
                 parent.acceptAnswer = it.value.toString()
@@ -1034,7 +1063,7 @@ class FunctionsFirebase {
     }
 
     fun getAllFieldsChild(p0: DataSnapshot): Child {
-        var child = Child("", "", "")
+        val child = Child("", "", "")
         p0.children.forEach {
             if (it.key.toString() == "acceptName") {
                 child.acceptName = it.value.toString()
@@ -1097,7 +1126,7 @@ class FunctionsFirebase {
     }
 
     fun getAllFieldsTask(p0: DataSnapshot): Task {
-        var task = Task("", "", "", 0, "", "")
+        val task = Task("", "", "", 0, "", "")
 
         p0.children.forEach {
             if (it.key.toString() == "cost") {
@@ -1142,7 +1171,7 @@ class FunctionsFirebase {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                var tasks: MutableList<Task> = mutableListOf()
+                val tasks: MutableList<Task> = mutableListOf()
                 var parentUidInFirebase: String = ""
                 var statusInFirebase: Int = -2
                 for (p1 in p0.children) {
@@ -1175,7 +1204,7 @@ class FunctionsFirebase {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                var tasks: MutableList<Task> = mutableListOf()
+                val tasks: MutableList<Task> = mutableListOf()
                 var childUidInFirebase: String = ""
                 var statusInFirebase: Int = -2
                 for (p1 in p0.children) {

@@ -34,9 +34,6 @@ class ScheduleDayFragment : Fragment() {
         arguments?.let {
             title = it.getString("title")
         }
-        if(!title.isNullOrBlank()) {
-            activity?.title = title
-        }
 
     }
 
@@ -50,6 +47,9 @@ class ScheduleDayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if(!title.isNullOrBlank()) {
+            activity?.title = title
+        }
         messageTextView?.isVisible  =false
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
@@ -81,13 +81,10 @@ class ScheduleDayFragment : Fragment() {
             val lessonItem = item as LessonItem
             val bundle = bundleOf()
             bundle.putString("homework",lessonItem.lesson.homework)
+            bundle.putString("lessonName",lessonItem.lesson.name)
             Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_scheduleDayFragment_to_homeworkFragment,bundle)
 
         }
-
-
-
-
     }
     companion object {
         /**

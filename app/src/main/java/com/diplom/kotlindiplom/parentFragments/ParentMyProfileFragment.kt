@@ -44,11 +44,6 @@ class ParentMyProfileFragment : Fragment() {
         val network = FunctionsApi(cityId)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activity?.title = "Мой профиль"
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,6 +54,7 @@ class ParentMyProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.title = "Мой профиль"
         changeEmail = false
         loadInformationFromFirebase()
         /*selectPhotoButtonParentMyProfile.setOnClickListener {
@@ -203,8 +199,8 @@ class ParentMyProfileFragment : Fragment() {
                 }
         }
         firebase.setFieldUserDatabase(firebase.uidUser!!,"username",username)
-        firebase.setFieldUserDatabase(firebase.uidUser!!,"cityId",cityId)
-        firebase.setFieldUserDatabase(firebase.uidUser!!,"city",city)
+        firebase.setFieldUserDatabase(firebase.uidUser,"cityId",cityId)
+        firebase.setFieldUserDatabase(firebase.uidUser,"city",city)
         val header = requireActivity().navView.getHeaderView(0);
         val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         userNameHeader.text = username

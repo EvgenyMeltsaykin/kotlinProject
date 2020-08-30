@@ -58,13 +58,13 @@ class ParentTaskContentFragment : Fragment() {
                 titleTaskContentTextViewParent?.setText("Название:" + value.title)
                 costTaskContentTextViewParent?.setText("Стоимость: " + value.cost.toString())
                 descriptionTaskContentTextViewParent?.setText(value.description)
-                if (value.status == -1) statusContentTastTextViewParent?.setText("Не выполнено")
+                if (value.status == -1) statusContentTastTextViewParent?.text = "Не выполнено"
                 if (value.status == 0){
                     statusContentTastTextViewParent?.setText("На проверке")
                     acceptContentTaskButtonParent?.isVisible = true
                     rejectContentTaskButtonParent?.isVisible = true
                 }
-                if (value.status == 1) statusContentTastTextViewParent?.setText("Выполнено")
+                if (value.status == 1) statusContentTastTextViewParent?.text = "Выполнено"
             }
         })
         acceptContentTaskButtonParent?.setOnClickListener {

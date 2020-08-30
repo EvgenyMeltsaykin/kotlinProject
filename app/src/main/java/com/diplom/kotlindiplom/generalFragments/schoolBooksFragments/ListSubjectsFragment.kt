@@ -38,7 +38,6 @@ class ListSchoolBooksFragment : Fragment() {
             numberClass = it.getString("numberClass","1")
             param2 = it.getString(ARG_PARAM2)
         }
-        activity?.title = "Выберите предмет"
     }
 
     override fun onCreateView(
@@ -53,7 +52,7 @@ class ListSchoolBooksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = GroupAdapter<ViewHolder>()
-
+        activity?.title = "Выберите предмет"
 
         when(numberClass){
             "1" ->settingForFirstClass()
@@ -116,23 +115,4 @@ class ListSchoolBooksFragment : Fragment() {
         Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.schoolBooksFragment,bundle)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ListSchoolBooksFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ListSchoolBooksFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

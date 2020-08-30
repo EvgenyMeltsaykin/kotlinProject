@@ -256,7 +256,8 @@
             app:destination="@id/newAwardFragment" />
         <action
             android:id="@+id/action_listAwardsFragment_to_detailAwardFragment"
-            app:destination="@id/detailAwardFragment" />
+            app:destination="@id/detailAwardFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/newAwardFragment"
@@ -266,9 +267,6 @@
         <action
             android:id="@+id/action_newAwardFragment_to_listAwardsFragment"
             app:destination="@id/listAwardsFragment" />
-        <action
-            android:id="@+id/action_newAwardFragment_to_detailAwardFragment"
-            app:destination="@id/detailAwardFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailAwardFragment"

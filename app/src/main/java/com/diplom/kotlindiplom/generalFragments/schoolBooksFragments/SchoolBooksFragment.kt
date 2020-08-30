@@ -40,7 +40,6 @@ class SchoolBooksFragment : Fragment() {
             subjectName = it.getString("subjectName")
             numberClass = it.getString("numberClass")
         }
-        activity?.title = "Выберите учебник"
     }
 
     override fun onCreateView(
@@ -53,6 +52,7 @@ class SchoolBooksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.title = "Выберите учебник"
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
         messageStaticTextView?.isVisible = false
@@ -93,24 +93,5 @@ class SchoolBooksFragment : Fragment() {
             bundle.putString("topic","Добавить учебник")
             Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_schoolBooksFragment_to_mailFragment,bundle)
         }
-    }
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment schoolBooksFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SchoolBooksFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

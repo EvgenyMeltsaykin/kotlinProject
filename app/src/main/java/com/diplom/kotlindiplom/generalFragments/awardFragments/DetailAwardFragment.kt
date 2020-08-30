@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -11,8 +12,10 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
+import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_detail_award.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -30,7 +33,6 @@ class DetailAwardFragment : Fragment() {
     private lateinit var awardId: String
     private lateinit var nameAward: String
     private lateinit var costAward: String
-    private var param2: String? = null
     private lateinit var role:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +61,7 @@ class DetailAwardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val firebase = FunctionsFirebase()
         awardNameTextView?.text = "Вознаграждение: $nameAward"
         costAwardTxtView?.text = "Стоимость: $costAward"
         if (role == "children"){
@@ -69,34 +72,28 @@ class DetailAwardFragment : Fragment() {
         }
         deleteButton?.setOnClickListener {
             Toast.makeText(requireContext(),"Успешно",Toast.LENGTH_SHORT).show()
-            val firebase = FunctionsFirebase()
             firebase.deleteAward(awardId)
             Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailAwardFragment_to_listAwardsFragment)
         }
         takeButton?.setOnClickListener {
-            Toast.makeText(requireContext(),"Успешно",Toast.LENGTH_SHORT).show()
-            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailAwardFragment_to_listAwardsFragment)
+            firebase.getFieldUserDatabase(
+                firebase.uidUser!!,
+                "point",
+                object : FirebaseCallback<String> {
+                    override fun onComplete(value: String) {
+                        if (value.toInt()>= costAward.toInt()){
+                            Toast.makeText(requireContext(),"Успешно",Toast.LENGTH_SHORT).show()
+                            firebase.setFieldAward(awardId,"status","1")
+                            firebase.setFieldUserDatabase(firebase.uidUser!!,"point",value.toInt() - costAward.toInt())
+                            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailAwardFragment_to_listAwardsFragment)
+                        }else{
+                            Toast.makeText(requireContext(),"У Вас не хватает баллов",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
+
         }
 
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DetailAwardFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DetailAwardFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

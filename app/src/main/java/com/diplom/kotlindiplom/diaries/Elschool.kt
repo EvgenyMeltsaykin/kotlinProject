@@ -41,24 +41,24 @@ class Elschool {
         val firebase = FunctionsFirebase()
         Log.d("Tag", "Create")
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/login", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/semestrName", "триместр")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/password", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks/dateUpdate", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/schedule/weekUpdate", 0)
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/semestrName", "триместр")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/password", "")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/url", "")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/marks/dateUpdate", "")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/schedule/weekUpdate", 0)
     }
 
     fun deleteDiary() {
         val firebase = FunctionsFirebase()
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/semestrName", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/idChild", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/login", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/password", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/schedule", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/marks/dateUpdate", "")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/schedule/weekUpdate", 0)
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/idChild", "")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/login", "")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/password", "")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/url", "")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/schedule", "")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/marks", "")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/marks/dateUpdate", "")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/schedule/weekUpdate", 0)
     }
 
     fun login(login: String, password: String): Boolean {
@@ -80,7 +80,7 @@ class Elschool {
                 val firebase = FunctionsFirebase()
                 firebase.setFieldDiary(firebase.uidUser!!, "idChild", id)
                 firebase.setFieldDiary(
-                    firebase.uidUser!!,
+                    firebase.uidUser,
                     "cookie",
                     document.cookies().get(keyCookie).toString()
                 )
@@ -102,7 +102,7 @@ class Elschool {
                 if (answer == "child") role = "children"
                 else role = "parents"
 
-                val ref = firebase.rootRef.child("users").child(role).child(firebase.uidUser!!)
+                val ref = firebase.rootRef.child("users").child(role).child(firebase.uidUser)
                     .child("diary").child("schedule")
                 ref.child("понедельник").removeValue()
                 ref.child("вторник").removeValue()
@@ -128,12 +128,8 @@ class Elschool {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
-                        var cookies = hashMapOf<String, String>()
+                        val cookies = hashMapOf<String, String>()
                         cookies[keyCookie] = value
-                        if (cookies == null) {
-                            firebaseCallback.onComplete(schedule)
-                            return@launch
-                        }
                         try {
                             val document = Jsoup.connect(urlDiary)
                                 .cookies(cookies)
@@ -161,7 +157,7 @@ class Elschool {
                                 val lessons = mutableListOf<Lesson>()
                                 var cabinetAndTime = ""
                                 items.forEach { item ->
-                                    var lesson = Lesson()
+                                    val lesson = Lesson()
                                     lesson.name = item.select("div[class=flex-grow-1]").text()
                                     lesson.form = item.select("div[class=lesson-form]").text()
                                     cabinetAndTime =
@@ -191,38 +187,38 @@ class Elschool {
                                     list.forEach {
                                         i++
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser!!,
+                                            firebase.uidUser,
                                             "diary/schedule/$day/lesson$i/lessonName",
                                             it.name
                                         )
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser!!,
+                                            firebase.uidUser,
                                             "diary/schedule/$day/lesson$i/time",
                                             it.time
                                         )
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser!!,
+                                            firebase.uidUser,
                                             "diary/schedule/$day/lesson$i/cabinet",
                                             it.cabinet
                                         )
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser!!,
+                                            firebase.uidUser,
                                             "diary/schedule/$day/lesson$i/form",
                                             it.form
                                         )
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser!!,
+                                            firebase.uidUser,
                                             "diary/schedule/$day/lesson$i/homework",
                                             it.homework
                                         )
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser!!,
+                                            firebase.uidUser,
                                             "diary/schedule/$day/lesson$i/mark",
                                             it.mark
                                         )
                                     }
                                     firebase.setFieldUserDatabase(
-                                        firebase.uidUser!!,
+                                        firebase.uidUser,
                                         "diary/schedule/$day/date",
                                         date
                                     )
@@ -277,7 +273,7 @@ class Elschool {
             object : FirebaseCallback<String> {
                 override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
-                        var cookies = hashMapOf<String, String>()
+                        val cookies = hashMapOf<String, String>()
                         cookies[keyCookie] = value
                         try {
                             val document = Jsoup.connect("https://$url")
@@ -298,17 +294,17 @@ class Elschool {
                                     children.add(childForElschool)
                                 }
                             }
-                            firebase.setFieldDiary(firebase.uidUser!!, "children", "")
+                            firebase.setFieldDiary(firebase.uidUser, "children", "")
                             var i = 0
                             children.forEach {
                                 i++
                                 firebase.setFieldDiary(
-                                    firebase.uidUser!!,
+                                    firebase.uidUser,
                                     "children/child$i/id",
                                     it.id
                                 )
                                 firebase.setFieldDiary(
-                                    firebase.uidUser!!,
+                                    firebase.uidUser,
                                     "children/child$i/name",
                                     it.name
                                 )
@@ -330,7 +326,6 @@ class Elschool {
         } else {
             return cabinetAndTime!!
         }
-        return ""
     }
 
     private fun getCabinet(cabinetAndTime: String?): String {

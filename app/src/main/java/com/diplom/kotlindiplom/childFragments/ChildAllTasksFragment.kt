@@ -31,14 +31,12 @@ private const val ARG_PARAM2 = "param2"
 class ChildAllTasksFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var title: String? = null
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             title = it.get("title").toString()
         }
-        activity?.setTitle(title)
     }
 
     override fun onCreateView(
@@ -52,6 +50,7 @@ class ChildAllTasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
+        activity?.title = title
 
         tasksEmptyTextView?.isVisible = false
         var status: Int = -2
@@ -119,25 +118,4 @@ class ChildAllTasksFragment : Fragment() {
         }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a nw instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ChildAllTasksFragment.
-         */
-        val TAG = ChildAllTasksFragment::class.java.simpleName
-
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ChildAllTasksFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

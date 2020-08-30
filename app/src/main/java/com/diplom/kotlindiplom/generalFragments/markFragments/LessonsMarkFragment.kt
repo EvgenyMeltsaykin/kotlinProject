@@ -41,7 +41,6 @@ class LessonsMarkFragment : Fragment() {
         arguments?.let {
             semestrNumber = it.getString("semestrNumber", "1")
         }
-        activity?.title = "Предметы"
     }
 
     override fun onCreateView(
@@ -54,6 +53,7 @@ class LessonsMarkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.title = "Предметы"
         val adapter = GroupAdapter<ViewHolder>()
         adapter.clear()
         val firebase = FunctionsFirebase()

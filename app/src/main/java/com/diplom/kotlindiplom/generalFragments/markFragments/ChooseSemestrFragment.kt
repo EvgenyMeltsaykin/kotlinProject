@@ -40,7 +40,6 @@ class ChooseSemestrElschoolFragment : Fragment() {
         arguments?.let {
             idChild = it.getString("idChild","")
         }
-        activity?.title = "Выберите"
     }
 
     override fun onCreateView(
@@ -54,6 +53,7 @@ class ChooseSemestrElschoolFragment : Fragment() {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.title = "Выберите"
         val bundle = bundleOf()
         val firebase = FunctionsFirebase()
         progressBar?.isVisible = false
@@ -111,7 +111,8 @@ class ChooseSemestrElschoolFragment : Fragment() {
         }
         firebase.getFieldDiary(firebase.uidUser!!,"url",object :FirebaseCallback<String>{
             override fun onComplete(url: String) {
-                firebase.getFieldDiary(firebase.uidUser!!,"idChild",object :FirebaseCallback<String>{
+                firebase.getFieldDiary(firebase.uidUser,"idChild",object :FirebaseCallback<String>{
+                    @RequiresApi(Build.VERSION_CODES.O)
                     override fun onComplete(value: String) {
                         if (value != idChild) {
                             val diary = Diary()

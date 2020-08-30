@@ -10,16 +10,18 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listAwardRecyclerView"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/addAwardButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:reverseLayout="false"
+        app:spanCount="3" />
 
     <Button
         android:id="@+id/addAwardButton"

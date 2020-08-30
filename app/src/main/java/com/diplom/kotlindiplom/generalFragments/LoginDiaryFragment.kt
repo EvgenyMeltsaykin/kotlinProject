@@ -34,14 +34,11 @@ private const val ARG_PARAM2 = "param2"
 class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
     // TODO: Rename and change types of parameters
     private var deletedDiary: Boolean = false
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.title = "Электронный дневник"
         arguments?.let {
             deletedDiary = it.getBoolean("deletedDiary",false)
-            param2 = it.getString(ARG_PARAM2)
         }
     }
 
@@ -58,7 +55,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         progressBar?.isVisible = false
-
+        activity?.title = "Электронный дневник"
         val firebase = FunctionsFirebase()
         firebase.getFieldDiary(firebase.uidUser!!,"login",object : FirebaseCallback<String>{
             override fun onComplete(value: String) {
@@ -101,9 +98,9 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     } else {
                         firebase.createDiary(urlDiary)
                         firebase.setLoginAndPasswordDiary(login,password)
-                        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", urlDiary)
+                        firebase.setFieldUserDatabase(firebase.uidUser, "diary/url", urlDiary)
                         firebase.getRoleByUid(
-                            firebase.uidUser!!,
+                            firebase.uidUser,
                             object : FirebaseCallback<String> {
                                 override fun onComplete(value: String) {
                                     Navigation.findNavController(
@@ -160,26 +157,5 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
         } else {
             urlDiary = ""
         }
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment WeekdayWithoutDiaryFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LoginDiaryFragment()
-                .apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

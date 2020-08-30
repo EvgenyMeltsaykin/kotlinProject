@@ -30,14 +30,13 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        activity?.title = "Главная"
         return inflater.inflate(R.layout.fragment_main, container, false)
 
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.title = "Главная"
     }
 
 }

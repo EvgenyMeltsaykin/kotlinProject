@@ -43,7 +43,6 @@ class ChooseChildMarkFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        activity?.title = "Выберите ребенка"
     }
 
     override fun onCreateView(
@@ -58,6 +57,7 @@ class ChooseChildMarkFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         progressBar?.isVisible= false
+        activity?.title = "Выберите ребенка"
         updateRecyclerView()
 
         refreshButton?.setOnClickListener {

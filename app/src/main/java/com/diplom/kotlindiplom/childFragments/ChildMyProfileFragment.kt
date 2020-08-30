@@ -36,19 +36,8 @@ var schoolId: Int? = -1
 
 class ChildMyProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activity?.title = "Мой профиль"
-
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
 
     override fun onCreateView(
@@ -63,6 +52,7 @@ class ChildMyProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
+        activity?.title = "Мой профиль"
         changeEmail = false
         loadInformationFromFirebase()
 
@@ -243,7 +233,7 @@ class ChildMyProfileFragment : Fragment() {
         firebase.setFieldUserDatabase(firebase.uidUser!!, "city", city)
         firebase.setFieldUserDatabase(firebase.uidUser!!, "educationalInstitutionId", schoolId)
         firebase.setFieldUserDatabase(
-            firebase.uidUser!!,
+            firebase.uidUser,
             "educationalInstitution",
             educationalInstitution
         )
@@ -283,25 +273,4 @@ class ChildMyProfileFragment : Fragment() {
         fun onFragmentInteraction(uri: Uri)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyProfileFragment.
-         */
-        val TAG = "ChildMyProfile"
-
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ChildMyProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

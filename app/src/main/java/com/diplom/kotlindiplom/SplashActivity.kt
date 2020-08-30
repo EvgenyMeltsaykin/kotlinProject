@@ -22,10 +22,10 @@ class SplashActivity : AppCompatActivity(){
     private fun verifyUserIsLoggedIn() {
         val uid = FirebaseAuth.getInstance().uid
         val user = FirebaseAuth.getInstance().currentUser
-        if (uid != null) {
-            if (user!!.isEmailVerified){
+        if (user != null) {
+            if (user.isEmailVerified){
                 val firebase = FunctionsFirebase()
-                firebase.getRoleByUid(uid, object : FirebaseCallback<String> {
+                firebase.getRoleByUid(uid!!, object : FirebaseCallback<String> {
                     override fun onComplete(value: String) {
                         if (value == "child") {
                             intent = Intent(applicationContext, MainActivity::class.java)

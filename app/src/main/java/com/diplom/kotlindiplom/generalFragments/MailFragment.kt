@@ -35,7 +35,6 @@ class MailFragment : Fragment() {
             subjectName = it.getString("subjectName")
             topic = it.getString("topic")
         }
-        activity?.title = "Обратная связь"
     }
 
     override fun onCreateView(
@@ -48,6 +47,7 @@ class MailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.title = "Обратная связь"
         messageUserTextView?.isVisible = false
         if (topic == "Добавить учебник"){
             addSchoolBook()
@@ -108,23 +108,4 @@ class MailFragment : Fragment() {
         contentMessageEditText?.setText("Класс: $numberClass\nПредмет: $name\nАвтор: ")
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MailFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }
