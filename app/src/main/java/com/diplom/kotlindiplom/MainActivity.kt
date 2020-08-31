@@ -20,6 +20,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -408,6 +409,14 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
             return
+        }
+        if (navController.currentDestination?.id == R.id.weekdayFragment){
+            if (navController.backStack.size >= 7){
+                navController.popBackStack()
+                navController.popBackStack()
+                navController.popBackStack()
+                return
+            }
         }
         if (navController.currentDestination?.id == R.id.scheduleDayFragment){
             val bundle = bundleOf()

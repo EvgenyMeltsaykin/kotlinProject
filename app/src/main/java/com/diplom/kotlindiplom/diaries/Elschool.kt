@@ -134,7 +134,7 @@ class Elschool {
                             val document = Jsoup.connect(urlDiary)
                                 .cookies(cookies)
                                 .get()
-                            val scheduleHtml: org.jsoup.nodes.Document
+                            var scheduleHtml: org.jsoup.nodes.Document
                             if (id.isEmpty()) {
                                 scheduleHtml =
                                     Jsoup.connect("${document.baseUri()}&year=$year&week=$week&log=false")
@@ -147,6 +147,9 @@ class Elschool {
                                         .cookies(cookies)
                                         .get()
                             }
+                            scheduleHtml = Jsoup.connect("https://elschool.ru/users/diaries/details?rooId=18&instituteId=233&departmentId=91120&pupilId=1588026&year=$year&week=$week&log=false")
+                                .cookies(cookies)
+                                .get()
                             val dayOfWeekHtml = scheduleHtml.select("tbody")
                             dayOfWeekHtml.forEach { it ->
                                 //example понедельник 17.08

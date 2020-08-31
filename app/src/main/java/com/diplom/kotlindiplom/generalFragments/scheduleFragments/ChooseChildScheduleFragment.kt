@@ -140,7 +140,7 @@ class ChooseChildScheduleFragment : Fragment() {
                 "idChild",
                 object : FirebaseCallback<String> {
                     override fun onComplete(idChild: String) {
-                        bundle.putBoolean("updateSchedule",false)
+                        bundle.putBoolean("updateSchedule",true)
                         if (idChild != childDiaryItem.child.id) {
                             bundle.putBoolean("updateWithoutCheck", true)
                         } else {

@@ -2,6 +2,7 @@ package com.diplom.kotlindiplom.generalFragments.scheduleFragments
 
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
@@ -118,45 +120,40 @@ class WeekdayFragment : Fragment() {
 
         firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
-                Log.d("Tag", "${updateWithoutCheck} $updateSchedule")
-                if (updateSchedule || updateWithoutCheck) {
-                    firebase.getFieldSchedule(
-                        firebase.uidUser,
-                        "weekUpdate",
-                        object : FirebaseCallback<String> {
-                            override fun onComplete(weekUpdate: String) {
-                                if (selectedWeek != weekUpdate.toInt() || updateWithoutCheck) {
-                                    diaryUrl = value
-                                    when (value) {
-                                        diary.elschool.url -> {
-                                            diary.elschool.updateSchedule(
-                                                id,
-                                                selectedYear,
-                                                selectedWeek,
-                                                requireContext(),
-                                                progressBar,
-                                                hideButtons,
-                                                showButtons
-                                            )
-                                        }
+                firebase.getFieldSchedule(
+                    firebase.uidUser,
+                    "weekUpdate",
+                    object : FirebaseCallback<String> {
+                        override fun onComplete(weekUpdate: String) {
+                            Log.d("Tag", "$selectedWeek = $weekUpdate")
+                            if (selectedWeek != weekUpdate.toInt() || updateWithoutCheck) {
+                                diaryUrl = value
+                                when (value) {
+                                    diary.elschool.url -> {
+                                        diary.elschool.updateSchedule(
+                                            id,
+                                            selectedYear,
+                                            selectedWeek,
+                                            requireContext(),
+                                            progressBar,
+                                            hideButtons,
+                                            showButtons
+                                        )
                                     }
-                                    firebase.setFieldSchedule(
-                                        firebase.uidUser!!,
-                                        "weekUpdate",
-                                        selectedWeek
-                                    )
-                                    firebase.setDateUpdateSсhedule(
-                                        calendar.get(Calendar.YEAR).toString(),
-                                        (calendar.get(Calendar.MONTH) + 1).toString(),
-                                        calendar.get(Calendar.DAY_OF_MONTH).toString()
-                                    )
                                 }
+                                firebase.setFieldSchedule(
+                                    firebase.uidUser!!,
+                                    "weekUpdate",
+                                    selectedWeek
+                                )
+                                firebase.setDateUpdateSсhedule(
+                                    calendar.get(Calendar.YEAR).toString(),
+                                    (calendar.get(Calendar.MONTH) + 1).toString(),
+                                    calendar.get(Calendar.DAY_OF_MONTH).toString()
+                                )
                             }
-                        })
-                } else {
-                    updateSchedule = true
-                }
-
+                        }
+                    })
             }
         })
     }
@@ -172,14 +169,14 @@ class WeekdayFragment : Fragment() {
     @ExperimentalStdlibApi
     private fun setupCalendar() {
         calendarView?.isVisible = false
-        val selectedDate = calendarView?.date
+        //val selectedDate = calendarView?.date
         val firebase = FunctionsFirebase()
         val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
         firebase.getDateUpdateInSchedule(object : FirebaseCallback<LocalDate> {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onComplete(value: LocalDate) {
                 if (updateSchedule) {
-                    calendar.timeInMillis = selectedDate!!
+                    calendar.timeInMillis = System.currentTimeMillis()
                 } else {
                     calendar.set(value.year, value.monthValue - 1, value.dayOfMonth)
                     calendarView?.date = calendar.timeInMillis
@@ -205,30 +202,8 @@ class WeekdayFragment : Fragment() {
             calendarView.isVisible = false
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
-
             updateSchedule(updateWithoutCheck, calendar)
         }
         updateSchedule(updateWithoutCheck, calendar)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment WeekdayFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            WeekdayFragment()
-                .apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

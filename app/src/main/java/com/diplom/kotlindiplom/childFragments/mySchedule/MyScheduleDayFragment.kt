@@ -44,11 +44,11 @@ class MyScheduleDayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.title =day?.capitalize()
-        frameLayout?.isVisible = false
         addLessonButton?.setOnClickListener {
-            frameLayout?.isVisible = true
-            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_myScheduleDayFragment_to_addLessonFragment)
+            val addLessonFragment = AddLessonFragment()
+            addLessonFragment.show(requireActivity().supportFragmentManager,"addLessonFragment")
         }
+
     }
 
     companion object {

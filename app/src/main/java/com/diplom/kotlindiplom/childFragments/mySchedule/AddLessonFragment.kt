@@ -1,11 +1,12 @@
 package com.diplom.kotlindiplom.childFragments.mySchedule
 
 import android.os.Bundle
+import android.view.*
+import android.widget.LinearLayout
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.diplom.kotlindiplom.R
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,7 +18,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AddLessonFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AddLessonFragment : Fragment() {
+class AddLessonFragment : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -36,6 +37,14 @@ class AddLessonFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_lesson, container, false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
+        params.width = LinearLayout.LayoutParams.MATCH_PARENT
+        params.height = LinearLayout.LayoutParams.MATCH_PARENT
+        dialog!!.window!!.attributes = params as WindowManager.LayoutParams
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
