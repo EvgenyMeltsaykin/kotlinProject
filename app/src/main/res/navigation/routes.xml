@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mainFragment_to_parentTaskContentFragment"
             app:destination="@id/parentTaskContentFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_myScheduleDayFragment"
+            app:destination="@id/myScheduleDayFragment" />
     </fragment>
     <fragment
         android:id="@+id/childMyProfileFragment"
@@ -103,7 +106,14 @@
         android:id="@+id/parentTasksFragment"
         android:name="com.diplom.kotlindiplom.parentFragments.ParentTasksFragment"
         android:label="fragment_parent_tasks"
-        tools:layout="@layout/fragment_parent_tasks" />
+        tools:layout="@layout/fragment_parent_tasks" >
+        <action
+            android:id="@+id/action_parentTasksFragment_to_parentAllTasksFragment"
+            app:destination="@id/parentAllTasksFragment" />
+        <action
+            android:id="@+id/action_parentTasksFragment_to_parentNewTaskFragment"
+            app:destination="@id/parentNewTaskFragment" />
+    </fragment>
     <fragment
         android:id="@+id/parentAllTasksFragment"
         android:name="com.diplom.kotlindiplom.parentFragments.ParentAllTasksFragment"
@@ -111,8 +121,9 @@
         tools:layout="@layout/fragment_parent_all_tasks" />
     <fragment
         android:id="@+id/parentNewTaskFragment"
-        android:name="com.diplom.kotlindiplom.parentFragments.NewTaskFragment"
-        android:label="NewTaskFragment" />
+        android:name="com.diplom.kotlindiplom.parentFragments.ParentNewTaskFragment"
+        android:label="fragment_parent_new_task"
+        tools:layout="@layout/fragment_parent_new_task" />
     <fragment
         android:id="@+id/parentTaskContentFragment"
         android:name="com.diplom.kotlindiplom.parentFragments.ParentTaskContentFragment"
@@ -285,4 +296,18 @@
         android:name="com.diplom.kotlindiplom.generalFragments.markFragments.DetailsFinalMarkFragment"
         android:label="fragment_details_final_mark"
         tools:layout="@layout/fragment_details_final_mark" />
+    <fragment
+        android:id="@+id/myScheduleDayFragment"
+        android:name="com.diplom.kotlindiplom.childFragments.mySchedule.MyScheduleDayFragment"
+        android:label="fragment_my_schedule_day"
+        tools:layout="@layout/fragment_my_schedule_day" >
+        <action
+            android:id="@+id/action_myScheduleDayFragment_to_addLessonFragment"
+            app:destination="@id/addLessonFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addLessonFragment"
+        android:name="com.diplom.kotlindiplom.childFragments.mySchedule.AddLessonFragment"
+        android:label="fragment_add_lesson"
+        tools:layout="@layout/fragment_add_lesson" />
 </navigation>

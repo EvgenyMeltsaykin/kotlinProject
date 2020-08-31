@@ -78,11 +78,11 @@ class ParentMyProfileFragment : Fragment() {
         }*/
 
          */
-        emailEditTextParentMyProfile?.setOnClickListener {
+        emailTextInputParentMyProfile?.editText?.setOnClickListener {
             changeEmail = true
         }
-        emailEditTextParentMyProfile?.setOnKeyListener { v, keyCode, event ->
-            v.emailEditTextParentMyProfile?.isCursorVisible = true
+        emailTextInputParentMyProfile?.editText?.setOnKeyListener { v, keyCode, event ->
+            v.emailTextInputParentMyProfile?.editText?.isCursorVisible = true
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 val imn =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -99,21 +99,21 @@ class ParentMyProfileFragment : Fragment() {
             saveChangeInParentProfile()
         }
 
-        usernameEditTextParentMyProfile?.doAfterTextChanged {
+        usernameTextInputParentMyProfile?.editText?.doAfterTextChanged {
             saveChangeButtonParentMyProfile?.isVisible = true
         }
-        emailEditTextParentMyProfile?.doAfterTextChanged {
+        emailTextInputParentMyProfile?.editText?.doAfterTextChanged {
             saveChangeButtonParentMyProfile?.isVisible = true
         }
 
         val cities: MutableList<City> = mutableListOf()
-        cityEditTextParentMyProfile?.doAfterTextChanged {
+        cityAutoCompleteTextViewParentMyProfile?.doAfterTextChanged {
             saveChangeButtonParentMyProfile?.isVisible = true
             Network.network.cityId = cityId
-            Network.network.getNodeCities(cityEditTextParentMyProfile, requireContext(), cities)
+            Network.network.getNodeCities(cityAutoCompleteTextViewParentMyProfile, requireContext(), cities)
         }
 
-        cityEditTextParentMyProfile?.setOnItemClickListener { parent, view, position, id ->
+        cityAutoCompleteTextViewParentMyProfile?.setOnItemClickListener { parent, view, position, id ->
             cityId = cities[id.toInt()].id
         }
     }
@@ -155,9 +155,9 @@ class ParentMyProfileFragment : Fragment() {
                         ).into(selectPhotoImageviewParentMyProfile)
                     selectPhotoButtonParentMyProfile.alpha = 0f
                 }*/
-                usernameEditTextParentMyProfile?.setText(value.username)
-                emailEditTextParentMyProfile?.setText(value.email)
-                cityEditTextParentMyProfile?.setText(value.city)
+                usernameTextInputParentMyProfile?.editText?.setText(value.username)
+                emailTextInputParentMyProfile?.editText?.setText(value.email)
+                cityAutoCompleteTextViewParentMyProfile?.setText(value.city)
                 cityId = value.cityId.toString().toInt()
                 saveChangeButtonParentMyProfile?.isVisible = false
                 Network.network.cityId = cityId
@@ -167,16 +167,16 @@ class ParentMyProfileFragment : Fragment() {
 
     private fun saveChangeInParentProfile() {
         val user = FirebaseAuth.getInstance().currentUser
-        val email = emailEditTextParentMyProfile?.text.toString()
-        val username = usernameEditTextParentMyProfile?.text.toString()
-        val city = cityEditTextParentMyProfile?.text.toString()
+        val email = emailTextInputParentMyProfile?.editText?.text.toString()
+        val username = usernameTextInputParentMyProfile?.editText?.text.toString()
+        val city = cityAutoCompleteTextViewParentMyProfile?.text.toString()
         //val ref = FirebaseDatabase.getInstance().getReference("/users/parents/$uid")
         val firebase = FunctionsFirebase()
         if (changeEmail) {
-            user?.updateEmail(emailEditTextParentMyProfile?.text.toString())
+            user?.updateEmail(emailTextInputParentMyProfile?.editText?.text.toString())
                 ?.addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
-                    if (emailEditTextParentMyProfile?.text != null) {
+                    if (emailTextInputParentMyProfile?.editText?.text != null) {
                         firebase.setFieldUserDatabase(firebase.uidUser!!,"email",email)
                     }
                     Toast.makeText(

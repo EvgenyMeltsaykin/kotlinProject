@@ -12,7 +12,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
@@ -79,14 +78,14 @@ class ChildMyProfileFragment : Fragment() {
         }
         */
  */
-        emailEditTextChildmyprofile?.setOnClickListener {
+        emailTextInputChildMyProfile?.editText?.setOnClickListener {
             changeEmail = true
         }
-        usernameEditTextChildMyProfile?.doAfterTextChanged {
+        usernameTextInputChildMyProfile?.editText?.doAfterTextChanged {
             saveChangeButtonChildMyProfile?.isVisible = true
         }
-        emailEditTextChildmyprofile?.setOnKeyListener { v, keyCode, event ->
-            v.emailEditTextChildmyprofile?.isCursorVisible = true
+        emailTextInputChildMyProfile?.editText?.setOnKeyListener { v, keyCode, event ->
+            v.emailTextInputChildMyProfile?.editText?.isCursorVisible = true
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 val imn =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -102,32 +101,32 @@ class ChildMyProfileFragment : Fragment() {
             saveChangeInChildProfile()
         }
 
-        emailEditTextChildmyprofile?.doAfterTextChanged {
+        emailTextInputChildMyProfile?.editText?.doAfterTextChanged {
             saveChangeButtonChildMyProfile?.isVisible = true
         }
 
         val cities: MutableList<City> = mutableListOf()
-        cityEditTextChildMyProfile?.doAfterTextChanged {
+        cityAutoCompleteTextViewChildMyProfile?.doAfterTextChanged {
             saveChangeButtonChildMyProfile?.isVisible = true
-            educationalInstitutionEditTextChildMyProfile?.text?.clear()
+            educationalInstitutionAutoCompleteTextViewChildMyProfile?.text?.clear()
             schoolId = -1
-            network.getNodeCities(cityEditTextChildMyProfile!!, requireContext(), cities)
+            network.getNodeCities(cityAutoCompleteTextViewChildMyProfile!!, requireContext(), cities)
         }
-        cityEditTextChildMyProfile?.setOnItemClickListener { parent, view, position, id ->
+        cityAutoCompleteTextViewChildMyProfile?.setOnItemClickListener { parent, view, position, id ->
             cityId = cities[id.toInt()].id
         }
 
         val schools: MutableList<SchoolClass> = mutableListOf()
-        educationalInstitutionEditTextChildMyProfile?.doAfterTextChanged {
+        educationalInstitutionAutoCompleteTextViewChildMyProfile?.doAfterTextChanged {
             saveChangeButtonChildMyProfile?.isVisible = true
             network.getNodeSchools(
-                educationalInstitutionEditTextChildMyProfile!!,
+                educationalInstitutionAutoCompleteTextViewChildMyProfile!!,
                 requireContext(),
                 schools,
                 cityId
             )
         }
-        educationalInstitutionEditTextChildMyProfile?.setOnItemClickListener { parent, view, position, id ->
+        educationalInstitutionAutoCompleteTextViewChildMyProfile?.setOnItemClickListener { parent, view, position, id ->
             schoolId = schools[id.toInt()].id
         }
 
@@ -175,11 +174,11 @@ class ChildMyProfileFragment : Fragment() {
                 val header = requireActivity().navView.getHeaderView(0);
                 val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
                 userNameHeader.text = value.username
-                usernameEditTextChildMyProfile?.setText(value.username)
-                emailEditTextChildmyprofile?.setText(value.email)
+                usernameTextInputChildMyProfile?.editText?.setText(value.username)
+                emailTextInputChildMyProfile?.editText?.setText(value.email)
                 pointTextViewChildMyProfile?.text = value.point.toString()
-                cityEditTextChildMyProfile?.setText(value.city)
-                educationalInstitutionEditTextChildMyProfile?.setText(value.educationalInstitution)
+                cityAutoCompleteTextViewChildMyProfile?.setText(value.city)
+                educationalInstitutionAutoCompleteTextViewChildMyProfile?.setText(value.educationalInstitution)
                 cityId = value.cityId.toString().toInt()
                 schoolId = value.educationalInstitutionId.toString().toInt()
                 idTextViewChildMyProfile?.text = "id: " + value.id;
@@ -190,10 +189,10 @@ class ChildMyProfileFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun saveChangeInChildProfile() {
-        val username = usernameEditTextChildMyProfile?.text.toString();
-        val city = cityEditTextChildMyProfile?.text.toString()
-        val educationalInstitution = educationalInstitutionEditTextChildMyProfile?.text.toString()
-        val email = emailEditTextChildmyprofile?.text.toString()
+        val username = usernameTextInputChildMyProfile?.editText?.text.toString();
+        val city = cityAutoCompleteTextViewChildMyProfile?.text.toString()
+        val educationalInstitution = educationalInstitutionAutoCompleteTextViewChildMyProfile?.text.toString()
+        val email = emailTextInputChildMyProfile?.editText?.text.toString()
         val point = pointTextViewChildMyProfile?.text.toString().toInt()
 
         val user = FirebaseAuth.getInstance().currentUser
@@ -202,7 +201,7 @@ class ChildMyProfileFragment : Fragment() {
             user?.updateEmail(email)
                 ?.addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
-                    if (emailEditTextChildmyprofile?.text != null) {
+                    if (emailTextInputChildMyProfile?.editText?.text != null) {
                         firebase.setFieldUserDatabase(firebase.uidUser!!, "email", email)
                     }
                     Toast.makeText(

@@ -45,9 +45,9 @@ class RegistryActivity : AppCompatActivity() {
 
 
     private fun performRegistry() {
-        val email = emailEditTextRegistry?.text.toString()
-        val password = passwordEditTextRegistry?.text.toString()
-        val username = usernameEditTextRegistry?.text.toString()
+        val email = emailTextInputRegistry?.editText?.text.toString()
+        val password = passwordTextInputRegistry?.editText?.text.toString()
+        val username = usernameTextInputRegistry?.editText?.text.toString()
         val parentOrNot = intent.getBooleanExtra("parentOrNot", false)
 
         if (email.isEmpty() || password.isEmpty() || username.isEmpty()) {
@@ -89,7 +89,7 @@ class RegistryActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     Toast.makeText(
                         applicationContext,
-                        "На email ${emailEditTextRegistry?.text.toString()} отправлено письмо. Перейдите по ссылке в письме для подтверждения своего email.",
+                        "На email ${emailTextInputRegistry.editText?.text.toString()} отправлено письмо. Перейдите по ссылке в письме для подтверждения своего email.",
                         Toast.LENGTH_SHORT
                     ).show()
                     FirebaseAuth.getInstance().signOut()

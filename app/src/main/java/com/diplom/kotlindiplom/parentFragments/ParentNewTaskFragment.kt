@@ -20,10 +20,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [NewTaskFragment.newInstance] factory method to
+ * Use the [ParentNewTaskFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class NewTaskFragment : Fragment() {
+class ParentNewTaskFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var title: String? = null
 
@@ -69,7 +69,5 @@ class NewTaskFragment : Fragment() {
             )
             navController.popBackStack()
         }
-
     }
-
 }

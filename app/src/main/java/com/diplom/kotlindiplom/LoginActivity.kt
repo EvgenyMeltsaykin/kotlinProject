@@ -23,8 +23,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         loginButtonLogin?.setOnClickListener {
-            val email = emailEditTextLogin?.text.toString()
-            val password = passwordEditTextLogin?.text.toString()
+            val email = emailTextInput?.editText?.text.toString()
+            val password = passwordTextInput?.editText?.text.toString()
             loginButtonLogin?.isVisible = false
             backregistryTextViewLogin?.isVisible = false
             loginProgressBar?.isVisible = true

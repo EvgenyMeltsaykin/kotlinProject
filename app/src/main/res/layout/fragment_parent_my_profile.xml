@@ -36,78 +36,67 @@
                 app:layout_constraintStart_toStartOf="@+id/selectPhotoButtonParentMyProfile"
                 app:layout_constraintTop_toTopOf="@+id/selectPhotoButtonParentMyProfile" />-->
 
-        <EditText
-            android:id="@+id/usernameEditTextParentMyProfile"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/usernameTextInputParentMyProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:paddingLeft="40dp"
-            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" >
 
-        <EditText
-            android:id="@+id/emailEditTextParentMyProfile"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Имя"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailTextInputParentMyProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:cursorVisible="true"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:paddingLeft="47dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/usernameEditTextParentMyProfile" />
+            app:layout_constraintTop_toBottomOf="@+id/usernameTextInputParentMyProfile">
 
-        <TextView
-            android:id="@+id/emailTextViewParentMyProfile"
-            android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Email"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cityTextInputParentMyProfile"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:text="Email:"
-            android:textColor="@color/colorText"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/emailEditTextParentMyProfile"
-            app:layout_constraintStart_toStartOf="@+id/emailEditTextParentMyProfile"
-            app:layout_constraintTop_toTopOf="@+id/emailEditTextParentMyProfile"
-            app:layout_constraintVertical_bias="0.538" />
-
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/cityEditTextParentMyProfile"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:completionThreshold="0"
-            android:ems="10"
-            android:hint="Введите город"
-            android:inputType="textPersonName"
-            android:paddingLeft="51dp"
-            android:selectAllOnFocus="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailEditTextParentMyProfile" />
+            app:layout_constraintTop_toBottomOf="@+id/emailTextInputParentMyProfile">
 
-        <TextView
-            android:id="@+id/cityTextViewParentMyProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:text="Город:"
-            android:textColor="@color/colorText"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/cityEditTextParentMyProfile"
-            app:layout_constraintStart_toStartOf="@+id/cityEditTextParentMyProfile"
-            app:layout_constraintTop_toTopOf="@+id/cityEditTextParentMyProfile" />
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/cityAutoCompleteTextViewParentMyProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:completionThreshold="1"
+                android:ems="10"
+                android:hint="Город"
+                android:inputType="textAutoComplete"
+                android:selectAllOnFocus="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/saveChangeButtonParentMyProfile"
@@ -124,17 +113,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cityEditTextParentMyProfile" />
+            app:layout_constraintTop_toBottomOf="@+id/cityTextInputParentMyProfile" />
 
-        <TextView
-            android:id="@+id/userNameTextViewMyProfileParent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:text="Имя:"
-            android:textColor="@color/colorText"
-            app:layout_constraintBottom_toBottomOf="@+id/usernameEditTextParentMyProfile"
-            app:layout_constraintStart_toStartOf="@+id/usernameEditTextParentMyProfile"
-            app:layout_constraintTop_toTopOf="@+id/usernameEditTextParentMyProfile" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

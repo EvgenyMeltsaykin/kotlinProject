@@ -11,9 +11,10 @@
     android:background="@drawable/background_text"
     android:paddingBottom="16dp"
     tools:context=".childFragments.ChildMyProfileFragment">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <!--<Button
             android:id="@+id/selectphotoButtonChildmyprofile"
             android:layout_width="150dp"
@@ -36,31 +37,6 @@
             app:layout_constraintStart_toStartOf="@+id/selectphotoButtonChildmyprofile"
             app:layout_constraintTop_toTopOf="@+id/selectphotoButtonChildmyprofile" />-->
 
-        <EditText
-            android:id="@+id/emailEditTextChildmyprofile"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:paddingLeft="47dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/usernameEditTextChildMyProfile" />
-
-        <TextView
-            android:id="@+id/emailTextViewChildmyprofile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:text="Email:"
-            android:textColor="@color/colorText"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/emailEditTextChildmyprofile"
-            app:layout_constraintStart_toStartOf="@+id/emailEditTextChildmyprofile"
-            app:layout_constraintTop_toTopOf="@+id/emailEditTextChildmyprofile" />
 
         <TextView
             android:id="@+id/balanceTextviewChildMyProfile"
@@ -100,81 +76,94 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/educationalInstitutionEditTextChildMyProfile"
+            app:layout_constraintTop_toBottomOf="@+id/educationalInstitutionTextInputChildMyProfile"
             app:layout_constraintVertical_bias="1.0" />
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/cityEditTextChildMyProfile"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:completionThreshold="1"
-            android:ems="10"
-            android:hint="Введите город"
-            android:inputType="textPersonName"
-            android:paddingLeft="51dp"
-            android:selectAllOnFocus="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailEditTextChildmyprofile" />
 
-        <TextView
-            android:id="@+id/cityTextViewChildMyProfile"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/usernameTextInputChildMyProfile"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:text="Город:"
-            android:textColor="@color/colorText"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/cityEditTextChildMyProfile"
-            app:layout_constraintStart_toStartOf="@+id/cityEditTextChildMyProfile"
-            app:layout_constraintTop_toTopOf="@+id/cityEditTextChildMyProfile" />
-
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/educationalInstitutionEditTextChildMyProfile"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:completionThreshold="1"
-            android:ems="10"
-            android:hint="Школа/лицей/гимназия"
-            android:inputType="textPersonName"
-            android:paddingLeft="141dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cityEditTextChildMyProfile" />
+            app:layout_constraintTop_toBottomOf="@+id/idTextViewChildMyProfile">
 
-        <TextView
-            android:id="@+id/educationalInstitutionTextViewChildMyProfile"
-            android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Имя"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailTextInputChildMyProfile"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:text="Учебное заведение:"
-            android:textColor="@color/colorText"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/educationalInstitutionEditTextChildMyProfile"
-            app:layout_constraintStart_toStartOf="@+id/educationalInstitutionEditTextChildMyProfile"
-            app:layout_constraintTop_toTopOf="@+id/educationalInstitutionEditTextChildMyProfile" />
-
-        <EditText
-            android:id="@+id/usernameEditTextChildMyProfile"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:cursorVisible="true"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:paddingLeft="40dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/idTextViewChildMyProfile" />
+            app:layout_constraintTop_toBottomOf="@+id/usernameTextInputChildMyProfile">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Email"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cityTextInputChildMyProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailTextInputChildMyProfile">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/cityAutoCompleteTextViewChildMyProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:completionThreshold="1"
+                android:ems="10"
+                android:hint="Город"
+                android:inputType="textAutoComplete"
+                android:selectAllOnFocus="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/educationalInstitutionTextInputChildMyProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cityTextInputChildMyProfile">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/educationalInstitutionAutoCompleteTextViewChildMyProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:completionThreshold="1"
+                android:ems="10"
+                android:hint="Школа/лицей/гимназия"
+                android:inputType="textAutoComplete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cityTextInputChildMyProfile" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/idTextViewChildMyProfile"
@@ -187,19 +176,6 @@
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/userNameTextViewChild"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:text="Имя:"
-            android:textColor="@color/colorText"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/usernameEditTextChildMyProfile"
-            app:layout_constraintStart_toStartOf="@+id/usernameEditTextChildMyProfile"
-            app:layout_constraintTop_toTopOf="@+id/usernameEditTextChildMyProfile"
-            app:layout_constraintVertical_bias="0.5" />
 
         <!--<TextView
             android:id="@+id/countryTextViewChildMyProfile"
@@ -231,5 +207,5 @@
             app:layout_constraintStart_toEndOf="@+id/countryTextViewChildMyProfile"
             app:layout_constraintTop_toTopOf="@+id/countryTextViewChildMyProfile" />
 -->
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

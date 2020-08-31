@@ -7,8 +7,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.R
+import kotlinx.android.synthetic.main.fragment_main.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,6 +41,30 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
         activity?.title = "Главная"
+        mondayMainButton?.setOnClickListener {
+            navigateToDay("понедельник")
+        }
+        tuesdayMainButton?.setOnClickListener {
+            navigateToDay("вторник")
+        }
+        wednesdayMainButton?.setOnClickListener {
+            navigateToDay("среда")
+        }
+        thursdayMainButton?.setOnClickListener {
+            navigateToDay("четверг")
+        }
+        fridayMainButton?.setOnClickListener {
+            navigateToDay("пятница")
+        }
+        saturdayMainButton?.setOnClickListener {
+            navigateToDay("суббота")
+        }
+    }
+
+    fun navigateToDay(day : String){
+        val bundle = bundleOf()
+        bundle.putString("day",day)
+        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_mainFragment_to_myScheduleDayFragment,bundle)
     }
 
 }
