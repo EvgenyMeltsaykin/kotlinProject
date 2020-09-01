@@ -127,6 +127,16 @@ class RegistryActivity : AppCompatActivity() {
         })
         ref.setValue(user)
         firebase.setFieldUserDatabase(firebase.uidUser!!, "role", "child")
+        val weekday = listOf<String>("понедельник","вторник","среда","четверг","пятница","суббота")
+        weekday.forEach {
+            for(i in 0..6){
+                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/cabinet", "")
+                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/homework", "")
+                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/number", i)
+                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/time", "")
+                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/lessonName", "")
+            }
+        }
     }
     private fun saveParentToFirebaseDatabase(username: String, email: String) {
         val firebase = FunctionsFirebase()

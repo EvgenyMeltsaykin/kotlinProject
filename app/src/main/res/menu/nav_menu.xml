@@ -2,6 +2,12 @@
 <menu  xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/editScheduleDay"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_edit_schedule"
+        android:visible="false"
+        android:title=""/>
+    <item
         android:visible="false"
         android:id="@+id/updateInformation"
         app:showAsAction="ifRoom"
@@ -10,5 +16,5 @@
     <item
         android:id="@+id/menuPointsChild"
         app:showAsAction="ifRoom"
-        android:title="" />
+        android:title=""/>
 </menu>

@@ -22,10 +22,7 @@ import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.diaries.Diary
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.header.*
 import org.cryptonode.jncryptor.AES256JNCryptor
@@ -45,6 +42,59 @@ class FunctionsFirebase {
     val rolesRef = rootRef.child("roles")
     val uidUser = FirebaseAuth.getInstance().uid
 
+    fun updateLessonMyScheduleInFirebase(weekday:String,numberLesson: String,lessonName: String,cabinet:String,homework:String,time:String){
+        val ref = childRef.child(uidUser!!).child("mySchedule").child(weekday).orderByChild("number").equalTo(numberLesson)
+        Log.d("Tag",ref.ref.toString())
+        // ref.ref.child("homework").setValue(homework)
+        // ref.ref.child("cabinet").setValue(cabinet)
+        // ref.ref.child("lessonName").setValue(lessonName)
+        // ref.ref.child("time").setValue(time)
+    }
+    fun getFieldsLessonMyScheduleOutFirebase(infoLesson: DataSnapshot):Lesson{
+        val lesson = Lesson()
+        infoLesson.children.forEach {
+            if (it.key.toString() == "lessonName"){
+                lesson.name = it.value.toString()
+            }
+            if (it.key.toString() == "homework"){
+                lesson.homework = it.value.toString()
+            }
+            if (it.key.toString() == "cabinet"){
+                lesson.cabinet = it.value.toString()
+            }
+            if (it.key.toString() == "time"){
+                lesson.time = it.value.toString()
+            }
+        }
+        return lesson
+    }
+    fun getLessonMyScheduleOutFirebase(weekday:String,firebaseCallBack: FirebaseCallback<List<Lesson>>){
+        val ref = childRef.child(uidUser!!).child("mySchedule").child(weekday).orderByChild("number")
+        val lessons = mutableListOf<Lesson>()
+        ref.keepSynced(true)
+        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach { infoLesson->
+                    lessons.add(getFieldsLessonMyScheduleOutFirebase(infoLesson))
+                }
+                firebaseCallBack.onComplete(lessons)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+    fun addLessonMyScheduleInFirebase(weekday:String,numberLesson:String,lesson: Lesson){
+        val ref = childRef.child(uidUser!!).child("mySchedule").child(weekday).child(numberLesson)
+
+        ref.child("homework").setValue("")
+        ref.child("lessonName").setValue(lesson.name)
+        ref.child("cabinet").setValue(lesson.cabinet)
+        ref.child("time").setValue(lesson.time)
+        ref.child("number").setValue(numberLesson)
+    }
     fun deleteAward(awardId: String) {
         val ref = rootRef.child("awards").child(awardId)
         ref.removeValue()

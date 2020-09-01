@@ -1,13 +1,20 @@
 package com.diplom.kotlindiplom.childFragments.mySchedule
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.diplom.kotlindiplom.models.Lesson
+import com.diplom.kotlindiplom.models.recyclerViewItems.LessonMyScheduleItem
+import com.diplom.kotlindiplom.models.recyclerViewItems.LessonMySchedulePagerItem
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_my_schedule_day.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -43,12 +50,33 @@ class MyScheduleDayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().invalidateOptionsMenu()
         activity?.title =day?.capitalize()
-        addLessonButton?.setOnClickListener {
-            val addLessonFragment = AddLessonFragment()
-            addLessonFragment.show(requireActivity().supportFragmentManager,"addLessonFragment")
+        val adapter = GroupAdapter<ViewHolder>()
+        val firebase = FunctionsFirebase()
+        firebase.getLessonMyScheduleOutFirebase(day!!,object :FirebaseCallback<List<Lesson>>{
+            override fun onComplete(value: List<Lesson>) {
+                var i = 0
+                value.forEach {
+                    if (it.name.isNotEmpty()){
+                        adapter.add(LessonMyScheduleItem(it,i))
+                        i++
+                    }
+                }
+                lessonsRecyclerView?.adapter = adapter
+            }
+        })
+        adapter.setOnItemClickListener { item, view ->
+            val lessonItem = item as LessonMyScheduleItem
+            val bundle = bundleOf()
+            bundle.putString("lessonName",lessonItem.lesson.name)
+            bundle.putString("lessonTime",lessonItem.lesson.time)
+            bundle.putString("lessonCabinet",lessonItem.lesson.cabinet)
+            bundle.putString("lessonNumber",lessonItem.number.toString())
+            bundle.putString("lessonHomework",lessonItem.lesson.homework)
+            bundle.putString("weekday",day)
+            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_myScheduleDayFragment_to_detailLessonMyScheduleFragment,bundle)
         }
-
     }
 
     companion object {

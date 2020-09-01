@@ -302,12 +302,34 @@
         android:label="fragment_my_schedule_day"
         tools:layout="@layout/fragment_my_schedule_day" >
         <action
-            android:id="@+id/action_myScheduleDayFragment_to_addLessonFragment"
-            app:destination="@id/addLessonFragment" />
+            android:id="@+id/action_myScheduleDayFragment_to_detailLessonMyScheduleFragment"
+            app:destination="@id/detailLessonMyScheduleFragment" />
+        <action
+            android:id="@+id/action_myScheduleDayFragment_to_editScheduleFragment"
+            app:destination="@id/editScheduleFragment" />
     </fragment>
     <fragment
         android:id="@+id/addLessonFragment"
         android:name="com.diplom.kotlindiplom.childFragments.mySchedule.AddLessonFragment"
         android:label="fragment_add_lesson"
         tools:layout="@layout/fragment_add_lesson" />
+    <fragment
+        android:id="@+id/detailLessonMyScheduleFragment"
+        android:name="com.diplom.kotlindiplom.childFragments.mySchedule.DetailLessonMyScheduleFragment"
+        android:label="fragment_detail_lesson_my_schedule"
+        tools:layout="@layout/fragment_detail_lesson_my_schedule" />
+    <fragment
+        android:id="@+id/editScheduleFragment"
+        android:name="com.diplom.kotlindiplom.childFragments.mySchedule.EditScheduleFragment"
+        android:label="fragment_edit_schedule"
+        tools:layout="@layout/fragment_edit_schedule" >
+        <action
+            android:id="@+id/action_editScheduleFragment_to_addLessonFragment"
+            app:destination="@id/addLessonFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pagerMyScheduleFragment"
+        android:name="com.diplom.kotlindiplom.childFragments.mySchedule.PagerMyScheduleFragment"
+        android:label="fragment_pager_my_schedule"
+        tools:layout="@layout/fragment_pager_my_schedule" />
 </navigation>

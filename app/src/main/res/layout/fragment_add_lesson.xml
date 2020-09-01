@@ -5,10 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_text"
-    tools:context=".childFragments.mySchedule.AddLessonFragment">
+    tools:context=".childFragments.mySchedule.AddLessonFragment"
+    android:paddingBottom="16dp"
+    android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/usernameTextInput"
+        android:id="@+id/lessonNameTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -23,6 +25,85 @@
             android:layout_height="match_parent"
             android:hint="Предмет"
             android:inputType="text" />
+
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lessonBeginTimeTextInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:placeholderText="Время начала урока"
+        app:placeholderTextColor="?android:textColorHint"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/lessonBeginTimeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="08:00"
+            android:textColor="@color/colorText"
+            android:textSize="18sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lessonEndTimeTextInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:placeholderText="Время окончания урока"
+        app:placeholderTextColor="?android:textColorHint"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/lessonEndTimeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="08:45"
+            android:textColor="@color/colorText"
+            android:textSize="18sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/cabinetTextInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Кабинет"
+            android:inputType="number" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/addLessonButton"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/simple_button"
+        android:textColor="@color/colorButtonText"
+        android:text="Добавить урок" />
+
+
 </LinearLayout>
 

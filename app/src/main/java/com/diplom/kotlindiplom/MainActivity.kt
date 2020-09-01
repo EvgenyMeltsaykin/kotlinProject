@@ -350,6 +350,9 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                     navController.navigate(R.id.listAwardsFragment)
                 }
             }
+            R.id.editScheduleDay->{
+                navController.navigate(R.id.action_myScheduleDayFragment_to_editScheduleFragment)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -391,6 +394,10 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         }
         if (navController.currentDestination?.id == R.id.listAwardsFragment){
             val item = menu?.findItem(R.id.updateInformation)
+            item?.isVisible = true
+        }
+        if (navController.currentDestination?.id == R.id.myScheduleDayFragment){
+            val item = menu?.findItem(R.id.editScheduleDay)
             item?.isVisible = true
         }
         return super.onPrepareOptionsMenu(menu)
@@ -436,9 +443,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 //super.onBackPressed()
             } else {
                 Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
+                return
             }
         }else{
             navController.popBackStack()
+            return
         }
 
         back_pressed = System.currentTimeMillis()
