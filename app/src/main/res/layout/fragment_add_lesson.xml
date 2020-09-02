@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_text"
-    tools:context=".childFragments.mySchedule.AddLessonFragment"
+    android:orientation="vertical"
     android:paddingBottom="16dp"
-    android:orientation="vertical">
+    tools:context=".childFragments.mySchedule.AddLessonFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/lessonNameTextInput"
@@ -16,9 +16,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -32,14 +33,14 @@
         android:id="@+id/lessonBeginTimeTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:placeholderText="Время начала урока"
-        app:placeholderTextColor="?android:textColorHint"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderText="Время начала урока"
+        app:placeholderTextColor="?android:textColorHint">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lessonBeginTimeTextView"
@@ -55,14 +56,14 @@
         android:id="@+id/lessonEndTimeTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:placeholderText="Время окончания урока"
-        app:placeholderTextColor="?android:textColorHint"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderText="Время окончания урока"
+        app:placeholderTextColor="?android:textColorHint">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lessonEndTimeTextView"
@@ -81,9 +82,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -93,16 +95,36 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/addLessonButton"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/simple_button"
-        android:textColor="@color/colorButtonText"
-        android:text="Добавить урок" />
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <Button
+            android:id="@+id/deleteLessonButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/simple_button"
+            android:text="Удалить"
+            android:textColor="@color/colorButtonText" />
+
+        <Button
+            android:id="@+id/addLessonButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/simple_button"
+            android:text="Добавить"
+            android:textColor="@color/colorButtonText" />
+
+
+    </LinearLayout>
 
 
 </LinearLayout>

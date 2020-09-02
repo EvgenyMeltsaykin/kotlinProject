@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.BaseFragment
 import com.diplom.kotlindiplom.R
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -27,20 +28,34 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MainFragment : Fragment() {
+    private lateinit var role:String
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
 
+        val activityCallback = context as ActivityCallback
+        role = activityCallback.getRoleUser()!!
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false)
-
+        if (role == "child"){
+            return inflater.inflate(R.layout.fragment_main, container, false)
+        }
+        return inflater.inflate(R.layout.fragment_main_parent, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
         activity?.title = "Главная"
+        if (role == "child"){
+            setupChildFragment()
+        }
+
+    }
+    fun setupChildFragment(){
         mondayMainButton?.setOnClickListener {
             navigateToDay("понедельник")
         }
@@ -60,7 +75,6 @@ class MainFragment : Fragment() {
             navigateToDay("суббота")
         }
     }
-
     fun navigateToDay(day : String){
         val bundle = bundleOf()
         bundle.putString("day",day)

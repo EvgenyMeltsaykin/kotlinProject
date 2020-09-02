@@ -43,12 +43,11 @@ class FunctionsFirebase {
     val uidUser = FirebaseAuth.getInstance().uid
 
     fun updateLessonMyScheduleInFirebase(weekday:String,numberLesson: String,lessonName: String,cabinet:String,homework:String,time:String){
-        val ref = childRef.child(uidUser!!).child("mySchedule").child(weekday).orderByChild("number").equalTo(numberLesson)
-        Log.d("Tag",ref.ref.toString())
-        // ref.ref.child("homework").setValue(homework)
-        // ref.ref.child("cabinet").setValue(cabinet)
-        // ref.ref.child("lessonName").setValue(lessonName)
-        // ref.ref.child("time").setValue(time)
+        val ref = childRef.child(uidUser!!).child("mySchedule").child(weekday).child(numberLesson)
+         ref.child("homework").setValue(homework)
+         ref.child("cabinet").setValue(cabinet)
+         ref.child("lessonName").setValue(lessonName)
+         ref.child("time").setValue(time)
     }
     fun getFieldsLessonMyScheduleOutFirebase(infoLesson: DataSnapshot):Lesson{
         val lesson = Lesson()
@@ -69,15 +68,20 @@ class FunctionsFirebase {
         return lesson
     }
     fun getLessonMyScheduleOutFirebase(weekday:String,firebaseCallBack: FirebaseCallback<List<Lesson>>){
-        val ref = childRef.child(uidUser!!).child("mySchedule").child(weekday).orderByChild("number")
+        val ref = childRef.child(uidUser!!).child("mySchedule").child(weekday)
         val lessons = mutableListOf<Lesson>()
         ref.keepSynced(true)
         ref.addListenerForSingleValueEvent(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.children.forEach { infoLesson->
-                    lessons.add(getFieldsLessonMyScheduleOutFirebase(infoLesson))
+                if (snapshot.exists()){
+                    var i = 0
+                    snapshot.children.forEach { infoLesson->
+                        lessons.add(getFieldsLessonMyScheduleOutFirebase(infoLesson))
+                        i++
+                    }
+                    firebaseCallBack.onComplete(lessons)
                 }
-                firebaseCallBack.onComplete(lessons)
+
             }
 
             override fun onCancelled(error: DatabaseError) {

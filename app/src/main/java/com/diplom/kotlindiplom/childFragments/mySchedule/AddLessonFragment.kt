@@ -13,6 +13,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.TimePicker
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.diplom.kotlindiplom.ActivityCallback
@@ -45,10 +47,11 @@ class AddLessonFragment : DialogFragment() {
     private var lessonName: String? = null
     private var time: String? = null
     private var cabinet: String? = null
+    private var indexTab: Int = 0
     private lateinit var roleUser: String
 
     interface OnInputListener{
-        fun sendInput()
+        fun sendInput(indexTab:Int)
     }
     private lateinit var onInputListener : OnInputListener
 
@@ -61,7 +64,9 @@ class AddLessonFragment : DialogFragment() {
             lessonName = it.getString("lessonName")
             time = it.getString("time")
             cabinet = it.getString("cabinet")
+            indexTab = it.getInt("indexTab",0)
         }
+        Log.d("Tag","addlesson = $indexTab")
 
     }
 
@@ -92,7 +97,15 @@ class AddLessonFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
+        lessonNameTextInput?.editText?.doAfterTextChanged {
+            lessonNameTextInput?.error = null
+        }
+        cabinetTextInput.editText?.doAfterTextChanged {
+            cabinetTextInput?.error = null
+        }
+        deleteLessonButton?.isVisible = false
         if (!lessonName.isNullOrBlank()){
+            deleteLessonButton?.isVisible = true
             lessonNameTextInput.editText?.setText(lessonName)
             val timeBegin = time?.substringBefore("-")
             val timeEnd = time?.substringAfter("-")
@@ -113,10 +126,41 @@ class AddLessonFragment : DialogFragment() {
             val lessonName = lessonNameTextInput?.editText?.text.toString()
             val time = lessonBeginTimeTextView?.text.toString() + "-" + lessonEndTimeTextView?.text.toString()
             val cabinet = cabinetTextInput.editText?.text.toString()
-            val lesson = Lesson(lessonName,"",time,cabinet,"","")
+            var fl = true
+            if (validateLessonName(lessonName)) fl = false
+            if (validateCabinet(cabinet)) fl = false
+            if (fl){
+                val lesson = Lesson(lessonName,"",time,cabinet,"","")
+                firebase.addLessonMyScheduleInFirebase(day,numberLesson!!,lesson)
+                onInputListener.sendInput(indexTab)
+                dismiss()
+            }
+        }
+        deleteLessonButton?.setOnClickListener {
+            val firebase = FunctionsFirebase()
+            val lesson = Lesson()
             firebase.addLessonMyScheduleInFirebase(day,numberLesson!!,lesson)
-            onInputListener.sendInput()
+            onInputListener.sendInput(indexTab)
             dismiss()
+        }
+
+    }
+    fun validateLessonName(lessonName : String):Boolean{
+        if (lessonName.isEmpty()) {
+            lessonNameTextInput?.error = "Заполните поле"
+            return false
+        }else{
+            lessonNameTextInput?.error = null
+            return true
+        }
+    }
+    fun validateCabinet(cabinet : String):Boolean{
+        if (cabinet.isEmpty()) {
+            cabinetTextInput?.error = "Заполните поле"
+            return false
+        }else{
+            cabinetTextInput?.error = null
+            return true
         }
     }
 

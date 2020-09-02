@@ -96,6 +96,7 @@ class ParentNodeChildrenFragment : Fragment() {
                         }
                     } ))
                 }
+                parentNodeChildrenProgressBar?.isVisible = false
             }
 
         })

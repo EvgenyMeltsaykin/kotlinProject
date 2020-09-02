@@ -24,13 +24,13 @@ private const val ARG_PARAM2 = "param2"
  */
 class EditScheduleFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    private var indexTab: Int = 0
     private var param2: String? = null
     private lateinit var fragmentAdapter: MyPagerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
+            indexTab = it.getInt("indexTab",0)
             param2 = it.getString(ARG_PARAM2)
         }
     }
@@ -53,6 +53,7 @@ class EditScheduleFragment : Fragment() {
         activity?.title = "Редактор"
         viewPager?.adapter = fragmentAdapter
         tabLayout?.setupWithViewPager(viewPager)
+        tabLayout.getTabAt(indexTab)?.select()
     }
 
 }

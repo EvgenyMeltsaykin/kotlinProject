@@ -1,10 +1,12 @@
 package com.diplom.kotlindiplom.childFragments.mySchedule
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
@@ -52,6 +54,7 @@ class MyScheduleDayFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
         activity?.title =day?.capitalize()
+        emptyLessonTextView?.isVisible = false
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
         firebase.getLessonMyScheduleOutFirebase(day!!,object :FirebaseCallback<List<Lesson>>{
@@ -59,10 +62,15 @@ class MyScheduleDayFragment : Fragment() {
                 var i = 0
                 value.forEach {
                     if (it.name.isNotEmpty()){
+                        emptyLessonTextView?.isVisible = false
                         adapter.add(LessonMyScheduleItem(it,i))
                         i++
                     }
                 }
+                if (adapter.itemCount== 0){
+                    emptyLessonTextView?.isVisible = true
+                }
+                myScheduleProgressBar?.isVisible = false
                 lessonsRecyclerView?.adapter = adapter
             }
         })

@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_detail_lesson_my_schedule.*
@@ -62,6 +64,8 @@ class DetailLessonMyScheduleFragment : Fragment() {
         saveLessonButton?.setOnClickListener {
             val firebase = FunctionsFirebase()
             firebase.updateLessonMyScheduleInFirebase(weekday,lessonNumber,lessonName,lessonCabinet, homeworkTextInput.editText?.text.toString(),lessonTime)
+            Toast.makeText(requireContext(),"Домашняя работа сохранена",Toast.LENGTH_SHORT).show()
+            Navigation.findNavController(requireActivity(),R.id.navFragment).popBackStack()
         }
     }
 

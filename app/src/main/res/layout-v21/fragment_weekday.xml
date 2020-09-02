@@ -161,5 +161,17 @@
             app:layout_constraintStart_toEndOf="@+id/openCalendarButton"
             app:layout_constraintTop_toTopOf="@+id/openCalendarButton" />
 
+        <TextView
+            android:id="@+id/messageForUserTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center|center_horizontal"
+            android:text="Расписание загружается с сайта электронного дневника."
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/saturdayButton"
+            app:layout_constraintStart_toStartOf="@+id/saturdayButton"
+            app:layout_constraintTop_toBottomOf="@+id/saturdayButton" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

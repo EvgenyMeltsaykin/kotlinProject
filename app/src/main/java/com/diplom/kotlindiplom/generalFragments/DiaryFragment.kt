@@ -1,16 +1,15 @@
 package com.diplom.kotlindiplom.generalFragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.models.FunctionsUI
 import kotlinx.android.synthetic.main.fragment_diary.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -47,34 +46,50 @@ class DiaryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
+
+
+        val fm = requireActivity().supportFragmentManager
+        for (i in 0 until fm.backStackEntryCount) {
+            fm.popBackStack()
+        }
         activity?.title = "Электронный дневник"
         val firebase = FunctionsFirebase()
-        firebase.getFieldUserDatabase(firebase.uidUser!!,"role",object : FirebaseCallback<String>{
-            override fun onComplete(value: String) {
-                scheduleButton?.setOnClickListener {
-                    if (value == "child"){
-                        val bundle = bundleOf()
-                        bundle.putBoolean("updateSchedule",true)
-                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_weekdayFragment,bundle)
-                    }
-                    if (value == "parent"){
-                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_chooseChildScheduleFragment)
-                    }
+        firebase.getFieldUserDatabase(
+            firebase.uidUser!!,
+            "role",
+            object : FirebaseCallback<String> {
+                override fun onComplete(value: String) {
+                    scheduleButton?.setOnClickListener {
+                        if (value == "child") {
+                            val bundle = bundleOf()
+                            bundle.putBoolean("updateSchedule", true)
+                            Navigation.findNavController(requireActivity(), R.id.navFragment)
+                                .navigate(
+                                    R.id.action_diaryFragment_to_weekdayFragment,
+                                    bundle
+                                )
+                        }
+                        if (value == "parent") {
+                            Navigation.findNavController(requireActivity(), R.id.navFragment)
+                                .navigate(R.id.action_diaryFragment_to_chooseChildScheduleFragment)
+                        }
 
+                    }
+                    marksButton?.setOnClickListener {
+                        if (value == "child") {
+                            Navigation.findNavController(requireActivity(), R.id.navFragment)
+                                .navigate(R.id.action_diaryFragment_to_chooseSemestrElschoolFragment)
+                        }
+                        if (value == "parent") {
+                            Navigation.findNavController(requireActivity(), R.id.navFragment)
+                                .navigate(R.id.action_diaryFragment_to_chooseChildMarkFragment)
+                        }
+                    }
                 }
-                marksButton?.setOnClickListener {
-                    if (value == "child"){
-                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_chooseSemestrElschoolFragment)
-                    }
-                    if (value == "parent"){
-                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_chooseChildMarkFragment)
-                    }
-                }
-            }
-        })
+            })
 
 
-        firebase.getFieldDiary(firebase.uidUser!!,"url",object : FirebaseCallback<String> {
+        firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
                 diaryTextView?.text = value
             }
@@ -82,9 +97,9 @@ class DiaryFragment : Fragment() {
         deleteDiaryButton?.setOnClickListener {
             firebase.deleteDiary()
             val bundle = bundleOf()
-            bundle.putBoolean("deletedDiary",true)
+            bundle.putBoolean("deletedDiary", true)
             Navigation.findNavController(requireActivity(), R.id.navFragment)
-                .navigate(R.id.action_diaryFragment_to_loginDiaryFragment,bundle)
+                .navigate(R.id.action_diaryFragment_to_loginDiaryFragment, bundle)
         }
     }
 

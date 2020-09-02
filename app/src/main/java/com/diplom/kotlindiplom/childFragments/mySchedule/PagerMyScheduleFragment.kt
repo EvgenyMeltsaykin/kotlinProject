@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
@@ -20,6 +21,7 @@ import com.diplom.kotlindiplom.models.recyclerViewItems.LessonMySchedulePagerIte
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_pager_my_schedule.*
+import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,9 +35,12 @@ private const val ARG_PARAM2 = "param2"
  */
 class PagerMyScheduleFragment : Fragment() , AddLessonFragment.OnInputListener {
     // TODO: Rename and change types of parameters
-    override fun sendInput() {
+    override fun sendInput(indexTab:Int) {
+        val bundle = bundleOf()
+        bundle.putInt("indexTab",indexTab)
+        Log.d("Tag",indexTab.toString())
         Navigation.findNavController(requireActivity(),R.id.navFragment).popBackStack()
-        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.editScheduleFragment)
+        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.editScheduleFragment,bundle)
     }
 
     override fun onResume() {
@@ -43,12 +48,13 @@ class PagerMyScheduleFragment : Fragment() , AddLessonFragment.OnInputListener {
     }
 
     private lateinit var weekday: String
-    private var param2: String? = null
+    private var indexTab by Delegates.notNull<Int>()
     private lateinit var fragmentAdapter: MyPagerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             weekday = it.getString("weekday","")
+            indexTab = it.getInt("indexTab",1)
         }
         fragmentAdapter = MyPagerAdapter(childFragmentManager)
     }
@@ -68,13 +74,12 @@ class PagerMyScheduleFragment : Fragment() , AddLessonFragment.OnInputListener {
         firebase.getLessonMyScheduleOutFirebase(weekday.toLowerCase(),object : FirebaseCallback<List<Lesson>> {
             override fun onComplete(value: List<Lesson>) {
                 var i = 0
-
                 value.forEach {
-                    Log.d("Tag",it.toString())
                     adapter.add(LessonMySchedulePagerItem(it, i))
                     i++
                 }
                 lessonsRecyclerViewPagerMySchedule?.adapter = adapter
+                pagerMyScheduleProgressBar?.isVisible = false
             }
         })
 
@@ -91,7 +96,9 @@ class PagerMyScheduleFragment : Fragment() , AddLessonFragment.OnInputListener {
                 bundle.putString("lessonName",item.lesson.name)
                 bundle.putString("time",item.lesson.time)
                 bundle.putString("cabinet",item.lesson.cabinet)
+
             }
+            bundle.putInt("indexTab",indexTab)
             /*Log.d("Tag",this.fragmentManager.toString())
             Log.d("Tag",
             Log.d("Tag",this.parentFragmentManager.toString())
@@ -103,10 +110,11 @@ class PagerMyScheduleFragment : Fragment() , AddLessonFragment.OnInputListener {
     }
     companion object {
         @JvmStatic
-        fun newInstance(weekday: String) =
+        fun newInstance(weekday: String,indexTab:Int) =
             PagerMyScheduleFragment().apply {
                 arguments = Bundle().apply {
                     putString("weekday", weekday)
+                    putInt("indexTab", indexTab)
                 }
             }
     }

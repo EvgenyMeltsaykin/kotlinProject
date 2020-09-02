@@ -75,6 +75,13 @@ class ListAwardsFragment : Fragment() {
         firebase.getFieldUserDatabase(firebase.uidUser!!,"parentUid",object :FirebaseCallback<String>{
             override fun onComplete(value: String) {
                 adapter.clear()
+                if (value.isEmpty()){
+                    listAwardProgressBar?.isVisible = false
+                    if (role == "children"){
+                        emptyListAwardTextView?.text = "Не привязан родительский аккаунт"
+                        emptyListAwardTextView?.isVisible = true
+                    }
+                }
                 firebase.getAwardOutFirebaseWithParentUid(value,object :FirebaseCallback<Map<String,String>>{
                     override fun onComplete(value: Map<String, String>) {
                         listAwardProgressBar?.isVisible = false

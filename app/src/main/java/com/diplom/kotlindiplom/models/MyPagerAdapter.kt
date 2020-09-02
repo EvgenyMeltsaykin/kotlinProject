@@ -1,5 +1,6 @@
 package com.diplom.kotlindiplom.models
 
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -11,7 +12,8 @@ class MyPagerAdapter(fragmentManager: FragmentManager):FragmentPagerAdapter(frag
     }
 
     override fun getItem(position: Int): Fragment {
-        return PagerMyScheduleFragment.newInstance(getPageTitle(position).toString())
+        Log.d("Tag","mypager = $position")
+        return PagerMyScheduleFragment.newInstance(getPageTitle(position).toString(),position)
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

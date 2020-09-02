@@ -418,16 +418,22 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             return
         }
         if (navController.currentDestination?.id == R.id.weekdayFragment){
-            if (navController.backStack.size >= 7){
-                navController.popBackStack()
-                navController.popBackStack()
-                navController.popBackStack()
-                return
+            if (roleUser == "child"){
+                while(navController.backStack.size >= 5){
+                    navController.popBackStack()
+                }
             }
+            if(roleUser == "parent"){
+                while(navController.backStack.size >= 6){
+                    navController.popBackStack()
+                }
+            }
+            return
         }
         if (navController.currentDestination?.id == R.id.scheduleDayFragment){
             val bundle = bundleOf()
             bundle.putBoolean("updateSchedule",false)
+
             navController.navigate(R.id.action_scheduleDayFragment_to_weekdayFragment,bundle)
             return
         }
@@ -443,14 +449,13 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 //super.onBackPressed()
             } else {
                 Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
+                back_pressed = System.currentTimeMillis()
                 return
             }
         }else{
             navController.popBackStack()
             return
         }
-
-        back_pressed = System.currentTimeMillis()
 
     }
 
