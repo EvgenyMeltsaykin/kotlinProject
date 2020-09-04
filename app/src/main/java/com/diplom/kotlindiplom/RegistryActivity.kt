@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Parent
@@ -36,22 +37,51 @@ class RegistryActivity : AppCompatActivity() {
             startActivity(intent)
         }
         registryButtonRegistry?.setOnClickListener {
+
             registryButtonRegistry?.isVisible = false
             alreadyRegistryTextViewRegistry?.isVisible = false
             registryProgressBar?.isVisible = true
             performRegistry()
         }
+        usernameTextInputRegistry?.editText?.doAfterTextChanged {
+            usernameTextInputRegistry?.error = null
+        }
+        emailTextInputRegistry?.editText?.doAfterTextChanged {
+            emailTextInputRegistry?.error = null
+        }
+        passwordTextInputRegistry?.editText?.doAfterTextChanged {
+            passwordTextInputRegistry?.error = null
+        }
     }
 
+    private fun validateRegistry(username:String, email:String,password:String):Boolean{
+        var fl = true
+        if (username.isEmpty()){
+            usernameTextInputRegistry?.error = resources.getString(R.string.messageEmptyField)
+            fl = false
+        }
+        if (email.isEmpty()){
+            emailTextInputRegistry?.error = resources.getString(R.string.messageEmptyField)
+            fl = false
+        }
+        if (password.isEmpty()){
+            passwordTextInputRegistry?.error = resources.getString(R.string.messageEmptyField)
+            fl = false
+        }
+        return fl
 
+    }
     private fun performRegistry() {
         val email = emailTextInputRegistry?.editText?.text.toString()
         val password = passwordTextInputRegistry?.editText?.text.toString()
         val username = usernameTextInputRegistry?.editText?.text.toString()
         val parentOrNot = intent.getBooleanExtra("parentOrNot", false)
 
-        if (email.isEmpty() || password.isEmpty() || username.isEmpty()) {
-            Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show()
+
+        if (!validateRegistry(username,email,password)){
+            registryButtonRegistry?.isVisible = true
+            alreadyRegistryTextViewRegistry?.isVisible = true
+            registryProgressBar?.isVisible = false
             return
         }
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)

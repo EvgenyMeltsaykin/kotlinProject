@@ -61,13 +61,11 @@ class AddLessonFragment : DialogFragment() {
         arguments?.let {
             day = it.getString("day","")
             numberLesson = it.getString("numberLesson")
-            lessonName = it.getString("lessonName")
+            lessonName = it.getString("lessonName")?.capitalize()
             time = it.getString("time")
             cabinet = it.getString("cabinet")
             indexTab = it.getInt("indexTab",0)
         }
-        Log.d("Tag","addlesson = $indexTab")
-
     }
 
     override fun onCreateView(
@@ -123,7 +121,7 @@ class AddLessonFragment : DialogFragment() {
 
         addLessonButton?.setOnClickListener {
             val firebase = FunctionsFirebase()
-            val lessonName = lessonNameTextInput?.editText?.text.toString()
+            val lessonName = lessonNameTextInput?.editText?.text.toString().capitalize()
             val time = lessonBeginTimeTextView?.text.toString() + "-" + lessonEndTimeTextView?.text.toString()
             val cabinet = cabinetTextInput.editText?.text.toString()
             var fl = true
@@ -147,7 +145,7 @@ class AddLessonFragment : DialogFragment() {
     }
     fun validateLessonName(lessonName : String):Boolean{
         if (lessonName.isEmpty()) {
-            lessonNameTextInput?.error = "Заполните поле"
+            lessonNameTextInput?.error = resources.getString(R.string.messageEmptyField)
             return false
         }else{
             lessonNameTextInput?.error = null
@@ -156,7 +154,7 @@ class AddLessonFragment : DialogFragment() {
     }
     fun validateCabinet(cabinet : String):Boolean{
         if (cabinet.isEmpty()) {
-            cabinetTextInput?.error = "Заполните поле"
+            cabinetTextInput?.error = resources.getString(R.string.messageEmptyField)
             return false
         }else{
             cabinetTextInput?.error = null
@@ -164,26 +162,23 @@ class AddLessonFragment : DialogFragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun openDatePicker(textView: TextView){
         val hourTextView = textView.text.toString().substringBefore(":").toInt()
         val minuteTextView = textView.text.toString().substringAfter(":").toInt()
         val timepickerdialog = TimePickerDialog(
             requireContext(),
-            object : TimePickerDialog.OnTimeSetListener {
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun onTimeSet(p0: TimePicker?, hourOfDay: Int, minute: Int) {
-                    var time = LocalTime.of(hourOfDay,minute)
-                    textView.text = time.toString()
-                    var tempMinute = minute+45
-                    var tempHour = hourOfDay
-                    if (tempMinute>=60){
-                        tempMinute-=60
-                        tempHour+=1
-                    }
-                    time = LocalTime.of(tempHour,tempMinute)
-                    lessonEndTimeTextView?.text = time.toString()
+            { p0, hourOfDay, minute ->
+                var time = LocalTime.of(hourOfDay,minute)
+                textView.text = time.toString()
+                var tempMinute = minute+45
+                var tempHour = hourOfDay
+                if (tempMinute>=60){
+                    tempMinute-=60
+                    tempHour+=1
                 }
-
+                time = LocalTime.of(tempHour,tempMinute)
+                lessonEndTimeTextView?.text = time.toString()
             },
             hourTextView,
             minuteTextView,
@@ -192,23 +187,4 @@ class AddLessonFragment : DialogFragment() {
         timepickerdialog.show()
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AddLessonFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AddLessonFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

@@ -42,11 +42,6 @@ class PagerMyScheduleFragment : Fragment() , AddLessonFragment.OnInputListener {
         Navigation.findNavController(requireActivity(),R.id.navFragment).popBackStack()
         Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.editScheduleFragment,bundle)
     }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
     private lateinit var weekday: String
     private var indexTab by Delegates.notNull<Int>()
     private lateinit var fragmentAdapter: MyPagerAdapter
@@ -54,7 +49,7 @@ class PagerMyScheduleFragment : Fragment() , AddLessonFragment.OnInputListener {
         super.onCreate(savedInstanceState)
         arguments?.let {
             weekday = it.getString("weekday","")
-            indexTab = it.getInt("indexTab",1)
+            indexTab = it.getInt("indexTab",0)
         }
         fragmentAdapter = MyPagerAdapter(childFragmentManager)
     }

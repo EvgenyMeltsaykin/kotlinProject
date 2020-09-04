@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
@@ -21,10 +22,18 @@ class LoginActivity : AppCompatActivity() {
             intent.putExtra("parentOrNot",parentOrNot)
             startActivity(intent)
         }
-
+        emailTextInput?.editText?.doAfterTextChanged {
+            emailTextInput?.error = null
+        }
+        passwordTextInput?.editText?.doAfterTextChanged {
+            passwordTextInput?.error = null
+        }
         loginButtonLogin?.setOnClickListener {
             val email = emailTextInput?.editText?.text.toString()
             val password = passwordTextInput?.editText?.text.toString()
+            if(!validateLogin(email, password)){
+                return@setOnClickListener
+            }
             loginButtonLogin?.isVisible = false
             backregistryTextViewLogin?.isVisible = false
             loginProgressBar?.isVisible = true
@@ -62,5 +71,17 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this,"Ошибка при входе: ${it.message}",Toast.LENGTH_SHORT).show()
                 }
         }
+    }
+    private fun validateLogin(email:String,password:String):Boolean{
+        var fl = true
+        if (email.isEmpty()){
+            emailTextInput?.error = resources.getString(R.string.messageEmptyField)
+            fl = false
+        }
+        if (password.isEmpty()){
+            passwordTextInput?.error = resources.getString(R.string.messageEmptyField)
+            fl = false
+        }
+        return fl
     }
 }
