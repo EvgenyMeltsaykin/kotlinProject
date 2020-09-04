@@ -27,7 +27,6 @@
                 android:background="@color/colorPrimary"
                 android:minHeight="?attr/actionBarSize"
                 >
-
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -48,6 +47,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/colorLeftMenuBackground"
+        app:itemIconPadding="8dp"
         app:headerLayout="@layout/header"
         app:itemTextColor="@color/colorBlack">
     </com.google.android.material.navigation.NavigationView>

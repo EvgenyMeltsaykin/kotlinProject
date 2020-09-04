@@ -127,8 +127,8 @@ class AddLessonFragment : DialogFragment() {
             val time = lessonBeginTimeTextView?.text.toString() + "-" + lessonEndTimeTextView?.text.toString()
             val cabinet = cabinetTextInput.editText?.text.toString()
             var fl = true
-            if (validateLessonName(lessonName)) fl = false
-            if (validateCabinet(cabinet)) fl = false
+            if (!validateLessonName(lessonName)) fl = false
+            if (!validateCabinet(cabinet)) fl = false
             if (fl){
                 val lesson = Lesson(lessonName,"",time,cabinet,"","")
                 firebase.addLessonMyScheduleInFirebase(day,numberLesson!!,lesson)

@@ -131,6 +131,7 @@ class RegistryActivity : AppCompatActivity() {
         weekday.forEach {
             for(i in 0..6){
                 firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/cabinet", "")
+                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/dateHomework", "")
                 firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/homework", "")
                 firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/number", i)
                 firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/time", "")

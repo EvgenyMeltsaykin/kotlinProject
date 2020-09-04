@@ -28,6 +28,7 @@ class DetailLessonMyScheduleFragment : Fragment() {
     private lateinit var lessonCabinet: String
     private lateinit var lessonNumber: String
     private lateinit var lessonHomework: String
+    private lateinit var dateHomework: String
     private lateinit var weekday: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +39,7 @@ class DetailLessonMyScheduleFragment : Fragment() {
             lessonCabinet = it.getString("lessonCabinet","")
             lessonNumber = it.getString("lessonNumber","")
             lessonHomework = it.getString("lessonHomework","")
+            dateHomework = it.getString("dateHomework","")
             weekday = it.getString("weekday","")
         }
     }
@@ -58,12 +60,15 @@ class DetailLessonMyScheduleFragment : Fragment() {
         lessonNameTextView?.text = "Предмет: $lessonName"
         lessonCabinetTextView?.text = "Кабинет: $lessonCabinet"
         lessonTimeTextView?.text = "Время: $lessonTime"
+        dateHomeworkTextInput?.editText?.setText(dateHomework)
         if (lessonHomework.isNotEmpty()){
             homeworkTextInput.editText?.setText(lessonHomework)
         }
         saveLessonButton?.setOnClickListener {
             val firebase = FunctionsFirebase()
-            firebase.updateLessonMyScheduleInFirebase(weekday,lessonNumber,lessonName,lessonCabinet, homeworkTextInput.editText?.text.toString(),lessonTime)
+            val homework = homeworkTextInput?.editText?.text.toString()
+            val dateHomework = dateHomeworkTextInput?.editText?.text.toString()
+            firebase.updateLessonMyScheduleInFirebase(weekday,lessonNumber,lessonName,lessonCabinet, homework,lessonTime,dateHomework)
             Toast.makeText(requireContext(),"Домашняя работа сохранена",Toast.LENGTH_SHORT).show()
             Navigation.findNavController(requireActivity(),R.id.navFragment).popBackStack()
         }

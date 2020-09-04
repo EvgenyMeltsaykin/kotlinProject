@@ -82,6 +82,7 @@ class MyScheduleDayFragment : Fragment() {
             bundle.putString("lessonCabinet",lessonItem.lesson.cabinet)
             bundle.putString("lessonNumber",lessonItem.number.toString())
             bundle.putString("lessonHomework",lessonItem.lesson.homework)
+            bundle.putString("dateHomework",lessonItem.lesson.dateHomework)
             bundle.putString("weekday",day)
             Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_myScheduleDayFragment_to_detailLessonMyScheduleFragment,bundle)
         }

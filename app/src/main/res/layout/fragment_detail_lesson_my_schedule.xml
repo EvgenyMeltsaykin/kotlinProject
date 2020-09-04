@@ -62,15 +62,39 @@
         app:layout_constraintTop_toBottomOf="@+id/lessonCabinetTextView" />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dateHomeworkTextInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/simple_edit_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider5">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Дата"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/homeworkTextInput"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
+        android:padding ="8dp"
+        android:background="@drawable/simple_edit_text"
         app:layout_constraintBottom_toTopOf="@+id/saveLessonButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider5">
+        app:layout_constraintTop_toBottomOf="@+id/dateHomeworkTextInput">
 
         <EditText
             android:layout_width="match_parent"

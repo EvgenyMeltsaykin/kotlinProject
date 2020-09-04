@@ -42,8 +42,9 @@ class FunctionsFirebase {
     val rolesRef = rootRef.child("roles")
     val uidUser = FirebaseAuth.getInstance().uid
 
-    fun updateLessonMyScheduleInFirebase(weekday:String,numberLesson: String,lessonName: String,cabinet:String,homework:String,time:String){
+    fun updateLessonMyScheduleInFirebase(weekday:String,numberLesson: String,lessonName: String,cabinet:String,homework:String,time:String,dateHomework : String){
         val ref = childRef.child(uidUser!!).child("mySchedule").child(weekday).child(numberLesson)
+        ref.child("dateHomework").setValue(dateHomework)
          ref.child("homework").setValue(homework)
          ref.child("cabinet").setValue(cabinet)
          ref.child("lessonName").setValue(lessonName)
@@ -63,6 +64,9 @@ class FunctionsFirebase {
             }
             if (it.key.toString() == "time"){
                 lesson.time = it.value.toString()
+            }
+            if (it.key.toString() == "dateHomework"){
+                lesson.dateHomework = it.value.toString()
             }
         }
         return lesson
