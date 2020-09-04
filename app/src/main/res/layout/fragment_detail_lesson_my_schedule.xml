@@ -1,47 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="70dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginBottom="10dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="16dp"
-    android:background="@drawable/background_text"
+    android:fillViewport="true"
+    android:layout_marginTop="?attr/actionBarSize"
     tools:context=".childFragments.mySchedule.DetailLessonMyScheduleFragment">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_text"
+    android:layout_margin="8dp"
+    android:orientation="vertical"
+    android:padding="8dp">
 
 
     <TextView
         android:id="@+id/lessonNameTextView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Предмет:"
         android:textColor="@color/colorText"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/lessonTimeTextView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Время:"
         android:textColor="@color/colorText"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lessonNameTextView" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/lessonCabinetTextView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Кабинет:"
@@ -53,7 +49,7 @@
 
     <View
         android:id="@+id/divider5"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
         android:background="?android:attr/listDivider"
@@ -86,11 +82,12 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/homeworkTextInput"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        android:padding ="8dp"
+        android:layout_weight="1"
         android:background="@drawable/simple_edit_text"
+        android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@+id/saveLessonButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +95,7 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:ems="10"
@@ -109,7 +106,7 @@
 
     <Button
         android:id="@+id/saveLessonButton"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Сохранить"
         android:background="@drawable/simple_button"
@@ -118,5 +115,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
+</androidx.core.widget.NestedScrollView>

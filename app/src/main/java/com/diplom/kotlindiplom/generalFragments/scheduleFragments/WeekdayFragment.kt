@@ -70,6 +70,7 @@ class WeekdayFragment : Fragment() {
 
         refreshScheduleButton?.setOnClickListener {
             updateSchedule(true, calendar)
+            calendarView?.isVisible = false
         }
         mondayButton?.setOnClickListener {
             openFragmentDay("Понедельник")

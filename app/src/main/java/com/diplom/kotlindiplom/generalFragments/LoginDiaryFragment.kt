@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
@@ -71,17 +72,22 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 }
             }
         })
-
+        loginDiaryTextInput?.editText?.doAfterTextChanged {
+            loginDiaryTextInput?.error = null
+        }
+        passwordDiaryTextInput?.editText?.doAfterTextChanged {
+            passwordDiaryTextInput?.error = null
+        }
         enterDiaryButton?.setOnClickListener {
             if (urlDiary.isEmpty()) {
                 Toast.makeText(requireContext(), "Выберите дневник", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (loginDiaryEditText?.text?.isNotEmpty()!! && passwordDiaryEditText?.text?.isNotEmpty()!!) {
-                val login = loginDiaryEditText?.text.toString()
-                val password = passwordDiaryEditText?.text.toString()
+            val login = loginDiaryTextInput?.editText?.text.toString()
+            val password = passwordDiaryTextInput?.editText?.text.toString()
+            if (validateLogin(login, password)) {
                 val diary = Diary()
-                enterDiaryButton?.isVisible = false
+                hideButtons()
                 progressBar?.isVisible = true
                 GlobalScope.launch(Dispatchers.Main) {
                     var rightLogin = false
@@ -114,8 +120,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     }
                 }
             } else {
-                enterDiaryButton?.isVisible = true
-                Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
+                showButtons()
             }
         }
 
@@ -125,12 +130,33 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
             Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_loginDiaryFragment_to_mailFragment,bundle)
         }
     }
-
-    fun setupSpinner() {
+    private fun showButtons(){
+        staticMessageTextView?.isVisible = true
+        writeMailButton?.isVisible = true
+        enterDiaryButton?.isVisible = true
+    }
+    private fun hideButtons(){
+        staticMessageTextView?.isVisible = false
+        writeMailButton?.isVisible = false
+        enterDiaryButton?.isVisible = false
+    }
+    private fun validateLogin(login:String, password:String):Boolean{
+        var fl = true
+        if (login.isEmpty()){
+            loginDiaryTextInput?.error = resources.getString(R.string.messageEmptyField)
+            fl = false
+        }
+        if (password.isEmpty()){
+            passwordDiaryTextInput?.error = resources.getString(R.string.messageEmptyField)
+            fl = false
+        }
+        return fl
+    }
+    private fun setupSpinner() {
         activity?.title = "Вход в дневник"
         diariesSpinnerLoginDiary?.isVisible = true
-        loginDiaryEditText?.isVisible = true
-        passwordDiaryEditText?.isVisible = true
+        loginDiaryTextInput?.isVisible = true
+        passwordDiaryTextInput?.isVisible = true
         enterDiaryButton?.isVisible = true
         writeMailButton?.isVisible = true
         staticMessageTextView?.isVisible = true

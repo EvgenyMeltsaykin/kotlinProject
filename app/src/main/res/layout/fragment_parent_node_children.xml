@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="70dp"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:padding="8dp"
     tools:context=".parentFragments.ParentNodeChildrenFragment">
 
 
@@ -12,11 +13,7 @@
         android:id="@+id/childrenRecyclerViewParent"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,7 +26,6 @@
         android:id="@+id/childIdTextInputParentMyProfile"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         app:hintTextColor="@color/colorText"
         app:layout_constraintEnd_toStartOf="@+id/addChildButton"
@@ -48,7 +44,6 @@
         android:id="@+id/addChildButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:background="@drawable/button_green"
         android:text="Добавить"
         android:textColor="@color/colorButtonText"

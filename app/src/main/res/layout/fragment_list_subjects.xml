@@ -4,20 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="70dp"
+    android:layout_marginTop="?attr/actionBarSize"
     tools:context=".generalFragments.schoolBooksFragments.ListSchoolBooksFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="10dp">
+        android:paddingTop="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/subjectsRecyclerView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"

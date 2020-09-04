@@ -9,14 +9,14 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/colorPrimary"
         app:tabTextColor="@color/colorButtonText"
-        app:tabGravity="fill"
+        app:tabGravity="center"
         app:tabMode="scrollable">
 
         <com.google.android.material.tabs.TabItem

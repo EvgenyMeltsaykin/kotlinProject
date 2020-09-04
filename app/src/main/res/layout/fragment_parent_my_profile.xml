@@ -4,17 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="70dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginBottom="10dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="60dp"
+    android:layout_marginEnd="8dp"
     android:background="@drawable/background_text"
-    android:paddingBottom="16dp"
     tools:context="parentFragments.ParentMyProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp">
         <!--<Button
                 android:id="@+id/selectPhotoButtonParentMyProfile"
                 android:layout_width="150dp"
@@ -105,7 +104,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="24dp"
             android:background="@drawable/simple_button"
             android:text="Сохранить изменения"
             android:textColor="@color/colorButtonText"

@@ -16,6 +16,7 @@ class SplashActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        this.window.statusBarColor = resources.getColor(R.color.colorActionBarSplash)
         verifyUserIsLoggedIn()
     }
 

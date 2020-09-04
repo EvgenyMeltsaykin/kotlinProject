@@ -8,6 +8,9 @@
     <color name="colorButtonRed">#f44336</color>
     <color name="colorButtonGreen">#4caf50</color>
     <color name="colorButton">#2196f3</color>
+    <color name="colorGray">#BBBCB6</color>
+    <color name="colorActionBarSplash">#BADDF9</color>
+
     <color name="colorBackground">#BBDEFB</color>
     <color name="colorLeftMenuBackground">#BBDEFB</color>
     <color name="colorWhite">#FFFFFF</color>

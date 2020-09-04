@@ -1,109 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="70dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginBottom="10dp"
-    android:background="@drawable/background_text"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="60dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
+    android:fillViewport="true"
     tools:context=".childFragments.ChildTaskContentFragment">
 
-    <TextView
-        android:id="@+id/statusContentTaskTextViewChild"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Статус"
-        android:textColor="@color/colorText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="8dp"
+        android:orientation="vertical"
+        android:background="@drawable/background_text">
 
-    <TextView
-        android:id="@+id/titleContentTaskTextViewChild"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Название:"
-        android:textColor="@color/colorText"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusContentTaskTextViewChild" />
 
-    <TextView
-        android:id="@+id/costContentTaskTextViewChild"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Стоимость:"
-        android:textColor="@color/colorText"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleContentTaskTextViewChild" />
+        <TextView
+            android:id="@+id/statusContentTaskTextViewChild"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Статус"
+            android:textColor="@color/colorText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="409dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="16dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/costContentTaskTextViewChild"
-        tools:background="@color/colorPrimaryDark" />
+        <TextView
+            android:id="@+id/titleContentTaskTextViewChild"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Название:"
+            android:textColor="@color/colorText"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statusContentTaskTextViewChild" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Описание:"
-        android:textColor="@color/colorText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+        <TextView
+            android:id="@+id/costContentTaskTextViewChild"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Стоимость:"
+            android:textColor="@color/colorText"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleContentTaskTextViewChild" />
 
-    <TextView
-        android:id="@+id/descriptionTaskContentTextViewChild"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="Описание"
-        android:textColor="@color/colorText"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1"
-        app:layout_constraintVertical_bias="0.0" />
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/costContentTaskTextViewChild"
+            tools:background="@color/colorPrimaryDark" />
 
-    <Button
-        android:id="@+id/sendTaskButtonChild"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/button_green"
-        android:textColor="@color/colorButtonText"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text="Отправить на проверку"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTaskContentTextViewChild"
-        app:layout_constraintVertical_bias="0.962" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Описание:"
+            android:textColor="@color/colorText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+        <TextView
+            android:id="@+id/descriptionTaskContentTextViewChild"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Описание"
+            android:textColor="@color/colorText"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/sendTaskButtonChild"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView1"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/sendTaskButtonChild"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_green"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Отправить на проверку"
+            android:textColor="@color/colorButtonText"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="70dp"
-    android:paddingBottom="10dp"
+    android:layout_marginTop="?attr/actionBarSize"
     tools:context=".generalFragments.MailFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="8dp"
         app:layout_constraintBottom_toTopOf="parent">
 
         <EditText

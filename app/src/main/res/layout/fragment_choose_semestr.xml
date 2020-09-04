@@ -1,100 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
-    android:paddingTop="70dp"
+    android:fillViewport="true"
+    android:paddingTop="?attr/actionBarSize"
     android:paddingRight="16dp"
     tools:context=".generalFragments.markFragments.ChooseSemestrElschoolFragment">
 
-
-    <Button
-        android:id="@+id/firstSemestrButton"
-        android:textColor="@color/colorButtonText"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:elevation="20dp"
-        android:background="@drawable/simple_button"
-        android:text="Первый триместр"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateUpdateTextView" />
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
-    <Button
-        android:id="@+id/secondSemestrButton"
-        android:textColor="@color/colorButtonText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/simple_button"
-        android:text="Второй триместр"
-        app:layout_constraintEnd_toEndOf="@+id/firstSemestrButton"
-        app:layout_constraintStart_toStartOf="@+id/firstSemestrButton"
-        app:layout_constraintTop_toBottomOf="@+id/firstSemestrButton" />
+        <Button
+            android:id="@+id/firstSemestrButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/simple_button"
+            android:elevation="20dp"
+            android:text="Первый триместр"
+            android:textColor="@color/colorButtonText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateUpdateTextView" />
 
-    <Button
-        android:id="@+id/thirdSemestrButton"
-        android:textColor="@color/colorButtonText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/simple_button"
-        android:text="Третий триместр"
-        app:layout_constraintEnd_toEndOf="@+id/secondSemestrButton"
-        app:layout_constraintStart_toStartOf="@+id/secondSemestrButton"
-        app:layout_constraintTop_toBottomOf="@+id/secondSemestrButton" />
+        <Button
+            android:id="@+id/secondSemestrButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/simple_button"
+            android:text="Второй триместр"
+            android:textColor="@color/colorButtonText"
+            app:layout_constraintEnd_toEndOf="@+id/firstSemestrButton"
+            app:layout_constraintStart_toStartOf="@+id/firstSemestrButton"
+            app:layout_constraintTop_toBottomOf="@+id/firstSemestrButton" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/thirdSemestrButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/simple_button"
+            android:text="Третий триместр"
+            android:textColor="@color/colorButtonText"
+            app:layout_constraintEnd_toEndOf="@+id/secondSemestrButton"
+            app:layout_constraintStart_toStartOf="@+id/secondSemestrButton"
+            app:layout_constraintTop_toBottomOf="@+id/secondSemestrButton" />
 
-    <TextView
-        android:id="@+id/dateUpdateTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="Дата обновления:"
-        android:textColor="@color/colorText"
-        app:layout_constraintEnd_toStartOf="@+id/refreshMarkButton"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/refreshMarkButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/simple_button"
-        android:textColor="@color/colorButtonText"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:text="Обновить оценки"
-        app:layout_constraintBottom_toBottomOf="@+id/dateUpdateTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/dateUpdateTextView"
-        app:layout_constraintVertical_bias="0.413" />
+        <TextView
+            android:id="@+id/dateUpdateTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Дата обновления:"
+            android:textColor="@color/colorText"
+            app:layout_constraintEnd_toStartOf="@+id/refreshMarkButton"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/yearsMarksButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/simple_button"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:text="Годовые оценки"
-        android:textColor="@color/colorButtonText"
-        app:layout_constraintEnd_toEndOf="@+id/thirdSemestrButton"
-        app:layout_constraintStart_toStartOf="@+id/thirdSemestrButton"
-        app:layout_constraintTop_toBottomOf="@+id/thirdSemestrButton" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/refreshMarkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/simple_button"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="Обновить оценки"
+            android:textColor="@color/colorButtonText"
+            app:layout_constraintBottom_toBottomOf="@+id/dateUpdateTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/dateUpdateTextView"
+            app:layout_constraintVertical_bias="0.413" />
+
+        <Button
+            android:id="@+id/yearsMarksButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/simple_button"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="Годовые оценки"
+            android:textColor="@color/colorButtonText"
+            app:layout_constraintEnd_toEndOf="@+id/thirdSemestrButton"
+            app:layout_constraintStart_toStartOf="@+id/thirdSemestrButton"
+            app:layout_constraintTop_toBottomOf="@+id/thirdSemestrButton" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

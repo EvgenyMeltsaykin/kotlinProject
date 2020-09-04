@@ -24,6 +24,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.diplom.kotlindiplom.childFragments.RequestParentFragment
+import com.diplom.kotlindiplom.childFragments.mySchedule.AddLessonFragment
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
@@ -74,23 +76,19 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     fun settingsParent() {
         navView.inflateMenu(R.menu.drawer_menu_parent)
         setupDrawerAndToolbar()
-        //Нажатие на аватарку в боковом меню
         val header = navView.getHeaderView(0)
         val usernameTextViewHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         usernameTextViewHeader.setOnClickListener {
             navController.navigate(R.id.parentMyProfileFragment)
             drawer.closeDrawer(GravityCompat.START)
         }
-        /*val photo = header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
-        photo.setOnClickListener {
-            val navController = Navigation.findNavController(
-                this,
-                R.id.navFragment
-            )
-            navController?.navigate(R.id.parentMyProfileFragment)
-            drawer = findViewById(R.id.drawerLayout)
-            drawer?.closeDrawer(GravityCompat.START)
-        }*/
+        if (!intent.getStringExtra("taskId").isNullOrBlank()) {
+            val bundle = bundleOf()
+            bundle.putString("taskId", intent.getStringExtra("taskId"))
+            bundle.putString("title", intent.getStringExtra("title"))
+            navController.navigate(R.id.action_mainFragment_to_parentTaskContentFragment, bundle)
+        }
+
         val firebase = FunctionsFirebase()
         val uiFunctions = FunctionsUI()
         val ref = firebase.parentRef.child(firebase.uidUser!!)
@@ -168,12 +166,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 return
             }
         })
-        if (!intent.getStringExtra("taskId").isNullOrBlank()) {
-            val bundle = bundleOf()
-            bundle.putString("taskId", intent.getStringExtra("taskId"))
-            bundle.putString("title", intent.getStringExtra("title"))
-            navController.navigate(R.id.action_mainFragment_to_parentTaskContentFragment, bundle)
-        }
     }
 
     fun settingsChild() {
@@ -209,8 +201,8 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                val window = PopupWindow(this@MainActivity)
-                val view = layoutInflater.inflate(R.layout.accept_parent, null)
+                val requestParentFragment = RequestParentFragment()
+                val bundle =  bundleOf()
                 if (p0.key.toString() == "acceptName") {
                     if (p0.value.toString().isNotEmpty()) {
                         Log.d("TAG", "Найден пользователь")
@@ -219,47 +211,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                             "acceptName",
                             object : FirebaseCallback<String> {
                                 override fun onComplete(parentName: String) {
-                                    view.invitationTextView.setText("Пользователь ${parentName} запрашивает привязку аккаунта")
+                                    bundle.putString("parentName",parentName)
+                                    requestParentFragment.arguments = bundle
+                                    requestParentFragment.show(supportFragmentManager,"requestParentFragment")
                                 }
                             })
-                        window.contentView = view
-                        window.showAtLocation(getWindow().decorView, Gravity.CENTER, 0, 0)
-                        view.rejectButton.setOnClickListener {
-                            window.dismiss()
-                            firebase.getFieldUserDatabase(
-                                firebase.uidUser,
-                                "acceptUid",
-                                object : FirebaseCallback<String> {
-                                    override fun onComplete(value: String) {
-                                        firebase.setFieldUserDatabase(value, "acceptAnswer", "0")
-                                        firebase.clearAcceptRequest()
-                                    }
-                                })
-
-                        }
-                        view.acceptButton.setOnClickListener {
-                            window.dismiss()
-                            firebase.getFieldUserDatabase(
-                                firebase.uidUser,
-                                "acceptUid",
-                                object : FirebaseCallback<String> {
-                                    override fun onComplete(parentUid: String) {
-                                        Log.d("TAG", "$parentUid")
-                                        firebase.setFieldUserDatabase(
-                                            firebase.uidUser!!,
-                                            "parentUid",
-                                            parentUid
-                                        )
-                                        firebase.setFieldUserDatabase(
-                                            parentUid,
-                                            "acceptAnswer",
-                                            "1"
-                                        )
-                                        firebase.clearAcceptRequest()
-                                    }
-                                })
-
-                        }
                     }
                 }
             }
