@@ -10,7 +10,7 @@
     <color name="colorButton">#2196f3</color>
     <color name="colorGray">#BBBCB6</color>
     <color name="colorActionBarSplash">#BADDF9</color>
-
+    <color name="colorTextToolbar">#131732</color>
     <color name="colorBackground">#BBDEFB</color>
     <color name="colorLeftMenuBackground">#BBDEFB</color>
     <color name="colorWhite">#FFFFFF</color>

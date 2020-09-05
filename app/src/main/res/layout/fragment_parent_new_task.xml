@@ -4,16 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView1"
     android:layout_marginTop="?attr/actionBarSize"
+    android:padding="8dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="7dp"
-    android:paddingRight="7dp"
     android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="8dp"
+        android:padding="8dp"
         android:background="@drawable/background_text"
         tools:context=".parentFragments.ParentNewTaskFragment">
 
@@ -106,11 +105,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="24dp"
             android:background="@drawable/simple_button"
             android:text="Добавить задание"
             android:textColor="@color/colorButtonText"

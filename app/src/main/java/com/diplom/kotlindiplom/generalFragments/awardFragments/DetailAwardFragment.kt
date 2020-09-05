@@ -14,8 +14,10 @@ import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.MainActivity
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.diplom.kotlindiplom.models.FunctionsUI
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_detail_award.*
 import kotlinx.android.synthetic.main.fragment_list_awards.*
@@ -72,7 +74,8 @@ class DetailAwardFragment : Fragment() {
         if (role == "children"){
             deleteButton?.isVisible = false
             if (status == "1"){
-                takeButton?.text = "Выдано"
+                messageForChildTextView?.isVisible = true
+                takeButton?.text = "Получено"
             }
 
         }
@@ -82,7 +85,6 @@ class DetailAwardFragment : Fragment() {
                 deleteButton?.isVisible = false
             }
             if (status == "1"){
-                Log.d("Tag",status)
                 childTakeAwardTextView?.isVisible = true
             }
 
@@ -101,6 +103,7 @@ class DetailAwardFragment : Fragment() {
                         override fun onComplete(value: String) {
                             if (value.toInt()>= costAward.toInt()){
                                 Toast.makeText(requireContext(),"Успешно",Toast.LENGTH_SHORT).show()
+                                val functionUI = FunctionsUI()
                                 firebase.setFieldAward(awardId,"status","1")
                                 firebase.setFieldUserDatabase(firebase.uidUser!!,"point",value.toInt() - costAward.toInt())
                                 Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailAwardFragment_to_listAwardsFragment)

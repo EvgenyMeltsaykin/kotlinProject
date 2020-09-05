@@ -295,7 +295,11 @@
         android:id="@+id/detailsFinalMarkFragment2"
         android:name="com.diplom.kotlindiplom.generalFragments.markFragments.DetailsFinalMarkFragment"
         android:label="fragment_details_final_mark"
-        tools:layout="@layout/fragment_details_final_mark" />
+        tools:layout="@layout/fragment_details_final_mark" >
+        <action
+            android:id="@+id/action_detailsFinalMarkFragment2_to_detailsMarksFragment"
+            app:destination="@id/detailsMarksFragment" />
+    </fragment>
     <fragment
         android:id="@+id/myScheduleDayFragment"
         android:name="com.diplom.kotlindiplom.childFragments.mySchedule.MyScheduleDayFragment"

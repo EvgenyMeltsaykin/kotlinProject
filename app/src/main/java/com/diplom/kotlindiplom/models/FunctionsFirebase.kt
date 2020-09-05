@@ -1069,31 +1069,40 @@ class FunctionsFirebase {
                                             Toast.LENGTH_LONG
                                         ).show()
                                     } else {
-                                        setFieldUserDatabase(childUid, "acceptName", "")
-                                        setFieldUserDatabase(childUid, "acceptUid", "")
-                                        getFieldUserDatabase(
-                                            uidUser!!,
-                                            "username",
-                                            object : FirebaseCallback<String> {
-                                                override fun onComplete(value: String) {
-                                                    setFieldUserDatabase(
-                                                        childUid,
-                                                        "acceptName",
-                                                        value
-                                                    )
-                                                    setFieldUserDatabase(
-                                                        childUid,
-                                                        "acceptUid",
-                                                        uidUser!!
-                                                    )
+                                        getFieldUserDatabase(childUid,"acceptUid",object :FirebaseCallback<String>{
+                                            override fun onComplete(value: String) {
+                                                if (value.isEmpty()){
+                                                    setFieldUserDatabase(childUid, "acceptName", "")
+                                                    setFieldUserDatabase(childUid, "acceptUid", "")
+                                                    getFieldUserDatabase(
+                                                        uidUser!!,
+                                                        "username",
+                                                        object : FirebaseCallback<String> {
+                                                            override fun onComplete(value: String) {
+                                                                setFieldUserDatabase(
+                                                                    childUid,
+                                                                    "acceptName",
+                                                                    value
+                                                                )
+                                                                setFieldUserDatabase(
+                                                                    childUid,
+                                                                    "acceptUid",
+                                                                    uidUser!!
+                                                                )
+                                                            }
+                                                        })
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Запрос отправлен",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                    return
+                                                }else{
+                                                    Toast.makeText(context,"Ожидание ответа на запрос",Toast.LENGTH_SHORT).show()
                                                 }
-                                            })
-                                        Toast.makeText(
-                                            context,
-                                            "Запрос отправлен",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        return
+                                            }
+                                        })
+
                                     }
                                 }
                             })

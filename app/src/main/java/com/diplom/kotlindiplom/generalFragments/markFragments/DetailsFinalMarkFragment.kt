@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
@@ -70,6 +72,12 @@ class DetailsFinalMarkFragment : Fragment() {
                         }
                         val adapter = ArrayAdapter<String>(requireContext(),android.R.layout.simple_list_item_1,detailMark)
                         detailFinalMarkListView?.adapter = adapter
+                        detailFinalMarkListView?.setOnItemClickListener { adapterView, view, position, id ->
+                            val bundle = bundleOf()
+                            bundle.putString("semestrNumber",(position+1).toString())
+                            bundle.putString("lessonName",lessonName)
+                            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailsFinalMarkFragment2_to_detailsMarksFragment,bundle)
+                        }
                     }
                 })
             }

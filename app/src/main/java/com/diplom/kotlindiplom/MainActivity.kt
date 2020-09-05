@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 uiFunctions.createNotificationParent(
                     applicationContext,
                     MainActivity::class.java,
-                    R.drawable.ic_launcher_background,
+                    R.drawable.ic_logo_rounded,
                     "Ребенок выполнил задание",
                     "Ребенок выполнил задание",
                     task.title,
@@ -247,7 +247,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                     uiFunctions.createNotificationChild(
                         applicationContext,
                         MainActivity::class.java,
-                        R.drawable.ic_launcher_background,
+                        R.drawable.ic_logo_rounded,
                         "Задание не принято",
                         "Задание не принято",
                         task.title,
@@ -258,7 +258,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                     uiFunctions.createNotificationChild(
                         applicationContext,
                         MainActivity::class.java,
-                        R.drawable.ic_launcher_background,
+                        R.drawable.ic_logo_rounded,
                         "Задание принято",
                         "Задание принято",
                         task.title,
@@ -273,7 +273,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                     uiFunctions.createNotificationChild(
                         applicationContext,
                         MainActivity::class.java,
-                        R.drawable.ic_launcher_background,
+                        R.drawable.ic_logo_rounded,
                         "Новое задание",
                         "Новое задание",
                         task.title,
