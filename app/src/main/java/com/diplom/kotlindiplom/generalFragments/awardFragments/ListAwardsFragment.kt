@@ -17,6 +17,7 @@ import at.wirecube.additiveanimations.additive_animator.AdditiveAnimator
 import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.models.Award
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.recyclerViewItems.AwardItem
 import com.xwray.groupie.GroupAdapter
@@ -82,8 +83,8 @@ class ListAwardsFragment : Fragment() {
                         emptyListAwardTextView?.isVisible = true
                     }
                 }
-                firebase.getAwardOutFirebaseWithParentUid(value,object :FirebaseCallback<Map<String,String>>{
-                    override fun onComplete(value: Map<String, String>) {
+                firebase.getAwardOutFirebaseWithParentUid(role,value,object :FirebaseCallback<List<Award>>{
+                    override fun onComplete(value: List<Award>) {
                         listAwardProgressBar?.isVisible = false
                         if (value.isEmpty()){
                             if (role == "children"){
@@ -94,13 +95,14 @@ class ListAwardsFragment : Fragment() {
                             }
                             emptyListAwardTextView?.isVisible = true
                             return
-                        }else{
-                            val status = value["status"]
-                            val nameAward = value["name"]
-                            val costAward = value["cost"]
-                            val awardId = value["awardId"]
+                        }
+                        value.forEach {
+                            val status = it.status
+                            val nameAward = it.name
+                            val costAward = it.cost
+                            val awardId = it.awardId
                             if (status != null && nameAward != null && costAward != null && awardId != null){
-                                adapter.add(AwardItem(nameAward,costAward,awardId,status))
+                                adapter.add(AwardItem(nameAward,costAward,awardId,status.toString()))
                             }
                             listAwardRecyclerView?.adapter = adapter
                         }

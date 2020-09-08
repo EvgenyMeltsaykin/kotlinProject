@@ -33,53 +33,67 @@ import kotlin.math.roundToInt
 
 
 class FunctionsFirebase {
-    val rootRef = FirebaseDatabase.getInstance().getReference()
+    val rootRef = FirebaseDatabase.getInstance().reference
     val diariesRef = rootRef.child("diaries")
     val secretKey = "applicatonFromDiplom"
     val childRef = rootRef.child("users").child("children")
     val parentRef = rootRef.child("users").child("parents")
     val taskRef = rootRef.child("tasks")
+    val awardsRef = rootRef.child("awards")
     val rolesRef = rootRef.child("roles")
     val uidUser = FirebaseAuth.getInstance().uid
 
-    fun updateLessonMyScheduleInFirebase(weekday:String,numberLesson: String,lessonName: String,cabinet:String,homework:String,time:String,dateHomework : String){
+    fun updateLessonMyScheduleInFirebase(
+        weekday: String,
+        numberLesson: String,
+        lessonName: String,
+        cabinet: String,
+        homework: String,
+        time: String,
+        dateHomework: String
+    ) {
         val ref = childRef.child(uidUser!!).child("mySchedule").child(weekday).child(numberLesson)
         ref.child("dateHomework").setValue(dateHomework)
-         ref.child("homework").setValue(homework)
-         ref.child("cabinet").setValue(cabinet)
-         ref.child("lessonName").setValue(lessonName)
-         ref.child("time").setValue(time)
+        ref.child("homework").setValue(homework)
+        ref.child("cabinet").setValue(cabinet)
+        ref.child("lessonName").setValue(lessonName)
+        ref.child("time").setValue(time)
     }
-    fun getFieldsLessonMyScheduleOutFirebase(infoLesson: DataSnapshot):Lesson{
+
+    fun getFieldsLessonMyScheduleOutFirebase(infoLesson: DataSnapshot): Lesson {
         val lesson = Lesson()
         infoLesson.children.forEach {
-            if (it.key.toString() == "lessonName"){
+            if (it.key.toString() == "lessonName") {
                 lesson.name = it.value.toString()
             }
-            if (it.key.toString() == "homework"){
+            if (it.key.toString() == "homework") {
                 lesson.homework = it.value.toString()
             }
-            if (it.key.toString() == "cabinet"){
+            if (it.key.toString() == "cabinet") {
                 lesson.cabinet = it.value.toString()
             }
-            if (it.key.toString() == "time"){
+            if (it.key.toString() == "time") {
                 lesson.time = it.value.toString()
             }
-            if (it.key.toString() == "dateHomework"){
+            if (it.key.toString() == "dateHomework") {
                 lesson.dateHomework = it.value.toString()
             }
         }
         return lesson
     }
-    fun getLessonMyScheduleOutFirebase(weekday:String,firebaseCallBack: FirebaseCallback<List<Lesson>>){
+
+    fun getLessonMyScheduleOutFirebase(
+        weekday: String,
+        firebaseCallBack: FirebaseCallback<List<Lesson>>
+    ) {
         val ref = childRef.child(uidUser!!).child("mySchedule").child(weekday)
         val lessons = mutableListOf<Lesson>()
         ref.keepSynced(true)
-        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()){
+                if (snapshot.exists()) {
                     var i = 0
-                    snapshot.children.forEach { infoLesson->
+                    snapshot.children.forEach { infoLesson ->
                         lessons.add(getFieldsLessonMyScheduleOutFirebase(infoLesson))
                         i++
                     }
@@ -94,7 +108,8 @@ class FunctionsFirebase {
 
         })
     }
-    fun addLessonMyScheduleInFirebase(weekday:String,numberLesson:String,lesson: Lesson){
+
+    fun addLessonMyScheduleInFirebase(weekday: String, numberLesson: String, lesson: Lesson) {
         val ref = childRef.child(uidUser!!).child("mySchedule").child(weekday).child(numberLesson)
 
         ref.child("homework").setValue("")
@@ -103,6 +118,7 @@ class FunctionsFirebase {
         ref.child("time").setValue(lesson.time)
         ref.child("number").setValue(numberLesson)
     }
+
     fun deleteAward(awardId: String) {
         val ref = rootRef.child("awards").child(awardId)
         ref.removeValue()
@@ -113,23 +129,29 @@ class FunctionsFirebase {
         ref.child(field).setValue(value)
     }
 
-    fun getAllFieldAward(award: DataSnapshot): Map<String, String> {
-        val awardField = mutableMapOf<String, String>()
+    fun getAllFieldAward(award: DataSnapshot): Award {
+        val awardField = Award()
         award.children.forEach {
             if (it.key.toString() == "awardId") {
-                awardField["awardId"] = it.value.toString()
+                awardField.awardId = it.value.toString()
             }
             if (it.key.toString() == "cost") {
-                awardField["cost"] = it.value.toString()
+                awardField.cost = it.value.toString()
             }
             if (it.key.toString() == "name") {
-                awardField["name"] = it.value.toString()
+                awardField.name = it.value.toString()
             }
             if (it.key.toString() == "parentUid") {
-                awardField["parentUid"] = it.value.toString()
+                awardField.parentUid = it.value.toString()
             }
             if (it.key.toString() == "status") {
-                awardField["status"] = it.value.toString()
+                awardField.status = it.value.toString().toInt()
+            }
+            if (it.key.toString() == "showNotification") {
+                awardField.showNotification = it.value.toString().toInt()
+            }
+            if (it.key.toString() == "childUid") {
+                awardField.childUid = it.value.toString()
             }
         }
         return awardField
@@ -137,7 +159,7 @@ class FunctionsFirebase {
 
     fun getAwardOutFirebaseWithAwardID(
         awardId: String,
-        firebaseCallBack: FirebaseCallback<Map<String, String>>
+        firebaseCallBack: FirebaseCallback<Award>
     ) {
         val ref = rootRef.child("awards").child(awardId)
         ref.keepSynced(true)
@@ -156,11 +178,13 @@ class FunctionsFirebase {
     }
 
     fun getAwardOutFirebaseWithParentUid(
+        role: String,
         parentUid: String,
-        firebaseCallBack: FirebaseCallback<Map<String, String>>
+        firebaseCallBack: FirebaseCallback<List<Award>>
     ) {
         val ref = rootRef.child("awards")
-        var award = mapOf<String, String>()
+        var award = Award()
+        val awards = mutableListOf<Award>()
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
@@ -169,14 +193,25 @@ class FunctionsFirebase {
                             if (awardField.key.toString() == "parentUid") {
                                 if (awardField.value.toString() == parentUid) {
                                     award = getAllFieldAward(awardItem)
-                                    firebaseCallBack.onComplete(award)
+                                    if (role == "children") {
+                                        if (award.status == 0) {
+                                            awards.add(award)
+                                        }
+                                        Log.d("Tag","${award.childUid} = $uidUser")
+                                        if (award.status == 1 && award.childUid == uidUser) {
+                                            awards.add(award)
+                                        }
+
+                                    } else {
+                                        awards.add(award)
+                                    }
+
                                 }
                             }
                         }
                     }
-                    return
                 }
-                firebaseCallBack.onComplete(award)
+                firebaseCallBack.onComplete(awards)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -193,6 +228,7 @@ class FunctionsFirebase {
         ref.child("cost").setValue(cost)
         ref.child("awardId").setValue(awardId)
         ref.child("name").setValue(nameAward)
+        ref.child("childUid").setValue("")
         ref.child("status").setValue(0)
     }
 
@@ -292,10 +328,11 @@ class FunctionsFirebase {
         firebaseCallBack: FirebaseCallback<List<Int>>
     ) {
         var roleFirebase = ""
-        if (role == "child")roleFirebase = "children"
+        if (role == "child") roleFirebase = "children"
         else roleFirebase = "parents"
         val ref =
-            rootRef.child("users").child(roleFirebase).child(uidUser!!).child("diary").child("marks")
+            rootRef.child("users").child(roleFirebase).child(uidUser!!).child("diary")
+                .child("marks")
         ref.keepSynced(true)
         val marksSemestr = mutableListOf<Int>()
         ref.addValueEventListener(object : ValueEventListener {
@@ -1069,39 +1106,54 @@ class FunctionsFirebase {
                                             Toast.LENGTH_LONG
                                         ).show()
                                     } else {
-                                        getFieldUserDatabase(childUid,"acceptUid",object :FirebaseCallback<String>{
-                                            override fun onComplete(value: String) {
-                                                if (value.isEmpty()){
-                                                    setFieldUserDatabase(childUid, "acceptName", "")
-                                                    setFieldUserDatabase(childUid, "acceptUid", "")
-                                                    getFieldUserDatabase(
-                                                        uidUser!!,
-                                                        "username",
-                                                        object : FirebaseCallback<String> {
-                                                            override fun onComplete(value: String) {
-                                                                setFieldUserDatabase(
-                                                                    childUid,
-                                                                    "acceptName",
-                                                                    value
-                                                                )
-                                                                setFieldUserDatabase(
-                                                                    childUid,
-                                                                    "acceptUid",
-                                                                    uidUser!!
-                                                                )
-                                                            }
-                                                        })
-                                                    Toast.makeText(
-                                                        context,
-                                                        "Запрос отправлен",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
-                                                    return
-                                                }else{
-                                                    Toast.makeText(context,"Ожидание ответа на запрос",Toast.LENGTH_SHORT).show()
+                                        getFieldUserDatabase(
+                                            childUid,
+                                            "acceptUid",
+                                            object : FirebaseCallback<String> {
+                                                override fun onComplete(value: String) {
+                                                    if (value.isEmpty()) {
+                                                        setFieldUserDatabase(
+                                                            childUid,
+                                                            "acceptName",
+                                                            ""
+                                                        )
+                                                        setFieldUserDatabase(
+                                                            childUid,
+                                                            "acceptUid",
+                                                            ""
+                                                        )
+                                                        getFieldUserDatabase(
+                                                            uidUser!!,
+                                                            "username",
+                                                            object : FirebaseCallback<String> {
+                                                                override fun onComplete(value: String) {
+                                                                    setFieldUserDatabase(
+                                                                        childUid,
+                                                                        "acceptName",
+                                                                        value
+                                                                    )
+                                                                    setFieldUserDatabase(
+                                                                        childUid,
+                                                                        "acceptUid",
+                                                                        uidUser!!
+                                                                    )
+                                                                }
+                                                            })
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Запрос отправлен",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                        return
+                                                    } else {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Ожидание ответа на запрос",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
                                                 }
-                                            }
-                                        })
+                                            })
 
                                     }
                                 }

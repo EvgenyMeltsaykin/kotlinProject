@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.accept_parent.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.header.view.*
@@ -149,8 +150,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 uiFunctions.createNotificationParent(
                     applicationContext,
                     MainActivity::class.java,
-                    R.drawable.ic_logo_rounded,
-                    "Ребенок выполнил задание",
                     "Ребенок выполнил задание",
                     task.title,
                     task
@@ -165,6 +164,40 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             override fun onChildRemoved(p0: DataSnapshot) {
                 return
             }
+        })
+
+        firebase.awardsRef.addChildEventListener(object : ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                return
+            }
+
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val award = firebase.getAllFieldAward(snapshot)
+                if (award.showNotification != 1) return
+                uiFunctions.createNotificationChildTakeAward(
+                    applicationContext,
+                    MainActivity::class.java,
+                    "Ребенок выбрал вознаграждение",
+                    award.name,
+                    award
+                )
+                firebase.setFieldAward(award.awardId,"showNotification",0)
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
         })
     }
 
@@ -247,8 +280,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                     uiFunctions.createNotificationChild(
                         applicationContext,
                         MainActivity::class.java,
-                        R.drawable.ic_logo_rounded,
-                        "Задание не принято",
                         "Задание не принято",
                         task.title,
                         task
@@ -258,8 +289,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                     uiFunctions.createNotificationChild(
                         applicationContext,
                         MainActivity::class.java,
-                        R.drawable.ic_logo_rounded,
-                        "Задание принято",
                         "Задание принято",
                         task.title,
                         task
@@ -273,8 +302,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                     uiFunctions.createNotificationChild(
                         applicationContext,
                         MainActivity::class.java,
-                        R.drawable.ic_logo_rounded,
-                        "Новое задание",
                         "Новое задание",
                         task.title,
                         task
