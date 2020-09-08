@@ -43,6 +43,31 @@ class FunctionsFirebase {
     val rolesRef = rootRef.child("roles")
     val uidUser = FirebaseAuth.getInstance().uid
 
+
+    fun removeAllListener(){
+        rootRef.removeEventListener(object: ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
     fun updateLessonMyScheduleInFirebase(
         weekday: String,
         numberLesson: String,
@@ -710,7 +735,7 @@ class FunctionsFirebase {
                 else role = "parents"
 
                 val ref = rootRef.child("users").child(role).child(uid)
-
+                ref.keepSynced(true)
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                         TODO("Not yet implemented")
@@ -1066,7 +1091,7 @@ class FunctionsFirebase {
 
     fun addPointChild(childUid: String, point: Int) {
         val ref = childRef.child("$childUid")
-        Log.d("TAG", childUid)
+        ref.keepSynced(true)
         getFieldUserDatabase(childUid, "point", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
                 ref.child("point").setValue(value.toInt() + point)

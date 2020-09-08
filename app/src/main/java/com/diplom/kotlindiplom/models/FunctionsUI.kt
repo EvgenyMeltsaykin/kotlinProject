@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -36,7 +37,8 @@ class FunctionsUI {
         val builder = NotificationCompat.Builder(context,CHANNEL_ID)
             .setContentIntent(contentIntent)
             .setWhen(System.currentTimeMillis())
-            .setSmallIcon(R.drawable.ic_logo_rounded)
+            .setColor(context.resources.getColor(R.color.colorNotificationIco))
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title)
             .setContentText(text)
             .setAutoCancel(true)
@@ -53,7 +55,6 @@ class FunctionsUI {
         contentText: String,
         task: Task
     ) {
-
         val firebase = FunctionsFirebase()
         firebase.getFieldUserDatabase(
             firebase.uidUser!!,
@@ -119,6 +120,7 @@ class FunctionsUI {
         if (award.parentUid != firebase.uidUser) return
         createNotificationChannel(context)
         val intent = Intent(context, intentClass)
+        intent.putExtra("role","parent")
         intent.putExtra("awardId",award.awardId)
         intent.putExtra("nameAward",award.name)
         intent.putExtra("costAward",award.cost)

@@ -30,13 +30,12 @@ import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.accept_parent.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.header.view.*
+import java.util.*
 
 class MainActivity : AppCompatActivity(), ActivityCallback {
 
@@ -82,12 +81,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         usernameTextViewHeader.setOnClickListener {
             navController.navigate(R.id.parentMyProfileFragment)
             drawer.closeDrawer(GravityCompat.START)
-        }
-        if (!intent.getStringExtra("taskId").isNullOrBlank()) {
-            val bundle = bundleOf()
-            bundle.putString("taskId", intent.getStringExtra("taskId"))
-            bundle.putString("title", intent.getStringExtra("title"))
-            navController.navigate(R.id.action_mainFragment_to_parentTaskContentFragment, bundle)
         }
 
         val firebase = FunctionsFirebase()
@@ -186,7 +179,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                TODO("Not yet implemented")
+                return
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
@@ -199,6 +192,23 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
 
 
         })
+
+        if (!intent.getStringExtra("taskId").isNullOrBlank()) {
+            val bundle = bundleOf()
+            bundle.putString("taskId", intent.getStringExtra("taskId"))
+            bundle.putString("title", intent.getStringExtra("title"))
+            navController.navigate(R.id.action_mainFragment_to_parentTaskContentFragment, bundle)
+        }
+        Log.d("Tag",intent.getStringExtra("awardId").toString())
+        if (!intent.getStringExtra("awardId").isNullOrBlank()) {
+            val bundle = bundleOf()
+            bundle.putString("awardId",intent.getStringExtra("awardId"))
+            bundle.putString("nameAward",intent.getStringExtra("nameAward"))
+            bundle.putString("costAward",intent.getStringExtra("costAward"))
+            bundle.putString("status",intent.getStringExtra("status"))
+            Log.d("Tag",bundle.toString())
+            navController.navigate(R.id.action_mainFragment_to_detailAwardFragment, bundle)
+        }
     }
 
     fun settingsChild() {
@@ -224,7 +234,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         val firebase = FunctionsFirebase()
         val uiFunctions = FunctionsUI()
         val requestRef = firebase.childRef.child(firebase.uidUser!!)
-        requestRef.addChildEventListener(object : ChildEventListener {
+        val listener = requestRef.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -470,6 +480,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             intent = Intent(this, ChooseActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+            firebase.removeAllListener()
             return@setOnMenuItemClickListener true
         }
         /*if (role == "child"){

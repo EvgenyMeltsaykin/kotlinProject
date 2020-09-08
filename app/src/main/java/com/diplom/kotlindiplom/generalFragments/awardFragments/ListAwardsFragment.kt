@@ -101,9 +101,7 @@ class ListAwardsFragment : Fragment() {
                             val nameAward = it.name
                             val costAward = it.cost
                             val awardId = it.awardId
-                            if (status != null && nameAward != null && costAward != null && awardId != null){
-                                adapter.add(AwardItem(nameAward,costAward,awardId,status.toString()))
-                            }
+                            adapter.add(AwardItem(nameAward,costAward,awardId,status))
                             listAwardRecyclerView?.adapter = adapter
                         }
                     }
@@ -116,7 +114,7 @@ class ListAwardsFragment : Fragment() {
             bundle.putString("awardId",f.awardId)
             bundle.putString("nameAward",f.name)
             bundle.putString("costAward",f.cost)
-            bundle.putString("status",f.status)
+            bundle.putInt("status",f.status)
             Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_listAwardsFragment_to_detailAwardFragment,bundle)
         }
     }

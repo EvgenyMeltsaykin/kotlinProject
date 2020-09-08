@@ -55,12 +55,12 @@ class ParentTaskContentFragment : Fragment() {
         val firebase = FunctionsFirebase()
         firebase.getTask(taskId.toString(), object: FirebaseCallback<Task>{
             override fun onComplete(value: Task) {
-                titleTaskContentTextViewParent?.setText("Название:" + value.title)
-                costTaskContentTextViewParent?.setText("Стоимость: " + value.cost.toString())
-                descriptionTaskContentTextViewParent?.setText(value.description)
+                titleTaskContentTextViewParent?.text = "Название:" + value.title
+                costTaskContentTextViewParent?.text = "Стоимость: " + value.cost.toString()
+                descriptionTaskContentTextViewParent?.text = value.description
                 if (value.status == -1) statusContentTastTextViewParent?.text = "Не выполнено"
                 if (value.status == 0){
-                    statusContentTastTextViewParent?.setText("На проверке")
+                    statusContentTastTextViewParent?.text = "На проверке"
                     acceptContentTaskButtonParent?.isVisible = true
                     rejectContentTaskButtonParent?.isVisible = true
                 }
@@ -72,10 +72,9 @@ class ParentTaskContentFragment : Fragment() {
             firebase.setFieldDatabaseTask(taskId.toString(),"showNotification",0)
             Toast.makeText(requireContext(),"Задание принято",Toast.LENGTH_SHORT).show()
             navController.popBackStack()
-            requireActivity().setTitle("На проверке")
+            requireActivity().title = "На проверке"
             firebase.getTask(taskId.toString(), object : FirebaseCallback<Task>{
                 override fun onComplete(value: Task) {
-                    Log.d("TAG",value.childUid)
                     firebase.addPointChild(value.childUid,value.cost)
                 }
 
@@ -88,7 +87,7 @@ class ParentTaskContentFragment : Fragment() {
             firebase.setFieldDatabaseTask(taskId.toString(),"childUid","")
             Toast.makeText(requireContext(),"Задание не принято",Toast.LENGTH_SHORT).show()
             navController.popBackStack()
-            requireActivity().setTitle("На проверке")
+            requireActivity().title = "На проверке"
         }
     }
 

@@ -37,7 +37,7 @@ class DetailAwardFragment : Fragment() {
     private lateinit var awardId: String
     private lateinit var nameAward: String
     private lateinit var costAward: String
-    private lateinit var status: String
+    private var status: Int = 1
     private lateinit var role:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +45,7 @@ class DetailAwardFragment : Fragment() {
             awardId = it.getString("awardId","")
             nameAward = it.getString("nameAward","")
             costAward = it.getString("costAward","")
-            status = it.getString("status","")
+            status = it.getInt("status",1)
         }
     }
 
@@ -67,13 +67,14 @@ class DetailAwardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
+        activity?.title = "Вознаграждение"
         childTakeAwardTextView?.isVisible = false
         val firebase = FunctionsFirebase()
         awardNameTextView?.text = "Вознаграждение: $nameAward"
         costAwardTxtView?.text = "Стоимость: $costAward"
         if (role == "children"){
             deleteButton?.isVisible = false
-            if (status == "1"){
+            if (status == 1){
                 messageForChildTextView?.isVisible = true
                 takeButton?.text = "Получено"
             }
@@ -81,10 +82,10 @@ class DetailAwardFragment : Fragment() {
         }
         if (role == "parents"){
             takeButton?.isVisible = false
-            if (status != "0"){
+            if (status != 0){
                 deleteButton?.isVisible = false
             }
-            if (status == "1"){
+            if (status == 1){
                 childTakeAwardTextView?.isVisible = true
             }
 

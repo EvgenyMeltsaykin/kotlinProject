@@ -5,15 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
-    android:paddingTop="8dp"
+    android:padding="8dp"
     tools:context=".parentFragments.ParentTasksFragment">
 
     <Button
         android:id="@+id/unfulfilledButtonParentTasks"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:background="@drawable/simple_button"
         android:text="Невыполненные задания"
         android:textColor="@color/colorButtonText"
@@ -26,39 +24,33 @@
         android:id="@+id/checkButtonParentTasks"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
         android:background="@drawable/simple_button"
         android:text="Задания на проверке"
         android:textColor="@color/colorButtonText"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/unfulfilledButtonParentTasks"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/unfulfilledButtonParentTasks"
         app:layout_constraintTop_toBottomOf="@+id/unfulfilledButtonParentTasks" />
 
     <Button
         android:id="@+id/completedButtonParentTasks"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+
         android:background="@drawable/simple_button"
         android:text="Выполненные задания"
         android:textColor="@color/colorButtonText"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/checkButtonParentTasks"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/checkButtonParentTasks"
         app:layout_constraintTop_toBottomOf="@+id/checkButtonParentTasks" />
 
     <Button
         android:id="@+id/addButtonParentTasks"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:background="@drawable/simple_button"
         android:text="Добавить задание"
         android:textColor="@color/colorButtonText"

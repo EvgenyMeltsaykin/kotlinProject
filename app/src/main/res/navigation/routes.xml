@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_mainFragment_to_myScheduleDayFragment"
             app:destination="@id/myScheduleDayFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_detailAwardFragment"
+            app:destination="@id/detailAwardFragment" />
     </fragment>
     <fragment
         android:id="@+id/childMyProfileFragment"
