@@ -41,7 +41,7 @@ class HomeworkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         activity?.title = lessonName
         homeworkTextView?.text = homework
     }

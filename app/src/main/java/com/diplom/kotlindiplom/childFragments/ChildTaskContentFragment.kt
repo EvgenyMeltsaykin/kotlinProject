@@ -49,23 +49,23 @@ class ChildTaskContentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         activity?.title = title
         val navController = Navigation.findNavController(requireActivity(), R.id.navFragment)
         val firebase = FunctionsFirebase()
         firebase.getTask(taskId.toString(), object : FirebaseCallback<Task> {
             override fun onComplete(value: Task) {
-                titleContentTaskTextViewChild?.setText("Название:" +value.title)
-                costContentTaskTextViewChild?.setText("Стоимость: " + value.cost.toString())
-                descriptionTaskContentTextViewChild?.setText(value.description)
+                titleContentTaskTextViewChild?.text = "Название:" +value.title
+                costContentTaskTextViewChild?.text = "Стоимость: " + value.cost.toString()
+                descriptionTaskContentTextViewChild?.text = value.description
                 if (value.status == -1) {
-                    statusContentTaskTextViewChild?.setText("Не выполнено")
+                    statusContentTaskTextViewChild?.text = "Не выполнено"
                     sendTaskButtonChild?.isVisible = true
                 }
                 if (value.status == 0) {
-                    statusContentTaskTextViewChild?.setText("На проверке")
+                    statusContentTaskTextViewChild?.text = "На проверке"
                 }
-                if (value.status == 1) statusContentTaskTextViewChild?.setText("Выполнено")
+                if (value.status == 1) statusContentTaskTextViewChild?.text = "Выполнено"
             }
         })
         sendTaskButtonChild?.setOnClickListener {

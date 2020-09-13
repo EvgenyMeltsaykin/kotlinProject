@@ -45,7 +45,7 @@ class DiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
 
 
         val fm = requireActivity().supportFragmentManager
@@ -89,7 +89,12 @@ class DiaryFragment : Fragment() {
             })
 
 
-        firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
+        firebase.getFieldDiary(firebase.uidUser,"login",object :FirebaseCallback<String>{
+            override fun onComplete(value: String) {
+                loginDiaryTextView?.text = value
+            }
+        })
+        firebase.getFieldDiary(firebase.uidUser, "url", object : FirebaseCallback<String> {
             override fun onComplete(value: String) {
                 diaryTextView?.text = value
             }

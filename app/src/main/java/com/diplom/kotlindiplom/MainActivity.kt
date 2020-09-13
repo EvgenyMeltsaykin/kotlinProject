@@ -139,15 +139,16 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
-                if (task.showNotification == 1 || task.status != 0) return
-                uiFunctions.createNotificationParent(
-                    applicationContext,
-                    MainActivity::class.java,
-                    "Ребенок выполнил задание",
-                    task.title,
-                    task
-                )
-
+                if(task.parentUid == firebase.uidUser) {
+                    if (task.showNotification == 1 || task.status != 0) return
+                    uiFunctions.createNotificationParent(
+                        applicationContext,
+                        MainActivity::class.java,
+                        "Ребенок выполнил задание",
+                        task.title,
+                        task
+                    )
+                }
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
@@ -167,15 +168,17 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val award = firebase.getAllFieldAward(snapshot)
-                if (award.showNotification != 1) return
-                uiFunctions.createNotificationChildTakeAward(
-                    applicationContext,
-                    MainActivity::class.java,
-                    "Ребенок выбрал вознаграждение",
-                    award.name,
-                    award
-                )
-                firebase.setFieldAward(award.awardId,"showNotification",0)
+                if (award.parentUid == firebase.uidUser){
+                    if (award.showNotification != 1) return
+                    uiFunctions.createNotificationChildTakeAward(
+                        applicationContext,
+                        MainActivity::class.java,
+                        "Ребенок выбрал вознаграждение",
+                        award.name,
+                        award
+                    )
+                    firebase.setFieldAward(award.awardId,"showNotification",0)
+                }
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
@@ -234,7 +237,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         val firebase = FunctionsFirebase()
         val uiFunctions = FunctionsUI()
         val requestRef = firebase.childRef.child(firebase.uidUser!!)
-        val listener = requestRef.addChildEventListener(object : ChildEventListener {
+        requestRef.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -286,37 +289,47 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
 
-                if (task.showNotification == 2 && task.status == -1) {
-                    uiFunctions.createNotificationChild(
-                        applicationContext,
-                        MainActivity::class.java,
-                        "Задание не принято",
-                        task.title,
-                        task
-                    )
+                if (task.childUid == firebase.uidUser){
+                    if (task.showNotification == 2 && task.status == -1) {
+                        uiFunctions.createNotificationChild(
+                            applicationContext,
+                            MainActivity::class.java,
+                            "Задание не принято",
+                            task.title,
+                            task
+                        )
+                        firebase.setFieldDatabaseTask(task.taskId,"childUid","")
+                    }
+                    if (task.showNotification == 0 && task.status == 1) {
+                        uiFunctions.createNotificationChild(
+                            applicationContext,
+                            MainActivity::class.java,
+                            "Задание принято",
+                            task.title,
+                            task
+                        )
+                    }
                 }
-                if (task.showNotification == 0 && task.status == 1) {
-                    uiFunctions.createNotificationChild(
-                        applicationContext,
-                        MainActivity::class.java,
-                        "Задание принято",
-                        task.title,
-                        task
-                    )
-                }
+
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
-                if (task.showNotification == 0 && task.status == -1) {
-                    uiFunctions.createNotificationChild(
-                        applicationContext,
-                        MainActivity::class.java,
-                        "Новое задание",
-                        task.title,
-                        task
-                    )
-                }
+                firebase.getFieldUserDatabase(firebase.uidUser,"parentUid",object :FirebaseCallback<String>{
+                    override fun onComplete(value: String) {
+                        if (task.parentUid == value){
+                            if (task.showNotification == 0 && task.status == -1) {
+                                uiFunctions.createNotificationChild(
+                                    applicationContext,
+                                    MainActivity::class.java,
+                                    "Новое задание",
+                                    task.title,
+                                    task
+                                )
+                            }
+                        }
+                    }
+                })
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
@@ -410,31 +423,58 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             drawer.closeDrawer(GravityCompat.START)
             return
         }
-        if (navController.currentDestination?.id == R.id.weekdayFragment){
+        /*if (navController.currentDestination?.id == R.id.weekdayFragment){
             if (roleUser == "child"){
-                while(navController.backStack.size >= 5){
+                while(navController.backStack.size >= 3){
                     navController.popBackStack()
                 }
             }
             if(roleUser == "parent"){
-                while(navController.backStack.size >= 6){
+                while(navController.backStack.size >= 4){
                     navController.popBackStack()
                 }
             }
             return
-        }
+        }*/
         if (navController.currentDestination?.id == R.id.scheduleDayFragment){
             val bundle = bundleOf()
             bundle.putBoolean("updateSchedule",false)
-
             navController.navigate(R.id.action_scheduleDayFragment_to_weekdayFragment,bundle)
             return
         }
-        if (navController.currentDestination?.id == R.id.parentMyProfileFragment || navController.currentDestination?.id == R.id.childMyProfileFragment || navController.currentDestination?.id == R.id.childTasksFragment
-            || navController.currentDestination?.id == R.id.listAwardsFragment || navController.currentDestination?.id == R.id.diaryFragment || navController.currentDestination?.id == R.id.loginDiaryFragment
-            || navController.currentDestination?.id == R.id.mailFragment || navController.currentDestination?.id == R.id.parentTasksFragment || navController.currentDestination?.id == R.id.parentNodeChildrenFragment){
-            navController.navigate(R.id.mainFragment)
-            return
+        when(navController.currentDestination?.id){
+            R.id.parentMyProfileFragment ->{
+                navController.navigate(R.id.action_parentMyProfileFragment_to_mainFragment)
+                return
+            }
+            R.id.childMyProfileFragment->{
+                navController.navigate(R.id.action_childMyProfileFragment_to_mainFragment)
+                return
+            }
+            R.id.childTasksFragment->{
+                navController.navigate(R.id.action_childTasksFragment_to_mainFragment)
+                return
+            }
+            R.id.listAwardsFragment->{
+                navController.navigate(R.id.action_listAwardsFragment_to_mainFragment)
+                return
+            }
+            R.id.diaryFragment->{
+                navController.navigate(R.id.action_diaryFragment_to_mainFragment)
+                return
+            }
+            R.id.loginDiaryFragment->{
+                navController.navigate(R.id.action_loginDiaryFragment_to_mainFragment)
+                return
+            }
+            R.id.parentTasksFragment->{
+                navController.navigate(R.id.action_parentTasksFragment_to_mainFragment)
+                return
+            }
+            R.id.parentNodeChildrenFragment->{
+                navController.navigate(R.id.action_parentNodeChildrenFragment_to_mainFragment)
+                return
+            }
         }
         if (navController.currentDestination?.id == R.id.mainFragment){
             if (back_pressed + 2000 > System.currentTimeMillis()) {

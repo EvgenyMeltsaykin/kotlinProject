@@ -49,7 +49,7 @@ class ChildAllTasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         activity?.title = title
 
         tasksEmptyTextView?.isVisible = false
@@ -84,7 +84,7 @@ class ChildAllTasksFragment : Fragment() {
                                         requireActivity(),
                                         R.id.navFragment
                                     )
-                                    navController.navigate(R.id.childTaskContentFragment, bundle)
+                                    navController.navigate(R.id.action_childAllTasksFragment_to_childTaskContentFragment, bundle)
                                 }
                             }
 

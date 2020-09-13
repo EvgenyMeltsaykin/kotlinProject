@@ -42,8 +42,7 @@ class FunctionsFirebase {
     val awardsRef = rootRef.child("awards")
     val rolesRef = rootRef.child("roles")
     val uidUser = FirebaseAuth.getInstance().uid
-
-
+    
     fun removeAllListener(){
         rootRef.removeEventListener(object: ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {

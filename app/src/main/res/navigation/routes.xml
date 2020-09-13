@@ -12,16 +12,32 @@
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_mainFragment_to_childTaskContentFragment"
-            app:destination="@id/childTaskContentFragment" />
+            app:destination="@id/childTaskContentFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_mainFragment_to_parentTaskContentFragment"
-            app:destination="@id/parentTaskContentFragment" />
+            app:destination="@id/parentTaskContentFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_mainFragment_to_myScheduleDayFragment"
-            app:destination="@id/myScheduleDayFragment" />
+            app:destination="@id/myScheduleDayFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_mainFragment_to_detailAwardFragment"
-            app:destination="@id/detailAwardFragment" />
+            app:destination="@id/detailAwardFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/childMyProfileFragment"
@@ -30,13 +46,32 @@
         tools:layout="@layout/fragment_child_my_profile" >
         <action
             android:id="@+id/action_childMyProfileFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/childTasksFragment"
         android:name="com.diplom.kotlindiplom.childFragments.ChildTasksFragment"
         android:label="fragment_child_tasks"
-        tools:layout="@layout/fragment_child_tasks" />
+        tools:layout="@layout/fragment_child_tasks" >
+        <action
+            android:id="@+id/action_childTasksFragment_to_childAllTasksFragment"
+            app:destination="@id/childAllTasksFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_childTasksFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
     <fragment
         android:id="@+id/childAllTasksFragment"
         android:name="com.diplom.kotlindiplom.childFragments.ChildAllTasksFragment"
@@ -45,6 +80,13 @@
         <argument
             android:name="titile"
             app:argType="string" />
+        <action
+            android:id="@+id/action_childAllTasksFragment_to_childTaskContentFragment"
+            app:destination="@id/childTaskContentFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/childTaskContentFragment"
@@ -58,13 +100,11 @@
         tools:layout="@layout/fragment_weekday" >
         <action
             android:id="@+id/action_weekdayFragment_to_scheduleDayFragment"
-            app:destination="@id/scheduleDayFragment" />
-        <action
-            android:id="@+id/action_weekdayFragment_to_diaryFragment"
-            app:destination="@id/diaryFragment" />
-        <action
-            android:id="@+id/action_weekdayFragment_to_chooseChildScheduleFragment"
-            app:destination="@id/chooseChildScheduleFragment" />
+            app:destination="@id/scheduleDayFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/loginDiaryFragment"
@@ -73,10 +113,24 @@
         tools:layout="@layout/fragment_login_diary" >
         <action
             android:id="@+id/action_loginDiaryFragment_to_diaryFragment"
-            app:destination="@id/diaryFragment" />
+            app:destination="@id/diaryFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loginDiaryFragment_to_mailFragment"
-            app:destination="@id/mailFragment" />
+            app:destination="@id/mailFragment"
+            app:enterAnim="@anim/from_down"
+            app:exitAnim="@anim/to_up"
+            app:popEnterAnim="@anim/from_up"
+            app:popExitAnim="@anim/to_down" />
+        <action
+            android:id="@+id/action_loginDiaryFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/scheduleDayFragment"
@@ -86,25 +140,40 @@
         <argument android:name="day"
             app:argType="string" />
         <action
-            android:id="@+id/action_scheduleDayFragment_to_weekdayFragment"
-            app:destination="@id/weekdayFragment" />
-        <action
             android:id="@+id/action_scheduleDayFragment_to_homeworkFragment"
-            app:destination="@id/homeworkFragment" />
+            app:destination="@id/homeworkFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_scheduleDayFragment_to_weekdayFragment"
+            app:destination="@id/weekdayFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
+            app:popUpTo="@id/weekdayFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/homeworkFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.scheduleFragments.HomeworkFragment"
         android:label="fragment_homework"
-        tools:layout="@layout/fragment_homework" >
-        <action
-            android:id="@+id/action_homeworkFragment_to_scheduleDayFragment"
-            app:destination="@id/scheduleDayFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_homework" />
     <fragment
         android:id="@+id/parentMyProfileFragment"
         android:name="com.diplom.kotlindiplom.parentFragments.ParentMyProfileFragment"
-        android:label="ParentMyProfileFragment" />
+        android:label="ParentMyProfileFragment"
+        tools:layout="@layout/fragment_parent_my_profile">
+        <action
+            android:id="@+id/action_parentMyProfileFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
     <fragment
         android:id="@+id/parentTasksFragment"
         android:name="com.diplom.kotlindiplom.parentFragments.ParentTasksFragment"
@@ -112,16 +181,39 @@
         tools:layout="@layout/fragment_parent_tasks" >
         <action
             android:id="@+id/action_parentTasksFragment_to_parentAllTasksFragment"
-            app:destination="@id/parentAllTasksFragment" />
+            app:destination="@id/parentAllTasksFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_parentTasksFragment_to_parentNewTaskFragment"
-            app:destination="@id/parentNewTaskFragment" />
+            app:destination="@id/parentNewTaskFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_parentTasksFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/parentAllTasksFragment"
         android:name="com.diplom.kotlindiplom.parentFragments.ParentAllTasksFragment"
         android:label="fragment_parent_all_tasks"
-        tools:layout="@layout/fragment_parent_all_tasks" />
+        tools:layout="@layout/fragment_parent_all_tasks" >
+        <action
+            android:id="@+id/action_parentAllTasksFragment_to_parentTaskContentFragment"
+            app:destination="@id/parentTaskContentFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
     <fragment
         android:id="@+id/parentNewTaskFragment"
         android:name="com.diplom.kotlindiplom.parentFragments.ParentNewTaskFragment"
@@ -136,21 +228,34 @@
         android:id="@+id/parentNodeChildrenFragment"
         android:name="com.diplom.kotlindiplom.parentFragments.ParentNodeChildrenFragment"
         android:label="fragment_parent_node_children"
-        tools:layout="@layout/fragment_parent_node_children" />
+        tools:layout="@layout/fragment_parent_node_children" >
+        <action
+            android:id="@+id/action_parentNodeChildrenFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
     <fragment
         android:id="@+id/lessonsMarkFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.markFragments.LessonsMarkFragment"
         android:label="fragment_lessons_mark"
         tools:layout="@layout/fragment_lessons_mark" >
         <action
-            android:id="@+id/action_lessonsMarkFragment_to_chooseSemestrElschoolFragment"
-            app:destination="@id/chooseSemestrElschoolFragment" />
-        <action
             android:id="@+id/action_lessonsMarkFragment_to_detailsMarksFragment"
-            app:destination="@id/detailsMarksFragment" />
+            app:destination="@id/detailsMarksFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_lessonsMarkFragment_to_detailsFinalMarkFragment2"
-            app:destination="@id/detailsFinalMarkFragment2" />
+            app:destination="@id/detailsFinalMarkFragment2"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/diaryFragment"
@@ -159,19 +264,46 @@
         tools:layout="@layout/fragment_diary" >
         <action
             android:id="@+id/action_diaryFragment_to_weekdayFragment"
-            app:destination="@id/weekdayFragment" />
+            app:destination="@id/weekdayFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_diaryFragment_to_chooseChildMarkFragment"
-            app:destination="@id/chooseChildMarkFragment" />
+            app:destination="@id/chooseChildMarkFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_diaryFragment_to_loginDiaryFragment"
-            app:destination="@id/loginDiaryFragment" />
+            app:destination="@id/loginDiaryFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            app:popEnterAnim="@anim/from_right"
+            app:popExitAnim="@anim/to_left" />
         <action
             android:id="@+id/action_diaryFragment_to_chooseChildScheduleFragment"
-            app:destination="@id/chooseChildScheduleFragment" />
+            app:destination="@id/chooseChildScheduleFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_diaryFragment_to_chooseSemestrElschoolFragment"
-            app:destination="@id/chooseSemestrElschoolFragment" />
+            app:destination="@id/chooseSemestrElschoolFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_diaryFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/chooseChildMarkFragment"
@@ -179,11 +311,12 @@
         android:label="fragment_choose_child_mark"
         tools:layout="@layout/fragment_choose_child_mark" >
         <action
-            android:id="@+id/action_chooseChildMarkFragment_to_diaryFragment"
-            app:destination="@id/diaryFragment" />
-        <action
             android:id="@+id/action_chooseChildMarkFragment_to_chooseSemestrElschoolFragment"
-            app:destination="@id/chooseSemestrElschoolFragment" />
+            app:destination="@id/chooseSemestrElschoolFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/chooseChildScheduleFragment"
@@ -191,11 +324,12 @@
         android:label="fragment_choose_child_schedule"
         tools:layout="@layout/fragment_choose_child_schedule" >
         <action
-            android:id="@+id/action_chooseChildScheduleFragment_to_diaryFragment"
-            app:destination="@id/diaryFragment" />
-        <action
             android:id="@+id/action_chooseChildScheduleFragment_to_weekdayFragment"
-            app:destination="@id/weekdayFragment" />
+            app:destination="@id/weekdayFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/chooseSemestrElschoolFragment"
@@ -203,24 +337,18 @@
         android:label="fragment_choose_semestr_elschool"
         tools:layout="@layout/fragment_choose_semestr" >
         <action
-            android:id="@+id/action_chooseSemestrElschoolFragment_to_chooseChildMarkFragment"
-            app:destination="@id/chooseChildMarkFragment" />
-        <action
-            android:id="@+id/action_chooseSemestrElschoolFragment_to_diaryFragment"
-            app:destination="@id/diaryFragment" />
-        <action
             android:id="@+id/action_chooseSemestrElschoolFragment_to_lessonsMarkFragment"
-            app:destination="@id/lessonsMarkFragment" />
+            app:destination="@id/lessonsMarkFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/detailsMarksFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.markFragments.DetailsMarksFragment"
         android:label="fragment_details_marks"
-        tools:layout="@layout/fragment_details_marks" >
-        <action
-            android:id="@+id/action_detailsMarksFragment_to_lessonsMarkFragment"
-            app:destination="@id/lessonsMarkFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_details_marks" />
     <fragment
         android:id="@+id/listClassesFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.schoolBooksFragments.ListClassesFragment"
@@ -228,7 +356,11 @@
         tools:layout="@layout/fragment_list_classes" >
         <action
             android:id="@+id/action_listClassesFragment_to_listSubjectsFragment"
-            app:destination="@id/listSubjectsFragment" />
+            app:destination="@id/listSubjectsFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/listSubjectsFragment"
@@ -236,11 +368,12 @@
         android:label="fragment_list_school_books"
         tools:layout="@layout/fragment_list_subjects" >
         <action
-            android:id="@+id/action_listSubjectsFragment_to_listClassesFragment"
-            app:destination="@id/listClassesFragment" />
-        <action
             android:id="@+id/action_listSubjectsFragment_to_schoolBooksFragment"
-            app:destination="@id/schoolBooksFragment" />
+            app:destination="@id/schoolBooksFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/schoolBooksFragment"
@@ -248,11 +381,12 @@
         android:label="fragment_school_books"
         tools:layout="@layout/fragment_school_books" >
         <action
-            android:id="@+id/action_schoolBooksFragment_to_listSubjectsFragment"
-            app:destination="@id/listSubjectsFragment" />
-        <action
             android:id="@+id/action_schoolBooksFragment_to_mailFragment"
-            app:destination="@id/mailFragment" />
+            app:destination="@id/mailFragment"
+            app:enterAnim="@anim/from_down"
+            app:exitAnim="@anim/to_up"
+            app:popEnterAnim="@anim/from_up"
+            app:popExitAnim="@anim/to_down" />
     </fragment>
     <fragment
         android:id="@+id/mailFragment"
@@ -260,8 +394,12 @@
         android:label="fragment_mail"
         tools:layout="@layout/fragment_mail" >
         <action
-            android:id="@+id/action_mailFragment_to_schoolBooksFragment"
-            app:destination="@id/schoolBooksFragment" />
+            android:id="@+id/action_mailFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/listAwardsFragment"
@@ -270,11 +408,26 @@
         tools:layout="@layout/fragment_list_awards" >
         <action
             android:id="@+id/action_listAwardsFragment_to_newAwardFragment"
-            app:destination="@id/newAwardFragment" />
+            app:destination="@id/newAwardFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_listAwardsFragment_to_detailAwardFragment"
             app:destination="@id/detailAwardFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_listAwardsFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/newAwardFragment"
@@ -283,7 +436,13 @@
         tools:layout="@layout/fragment_new_award" >
         <action
             android:id="@+id/action_newAwardFragment_to_listAwardsFragment"
-            app:destination="@id/listAwardsFragment" />
+            app:destination="@id/listAwardsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/listAwardsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/detailAwardFragment"
@@ -292,7 +451,13 @@
         tools:layout="@layout/fragment_detail_award" >
         <action
             android:id="@+id/action_detailAwardFragment_to_listAwardsFragment"
-            app:destination="@id/listAwardsFragment" />
+            app:destination="@id/listAwardsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/listAwardsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/detailsFinalMarkFragment2"
@@ -301,7 +466,11 @@
         tools:layout="@layout/fragment_details_final_mark" >
         <action
             android:id="@+id/action_detailsFinalMarkFragment2_to_detailsMarksFragment"
-            app:destination="@id/detailsMarksFragment" />
+            app:destination="@id/detailsMarksFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/myScheduleDayFragment"
@@ -310,10 +479,18 @@
         tools:layout="@layout/fragment_my_schedule_day" >
         <action
             android:id="@+id/action_myScheduleDayFragment_to_detailLessonMyScheduleFragment"
-            app:destination="@id/detailLessonMyScheduleFragment" />
+            app:destination="@id/detailLessonMyScheduleFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@anim/fragment_fade_exit" />
         <action
             android:id="@+id/action_myScheduleDayFragment_to_editScheduleFragment"
-            app:destination="@id/editScheduleFragment" />
+            app:destination="@id/editScheduleFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/addLessonFragment"
@@ -332,7 +509,11 @@
         tools:layout="@layout/fragment_edit_schedule" >
         <action
             android:id="@+id/action_editScheduleFragment_to_addLessonFragment"
-            app:destination="@id/addLessonFragment" />
+            app:destination="@id/addLessonFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/pagerMyScheduleFragment"

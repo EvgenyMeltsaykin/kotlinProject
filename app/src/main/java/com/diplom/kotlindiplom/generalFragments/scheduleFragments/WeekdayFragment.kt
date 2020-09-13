@@ -63,7 +63,7 @@ class WeekdayFragment : Fragment() {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         activity?.title = "Расписание"
         setupCalendar()
         progressBar?.isVisible = false

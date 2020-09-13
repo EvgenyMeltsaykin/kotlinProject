@@ -55,7 +55,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         progressBar?.isVisible = false
         activity?.title = "Электронный дневник"
         val firebase = FunctionsFirebase()
@@ -114,7 +114,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                                         requireActivity(),
                                         R.id.navFragment
                                     )
-                                        .navigate(R.id.action_loginDiaryFragment_to_diaryFragment)
+                                        .navigate(R.id.action_loginDiaryFragment_to_diaryFragment,)
                                 }
                             })
                     }

@@ -47,7 +47,7 @@ class MailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         activity?.title = "Обратная связь"
         messageUserTextView?.isVisible = false
         if (topic == "Добавить учебник"){

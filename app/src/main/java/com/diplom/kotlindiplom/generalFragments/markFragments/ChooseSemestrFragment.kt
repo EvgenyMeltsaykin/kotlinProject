@@ -52,7 +52,7 @@ class ChooseSemestrElschoolFragment : Fragment() {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         activity?.title = "Выберите"
         val bundle = bundleOf()
         val firebase = FunctionsFirebase()

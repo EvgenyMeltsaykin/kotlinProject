@@ -9,22 +9,42 @@
     android:paddingRight="8dp"
     tools:context=".generalFragments.DiaryFragment">
 
+    <TextView
+        android:id="@+id/loginDiaryStaticTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Логин:"
+        android:textColor="@color/colorText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/loginDiaryTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="login"
+        android:textColor="@color/colorText"
+        app:layout_constraintBottom_toBottomOf="@+id/loginDiaryStaticTextView"
+        app:layout_constraintEnd_toStartOf="@+id/deleteDiaryButton"
+        app:layout_constraintStart_toEndOf="@+id/loginDiaryStaticTextView"
+        app:layout_constraintTop_toTopOf="@+id/loginDiaryStaticTextView" />
 
     <TextView
         android:id="@+id/diaryStaticTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="Электронный дневник:"
         android:textColor="@color/colorText"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/loginDiaryStaticTextView" />
 
     <TextView
         android:id="@+id/diaryTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:text="name"
         android:textColor="@color/colorText"
         app:layout_constraintBottom_toBottomOf="@+id/diaryStaticTextView"
@@ -38,13 +58,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/button_red"
+        android:text="Выход"
         android:textColor="@color/colorButtonText"
-        android:padding="8dp"
-        android:text="Удалить дневник"
-        android:textSize="8sp"
         app:layout_constraintBottom_toBottomOf="@+id/diaryTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/diaryTextView" />
+        app:layout_constraintTop_toTopOf="@+id/loginDiaryStaticTextView" />
 
     <Button
         android:id="@+id/scheduleButton"
@@ -69,5 +87,8 @@
         app:layout_constraintEnd_toEndOf="@+id/scheduleButton"
         app:layout_constraintStart_toStartOf="@+id/scheduleButton"
         app:layout_constraintTop_toBottomOf="@+id/scheduleButton" />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

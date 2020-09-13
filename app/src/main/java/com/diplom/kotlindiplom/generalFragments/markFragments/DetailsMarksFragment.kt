@@ -53,7 +53,7 @@ class DetailsMarksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         activity?.title ="Оценки"
         val firebase = FunctionsFirebase()
 

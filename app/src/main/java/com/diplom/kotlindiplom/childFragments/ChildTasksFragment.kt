@@ -50,7 +50,7 @@ class ChildTasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         activity?.title = "Задания"
         val navController = Navigation.findNavController(
             requireActivity(),
@@ -60,22 +60,22 @@ class ChildTasksFragment : Fragment() {
         unfulfilledButtonChildTasks?.setOnClickListener {
             val bundle : Bundle = bundleOf()
             bundle.putString("title","Невыполненные")
-            navController.navigate(R.id.childAllTasksFragment,bundle)
+            navController.navigate(R.id.action_childTasksFragment_to_childAllTasksFragment,bundle)
         }
         completedButtonChildTasks?.setOnClickListener {
             val bundle : Bundle = bundleOf()
             bundle.putString("title","Выполненные")
-            navController.navigate(R.id.childAllTasksFragment,bundle)
+            navController.navigate(R.id.action_childTasksFragment_to_childAllTasksFragment,bundle)
         }
         checkButtonChildTasks?.setOnClickListener {
             val bundle : Bundle = bundleOf()
             bundle.putString("title","На проверке")
-            navController.navigate(R.id.childAllTasksFragment,bundle)
+            navController.navigate(R.id.action_childTasksFragment_to_childAllTasksFragment,bundle)
         }
         additionalButtonChildTasks?.setOnClickListener {
             val bundle : Bundle = bundleOf()
             bundle.putString("title","Дополнительные")
-            navController.navigate(R.id.childAllTasksFragment,bundle)
+            navController.navigate(R.id.action_childTasksFragment_to_childAllTasksFragment,bundle)
         }
     }
     // TODO: Rename method, update argument and hook method into UI event

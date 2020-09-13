@@ -43,7 +43,7 @@ class ListClassesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         activity?.title = "Выберите класс"
         firstClassButton?.setOnClickListener {
             navigateNextFragment(1)

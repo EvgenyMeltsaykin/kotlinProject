@@ -51,7 +51,7 @@ class ListSchoolBooksFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         val adapter = GroupAdapter<ViewHolder>()
         activity?.title = "Выберите предмет"
 
@@ -113,7 +113,7 @@ class ListSchoolBooksFragment : Fragment() {
         val bundle = bundleOf()
         bundle.putString("subjectName",subjectName)
         bundle.putString("numberClass",numberClass)
-        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.schoolBooksFragment,bundle)
+        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_listSubjectsFragment_to_schoolBooksFragment,bundle)
     }
 
 }

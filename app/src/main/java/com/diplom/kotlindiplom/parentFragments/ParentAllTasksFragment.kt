@@ -75,7 +75,7 @@ class ParentAllTasksFragment : Fragment() {
                     bundle.putString("taskId", "${taskItem.task.taskId}")
                     val navController =
                         Navigation.findNavController(requireActivity(), R.id.navFragment)
-                    navController.navigate(R.id.parentTaskContentFragment, bundle)
+                    navController.navigate(R.id.action_parentAllTasksFragment_to_parentTaskContentFragment, bundle)
                 }
             }
         })

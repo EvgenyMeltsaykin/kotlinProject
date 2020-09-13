@@ -94,7 +94,7 @@ class AddLessonFragment : DialogFragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().invalidateOptionsMenu()
+        //requireActivity().invalidateOptionsMenu()
         lessonNameTextInput?.editText?.doAfterTextChanged {
             lessonNameTextInput?.error = null
         }
