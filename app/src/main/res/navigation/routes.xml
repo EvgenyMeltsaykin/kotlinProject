@@ -120,13 +120,27 @@
         <action
             android:id="@+id/action_loginDiaryFragment_to_mailFragment"
             app:destination="@id/mailFragment"
-            app:enterAnim="@anim/from_down"
-            app:exitAnim="@anim/to_up"
-            app:popEnterAnim="@anim/from_up"
-            app:popExitAnim="@anim/to_down" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_loginDiaryFragment_to_mainFragment"
             app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_loginDiaryFragment_to_parentTaskContentFragment"
+            app:destination="@id/parentTaskContentFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_loginDiaryFragment_to_detailAwardFragment"
+            app:destination="@id/detailAwardFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
@@ -167,8 +181,8 @@
         android:label="ParentMyProfileFragment"
         tools:layout="@layout/fragment_parent_my_profile">
         <action
-            android:id="@+id/action_parentMyProfileFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
+            android:id="@+id/action_parentMyProfileFragment_to_loginDiaryFragment"
+            app:destination="@id/loginDiaryFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
@@ -194,8 +208,8 @@
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
         <action
-            android:id="@+id/action_parentTasksFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
+            android:id="@+id/action_parentTasksFragment_to_loginDiaryFragment"
+            app:destination="@id/loginDiaryFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
@@ -230,8 +244,8 @@
         android:label="fragment_parent_node_children"
         tools:layout="@layout/fragment_parent_node_children" >
         <action
-            android:id="@+id/action_parentNodeChildrenFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
+            android:id="@+id/action_parentNodeChildrenFragment_to_loginDiaryFragment"
+            app:destination="@id/loginDiaryFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
@@ -400,6 +414,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_mailFragment_to_loginDiaryFragment"
+            app:destination="@id/loginDiaryFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/listAwardsFragment"
@@ -424,6 +445,13 @@
         <action
             android:id="@+id/action_listAwardsFragment_to_mainFragment"
             app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_listAwardsFragment_to_loginDiaryFragment"
+            app:destination="@id/loginDiaryFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"

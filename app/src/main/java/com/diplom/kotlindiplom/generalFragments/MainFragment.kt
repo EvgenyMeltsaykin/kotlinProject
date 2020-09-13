@@ -1,5 +1,6 @@
 package com.diplom.kotlindiplom.generalFragments
 
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -43,15 +44,22 @@ class MainFragment : Fragment() {
         if (role == "child"){
             return inflater.inflate(R.layout.fragment_main, container, false)
         }
-        return inflater.inflate(R.layout.fragment_main_parent, container, false)
+        if (role == "parent"){
+            return inflater.inflate(R.layout.fragment_login_diary, container, false)
+        }
+        return null
     }
 
+    @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
         activity?.title = "Главная"
         if (role == "child"){
             setupChildFragment()
+        }
+        if (role == "parent"){
+
         }
 
     }

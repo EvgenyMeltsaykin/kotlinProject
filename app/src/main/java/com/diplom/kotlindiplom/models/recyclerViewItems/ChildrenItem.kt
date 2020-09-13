@@ -17,7 +17,9 @@ class ChildrenItem(val child: Child, val deleteListener: OnClickDeleteButton?): 
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.nameChildTextView.text = child.username
-        viewHolder.itemView.childIdTextView.text = "id:" + child.id.toString()
+        viewHolder.itemView.balanceChildTextView.text = "Баланс: ${child.point}"
+        viewHolder.itemView.childIdTextView.text = "id: ${child.id}"
+
         viewHolder.itemView.deleteButton.setOnClickListener {
             deleteListener?.onClickDeleteButton(this@ChildrenItem,child)
         }

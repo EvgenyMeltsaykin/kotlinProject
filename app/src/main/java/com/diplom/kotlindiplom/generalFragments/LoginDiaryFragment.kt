@@ -55,9 +55,9 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //requireActivity().invalidateOptionsMenu()
+        requireActivity().invalidateOptionsMenu()
         progressBar?.isVisible = false
-        activity?.title = "Электронный дневник"
+        activity?.title = ""
         val firebase = FunctionsFirebase()
         firebase.getFieldDiary(firebase.uidUser!!,"login",object : FirebaseCallback<String>{
             override fun onComplete(value: String) {
@@ -96,7 +96,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                             withContext(Dispatchers.IO) { diary.elschool.login(login, password) }
                     }
                     if (!rightLogin) {
-                        enterDiaryButton?.isVisible = true
+                        showButtons()
                         Toast.makeText(
                             requireContext(),
                             "Не верный логин или пароль",
@@ -131,14 +131,16 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
     private fun showButtons(){
+        enterDiaryButton?.isVisible = true
         staticMessageTextView?.isVisible = true
         writeMailButton?.isVisible = true
-        enterDiaryButton?.isVisible = true
     }
     private fun hideButtons(){
         staticMessageTextView?.isVisible = false
         writeMailButton?.isVisible = false
         enterDiaryButton?.isVisible = false
+        staticMessageTextView?.isVisible = false
+        writeMailButton?.isVisible = false
     }
     private fun validateLogin(login:String, password:String):Boolean{
         var fl = true

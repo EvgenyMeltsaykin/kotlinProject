@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">SchoolUp</string>
-
     <integer name="com_vk_sdk_AppId">7345144</integer>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -9,10 +8,9 @@
     <string name="navigation_drawer_close"> Close</string>
     <string name="accessTokenVkApi"> 82ec654d82ec654d82ec654d1d829c76b5882ec82ec654ddcb339961b9dc274bcd1e19a</string>
     <string name="messageEmptyField"> Обязательное поле</string>
-    <string name="emailSupport"> e.meltsaykin@gmail.com</string>
-
-    <string name="computerScience"> Информатика</string>
-    <string name="maths"> Математика</string>
+    <string name="emailSupport">schoolup.team@gmail.com</string>
+    <string name="computerScience">Информатика</string>
+    <string name="maths">Математика</string>
     <string name="russianLanguage"> Русский язык</string>
     <string name="geometry"> Геометрия</string>
     <string name="literature"> Литература</string>
@@ -29,9 +27,4 @@
     <string name="frenchLanguage"> Французский язык</string>
     <string name="physics"> Физика</string>
     <string name="chemistry"> Химия</string>
-
-
-    socialScienceButton?.setOnClickListener {
-    navigateNextFragment("socialScienceButton")
-    }
 </resources>

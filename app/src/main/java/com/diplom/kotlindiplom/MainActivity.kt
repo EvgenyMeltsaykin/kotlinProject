@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
 
     fun settingsParent() {
         navView.inflateMenu(R.menu.drawer_menu_parent)
+        navController.navigate(R.id.loginDiaryFragment)
         setupDrawerAndToolbar()
         val header = navView.getHeaderView(0)
         val usernameTextViewHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
@@ -200,7 +201,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             val bundle = bundleOf()
             bundle.putString("taskId", intent.getStringExtra("taskId"))
             bundle.putString("title", intent.getStringExtra("title"))
-            navController.navigate(R.id.action_mainFragment_to_parentTaskContentFragment, bundle)
+            navController.navigate(R.id.action_loginDiaryFragment_to_parentTaskContentFragment, bundle)
         }
         Log.d("Tag",intent.getStringExtra("awardId").toString())
         if (!intent.getStringExtra("awardId").isNullOrBlank()) {
@@ -210,7 +211,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             bundle.putString("costAward",intent.getStringExtra("costAward"))
             bundle.putString("status",intent.getStringExtra("status"))
             Log.d("Tag",bundle.toString())
-            navController.navigate(R.id.action_mainFragment_to_detailAwardFragment, bundle)
+            navController.navigate(R.id.action_loginDiaryFragment_to_detailAwardFragment, bundle)
         }
     }
 
@@ -355,6 +356,9 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 if (navController.currentDestination?.id  == R.id.listAwardsFragment){
                     navController.navigate(R.id.listAwardsFragment)
                 }
+                if (navController.currentDestination?.id == R.id.parentNodeChildrenFragment){
+                    navController.navigate(R.id.parentNodeChildrenFragment)
+                }
             }
             R.id.editScheduleDay->{
                 navController.navigate(R.id.action_myScheduleDayFragment_to_editScheduleFragment)
@@ -402,6 +406,10 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             val item = menu?.findItem(R.id.updateInformation)
             item?.isVisible = true
         }
+        if (navController.currentDestination?.id == R.id.parentNodeChildrenFragment){
+            val item = menu?.findItem(R.id.updateInformation)
+            item?.isVisible = true
+        }
         if (navController.currentDestination?.id == R.id.myScheduleDayFragment){
             val item = menu?.findItem(R.id.editScheduleDay)
             item?.isVisible = true
@@ -443,8 +451,8 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             return
         }
         when(navController.currentDestination?.id){
-            R.id.parentMyProfileFragment ->{
-                navController.navigate(R.id.action_parentMyProfileFragment_to_mainFragment)
+            R.id.parentMyProfileFragment->{
+                navController.navigate(R.id.action_parentMyProfileFragment_to_loginDiaryFragment)
                 return
             }
             R.id.childMyProfileFragment->{
@@ -456,42 +464,75 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 return
             }
             R.id.listAwardsFragment->{
-                navController.navigate(R.id.action_listAwardsFragment_to_mainFragment)
+                moveFragment(R.id.action_listAwardsFragment_to_mainFragment,R.id.action_listAwardsFragment_to_loginDiaryFragment)
                 return
             }
             R.id.diaryFragment->{
-                navController.navigate(R.id.action_diaryFragment_to_mainFragment)
-                return
+                if (roleUser == "child"){
+                    navController.navigate(R.id.action_diaryFragment_to_mainFragment)
+                    return
+                }
             }
             R.id.loginDiaryFragment->{
-                navController.navigate(R.id.action_loginDiaryFragment_to_mainFragment)
-                return
+                if (roleUser == "child"){
+                    navController.navigate(R.id.action_loginDiaryFragment_to_mainFragment)
+                    return
+                }
             }
             R.id.parentTasksFragment->{
-                navController.navigate(R.id.action_parentTasksFragment_to_mainFragment)
+                navController.navigate(R.id.action_parentTasksFragment_to_loginDiaryFragment)
                 return
             }
             R.id.parentNodeChildrenFragment->{
-                navController.navigate(R.id.action_parentNodeChildrenFragment_to_mainFragment)
+                navController.navigate(R.id.action_parentNodeChildrenFragment_to_loginDiaryFragment)
+                return
+            }
+            R.id.mailFragment->{
+                moveFragment(R.id.action_mailFragment_to_mainFragment,R.id.action_mailFragment_to_loginDiaryFragment)
                 return
             }
         }
-        if (navController.currentDestination?.id == R.id.mainFragment){
-            if (back_pressed + 2000 > System.currentTimeMillis()) {
-                finishAffinity()
-                //super.onBackPressed()
-            } else {
-                Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
-                back_pressed = System.currentTimeMillis()
+        if (roleUser == "child"){
+            if (navController.currentDestination?.id == R.id.mainFragment){
+                if (back_pressed + 2000 > System.currentTimeMillis()) {
+                    finishAffinity()
+                    //super.onBackPressed()
+                } else {
+                    Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
+                    back_pressed = System.currentTimeMillis()
+                    return
+                }
+            }else{
+                navController.popBackStack()
                 return
             }
-        }else{
-            navController.popBackStack()
-            return
         }
+        if (roleUser == "parent"){
+            if (navController.currentDestination?.id == R.id.diaryFragment || navController.currentDestination?.id == R.id.loginDiaryFragment){
+                if (back_pressed + 2000 > System.currentTimeMillis()) {
+                    finishAffinity()
+                    //super.onBackPressed()
+                } else {
+                    Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
+                    back_pressed = System.currentTimeMillis()
+                    return
+                }
+            }else{
+                navController.popBackStack()
+                return
+            }
+        }
+
 
     }
-
+    fun moveFragment(childActionId: Int,parentActionId :Int){
+        if (roleUser == "child"){
+            navController.navigate(childActionId)
+        }
+        if (roleUser == "parent"){
+            navController.navigate(parentActionId)
+        }
+    }
     private fun setupDrawerAndToolbar() {
         val myToolBar = findViewById<Toolbar>(R.id.myToolbar)
         setSupportActionBar(myToolBar)
