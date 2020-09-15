@@ -48,6 +48,7 @@ class RequestParentFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        dialog?.setCanceledOnTouchOutside(false)
         return inflater.inflate(R.layout.accept_parent, container, false)
     }
 
@@ -78,7 +79,7 @@ class RequestParentFragment : DialogFragment() {
                     override fun onComplete(parentUid: String) {
                         Log.d("TAG", "$parentUid")
                         firebase.setFieldUserDatabase(
-                            firebase.uidUser!!,
+                            firebase.uidUser,
                             "parentUid",
                             parentUid
                         )

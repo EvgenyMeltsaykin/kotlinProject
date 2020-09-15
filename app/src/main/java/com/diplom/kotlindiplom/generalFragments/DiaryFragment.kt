@@ -24,14 +24,15 @@ private const val ARG_PARAM2 = "param2"
  */
 class DiaryFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var login: String
+    private lateinit var urlDiary: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            login = it.getString("login","")
+            urlDiary = it.getString("urlDiary","")
         }
     }
 
@@ -87,18 +88,15 @@ class DiaryFragment : Fragment() {
                     }
                 }
             })
-
-
-        firebase.getFieldDiary(firebase.uidUser,"login",object :FirebaseCallback<String>{
-            override fun onComplete(value: String) {
-                loginDiaryTextView?.text = value
-            }
-        })
-        firebase.getFieldDiary(firebase.uidUser, "url", object : FirebaseCallback<String> {
-            override fun onComplete(value: String) {
-                diaryTextView?.text = value
-            }
-        })
+        loginDiaryTextView?.text = login
+        diaryTextView?.text = urlDiary
+        if (urlDiary.isEmpty()){
+            firebase.getFieldDiary(firebase.uidUser, "url", object : FirebaseCallback<String> {
+                override fun onComplete(value: String) {
+                    diaryTextView?.text = value
+                }
+            })
+        }
         deleteDiaryButton?.setOnClickListener {
             firebase.deleteDiary()
             val bundle = bundleOf()

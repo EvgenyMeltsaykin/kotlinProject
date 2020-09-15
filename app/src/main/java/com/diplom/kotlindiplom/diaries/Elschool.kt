@@ -30,6 +30,7 @@ import java.io.IOException
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.time.measureTime
 
 class Elschool {
     val urlLogin = "https://elschool.ru/Logon/Index"
@@ -64,6 +65,7 @@ class Elschool {
     fun login(login: String, password: String): Boolean {
         val cookies: HashMap<String, String> = HashMap()
         var title = ""
+        Log.d("Tag",System.currentTimeMillis().toString())
         try {
             val document = Jsoup.connect(urlLogin)
                 .data("login", login)
@@ -82,15 +84,19 @@ class Elschool {
                 firebase.setFieldDiary(
                     firebase.uidUser,
                     "cookie",
-                    document.cookies().get(keyCookie).toString()
+                    document.cookies()[keyCookie].toString()
                 )
+                Log.d("Tag","true" + System.currentTimeMillis().toString())
                 return true
             } else {
+                Log.d("Tag","false1" + System.currentTimeMillis().toString())
                 return false
             }
         } catch (e: IOException) {
+            Log.d("Tag","IOException" + System.currentTimeMillis().toString())
             e.printStackTrace()
         }
+        Log.d("Tag","false2" + System.currentTimeMillis().toString())
         return false
     }
 

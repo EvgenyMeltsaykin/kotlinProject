@@ -12,7 +12,10 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.BaseFragment
+import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.childFragments.RequestParentFragment
+import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_main.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -58,12 +61,21 @@ class MainFragment : Fragment() {
         if (role == "child"){
             setupChildFragment()
         }
-        if (role == "parent"){
-
-        }
-
     }
     fun setupChildFragment(){
+        val firebase = FunctionsFirebase()
+        firebase.getFieldUserDatabase(firebase.uidUser!!,"acceptName",object :FirebaseCallback<String>{
+            override fun onComplete(parentName: String) {
+                if (parentName.isNotEmpty()){
+                    val requestParentFragment = RequestParentFragment()
+                    val bundle = bundleOf()
+                    bundle.putString("parentName",parentName)
+                    requestParentFragment.arguments = bundle
+                    requestParentFragment.show(requireActivity().supportFragmentManager,"requestParentFragment")
+                }
+
+            }
+        })
         mondayMainButton?.setOnClickListener {
             navigateToDay("понедельник")
         }

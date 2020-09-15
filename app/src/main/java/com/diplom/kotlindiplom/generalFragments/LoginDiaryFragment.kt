@@ -63,7 +63,9 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
             override fun onComplete(value: String) {
                 if(value.isNotEmpty()){
                     if (!deletedDiary){
-                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_loginDiaryFragment_to_diaryFragment)
+                        val bundle = bundleOf()
+                        bundle.putString("login",value)
+                        Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_loginDiaryFragment_to_diaryFragment,bundle)
                     }else{
                         setupSpinner()
                     }
@@ -103,20 +105,17 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
-                        firebase.createDiary(urlDiary)
-                        firebase.setLoginAndPasswordDiary(login,password)
-                        firebase.setFieldUserDatabase(firebase.uidUser, "diary/url", urlDiary)
-                        firebase.getRoleByUid(
-                            firebase.uidUser,
-                            object : FirebaseCallback<String> {
-                                override fun onComplete(value: String) {
-                                    Navigation.findNavController(
-                                        requireActivity(),
-                                        R.id.navFragment
-                                    )
-                                        .navigate(R.id.action_loginDiaryFragment_to_diaryFragment,)
-                                }
-                            })
+                        GlobalScope.launch(Dispatchers.IO) {
+                            firebase.createDiary(urlDiary)
+                            firebase.setLoginAndPasswordDiary(login,password)
+                            firebase.setFieldUserDatabase(firebase.uidUser, "diary/url", urlDiary)
+                        }
+                        val bundle = bundleOf()
+                        bundle.putString("login",login)
+                        Navigation.findNavController(
+                            requireActivity(),
+                            R.id.navFragment
+                        ).navigate(R.id.action_loginDiaryFragment_to_diaryFragment,bundle)
                     }
                 }
             } else {

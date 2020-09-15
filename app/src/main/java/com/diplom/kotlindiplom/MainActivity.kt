@@ -431,19 +431,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             drawer.closeDrawer(GravityCompat.START)
             return
         }
-        /*if (navController.currentDestination?.id == R.id.weekdayFragment){
-            if (roleUser == "child"){
-                while(navController.backStack.size >= 3){
-                    navController.popBackStack()
-                }
-            }
-            if(roleUser == "parent"){
-                while(navController.backStack.size >= 4){
-                    navController.popBackStack()
-                }
-            }
-            return
-        }*/
         if (navController.currentDestination?.id == R.id.scheduleDayFragment){
             val bundle = bundleOf()
             bundle.putBoolean("updateSchedule",false)

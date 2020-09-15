@@ -1099,6 +1099,7 @@ class FunctionsFirebase {
     }
 
     fun sendRequestChild(editTextId: EditText?, context: Context) {
+        clearAcceptRequest()
         val childRef = rootRef.child("users").child("children")
         childRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -1136,16 +1137,6 @@ class FunctionsFirebase {
                                             object : FirebaseCallback<String> {
                                                 override fun onComplete(value: String) {
                                                     if (value.isEmpty()) {
-                                                        setFieldUserDatabase(
-                                                            childUid,
-                                                            "acceptName",
-                                                            ""
-                                                        )
-                                                        setFieldUserDatabase(
-                                                            childUid,
-                                                            "acceptUid",
-                                                            ""
-                                                        )
                                                         getFieldUserDatabase(
                                                             uidUser!!,
                                                             "username",
@@ -1159,7 +1150,7 @@ class FunctionsFirebase {
                                                                     setFieldUserDatabase(
                                                                         childUid,
                                                                         "acceptUid",
-                                                                        uidUser!!
+                                                                        uidUser
                                                                     )
                                                                 }
                                                             })
