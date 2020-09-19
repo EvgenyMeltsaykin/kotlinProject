@@ -407,7 +407,7 @@ class Elschool {
         val firebase = FunctionsFirebase()
         firebase.setFieldDiary(firebase.uidUser!!, "marks", "")
         GlobalScope.launch(Dispatchers.IO) {
-            firebase.getFieldDiary(firebase.uidUser!!, "cookie", object : FirebaseCallback<String> {
+            firebase.getFieldDiary(firebase.uidUser, "cookie", object : FirebaseCallback<String> {
                 override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
                         val cookies = hashMapOf<String, String>()

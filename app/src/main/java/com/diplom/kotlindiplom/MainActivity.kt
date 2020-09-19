@@ -5,12 +5,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
-import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -20,22 +18,17 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.diplom.kotlindiplom.childFragments.RequestParentFragment
-import com.diplom.kotlindiplom.childFragments.mySchedule.AddLessonFragment
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.accept_parent.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.header.view.*
-import java.util.*
 
 class MainActivity : AppCompatActivity(), ActivityCallback {
 
@@ -44,8 +37,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     private lateinit var navController: NavController
     private lateinit var navigationView: NavigationView
     private lateinit var menuNavigationView: Menu
-    private lateinit var optionsMenu: MenuItem
-    private var back_pressed: Long = 0
+    private var backPressed: Long = 0
     private var roleUser = ""
     override fun getRoleUser(): String? {
         return intent.getStringExtra("role").toString()
@@ -53,7 +45,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
 
     @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
-
         roleUser = intent.getStringExtra("role").toString()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -65,6 +56,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         navigationView = findViewById(R.id.navView)
         navigationView.setupWithNavController(navController)
         menuNavigationView = navigationView.menu
+
         if (roleUser == "child") {
             settingsChild()
         }
@@ -73,7 +65,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         }
     }
 
-    fun settingsParent() {
+    private fun settingsParent() {
         navView.inflateMenu(R.menu.drawer_menu_parent)
         navController.navigate(R.id.loginDiaryFragment)
         setupDrawerAndToolbar()
@@ -104,7 +96,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                             "Ваш запрос отклонен",
                             Toast.LENGTH_SHORT
                         ).show()
-                        firebase.setFieldUserDatabase(firebase.uidUser, "acceptAnswer", "-1")
                     }
                     if (p0.value.toString() == "1") {
                         Toast.makeText(
@@ -112,8 +103,8 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                             "Ваш запрос принят",
                             Toast.LENGTH_SHORT
                         ).show()
-                        firebase.setFieldUserDatabase(firebase.uidUser, "acceptAnswer", "-1")
                     }
+                    firebase.setFieldUserDatabase(firebase.uidUser, "acceptAnswer", "-1")
                 }
             }
 
@@ -140,7 +131,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
-                if(task.parentUid == firebase.uidUser) {
+                if (task.parentUid == firebase.uidUser) {
                     if (task.showNotification == 1 || task.status != 0) return
                     uiFunctions.createNotificationParent(
                         applicationContext,
@@ -161,7 +152,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             }
         })
 
-        firebase.awardsRef.addChildEventListener(object : ChildEventListener{
+        firebase.awardsRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 return
             }
@@ -169,7 +160,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val award = firebase.getAllFieldAward(snapshot)
-                if (award.parentUid == firebase.uidUser){
+                if (award.parentUid == firebase.uidUser) {
                     if (award.showNotification != 1) return
                     uiFunctions.createNotificationChildTakeAward(
                         applicationContext,
@@ -178,7 +169,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                         award.name,
                         award
                     )
-                    firebase.setFieldAward(award.awardId,"showNotification",0)
+                    firebase.setFieldAward(award.awardId, "showNotification", 0)
                 }
             }
 
@@ -201,21 +192,24 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             val bundle = bundleOf()
             bundle.putString("taskId", intent.getStringExtra("taskId"))
             bundle.putString("title", intent.getStringExtra("title"))
-            navController.navigate(R.id.action_loginDiaryFragment_to_parentTaskContentFragment, bundle)
+            navController.navigate(
+                R.id.action_loginDiaryFragment_to_parentTaskContentFragment,
+                bundle
+            )
         }
-        Log.d("Tag",intent.getStringExtra("awardId").toString())
+        Log.d("Tag", intent.getStringExtra("awardId").toString())
         if (!intent.getStringExtra("awardId").isNullOrBlank()) {
             val bundle = bundleOf()
-            bundle.putString("awardId",intent.getStringExtra("awardId"))
-            bundle.putString("nameAward",intent.getStringExtra("nameAward"))
-            bundle.putString("costAward",intent.getStringExtra("costAward"))
-            bundle.putString("status",intent.getStringExtra("status"))
-            Log.d("Tag",bundle.toString())
+            bundle.putString("awardId", intent.getStringExtra("awardId"))
+            bundle.putString("nameAward", intent.getStringExtra("nameAward"))
+            bundle.putString("costAward", intent.getStringExtra("costAward"))
+            bundle.putString("status", intent.getStringExtra("status"))
+            Log.d("Tag", bundle.toString())
             navController.navigate(R.id.action_loginDiaryFragment_to_detailAwardFragment, bundle)
         }
     }
 
-    fun settingsChild() {
+    private fun settingsChild() {
         navView.inflateMenu(R.menu.drawer_menu_child)
         //Нажатие на аватарку в боковом меню
         val header = navView.getHeaderView(0)
@@ -248,21 +242,13 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                val requestParentFragment = RequestParentFragment()
-                val bundle =  bundleOf()
                 if (p0.key.toString() == "acceptName") {
                     if (p0.value.toString().isNotEmpty()) {
-                        Log.d("TAG", "Найден пользователь")
-                        firebase.getFieldUserDatabase(
-                            firebase.uidUser!!,
-                            "acceptName",
-                            object : FirebaseCallback<String> {
-                                override fun onComplete(parentName: String) {
-                                    bundle.putString("parentName",parentName)
-                                    requestParentFragment.arguments = bundle
-                                    requestParentFragment.show(supportFragmentManager,"requestParentFragment")
-                                }
-                            })
+                        val requestParentFragment = RequestParentFragment()
+                        val bundle = bundleOf()
+                        bundle.putString("parentName", p0.value.toString())
+                        requestParentFragment.arguments = bundle
+                        requestParentFragment.show(supportFragmentManager, "requestParentFragment")
                     }
                 }
             }
@@ -290,7 +276,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
 
-                if (task.childUid == firebase.uidUser){
+                if (task.childUid == firebase.uidUser) {
                     if (task.showNotification == 2 && task.status == -1) {
                         uiFunctions.createNotificationChild(
                             applicationContext,
@@ -299,7 +285,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                             task.title,
                             task
                         )
-                        firebase.setFieldDatabaseTask(task.taskId,"childUid","")
+                        firebase.setFieldDatabaseTask(task.taskId, "childUid", "")
                     }
                     if (task.showNotification == 0 && task.status == 1) {
                         uiFunctions.createNotificationChild(
@@ -316,21 +302,24 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
-                firebase.getFieldUserDatabase(firebase.uidUser,"parentUid",object :FirebaseCallback<String>{
-                    override fun onComplete(value: String) {
-                        if (task.parentUid == value){
-                            if (task.showNotification == 0 && task.status == -1) {
-                                uiFunctions.createNotificationChild(
-                                    applicationContext,
-                                    MainActivity::class.java,
-                                    "Новое задание",
-                                    task.title,
-                                    task
-                                )
+                firebase.getFieldUserDatabase(
+                    firebase.uidUser,
+                    "parentUid",
+                    object : FirebaseCallback<String> {
+                        override fun onComplete(value: String) {
+                            if (task.parentUid == value) {
+                                if (task.showNotification == 0 && task.status == -1) {
+                                    uiFunctions.createNotificationChild(
+                                        applicationContext,
+                                        MainActivity::class.java,
+                                        "Новое задание",
+                                        task.title,
+                                        task
+                                    )
+                                }
                             }
                         }
-                    }
-                })
+                    })
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
@@ -353,14 +342,14 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 R.id.childMyProfileFragment
             )
             R.id.updateInformation -> {
-                if (navController.currentDestination?.id  == R.id.listAwardsFragment){
+                if (navController.currentDestination?.id == R.id.listAwardsFragment) {
                     navController.navigate(R.id.listAwardsFragment)
                 }
-                if (navController.currentDestination?.id == R.id.parentNodeChildrenFragment){
+                if (navController.currentDestination?.id == R.id.parentNodeChildrenFragment) {
                     navController.navigate(R.id.parentNodeChildrenFragment)
                 }
             }
-            R.id.editScheduleDay->{
+            R.id.editScheduleDay -> {
                 navController.navigate(R.id.action_myScheduleDayFragment_to_editScheduleFragment)
             }
         }
@@ -379,15 +368,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                         item?.title = value
                     }
                 })
-        }else{
+        } else {
             val item = menu?.findItem(R.id.menuPointsChild)
             item?.isVisible = false
         }
         return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun invalidateOptionsMenu() {
-        super.invalidateOptionsMenu()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -402,15 +387,15 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                     }
                 })
         }
-        if (navController.currentDestination?.id == R.id.listAwardsFragment){
+        if (navController.currentDestination?.id == R.id.listAwardsFragment) {
             val item = menu?.findItem(R.id.updateInformation)
             item?.isVisible = true
         }
-        if (navController.currentDestination?.id == R.id.parentNodeChildrenFragment){
+        if (navController.currentDestination?.id == R.id.parentNodeChildrenFragment) {
             val item = menu?.findItem(R.id.updateInformation)
             item?.isVisible = true
         }
-        if (navController.currentDestination?.id == R.id.myScheduleDayFragment){
+        if (navController.currentDestination?.id == R.id.myScheduleDayFragment) {
             val item = menu?.findItem(R.id.editScheduleDay)
             item?.isVisible = true
         }
@@ -431,80 +416,88 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             drawer.closeDrawer(GravityCompat.START)
             return
         }
-        if (navController.currentDestination?.id == R.id.scheduleDayFragment){
+        if (navController.currentDestination?.id == R.id.scheduleDayFragment) {
             val bundle = bundleOf()
-            bundle.putBoolean("updateSchedule",false)
-            navController.navigate(R.id.action_scheduleDayFragment_to_weekdayFragment,bundle)
+            bundle.putBoolean("updateSchedule", false)
+            navController.navigate(R.id.action_scheduleDayFragment_to_weekdayFragment, bundle)
             return
         }
-        when(navController.currentDestination?.id){
-            R.id.parentMyProfileFragment->{
+        when (navController.currentDestination?.id) {
+            R.id.parentMyProfileFragment -> {
                 navController.navigate(R.id.action_parentMyProfileFragment_to_loginDiaryFragment)
                 return
             }
-            R.id.childMyProfileFragment->{
+            R.id.childMyProfileFragment -> {
                 navController.navigate(R.id.action_childMyProfileFragment_to_mainFragment)
                 return
             }
-            R.id.childTasksFragment->{
+            R.id.childTasksFragment -> {
                 navController.navigate(R.id.action_childTasksFragment_to_mainFragment)
                 return
             }
-            R.id.listAwardsFragment->{
-                moveFragment(R.id.action_listAwardsFragment_to_mainFragment,R.id.action_listAwardsFragment_to_loginDiaryFragment)
+            R.id.listAwardsFragment -> {
+                moveFragment(
+                    R.id.action_listAwardsFragment_to_mainFragment,
+                    R.id.action_listAwardsFragment_to_loginDiaryFragment
+                )
                 return
             }
-            R.id.diaryFragment->{
-                if (roleUser == "child"){
+            R.id.diaryFragment -> {
+                if (roleUser == "child") {
                     navController.navigate(R.id.action_diaryFragment_to_mainFragment)
                     return
                 }
             }
-            R.id.loginDiaryFragment->{
-                if (roleUser == "child"){
+            R.id.loginDiaryFragment -> {
+                if (roleUser == "child") {
                     navController.navigate(R.id.action_loginDiaryFragment_to_mainFragment)
                     return
                 }
             }
-            R.id.parentTasksFragment->{
+            R.id.parentTasksFragment -> {
                 navController.navigate(R.id.action_parentTasksFragment_to_loginDiaryFragment)
                 return
             }
-            R.id.parentNodeChildrenFragment->{
+            R.id.parentNodeChildrenFragment -> {
                 navController.navigate(R.id.action_parentNodeChildrenFragment_to_loginDiaryFragment)
                 return
             }
-            R.id.mailFragment->{
-                moveFragment(R.id.action_mailFragment_to_mainFragment,R.id.action_mailFragment_to_loginDiaryFragment)
+            R.id.mailFragment -> {
+                moveFragment(
+                    R.id.action_mailFragment_to_mainFragment,
+                    R.id.action_mailFragment_to_loginDiaryFragment
+                )
                 return
             }
         }
-        if (roleUser == "child"){
-            if (navController.currentDestination?.id == R.id.mainFragment){
-                if (back_pressed + 2000 > System.currentTimeMillis()) {
+        if (roleUser == "child") {
+            if (navController.currentDestination?.id == R.id.mainFragment) {
+                if (backPressed + 2000 > System.currentTimeMillis()) {
                     finishAffinity()
                     //super.onBackPressed()
                 } else {
-                    Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
-                    back_pressed = System.currentTimeMillis()
+                    Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT)
+                        .show()
+                    backPressed = System.currentTimeMillis()
                     return
                 }
-            }else{
+            } else {
                 navController.popBackStack()
                 return
             }
         }
-        if (roleUser == "parent"){
-            if (navController.currentDestination?.id == R.id.diaryFragment || navController.currentDestination?.id == R.id.loginDiaryFragment){
-                if (back_pressed + 2000 > System.currentTimeMillis()) {
+        if (roleUser == "parent") {
+            if (navController.currentDestination?.id == R.id.diaryFragment || navController.currentDestination?.id == R.id.loginDiaryFragment) {
+                if (backPressed + 2000 > System.currentTimeMillis()) {
                     finishAffinity()
                     //super.onBackPressed()
                 } else {
-                    Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT).show()
-                    back_pressed = System.currentTimeMillis()
+                    Toast.makeText(this, "Для выхода нажмите \"Назад\" ещё раз", Toast.LENGTH_SHORT)
+                        .show()
+                    backPressed = System.currentTimeMillis()
                     return
                 }
-            }else{
+            } else {
                 navController.popBackStack()
                 return
             }
@@ -512,14 +505,16 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
 
 
     }
-    fun moveFragment(childActionId: Int,parentActionId :Int){
-        if (roleUser == "child"){
+
+    private fun moveFragment(childActionId: Int, parentActionId: Int) {
+        if (roleUser == "child") {
             navController.navigate(childActionId)
         }
-        if (roleUser == "parent"){
+        if (roleUser == "parent") {
             navController.navigate(parentActionId)
         }
     }
+
     private fun setupDrawerAndToolbar() {
         val myToolBar = findViewById<Toolbar>(R.id.myToolbar)
         setSupportActionBar(myToolBar)
@@ -551,6 +546,8 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             firebase.removeAllListener()
             return@setOnMenuItemClickListener true
         }
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
         /*if (role == "child"){
             firebase.getChild(firebase.uidUser!!, object : FirebaseCallback<Child> {
                 override fun onComplete(value: Child) {
@@ -574,8 +571,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 }
             })
         }*/
-        drawer.addDrawerListener(toggle)
-        toggle.syncState()
     }
 
 }
