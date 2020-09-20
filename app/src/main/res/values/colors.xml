@@ -16,4 +16,8 @@
     <color name="colorLeftMenuBackground">#BBDEFB</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorPie5">#1e88e5</color>
+    <color name="colorPie4">#1976d2</color>
+    <color name="colorPie3">#1565c0</color>
+    <color name="colorPie2">#0d47a1</color>
 </resources>
