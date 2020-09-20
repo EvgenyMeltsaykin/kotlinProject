@@ -362,7 +362,15 @@
         android:id="@+id/detailsMarksFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.markFragments.DetailsMarksFragment"
         android:label="fragment_details_marks"
-        tools:layout="@layout/fragment_details_marks" />
+        tools:layout="@layout/fragment_details_marks" >
+        <action
+            android:id="@+id/action_detailsMarksFragment_to_graphMarksFragment"
+            app:destination="@id/graphMarksFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
     <fragment
         android:id="@+id/listClassesFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.schoolBooksFragments.ListClassesFragment"
@@ -499,6 +507,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_detailsFinalMarkFragment2_to_graphMarksFragment"
+            app:destination="@id/graphMarksFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/myScheduleDayFragment"
@@ -548,4 +563,9 @@
         android:name="com.diplom.kotlindiplom.childFragments.mySchedule.PagerMyScheduleFragment"
         android:label="fragment_pager_my_schedule"
         tools:layout="@layout/fragment_pager_my_schedule" />
+    <fragment
+        android:id="@+id/graphMarksFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.markFragments.GraphMarksFragment"
+        android:label="fragment_graph_marks"
+        tools:layout="@layout/fragment_graph_marks" />
 </navigation>

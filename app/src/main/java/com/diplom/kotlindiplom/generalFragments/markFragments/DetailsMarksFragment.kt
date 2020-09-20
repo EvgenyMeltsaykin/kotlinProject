@@ -12,8 +12,10 @@ import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.os.bundleOf
 import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
+import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.FirebaseCallback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -56,7 +58,7 @@ class DetailsMarksFragment : Fragment() {
         //requireActivity().invalidateOptionsMenu()
         activity?.title ="Оценки"
         val firebase = FunctionsFirebase()
-
+        val detailMark = mutableListOf<String>()
         semestrNumberTextView?.isVisible = false
         lessonNameTextView?.isVisible = false
         middleMarkTextView?.isVisible = false
@@ -75,8 +77,7 @@ class DetailsMarksFragment : Fragment() {
         firebase.getDetailsMarks(lessonName,semestrNumber,object : FirebaseCallback<Map<String,String>>{
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onComplete(value: Map<String, String>) {
-                val detailMark = mutableListOf<String>()
-                value.forEach { s, s1 ->
+                value.forEach { (s, s1) ->
                     if (s.isNotEmpty())
                         detailMark.add("Дата урока:$s.Оценка: $s1")
                 }
@@ -88,5 +89,11 @@ class DetailsMarksFragment : Fragment() {
                 middleMarkTextView?.isVisible = true
             }
         })
+        plotGraphButton?.setOnClickListener {
+            val bundle = bundleOf()
+            bundle.putString("lessonName",lessonName)
+            bundle.putString("semestrNumber",semestrNumber)
+            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailsMarksFragment_to_graphMarksFragment,bundle)
+        }
     }
 }

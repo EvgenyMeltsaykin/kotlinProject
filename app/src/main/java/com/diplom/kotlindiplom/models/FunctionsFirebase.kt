@@ -580,7 +580,6 @@ class FunctionsFirebase {
                                                     }
                                                     detailMarksMap[date] = value
                                                 }
-                                                firebaseCallBack.onComplete(detailMarksMap)
                                             }
                                         }
                                     }
