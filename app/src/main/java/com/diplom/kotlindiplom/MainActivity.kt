@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.diplom.kotlindiplom.childFragments.RequestParentFragment
+import com.diplom.kotlindiplom.models.FunctionsApi
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
@@ -43,6 +44,14 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         return intent.getStringExtra("role").toString()
     }
 
+    object FirebaseSingleton {
+        val firebase = FunctionsFirebase()
+    }
+
+    object Network {
+        val network = FunctionsApi()
+    }
+
     @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         roleUser = intent.getStringExtra("role").toString()
@@ -56,7 +65,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         navigationView = findViewById(R.id.navView)
         navigationView.setupWithNavController(navController)
         menuNavigationView = navigationView.menu
-
         if (roleUser == "child") {
             settingsChild()
         }
@@ -197,7 +205,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 bundle
             )
         }
-        Log.d("Tag", intent.getStringExtra("awardId").toString())
         if (!intent.getStringExtra("awardId").isNullOrBlank()) {
             val bundle = bundleOf()
             bundle.putString("awardId", intent.getStringExtra("awardId"))
@@ -305,7 +312,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 firebase.getFieldUserDatabase(
                     firebase.uidUser,
                     "parentUid",
-                    object : FirebaseCallback<String> {
+                    object : Callback<String> {
                         override fun onComplete(value: String) {
                             if (task.parentUid == value) {
                                 if (task.showNotification == 0 && task.status == -1) {
@@ -363,7 +370,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             val firebase = FunctionsFirebase()
             firebase.getPointChild(
                 firebase.uidUser!!,
-                object : FirebaseCallback<String> {
+                object : Callback<String> {
                     override fun onComplete(value: String) {
                         item?.title = value
                     }
@@ -381,7 +388,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             val firebase = FunctionsFirebase()
             firebase.getPointChild(
                 firebase.uidUser!!,
-                object : FirebaseCallback<String> {
+                object : Callback<String> {
                     override fun onComplete(value: String) {
                         item?.title = value
                     }
@@ -531,7 +538,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         firebase.getFieldUserDatabase(
             firebase.uidUser!!,
             "username",
-            object : FirebaseCallback<String> {
+            object : Callback<String> {
                 override fun onComplete(value: String) {
                     header.usernameTextviewDrawer.text = value
                 }

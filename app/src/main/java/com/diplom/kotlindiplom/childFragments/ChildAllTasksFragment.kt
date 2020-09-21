@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -63,9 +63,9 @@ class ChildAllTasksFragment : Fragment() {
             firebase.getFieldUserDatabase(
                 firebase.uidUser!!,
                 "parentUid",
-                object : FirebaseCallback<String> {
+                object : Callback<String> {
                     override fun onComplete(value: String) {
-                        firebase.getTasksParentUid(value, status, object : FirebaseCallback<List<Task>> {
+                        firebase.getTasksParentUid(value, status, object : Callback<List<Task>> {
                             override fun onComplete(value: List<Task>) {
                                 if (value.isEmpty()){
                                     tasksEmptyTextView?.isVisible = true
@@ -92,7 +92,7 @@ class ChildAllTasksFragment : Fragment() {
                     }
                 })
         }else{
-            firebase.getTasksChildUid(firebase.uidUser!!,status,object : FirebaseCallback<List<Task>>{
+            firebase.getTasksChildUid(firebase.uidUser!!,status,object : Callback<List<Task>>{
                 override fun onComplete(value: List<Task>) {
                     if (value.isEmpty()){
                         tasksEmptyTextView?.isVisible = true

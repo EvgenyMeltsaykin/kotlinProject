@@ -1,7 +1,6 @@
 package com.diplom.kotlindiplom.childFragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -53,7 +52,7 @@ class ChildTaskContentFragment : Fragment() {
         activity?.title = title
         val navController = Navigation.findNavController(requireActivity(), R.id.navFragment)
         val firebase = FunctionsFirebase()
-        firebase.getTask(taskId.toString(), object : FirebaseCallback<Task> {
+        firebase.getTask(taskId.toString(), object : Callback<Task> {
             override fun onComplete(value: Task) {
                 titleContentTaskTextViewChild?.text = "Название:" +value.title
                 costContentTaskTextViewChild?.text = "Стоимость: " + value.cost.toString()

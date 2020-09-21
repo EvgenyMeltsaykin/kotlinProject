@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -14,7 +14,8 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import com.diplom.kotlindiplom.ChooseActivity
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.*
 import com.diplom.kotlindiplom.models.apiResponse.cities.City
@@ -36,15 +37,14 @@ var schoolId: Int? = -1
 
 class ChildMyProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var listener: OnFragmentInteractionListener? = null
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+
         return inflater.inflate(R.layout.fragment_child_my_profile, container, false)
     }
 
@@ -55,30 +55,7 @@ class ChildMyProfileFragment : Fragment() {
         activity?.title = "Мой профиль"
         changeEmail = false
         loadInformationFromFirebase()
-
-        val network = FunctionsApi(cityId)
-        val firebase = FunctionsFirebase()
-/*
-      selectphotoButtonChildmyprofile.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-                == PackageManager.PERMISSION_GRANTED
-            ) {
-                val intent = Intent(Intent.ACTION_PICK)
-                intent.type = "image/*"
-                startActivityForResult(intent, 0)
-            }else{
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    1
-                )
-            }
-        }
-        */
- */
+        Log.d("Tag", cityId.toString())
         emailTextInputChildMyProfile?.editText?.setOnClickListener {
             changeEmail = true
         }
@@ -98,7 +75,6 @@ class ChildMyProfileFragment : Fragment() {
         }
 
         saveChangeButtonChildMyProfile?.setOnClickListener {
-            firebase.uploadImageToFirebase(selectedPhotoUri, requireActivity(), "children")
             saveChangeInChildProfile()
         }
 
@@ -107,24 +83,53 @@ class ChildMyProfileFragment : Fragment() {
         }
 
         val cities: MutableList<City> = mutableListOf()
+        val schools: MutableList<SchoolClass> = mutableListOf()
         cityAutoCompleteTextViewChildMyProfile?.doAfterTextChanged {
             saveChangeButtonChildMyProfile?.isVisible = true
             educationalInstitutionAutoCompleteTextViewChildMyProfile?.text?.clear()
             schoolId = -1
-            network.getNodeCities(cityAutoCompleteTextViewChildMyProfile!!, requireContext(), cities)
+            MainActivity.Network.network.getNodeCities(
+                cityAutoCompleteTextViewChildMyProfile!!,
+                requireContext(),
+                cities
+            )
         }
         cityAutoCompleteTextViewChildMyProfile?.setOnItemClickListener { parent, view, position, id ->
             cityId = cities[id.toInt()].id
+            MainActivity.Network.network.getNodeSchools(
+                schools,
+                educationalInstitutionAutoCompleteTextViewChildMyProfile.text.toString(),
+                cityId!!,
+                object : Callback<List<String>> {
+                    override fun onComplete(value: List<String>) {
+                        val adapterEducational: ArrayAdapter<String> = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_list_item_1,
+                            value
+                        )
+                        educationalInstitutionAutoCompleteTextViewChildMyProfile.setAdapter(adapterEducational                        )
+                        educationalInstitutionAutoCompleteTextViewChildMyProfile.setOnFocusChangeListener { v, hasFocus -> if (hasFocus) educationalInstitutionAutoCompleteTextViewChildMyProfile.showDropDown() }
+                    }
+                }
+            )
         }
-
-        val schools: MutableList<SchoolClass> = mutableListOf()
         educationalInstitutionAutoCompleteTextViewChildMyProfile?.doAfterTextChanged {
             saveChangeButtonChildMyProfile?.isVisible = true
-            network.getNodeSchools(
-                educationalInstitutionAutoCompleteTextViewChildMyProfile!!,
-                requireContext(),
+            MainActivity.Network.network.getNodeSchools(
                 schools,
-                cityId
+                educationalInstitutionAutoCompleteTextViewChildMyProfile.text.toString(),
+                cityId!!,
+                object : Callback<List<String>> {
+                    override fun onComplete(value: List<String>) {
+                        val adapterEducational: ArrayAdapter<String> = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_list_item_1,
+                            value
+                        )
+                        educationalInstitutionAutoCompleteTextViewChildMyProfile.setAdapter(adapterEducational)
+                        educationalInstitutionAutoCompleteTextViewChildMyProfile.setOnFocusChangeListener { v, hasFocus -> if (hasFocus) educationalInstitutionAutoCompleteTextViewChildMyProfile.showDropDown() }
+                    }
+                }
             )
         }
         educationalInstitutionAutoCompleteTextViewChildMyProfile?.setOnItemClickListener { parent, view, position, id ->
@@ -133,45 +138,11 @@ class ChildMyProfileFragment : Fragment() {
 
     }
 
-    var selectedPhotoUri: Uri? = null
-
-    @RequiresApi(Build.VERSION_CODES.P)
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        /*if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
-            Log.d(TAG, "Photo was select")
-            saveChangeButtonChildMyProfile?.isVisible = true
-            //Новый способ загрузки картинки из галереи
-            selectedPhotoUri = data.data
-            val source =
-                ImageDecoder.createSource(requireActivity().contentResolver, selectedPhotoUri!!)
-            val bitmap = ImageDecoder.decodeBitmap(source)
-            selectphotoImageviewChildmyprofile.setImageBitmap(bitmap)
-            requireActivity().photoImageviewDrawer.setImageBitmap(bitmap)
-            selectphotoButtonChildmyprofile.alpha = 0f
-        }*/
-    }
-
-    var childId: Int = 0
     private fun loadInformationFromFirebase() {
         val firebase = FunctionsFirebase()
 
-        firebase.getChild(firebase.uidUser!!, object : FirebaseCallback<Child> {
+        firebase.getChild(firebase.uidUser!!, object : Callback<Child> {
             override fun onComplete(value: Child) {
-                /*if (value.profileImageUrl.isNotEmpty()) {
-                    val header = requireActivity().navView.getHeaderView(0);
-                    val photo =
-                        header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
-                    Glide.with(requireActivity()).load(value.profileImageUrl)
-                        .into(photo)
-                    //Загрузка изображения в профиль
-                    Glide.with(requireActivity()).load(value.profileImageUrl)
-                        .diskCacheStrategy(
-                            DiskCacheStrategy.ALL
-                        ).into(selectphotoImageviewChildmyprofile)
-                    selectphotoButtonChildmyprofile.alpha = 0f
-                }*/
                 val header = requireActivity().navView.getHeaderView(0);
                 val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
                 userNameHeader.text = value.username
@@ -192,7 +163,8 @@ class ChildMyProfileFragment : Fragment() {
     private fun saveChangeInChildProfile() {
         val username = usernameTextInputChildMyProfile?.editText?.text.toString();
         val city = cityAutoCompleteTextViewChildMyProfile?.text.toString()
-        val educationalInstitution = educationalInstitutionAutoCompleteTextViewChildMyProfile?.text.toString()
+        val educationalInstitution =
+            educationalInstitutionAutoCompleteTextViewChildMyProfile?.text.toString()
         val email = emailTextInputChildMyProfile?.editText?.text.toString()
         val point = pointTextViewChildMyProfile?.text.toString().toInt()
 
@@ -214,7 +186,8 @@ class ChildMyProfileFragment : Fragment() {
                         requireActivity(),
                         ChooseActivity::class.java
                     )
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.flags =
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
                 }
                 ?.addOnFailureListener {
@@ -253,19 +226,8 @@ class ChildMyProfileFragment : Fragment() {
 
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
-
     override fun onDetach() {
         super.onDetach()
-        listener = null
-    }
-
-    interface OnFragmentInteractionListener {
-
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
     }
 
 }

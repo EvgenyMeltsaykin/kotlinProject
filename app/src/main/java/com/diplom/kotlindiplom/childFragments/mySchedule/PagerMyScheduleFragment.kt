@@ -1,19 +1,16 @@
 package com.diplom.kotlindiplom.childFragments.mySchedule
 
 import android.os.Bundle
-import android.os.TokenWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.generalFragments.MainFragment
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Lesson
 import com.diplom.kotlindiplom.models.MyPagerAdapter
@@ -66,7 +63,7 @@ class PagerMyScheduleFragment : Fragment() , AddLessonFragment.OnInputListener {
         super.onViewCreated(view, savedInstanceState)
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
-        firebase.getLessonMyScheduleOutFirebase(weekday.toLowerCase(),object : FirebaseCallback<List<Lesson>> {
+        firebase.getLessonMyScheduleOutFirebase(weekday.toLowerCase(),object : Callback<List<Lesson>> {
             override fun onComplete(value: List<Lesson>) {
                 var i = 0
                 value.forEach {

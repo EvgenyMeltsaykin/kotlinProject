@@ -12,7 +12,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -59,7 +59,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
         progressBar?.isVisible = false
         activity?.title = ""
         val firebase = FunctionsFirebase()
-        firebase.getFieldDiary(firebase.uidUser!!,"login",object : FirebaseCallback<String>{
+        firebase.getFieldDiary(firebase.uidUser!!,"login",object : Callback<String>{
             override fun onComplete(value: String) {
                 if(value.isNotEmpty()){
                     if (!deletedDiary){
@@ -163,7 +163,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
         staticMessageTextView?.isVisible = true
         val firebase = FunctionsFirebase()
         var arrayAdapter: ArrayAdapter<String>? = null
-        firebase.getDiaries(object : FirebaseCallback<List<String>> {
+        firebase.getDiaries(object : Callback<List<String>> {
             override fun onComplete(value: List<String>) {
                 arrayAdapter =
                     ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, value)

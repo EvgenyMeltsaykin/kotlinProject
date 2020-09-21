@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.recyclerViewItems.ChildDiaryItem
@@ -77,12 +77,12 @@ class ChooseChildScheduleFragment : Fragment() {
         progressBar?.isVisible = true
         refreshButton?.isVisible = false
         val firebase = FunctionsFirebase()
-        firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
+        firebase.getFieldDiary(firebase.uidUser!!, "url", object : Callback<String> {
             override fun onComplete(value: String) {
                 when (value) {
                     diary.elschool.url -> {
                         diary.elschool.writeChildrenDiaryInFirebase(object :
-                            FirebaseCallback<Boolean> {
+                            Callback<Boolean> {
                             override fun onComplete(value: Boolean) {
                                 GlobalScope.launch(Dispatchers.Main) {
                                     if (value) {
@@ -116,7 +116,7 @@ class ChooseChildScheduleFragment : Fragment() {
         adapter.clear()
         val diary = Diary()
         childScheduleRecyclerView?.isVisible = false
-        diary.elschool.getChildrenFromFirebase(object : FirebaseCallback<List<ChildForElschool>> {
+        diary.elschool.getChildrenFromFirebase(object : Callback<List<ChildForElschool>> {
             override fun onComplete(value: List<ChildForElschool>) {
                 if (value.isNotEmpty()) {
                     value.forEach {
@@ -138,7 +138,7 @@ class ChooseChildScheduleFragment : Fragment() {
             firebase.getFieldDiary(
                 firebase.uidUser!!,
                 "idChild",
-                object : FirebaseCallback<String> {
+                object : Callback<String> {
                     override fun onComplete(idChild: String) {
                         bundle.putBoolean("updateSchedule",true)
                         if (idChild != childDiaryItem.child.id) {

@@ -1,7 +1,6 @@
 package com.diplom.kotlindiplom.diaries
 
 import android.content.Context
-import android.icu.util.LocaleData
 import android.os.Build
 import android.util.Log
 import android.widget.ProgressBar
@@ -9,7 +8,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.models.ChildForElschool
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Lesson
@@ -25,12 +24,9 @@ import kotlinx.coroutines.launch
 import org.decimal4j.util.DoubleRounder
 import org.jsoup.Connection
 import org.jsoup.Jsoup
-import org.w3c.dom.Document
 import java.io.IOException
 import java.time.LocalDate
-import java.util.*
 import kotlin.collections.HashMap
-import kotlin.time.measureTime
 
 class Elschool {
     val urlLogin = "https://elschool.ru/Logon/Index"
@@ -102,7 +98,7 @@ class Elschool {
 
     fun deleteSchedule() {
         val firebase = FunctionsFirebase()
-        firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String> {
+        firebase.getRoleByUid(firebase.uidUser!!, object : Callback<String> {
             override fun onComplete(answer: String) {
                 var role = ""
                 if (answer == "child") role = "children"
@@ -125,12 +121,12 @@ class Elschool {
         year: Int,
         week: Int,
         id: String = "",
-        firebaseCallback: FirebaseCallback<MutableMap<String, List<Lesson>>>
+        firebaseCallback: Callback<MutableMap<String, List<Lesson>>>
     ) {
         val firebase = FunctionsFirebase()
         val schedule = mutableMapOf<String, List<Lesson>>()
         firebase.getFieldDiary(firebase.uidUser!!, "cookie",
-            object : FirebaseCallback<String> {
+            object : Callback<String> {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
@@ -245,7 +241,7 @@ class Elschool {
 
     }
 
-    fun getChildrenFromFirebase(firebaseCallback: FirebaseCallback<List<ChildForElschool>>) {
+    fun getChildrenFromFirebase(firebaseCallback: Callback<List<ChildForElschool>>) {
         val firebase = FunctionsFirebase()
         val ref = firebase.parentRef.child(firebase.uidUser!!).child("diary").child("children")
         val children = mutableListOf<ChildForElschool>()
@@ -276,11 +272,11 @@ class Elschool {
     }
 
     @ExperimentalStdlibApi
-    fun writeChildrenDiaryInFirebase(firebaseCallback: FirebaseCallback<Boolean>) {
+    fun writeChildrenDiaryInFirebase(firebaseCallback: Callback<Boolean>) {
         val firebase = FunctionsFirebase()
         val children = mutableListOf<ChildForElschool>()
         firebase.getFieldDiary(firebase.uidUser!!, "cookie",
-            object : FirebaseCallback<String> {
+            object : Callback<String> {
                 override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
                         val cookies = hashMapOf<String, String>()
@@ -373,7 +369,7 @@ class Elschool {
             selectedYear,
             selectedWeek,
             id,
-            object : FirebaseCallback<MutableMap<String, List<Lesson>>> {
+            object : Callback<MutableMap<String, List<Lesson>>> {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: MutableMap<String, List<Lesson>>) {
                     GlobalScope.launch(Dispatchers.Main) {
@@ -402,12 +398,12 @@ class Elschool {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getMarksFromDiary(
         idChild: String,
-        firebaseCallback: FirebaseCallback<Boolean>
+        firebaseCallback: Callback<Boolean>
     ) {
         val firebase = FunctionsFirebase()
         firebase.setFieldDiary(firebase.uidUser!!, "marks", "")
         GlobalScope.launch(Dispatchers.IO) {
-            firebase.getFieldDiary(firebase.uidUser, "cookie", object : FirebaseCallback<String> {
+            firebase.getFieldDiary(firebase.uidUser, "cookie", object : Callback<String> {
                 override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
                         val cookies = hashMapOf<String, String>()
@@ -546,10 +542,10 @@ class Elschool {
         hideButtons()
         getMarksFromDiary(
             idChild,
-            object : FirebaseCallback<Boolean> {
+            object : Callback<Boolean> {
                 override fun onComplete(end: Boolean) {
                     GlobalScope.launch(Dispatchers.Main) {
-                        firebase.getRoleByUid(firebase.uidUser!!, object : FirebaseCallback<String> {
+                        firebase.getRoleByUid(firebase.uidUser!!, object : Callback<String> {
                             override fun onComplete(answer: String) {
                                 var role = ""
                                 if (answer == "child") role = "children"

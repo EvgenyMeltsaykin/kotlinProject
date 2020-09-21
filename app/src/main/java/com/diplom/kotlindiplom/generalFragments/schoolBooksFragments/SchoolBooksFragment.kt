@@ -9,7 +9,7 @@ import android.view.animation.AnimationUtils
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.SchoolBook
@@ -63,7 +63,7 @@ class SchoolBooksFragment : Fragment() {
         firebase.getSchoolBooks(
             numberClass,
             subjectName,
-            object : FirebaseCallback<List<SchoolBook>> {
+            object : Callback<List<SchoolBook>> {
                 override fun onComplete(value: List<SchoolBook>) {
                     if (value.isEmpty())emptySchoolBooksTextView?.isVisible = true
                     value.forEach {

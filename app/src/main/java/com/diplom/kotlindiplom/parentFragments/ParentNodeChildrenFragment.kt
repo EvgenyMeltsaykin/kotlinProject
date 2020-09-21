@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.recyclerViewItems.ChildrenItem
@@ -82,13 +82,13 @@ class ParentNodeChildrenFragment : Fragment() {
     }
     private fun updateRecyclerView(firebase:FunctionsFirebase,adapter:GroupAdapter<ViewHolder>){
         adapter.clear()
-        firebase.getChildrenByParentUid(firebase.uidUser!!,object : FirebaseCallback<List<Child>>{
+        firebase.getChildrenByParentUid(firebase.uidUser!!,object : Callback<List<Child>>{
             override fun onComplete(value: List<Child>) {
                 emptyChildTextView?.isVisible = value.isEmpty()
                 value.forEach {
                     adapter.add(ChildrenItem(it,object : ChildrenItem.OnClickDeleteButton{
                         override fun onClickDeleteButton(item: Item<ViewHolder>, child: Child) {
-                            firebase.setFieldDatabaseUser(child.childUid,"parentUid","", object : FirebaseCallback<Boolean>{
+                            firebase.setFieldDatabaseUser(child.childUid,"parentUid","", object : Callback<Boolean>{
                                 override fun onComplete(value: Boolean) {
                                     updateRecyclerView(firebase,adapter)
                                 }

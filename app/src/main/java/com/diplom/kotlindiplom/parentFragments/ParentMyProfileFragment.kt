@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.SystemClock
-import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,7 +16,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.diplom.kotlindiplom.ChooseActivity
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.*
 import com.diplom.kotlindiplom.models.apiResponse.cities.City
@@ -40,10 +39,6 @@ private const val ARG_PARAM2 = "param2"
 var cityId: Int? = -1
 var changeEmail = false
 class ParentMyProfileFragment : Fragment() {
-    object Network {
-        val network = FunctionsApi(cityId)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,26 +53,6 @@ class ParentMyProfileFragment : Fragment() {
         activity?.title = "Мой профиль"
         changeEmail = false
         loadInformationFromFirebase()
-        /*selectPhotoButtonParentMyProfile.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-                == PackageManager.PERMISSION_GRANTED
-            ) {
-                val intent = Intent(Intent.ACTION_PICK)
-                intent.type = "image/*"
-                startActivityForResult(intent, 0)
-            }else{
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    1
-                )
-            }
-        }*/
-
-         */
         emailTextInputParentMyProfile?.editText?.setOnClickListener {
             changeEmail = true
         }
@@ -109,58 +84,22 @@ class ParentMyProfileFragment : Fragment() {
         val cities: MutableList<City> = mutableListOf()
         cityAutoCompleteTextViewParentMyProfile?.doAfterTextChanged {
             saveChangeButtonParentMyProfile?.isVisible = true
-            Network.network.cityId = cityId
-            Network.network.getNodeCities(cityAutoCompleteTextViewParentMyProfile, requireContext(), cities)
+            MainActivity.Network.network.getNodeCities(cityAutoCompleteTextViewParentMyProfile, requireContext(), cities)
         }
 
         cityAutoCompleteTextViewParentMyProfile?.setOnItemClickListener { parent, view, position, id ->
             cityId = cities[id.toInt()].id
         }
     }
-
-    //var selectedPhotoUri: Uri? = null
-
-    @RequiresApi(Build.VERSION_CODES.P)
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        /*(if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
-            Log.d("TAG", "Photo was select")
-            saveChangeButtonParentMyProfile?.isVisible = true
-            //Новый способ загрузки картинки из галереи
-            selectedPhotoUri = data.data
-            val source =
-                ImageDecoder.createSource(requireActivity().contentResolver, selectedPhotoUri!!)
-            val bitmap = ImageDecoder.decodeBitmap(source)
-            selectPhotoImageviewParentMyProfile.setImageBitmap(bitmap)
-            requireActivity().photoImageviewDrawer.setImageBitmap(bitmap)
-            selectPhotoButtonParentMyProfile.alpha = 0f
-        }*/
-    }
-
     private fun loadInformationFromFirebase() {
         val firebase = FunctionsFirebase()
-        firebase.getParent(firebase.uidUser, object : FirebaseCallback<Parent> {
+        firebase.getParent(firebase.uidUser, object : Callback<Parent> {
             override fun onComplete(value: Parent) {
-                /*if (value.profileImageUrl.isNotEmpty()) {
-                    //Загрузка изображения в боковое меню
-                    val header = requireActivity().navView.getHeaderView(0);
-                    val photo =
-                        header.findViewById<CircleImageView>(R.id.photoImageviewDrawer)
-                    Glide.with(requireActivity()).load(value.profileImageUrl)
-                        .into(photo)
-                    //Загрузка изображения в профиль
-                    Glide.with(requireActivity()).load(value.profileImageUrl)
-                        .diskCacheStrategy(
-                            DiskCacheStrategy.ALL
-                        ).into(selectPhotoImageviewParentMyProfile)
-                    selectPhotoButtonParentMyProfile.alpha = 0f
-                }*/
                 usernameTextInputParentMyProfile?.editText?.setText(value.username)
                 emailTextInputParentMyProfile?.editText?.setText(value.email)
                 cityAutoCompleteTextViewParentMyProfile?.setText(value.city)
                 cityId = value.cityId.toString().toInt()
                 saveChangeButtonParentMyProfile?.isVisible = false
-                Network.network.cityId = cityId
             }
         })
     }
@@ -170,7 +109,6 @@ class ParentMyProfileFragment : Fragment() {
         val email = emailTextInputParentMyProfile?.editText?.text.toString()
         val username = usernameTextInputParentMyProfile?.editText?.text.toString()
         val city = cityAutoCompleteTextViewParentMyProfile?.text.toString()
-        //val ref = FirebaseDatabase.getInstance().getReference("/users/parents/$uid")
         val firebase = FunctionsFirebase()
         if (changeEmail) {
             user?.updateEmail(emailTextInputParentMyProfile?.editText?.text.toString())

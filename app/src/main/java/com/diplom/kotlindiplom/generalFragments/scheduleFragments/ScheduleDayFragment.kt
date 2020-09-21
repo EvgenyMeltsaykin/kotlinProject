@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.*
 import com.diplom.kotlindiplom.models.recyclerViewItems.LessonItem
@@ -62,14 +62,14 @@ class ScheduleDayFragment : Fragment() {
         val day = activity?.title.toString().substringBefore(" ")
         val date = activity?.title.toString().substringAfter(day)
         if (date.isEmpty()){
-            firebase.getFieldScheduleDay(firebase.uidUser!!,day.toLowerCase(),object : FirebaseCallback<String>{
+            firebase.getFieldScheduleDay(firebase.uidUser!!,day.toLowerCase(),object : Callback<String>{
                 override fun onComplete(value: String) {
                     activity?.title = "${activity?.title} $value"
                 }
             })
         }
         adapter.clear()
-        firebase.getScheduleDay(firebase.uidUser!!, day.toLowerCase(),object : FirebaseCallback<List<Lesson>>{
+        firebase.getScheduleDay(firebase.uidUser!!, day.toLowerCase(),object : Callback<List<Lesson>>{
             override fun onComplete(value: List<Lesson>) {
                 var fl = true
                 value.forEach {

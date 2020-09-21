@@ -11,7 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -57,7 +57,7 @@ class ChooseSemestrElschoolFragment : Fragment() {
         val bundle = bundleOf()
         val firebase = FunctionsFirebase()
         progressBar?.isVisible = false
-        firebase.getFieldMarks("dateUpdate", object : FirebaseCallback<String> {
+        firebase.getFieldMarks("dateUpdate", object : Callback<String> {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onComplete(value: String) {
                 dateUpdateTextView?.text = "Дата обновления: $value"
@@ -71,7 +71,7 @@ class ChooseSemestrElschoolFragment : Fragment() {
         firebase.getFieldDiary(
             firebase.uidUser!!,
             "semestrName",
-            object : FirebaseCallback<String> {
+            object : Callback<String> {
                 override fun onComplete(value: String) {
                     firstSemestrButton?.text = "Первый $value"
                     secondSemestrButton?.text = "Второй $value"
@@ -121,12 +121,12 @@ class ChooseSemestrElschoolFragment : Fragment() {
             thirdSemestrButton?.isVisible = true
             yearsMarksButton?.isVisible = true
         }
-        firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
+        firebase.getFieldDiary(firebase.uidUser!!, "url", object : Callback<String> {
             override fun onComplete(url: String) {
                 firebase.getFieldDiary(
                     firebase.uidUser,
                     "idChild",
-                    object : FirebaseCallback<String> {
+                    object : Callback<String> {
                         @RequiresApi(Build.VERSION_CODES.O)
                         override fun onComplete(valueIdChild: String) {
                             if (valueIdChild != idChild) {

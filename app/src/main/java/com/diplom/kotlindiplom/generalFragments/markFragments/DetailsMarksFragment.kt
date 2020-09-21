@@ -2,25 +2,19 @@ package com.diplom.kotlindiplom.generalFragments.markFragments
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
-import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_details_marks.*
-import org.decimal4j.util.DoubleRounder
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -63,18 +57,18 @@ class DetailsMarksFragment : Fragment() {
         lessonNameTextView?.isVisible = false
         middleMarkTextView?.isVisible = false
 
-        firebase.getFieldDiary(firebase.uidUser!!,"semestrName",object : FirebaseCallback<String>{
+        firebase.getFieldDiary(firebase.uidUser!!,"semestrName",object : Callback<String>{
             override fun onComplete(value: String) {
                 semestrNumberTextView?.text = "${value.capitalize()}: $semestrNumber"
             }
         })
-        firebase.getMiddleMark(lessonName,semestrNumber,object :FirebaseCallback<String>{
+        firebase.getMiddleMark(lessonName,semestrNumber,object :Callback<String>{
             override fun onComplete(value: String) {
                 middleMarkTextView?.text = "Средний балл: $value"
             }
         })
         lessonNameTextView?.text = "Предмет: $lessonName"
-        firebase.getDetailsMarks(lessonName,semestrNumber,object : FirebaseCallback<Map<String,String>>{
+        firebase.getDetailsMarks(lessonName,semestrNumber,object : Callback<Map<String,String>>{
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onComplete(value: Map<String, String>) {
                 value.forEach { (s, s1) ->

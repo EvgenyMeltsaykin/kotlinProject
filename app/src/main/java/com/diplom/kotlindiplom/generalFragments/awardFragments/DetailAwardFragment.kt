@@ -2,25 +2,18 @@ package com.diplom.kotlindiplom.generalFragments.awardFragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
-import com.diplom.kotlindiplom.FirebaseCallback
-import com.diplom.kotlindiplom.MainActivity
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.models.FunctionsUI
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_detail_award.*
-import kotlinx.android.synthetic.main.fragment_list_awards.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -100,7 +93,7 @@ class DetailAwardFragment : Fragment() {
                 firebase.getFieldUserDatabase(
                     firebase.uidUser!!,
                     "point",
-                    object : FirebaseCallback<String> {
+                    object : Callback<String> {
                         override fun onComplete(value: String) {
                             if (value.toInt()>= costAward.toInt()){
                                 Toast.makeText(requireContext(),"Успешно",Toast.LENGTH_SHORT).show()

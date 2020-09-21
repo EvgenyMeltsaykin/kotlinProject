@@ -12,7 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.recyclerViewItems.LessonsMarkItem
@@ -62,7 +62,7 @@ class LessonsMarkFragment : Fragment() {
         val firebase = FunctionsFirebase()
         if (finalGrades){
             activity?.title = "Итоговые оценки"
-            firebase.getLessonsAndFinalMark(role,object : FirebaseCallback<Map<String,String>>{
+            firebase.getLessonsAndFinalMark(role,object : Callback<Map<String,String>>{
                 override fun onComplete(value: Map<String, String>) {
                     value.forEach { (lessonName, middleMark) ->
                         adapter.add(LessonsMarkItem(lessonName,middleMark))
@@ -84,7 +84,7 @@ class LessonsMarkFragment : Fragment() {
             }
         }else{
             activity?.title = "Предметы"
-            firebase.getLessonsAndMiddleMark(role,semestrNumber,object : FirebaseCallback<Map<String,String>> {
+            firebase.getLessonsAndMiddleMark(role,semestrNumber,object : Callback<Map<String,String>> {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: Map<String,String>) {
                     value.forEach { (lessonName, middleMark) ->

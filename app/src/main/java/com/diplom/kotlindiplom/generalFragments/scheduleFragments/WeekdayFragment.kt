@@ -2,7 +2,6 @@ package com.diplom.kotlindiplom.generalFragments.scheduleFragments
 
 import android.os.Build
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +10,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -119,12 +117,12 @@ class WeekdayFragment : Fragment() {
             refreshScheduleButton?.isVisible = false
         }
 
-        firebase.getFieldDiary(firebase.uidUser!!, "url", object : FirebaseCallback<String> {
+        firebase.getFieldDiary(firebase.uidUser!!, "url", object : Callback<String> {
             override fun onComplete(value: String) {
                 firebase.getFieldSchedule(
                     firebase.uidUser,
                     "weekUpdate",
-                    object : FirebaseCallback<String> {
+                    object : Callback<String> {
                         override fun onComplete(weekUpdate: String) {
                             Log.d("Tag", "$selectedWeek = $weekUpdate")
                             if (selectedWeek != weekUpdate.toInt() || updateWithoutCheck) {
@@ -173,7 +171,7 @@ class WeekdayFragment : Fragment() {
         //val selectedDate = calendarView?.date
         val firebase = FunctionsFirebase()
         val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
-        firebase.getDateUpdateInSchedule(object : FirebaseCallback<LocalDate> {
+        firebase.getDateUpdateInSchedule(object : Callback<LocalDate> {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onComplete(value: LocalDate) {
                 if (updateSchedule) {

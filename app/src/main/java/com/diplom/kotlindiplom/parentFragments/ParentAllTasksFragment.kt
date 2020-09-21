@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -60,7 +60,7 @@ class ParentAllTasksFragment : Fragment() {
         taskEmptyTextViewParent?.isVisible = false
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
-        firebase.getTasksParentUid(firebase.uidUser!!,status,object: FirebaseCallback<List<Task>>{
+        firebase.getTasksParentUid(firebase.uidUser!!,status,object: Callback<List<Task>>{
 
             override fun onComplete(value: List<Task>) {
                 if (value.isEmpty())taskEmptyTextViewParent?.isVisible = true

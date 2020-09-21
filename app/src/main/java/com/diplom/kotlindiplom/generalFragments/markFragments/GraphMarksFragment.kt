@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.github.mikephil.charting.data.*
@@ -61,7 +61,7 @@ class GraphMarksFragment : Fragment() {
         firebase.getDetailsMarks(
             lessonName,
             semestrNumber,
-            object : FirebaseCallback<Map<String, String>> {
+            object : Callback<Map<String, String>> {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: Map<String, String>) {
                     val dataValues = mutableListOf<Entry>()

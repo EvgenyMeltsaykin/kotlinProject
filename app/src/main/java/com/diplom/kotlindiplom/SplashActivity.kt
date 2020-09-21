@@ -3,13 +3,11 @@ package com.diplom.kotlindiplom
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.google.firebase.auth.FirebaseAuth
-import java.util.*
 
 
 class SplashActivity : AppCompatActivity() {
@@ -27,7 +25,7 @@ class SplashActivity : AppCompatActivity() {
         if (user != null) {
             if (user.isEmailVerified) {
                 val firebase = FunctionsFirebase()
-                firebase.getRoleByUid(uid!!, object : FirebaseCallback<String> {
+                firebase.getRoleByUid(uid!!, object : Callback<String> {
                     override fun onComplete(value: String) {
                         if (value == "child") {
                             intent = Intent(applicationContext, MainActivity::class.java)

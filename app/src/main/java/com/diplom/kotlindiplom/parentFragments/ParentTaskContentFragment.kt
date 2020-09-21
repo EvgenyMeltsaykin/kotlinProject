@@ -1,7 +1,6 @@
 package com.diplom.kotlindiplom.parentFragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -53,7 +52,7 @@ class ParentTaskContentFragment : Fragment() {
         activity?.title = title
         val navController = Navigation.findNavController(requireActivity(),R.id.navFragment)
         val firebase = FunctionsFirebase()
-        firebase.getTask(taskId.toString(), object: FirebaseCallback<Task>{
+        firebase.getTask(taskId.toString(), object: Callback<Task>{
             override fun onComplete(value: Task) {
                 titleTaskContentTextViewParent?.text = "Название:" + value.title
                 costTaskContentTextViewParent?.text = "Стоимость: " + value.cost.toString()
@@ -73,7 +72,7 @@ class ParentTaskContentFragment : Fragment() {
             Toast.makeText(requireContext(),"Задание принято",Toast.LENGTH_SHORT).show()
             navController.popBackStack()
             requireActivity().title = "На проверке"
-            firebase.getTask(taskId.toString(), object : FirebaseCallback<Task>{
+            firebase.getTask(taskId.toString(), object : Callback<Task>{
                 override fun onComplete(value: Task) {
                     firebase.addPointChild(value.childUid,value.cost)
                 }

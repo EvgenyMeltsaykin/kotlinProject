@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_diary.*
@@ -58,7 +58,7 @@ class DiaryFragment : Fragment() {
         firebase.getFieldUserDatabase(
             firebase.uidUser!!,
             "role",
-            object : FirebaseCallback<String> {
+            object : Callback<String> {
                 override fun onComplete(value: String) {
                     scheduleButton?.setOnClickListener {
                         if (value == "child") {
@@ -91,7 +91,7 @@ class DiaryFragment : Fragment() {
         loginDiaryTextView?.text = login
         diaryTextView?.text = urlDiary
         if (urlDiary.isEmpty()){
-            firebase.getFieldDiary(firebase.uidUser, "url", object : FirebaseCallback<String> {
+            firebase.getFieldDiary(firebase.uidUser, "url", object : Callback<String> {
                 override fun onComplete(value: String) {
                     diaryTextView?.text = value
                 }

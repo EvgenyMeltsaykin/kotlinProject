@@ -4,17 +4,11 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.navigation.Navigation
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.diaries.Diary
-import java.util.Date.from
 
 class FunctionsUI {
     val NOTIFY_ID = 101
@@ -59,7 +53,7 @@ class FunctionsUI {
         firebase.getFieldUserDatabase(
             firebase.uidUser!!,
             "parentUid",
-            object : FirebaseCallback<String> {
+            object : Callback<String> {
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onComplete(value: String) {
                     if (task.parentUid == value) {

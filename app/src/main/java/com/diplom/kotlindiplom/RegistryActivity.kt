@@ -10,13 +10,8 @@ import androidx.core.widget.doAfterTextChanged
 import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Parent
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_registry.*
 
 
@@ -149,7 +144,7 @@ class RegistryActivity : AppCompatActivity() {
         val user = Child(firebase.uidUser!!, username, email)
         val refCount = FirebaseDatabase.getInstance().getReference("/users")
         refCount.keepSynced(true)
-        firebase.getCountChildren(object :FirebaseCallback<String>{
+        firebase.getCountChildren(object :Callback<String>{
             override fun onComplete(value: String) {
                 val countChildren = value.toInt() + 1
                 firebase.setFieldUserDatabase(firebase.uidUser,"id",countChildren)

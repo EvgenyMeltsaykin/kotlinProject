@@ -1,30 +1,23 @@
 package com.diplom.kotlindiplom.generalFragments.awardFragments
 
-import android.animation.Animator
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
-import androidx.core.app.FrameMetricsAggregator.ANIMATION_DURATION
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
-import at.wirecube.additiveanimations.additive_animator.AdditiveAnimator
 import com.diplom.kotlindiplom.ActivityCallback
-import com.diplom.kotlindiplom.FirebaseCallback
+import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.Award
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.recyclerViewItems.AwardItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
-import io.reactivex.Single
 import kotlinx.android.synthetic.main.fragment_list_awards.*
-import org.decimal4j.scale.Scale0f.SCALE_FACTOR
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -73,7 +66,7 @@ class ListAwardsFragment : Fragment() {
     fun updateAwardList(){
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
-        firebase.getFieldUserDatabase(firebase.uidUser!!,"parentUid",object :FirebaseCallback<String>{
+        firebase.getFieldUserDatabase(firebase.uidUser!!,"parentUid",object :Callback<String>{
             override fun onComplete(value: String) {
                 adapter.clear()
                 if (value.isEmpty()){
@@ -83,7 +76,7 @@ class ListAwardsFragment : Fragment() {
                         emptyListAwardTextView?.isVisible = true
                     }
                 }
-                firebase.getAwardOutFirebaseWithParentUid(role,value,object :FirebaseCallback<List<Award>>{
+                firebase.getAwardOutFirebaseWithParentUid(role,value,object :Callback<List<Award>>{
                     override fun onComplete(value: List<Award>) {
                         listAwardProgressBar?.isVisible = false
                         if (value.isEmpty()){

@@ -1,6 +1,6 @@
 package com.diplom.kotlindiplom
 
-interface FirebaseCallback<T> {
+interface Callback<T> {
 
     fun  onComplete(value: T)
 
