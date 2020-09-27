@@ -35,9 +35,9 @@ class FunctionsFirebase {
     val awardsRef = rootRef.child("awards")
     val rolesRef = rootRef.child("roles")
     val uidUser = FirebaseAuth.getInstance().uid
-    
-    fun removeAllListener(){
-        rootRef.removeEventListener(object: ChildEventListener{
+
+    fun removeAllListener() {
+        rootRef.removeEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 TODO("Not yet implemented")
             }
@@ -199,36 +199,25 @@ class FunctionsFirebase {
         parentUid: String,
         firebaseCallBack: Callback<List<Award>>
     ) {
-        val ref = rootRef.child("awards")
+        val ref = rootRef.child("awards").orderByChild("parentUid").equalTo(parentUid)
         var award = Award()
         val awards = mutableListOf<Award>()
+        ref.keepSynced(true)
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    snapshot.children.forEach { awardItem ->
-                        awardItem.children.forEach { awardField ->
-                            if (awardField.key.toString() == "parentUid") {
-                                if (awardField.value.toString() == parentUid) {
-                                    award = getAllFieldAward(awardItem)
-                                    if (role == "children") {
-                                        if (award.status == 0) {
-                                            awards.add(award)
-                                        }
-                                        Log.d("Tag","${award.childUid} = $uidUser")
-                                        if (award.status == 1 && award.childUid == uidUser) {
-                                            awards.add(award)
-                                        }
-
-                                    } else {
-                                        awards.add(award)
-                                    }
-
-                                }
+                    snapshot.children.forEach { awardSnapshot ->
+                        award = getAllFieldAward(awardSnapshot)
+                        if (role == "children") {
+                            if (award.status == 0 || (award.status == 1 && award.childUid == uidUser)) {
+                                awards.add(award)
                             }
+                        } else {
+                            awards.add(award)
                         }
                     }
+                    firebaseCallBack.onComplete(awards)
                 }
-                firebaseCallBack.onComplete(awards)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -349,24 +338,19 @@ class FunctionsFirebase {
         else roleFirebase = "parents"
         val ref =
             rootRef.child("users").child(roleFirebase).child(uidUser!!).child("diary")
-                .child("marks")
+                .child("marks").orderByChild("lessonName").equalTo(lessonName)
         ref.keepSynced(true)
         val marksSemestr = mutableListOf<Int>()
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     snapshot.children.forEach { lesson ->
-                        lesson.children.forEach { info ->
-                            if (info.key.toString() == "lessonName" && info.value.toString() == lessonName) {
-                                lesson.children.forEach { semestr ->
-                                    semestr.children.forEach {
-                                        if (it.key.toString() == "middleMark") {
-                                            marksSemestr.add(
-                                                it.value.toString().toFloat().roundToInt()
-                                            )
-                                        }
-                                    }
-
+                        lesson.children.forEach { semestr ->
+                            semestr.children.forEach {
+                                if (it.key.toString() == "middleMark") {
+                                    marksSemestr.add(
+                                        it.value.toString().toFloat().roundToInt()
+                                    )
                                 }
                             }
                         }
@@ -389,7 +373,8 @@ class FunctionsFirebase {
                 if (answer == "child") role = "children"
                 else role = "parents"
                 val ref =
-                    rootRef.child("users").child(role).child(uidUser).child("diary").child("marks")
+                    rootRef.child("users").child(role).child(uidUser).child("diary")
+                        .child("marks")
                 ref.keepSynced(true)
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(p0: DataSnapshot) {
@@ -415,7 +400,8 @@ class FunctionsFirebase {
         role: String,
         firebaseCallBack: Callback<Map<String, String>>
     ) {
-        val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary").child("marks")
+        val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
+            .child("marks")
         val lessons = mutableMapOf<String, String>()
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -460,7 +446,8 @@ class FunctionsFirebase {
         semestrNumber: String,
         firebaseCallBack: Callback<Map<String, String>>
     ) {
-        val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary").child("marks")
+        val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
+            .child("marks")
         val lessons = mutableMapOf<String, String>()
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
@@ -507,41 +494,39 @@ class FunctionsFirebase {
                 if (answer == "child") role = "children"
                 else role = "parents"
                 val ref =
-                    rootRef.child("users").child(role).child(uidUser).child("diary").child("marks")
+                    rootRef.child("users").child(role).child(uidUser).child("diary")
+                        .child("marks").orderByChild("lessonName").equalTo(lessonName)
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(p0: DataSnapshot) {
-                        p0.children.forEach { lesson ->
-                            lesson.children.forEach { info ->
-                                if (info.value.toString() == lessonName) {
-                                    lesson.children.forEach { semestr ->
-                                        if (semestr.key.toString() == "semestr$semestrNumber") {
-                                            var mark = ""
-                                            semestr.children.forEach { middleMark ->
-                                                if (middleMark.key.toString() == "middleMark") {
-                                                    mark = middleMark.value.toString()
-                                                    firebaseCallBack.onComplete(mark)
-                                                }
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (snapshot.exists()) {
+                            snapshot.children.forEach { lesson ->
+                                lesson.children.forEach { semestr ->
+                                    if (semestr.key.toString() == "semestr$semestrNumber") {
+                                        semestr.children.forEach { middleMark ->
+                                            if (middleMark.key.toString() == "middleMark") {
+                                                val mark = middleMark.value.toString()
+                                                firebaseCallBack.onComplete(mark)
                                             }
                                         }
                                     }
                                 }
                             }
-
                         }
                     }
 
-                    override fun onCancelled(p0: DatabaseError) {
+                    override fun onCancelled(error: DatabaseError) {
                         TODO("Not yet implemented")
                     }
 
                 })
+
             }
         })
     }
 
     fun getDetailsMarks(
         lessonName: String,
-        numberSemestr: String,
+        numberSemester: String,
         firebaseCallBack: Callback<Map<String, String>>
     ) {
         getRoleByUid(uidUser!!, object : Callback<String> {
@@ -550,29 +535,30 @@ class FunctionsFirebase {
                 if (answer == "child") role = "children"
                 else role = "parents"
                 val ref =
-                    rootRef.child("users").child(role).child(uidUser).child("diary").child("marks")
+                    rootRef.child("users").child(role).child(uidUser).child("diary")
+                        .child("marks").orderByChild("lessonName").equalTo(lessonName)
                 val detailMarksMap = mutableMapOf<String, String>()
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(p0: DataSnapshot) {
                         if (p0.exists()) {
                             p0.children.forEach { lesson ->
                                 lesson.children.forEach { info ->
-                                    if (info.value.toString() == lessonName) {
-                                        lesson.children.forEach { semestr ->
-                                            if (semestr.key.toString() == "semestr$numberSemestr") {
-                                                semestr.children.forEach { mark ->
-                                                    var date = ""
-                                                    var value = ""
-                                                    mark.children.forEach { detailMark ->
-                                                        if (detailMark.key.toString() == "date") {
-                                                            date = detailMark.value.toString()
-                                                        }
-                                                        if (detailMark.key.toString() == "value") {
-                                                            value = detailMark.value.toString()
-                                                        }
+                                    lesson.children.forEach { semestr ->
+                                        if (semestr.key.toString() == "semestr$numberSemester") {
+                                            semestr.children.forEach { mark ->
+                                                var date = ""
+                                                var value = ""
+                                                mark.children.forEach { detailMark ->
+                                                    if (detailMark.key.toString() == "date") {
+                                                        date =
+                                                            detailMark.value.toString()
                                                     }
-                                                    detailMarksMap[date] = value
+                                                    if (detailMark.key.toString() == "value") {
+                                                        value =
+                                                            detailMark.value.toString()
+                                                    }
                                                 }
+                                                detailMarksMap[date] = value
                                             }
                                         }
                                     }
@@ -679,7 +665,8 @@ class FunctionsFirebase {
 
     fun setLoginAndPasswordDiary(login: String, password: String) {
         val cryptor = AES256JNCryptor()
-        val cipherText = cryptor.encryptData(password.toByteArray(), secretKey.toCharArray())
+        val cipherText =
+            cryptor.encryptData(password.toByteArray(), secretKey.toCharArray())
         val temp = Arrays.toString(cipherText)
         setFieldUserDatabase(uidUser!!, "diary/login", login)
         setFieldUserDatabase(uidUser!!, "diary/password", temp)
@@ -825,7 +812,8 @@ class FunctionsFirebase {
                 if (answer == "child") role = "children"
                 else role = "parents"
                 val ref =
-                    rootRef.child("users").child(role).child(uid).child("diary").child("schedule")
+                    rootRef.child("users").child(role).child(uid).child("diary")
+                        .child("schedule")
                         .child(day)
                 var value = ""
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -856,7 +844,8 @@ class FunctionsFirebase {
                 if (answer == "child") role = "children"
                 else role = "parents"
                 val ref =
-                    rootRef.child("users").child(role).child(uid).child("diary").child("schedule")
+                    rootRef.child("users").child(role).child(uid).child("diary")
+                        .child("schedule")
                 var value = ""
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
@@ -945,13 +934,17 @@ class FunctionsFirebase {
                                             var i = 0
                                             val len = bytes.size
                                             while (i < len) {
-                                                bytes[i] = byteValues[i].trim { it <= ' ' }.toByte()
+                                                bytes[i] = byteValues[i].trim { it <= ' ' }
+                                                    .toByte()
                                                 i++
                                             }
                                         }
                                         val cryptor = AES256JNCryptor()
                                         val decrypt =
-                                            cryptor.decryptData(bytes, secretKey.toCharArray())
+                                            cryptor.decryptData(
+                                                bytes,
+                                                secretKey.toCharArray()
+                                            )
                                         value["password"] = decrypt.decodeToString()
                                     } else {
                                         value["password"] = ""
@@ -1092,89 +1085,85 @@ class FunctionsFirebase {
 
     fun sendRequestChild(editTextId: EditText?, context: Context) {
         //clearAcceptRequest()
-        val childRef = rootRef.child("users").child("children")
-        childRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
+        val idChild = editTextId?.text.toString()
+        val childRef = rootRef.child("users").child("children").orderByChild("id").equalTo(idChild.toDouble())
+        childRef.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    snapshot.children.forEach {child->
+                        val childUid = child.key.toString()
+                        getFieldUserDatabase(childUid,"parentUid",object :Callback<String>{
+                            override fun onComplete(value: String) {
+                                val parentUid = value
+                                if (parentUid == uidUser) {
+                                    Toast.makeText(
+                                        context,
+                                        "Ребенок уже привязан к Вам",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    return
+                                }
+                                if (parentUid.isNotEmpty()) {
+                                    Toast.makeText(
+                                        context,
+                                        "Данный пользователь уже привязан к родителю. Вы можете сбросить привязку через приложение ребенка",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } else {
+                                    getFieldUserDatabase(
+                                        childUid,
+                                        "acceptUid",
+                                        object : Callback<String> {
+                                            override fun onComplete(value: String) {
+                                                if (value.isEmpty()) {
+                                                    getFieldUserDatabase(
+                                                        uidUser!!,
+                                                        "username",
+                                                        object : Callback<String> {
+                                                            override fun onComplete(
+                                                                value: String
+                                                            ) {
+                                                                setFieldUserDatabase(
+                                                                    childUid,
+                                                                    "acceptName",
+                                                                    value
+                                                                )
+                                                                setFieldUserDatabase(
+                                                                    childUid,
+                                                                    "acceptUid",
+                                                                    uidUser
+                                                                )
+                                                            }
+                                                        })
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Запрос отправлен",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                    return
+                                                } else {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Ожидание ответа на запрос",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+                                        })
+                                }
+                            }
+                        })
+                    }
+                }else{
+                    Toast.makeText(context,"Id ребенка не был найден",Toast.LENGTH_SHORT).show()
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
 
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    val childUid = searchIdChild(p0, editTextId?.text.toString())
-                    if (childUid.isNotEmpty()) {
-                        getFieldUserDatabase(
-                            childUid,
-                            "parentUid",
-                            object : Callback<String> {
-                                override fun onComplete(value: String) {
-                                    val parentUid = value
-                                    if (parentUid == uidUser) {
-                                        Toast.makeText(
-                                            context,
-                                            "Ребенок уже привязан к Вам",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        return
-                                    }
-                                    if (parentUid.isNotEmpty()) {
-                                        Toast.makeText(
-                                            context,
-                                            "Данный пользователь уже привязан к родителю. Вы можете сбросить привязку через приложение ребенка",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    } else {
-                                        getFieldUserDatabase(
-                                            childUid,
-                                            "acceptUid",
-                                            object : Callback<String> {
-                                                override fun onComplete(value: String) {
-                                                    if (value.isEmpty()) {
-                                                        getFieldUserDatabase(
-                                                            uidUser!!,
-                                                            "username",
-                                                            object : Callback<String> {
-                                                                override fun onComplete(value: String) {
-                                                                    setFieldUserDatabase(
-                                                                        childUid,
-                                                                        "acceptName",
-                                                                        value
-                                                                    )
-                                                                    setFieldUserDatabase(
-                                                                        childUid,
-                                                                        "acceptUid",
-                                                                        uidUser
-                                                                    )
-                                                                }
-                                                            })
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Запрос отправлен",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                        return
-                                                    } else {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Ожидание ответа на запрос",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
-                                                }
-                                            })
-
-                                    }
-                                }
-                            })
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Id ребенка не был найден",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
         })
+
     }
 
     fun uploadImageToFirebase(selectedPhotoUri: Uri?, activity: Activity, role: String) {
@@ -1188,7 +1177,8 @@ class FunctionsFirebase {
         getFieldUserDatabase(uidUser!!, "profileImageName", object : Callback<String> {
             override fun onComplete(value: String) {
                 if (value.isNotEmpty()) {
-                    val deleteRef = FirebaseStorage.getInstance().getReference("/image/$value")
+                    val deleteRef =
+                        FirebaseStorage.getInstance().getReference("/image/$value")
                     deleteRef.delete()
                 }
 
@@ -1202,7 +1192,8 @@ class FunctionsFirebase {
                     it.toString()
                     //Сохранение в firebase
                     val uid = FirebaseAuth.getInstance().uid ?: ""
-                    val ref = FirebaseDatabase.getInstance().getReference("/users/$role/$uid")
+                    val ref =
+                        FirebaseDatabase.getInstance().getReference("/users/$role/$uid")
                     ref.child("profileImageUrl").setValue(it.toString())
                     ref.child("profileImageName").setValue(filename)
 
@@ -1230,22 +1221,24 @@ class FunctionsFirebase {
         val uid = UUID.randomUUID().toString()
         taskRef.child("$uid").setValue(Task(uid, title, description, cost, parentUid, time))
             .addOnCompleteListener {
-                Toast.makeText(context, "Задание успешно добавлено", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Задание успешно добавлено", Toast.LENGTH_SHORT)
+                    .show()
             }
     }
 
     fun getParent(parentUid: String?, firebaseCallBack: Callback<Parent>) {
-        parentRef.child("$parentUid").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+        parentRef.child("$parentUid")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun onDataChange(p0: DataSnapshot) {
-                val parent = getAllFieldsParent(p0)
-                firebaseCallBack.onComplete(parent)
-            }
+                override fun onDataChange(p0: DataSnapshot) {
+                    val parent = getAllFieldsParent(p0)
+                    firebaseCallBack.onComplete(parent)
+                }
 
-        })
+            })
     }
 
     fun getAllFieldsParent(p0: DataSnapshot): Parent {
@@ -1278,17 +1271,18 @@ class FunctionsFirebase {
     }
 
     fun getChild(childUid: String?, firebaseCallBack: Callback<Child>) {
-        childRef.child("$childUid").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+        childRef.child("$childUid")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun onDataChange(p0: DataSnapshot) {
-                val child = getAllFieldsChild(p0)
-                firebaseCallBack.onComplete(child)
-            }
+                override fun onDataChange(p0: DataSnapshot) {
+                    val child = getAllFieldsChild(p0)
+                    firebaseCallBack.onComplete(child)
+                }
 
-        })
+            })
     }
 
     fun getAllFieldsChild(p0: DataSnapshot): Child {
@@ -1394,29 +1388,28 @@ class FunctionsFirebase {
         status: Int,
         firebaseCallBack: Callback<List<Task>>
     ) {
-        taskRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
+        val ref = taskRef.orderByChild("parentUid").equalTo(parentUid)
+        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val tasks: MutableList<Task> = mutableListOf()
+                Log.d("Tag",parentUid)
+                if (snapshot.exists()){
+                    snapshot.children.forEach {taskSnapshot->
+                        Log.d("Tag",taskSnapshot.key.toString())
+                        taskSnapshot.children.forEach {taskInfo->
+                            if (taskInfo.key.toString() == "status"){
+                                if (taskInfo.value.toString() == status.toString()){
+                                    tasks.add(getAllFieldsTask(taskSnapshot))
+                                }
+                            }
+                        }
+                    }
+                    firebaseCallBack.onComplete(tasks)
+                }
             }
 
-            override fun onDataChange(p0: DataSnapshot) {
-                val tasks: MutableList<Task> = mutableListOf()
-                var parentUidInFirebase: String = ""
-                var statusInFirebase: Int = -2
-                for (p1 in p0.children) {
-                    for (p2 in p1.children) {
-                        if (p2.key.toString() == "parentUid") {
-                            parentUidInFirebase = p2.value.toString()
-                        }
-                        if (p2.key.toString() == "status") {
-                            statusInFirebase = p2.value.toString().toInt()
-                        }
-                    }
-                    if (parentUidInFirebase == parentUid && statusInFirebase == status) {
-                        tasks.add(getAllFieldsTask(p1))
-                    }
-                }
-                firebaseCallBack.onComplete(tasks)
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
             }
 
         })
@@ -1427,30 +1420,28 @@ class FunctionsFirebase {
         status: Int,
         firebaseCallBack: Callback<List<Task>>
     ) {
-        taskRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
+        val ref = taskRef.orderByChild("childUid").equalTo(childUid)
+        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val tasks: MutableList<Task> = mutableListOf()
+                if (snapshot.exists()){
+                    snapshot.children.forEach {taskSnapshot->
+                        Log.d("Tag",taskSnapshot.key.toString())
+                        taskSnapshot.children.forEach {taskInfo->
+                            if (taskInfo.key.toString() == "status"){
+                                if (taskInfo.value.toString() == status.toString()){
+                                    tasks.add(getAllFieldsTask(taskSnapshot))
+                                }
+                            }
+                        }
+                    }
+                    firebaseCallBack.onComplete(tasks)
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
 
-            override fun onDataChange(p0: DataSnapshot) {
-                val tasks: MutableList<Task> = mutableListOf()
-                var childUidInFirebase: String = ""
-                var statusInFirebase: Int = -2
-                for (p1 in p0.children) {
-                    for (p2 in p1.children) {
-                        if (p2.key.toString() == "childUid") {
-                            childUidInFirebase = p2.value.toString()
-                        }
-                        if (p2.key.toString() == "status") {
-                            statusInFirebase = p2.value.toString().toInt()
-                        }
-                    }
-                    if (childUidInFirebase == childUid && statusInFirebase == status) {
-                        tasks.add(getAllFieldsTask(p1))
-                    }
-                }
-                firebaseCallBack.onComplete(tasks)
-            }
         })
     }
 

@@ -138,7 +138,6 @@ class RegistryActivity : AppCompatActivity() {
 
     private fun saveChildToFirebaseDatabase(username: String, email: String) {
         val firebase = FunctionsFirebase()
-
         val ref = firebase.childRef.child("${firebase.uidUser}")
         firebase.rolesRef.child("${firebase.uidUser}").setValue("child")
         val user = Child(firebase.uidUser!!, username, email)

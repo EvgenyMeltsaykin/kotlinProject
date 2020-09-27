@@ -17,10 +17,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.decimal4j.util.DoubleRounder
 import org.jsoup.Connection
 import org.jsoup.Jsoup
@@ -63,8 +60,7 @@ class Elschool {
     fun login(login: String, password: String): Boolean {
         val cookies: HashMap<String, String> = HashMap()
         var title = ""
-        Log.d("Tag", "$login $password")
-        Log.d("Tag",System.currentTimeMillis().toString())
+        Log.d("Tag","begin"+System.currentTimeMillis().toString())
         try {
             val document = Jsoup.connect(urlLogin)
                 .data("login", login)
@@ -79,13 +75,15 @@ class Elschool {
             if (title == "Личный кабинет") {
                 val id = parseDoc.text().substringAfter("ID ").substringBefore(" ")
                 val firebase = FunctionsFirebase()
-                firebase.setFieldDiary(firebase.uidUser!!, "idChild", id)
-                firebase.setFieldDiary(firebase.uidUser,"cookie","")
-                firebase.setFieldDiary(
-                    firebase.uidUser,
-                    "cookie",
-                    document.cookies()[keyCookie].toString()
-                )
+                GlobalScope.launch(Dispatchers.IO) {
+                    firebase.setFieldDiary(firebase.uidUser!!, "idChild", id)
+                    firebase.setFieldDiary(firebase.uidUser,"cookie","")
+                    firebase.setFieldDiary(
+                        firebase.uidUser,
+                        "cookie",
+                        document.cookies()[keyCookie].toString()
+                    )
+                }
                 Log.d("Tag","true" + System.currentTimeMillis().toString())
                 return true
             } else {

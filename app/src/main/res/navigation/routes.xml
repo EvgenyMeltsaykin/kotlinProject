@@ -114,7 +114,11 @@
         <action
             android:id="@+id/action_loginDiaryFragment_to_diaryFragment"
             app:destination="@id/diaryFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
             app:launchSingleTop="true"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@anim/to_right"
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true" />
         <action

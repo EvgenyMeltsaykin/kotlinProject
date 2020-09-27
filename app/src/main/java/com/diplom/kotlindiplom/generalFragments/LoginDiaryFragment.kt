@@ -57,7 +57,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
-        progressBar?.isVisible = false
+        progressBar?.isVisible = true
         activity?.title = ""
         firebase.getFieldDiary(firebase.uidUser!!,"login",object : Callback<String>{
             override fun onComplete(value: String) {
@@ -156,6 +156,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
     private fun setupSpinner() {
         activity?.title = "Вход в дневник"
+        progressBar?.isVisible = false
         diariesSpinnerLoginDiary?.isVisible = true
         loginDiaryTextInput?.isVisible = true
         passwordDiaryTextInput?.isVisible = true
