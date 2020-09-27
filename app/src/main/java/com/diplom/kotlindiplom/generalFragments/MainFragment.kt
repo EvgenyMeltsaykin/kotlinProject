@@ -2,6 +2,7 @@ package com.diplom.kotlindiplom.generalFragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,8 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.childFragments.RequestParentFragment
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -52,7 +55,6 @@ class MainFragment : Fragment() {
         }
     }
     private fun setupChildFragment(){
-        val firebase = FunctionsFirebase()
         firebase.getFieldUserDatabase(firebase.uidUser!!,"acceptName",object :Callback<String>{
             override fun onComplete(parentName: String) {
                 if (parentName.isNotEmpty()){

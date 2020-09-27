@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.accept_parent.*
@@ -54,7 +55,6 @@ class RequestParentFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val firebase = FunctionsFirebase()
         invitationTextView?.text = "Пользователь ${parentName} запрашивает привязку аккаунта"
         rejectButton?.setOnClickListener {
             dismiss()
@@ -64,7 +64,7 @@ class RequestParentFragment : DialogFragment() {
                 object : Callback<String> {
                     override fun onComplete(value: String) {
                         firebase.setFieldUserDatabase(value, "acceptAnswer", "0")
-                        firebase.clearAcceptRequest()
+                        firebase.clearAcceptRequest(firebase.uidUser)
                     }
                 })
 
@@ -88,7 +88,7 @@ class RequestParentFragment : DialogFragment() {
                             "acceptAnswer",
                             "1"
                         )
-                        firebase.clearAcceptRequest()
+                        firebase.clearAcceptRequest(firebase.uidUser)
                     }
                 })
 

@@ -249,8 +249,8 @@ class FunctionsFirebase {
         ref.child("status").setValue(0)
     }
 
-    fun clearAcceptRequest() {
-        val ref = rootRef.child("users").child("children").child("$uidUser")
+    fun clearAcceptRequest(childUid: String) {
+        val ref = rootRef.child("users").child("children").child(childUid)
         ref.child("acceptName").setValue("")
         ref.child("acceptUid").setValue("")
     }
@@ -1091,7 +1091,7 @@ class FunctionsFirebase {
     }
 
     fun sendRequestChild(editTextId: EditText?, context: Context) {
-        clearAcceptRequest()
+        //clearAcceptRequest()
         val childRef = rootRef.child("users").child("children")
         childRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {

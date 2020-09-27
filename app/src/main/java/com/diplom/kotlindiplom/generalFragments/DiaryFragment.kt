@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_diary.*
@@ -54,7 +55,6 @@ class DiaryFragment : Fragment() {
             fm.popBackStack()
         }
         activity?.title = "Электронный дневник"
-        val firebase = FunctionsFirebase()
         firebase.getFieldUserDatabase(
             firebase.uidUser!!,
             "role",

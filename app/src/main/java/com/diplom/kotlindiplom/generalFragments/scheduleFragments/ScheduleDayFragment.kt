@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.*
 import com.diplom.kotlindiplom.models.recyclerViewItems.LessonItem
@@ -58,7 +59,6 @@ class ScheduleDayFragment : Fragment() {
         }*/
         messageTextView?.isVisible  =false
         val adapter = GroupAdapter<ViewHolder>()
-        val firebase = FunctionsFirebase()
         val day = activity?.title.toString().substringBefore(" ")
         val date = activity?.title.toString().substringAfter(day)
         if (date.isEmpty()){

@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -58,7 +59,6 @@ class ChildAllTasksFragment : Fragment() {
         if (title == "На проверке") status = 0;
         if (title == "Выполненные") status = 1;
         val adapter = GroupAdapter<ViewHolder>()
-        val firebase = FunctionsFirebase()
         if (status != 1) {
             firebase.getFieldUserDatabase(
                 firebase.uidUser!!,

@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.Network.network
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.*
 import com.diplom.kotlindiplom.models.apiResponse.cities.City
@@ -55,7 +57,6 @@ class ChildMyProfileFragment : Fragment() {
         activity?.title = "Мой профиль"
         changeEmail = false
         loadInformationFromFirebase()
-        Log.d("Tag", cityId.toString())
         emailTextInputChildMyProfile?.editText?.setOnClickListener {
             changeEmail = true
         }
@@ -88,7 +89,7 @@ class ChildMyProfileFragment : Fragment() {
             saveChangeButtonChildMyProfile?.isVisible = true
             educationalInstitutionAutoCompleteTextViewChildMyProfile?.text?.clear()
             schoolId = -1
-            MainActivity.Network.network.getNodeCities(
+            network.getNodeCities(
                 cityAutoCompleteTextViewChildMyProfile!!,
                 requireContext(),
                 cities
@@ -96,7 +97,7 @@ class ChildMyProfileFragment : Fragment() {
         }
         cityAutoCompleteTextViewChildMyProfile?.setOnItemClickListener { parent, view, position, id ->
             cityId = cities[id.toInt()].id
-            MainActivity.Network.network.getNodeSchools(
+            network.getNodeSchools(
                 schools,
                 educationalInstitutionAutoCompleteTextViewChildMyProfile.text.toString(),
                 cityId!!,
@@ -115,7 +116,7 @@ class ChildMyProfileFragment : Fragment() {
         }
         educationalInstitutionAutoCompleteTextViewChildMyProfile?.doAfterTextChanged {
             saveChangeButtonChildMyProfile?.isVisible = true
-            MainActivity.Network.network.getNodeSchools(
+            network.getNodeSchools(
                 schools,
                 educationalInstitutionAutoCompleteTextViewChildMyProfile.text.toString(),
                 cityId!!,
@@ -135,11 +136,9 @@ class ChildMyProfileFragment : Fragment() {
         educationalInstitutionAutoCompleteTextViewChildMyProfile?.setOnItemClickListener { parent, view, position, id ->
             schoolId = schools[id.toInt()].id
         }
-
     }
 
     private fun loadInformationFromFirebase() {
-        val firebase = FunctionsFirebase()
 
         firebase.getChild(firebase.uidUser!!, object : Callback<Child> {
             override fun onComplete(value: Child) {
@@ -169,7 +168,6 @@ class ChildMyProfileFragment : Fragment() {
         val point = pointTextViewChildMyProfile?.text.toString().toInt()
 
         val user = FirebaseAuth.getInstance().currentUser
-        val firebase = FunctionsFirebase()
         if (changeEmail) {
             user?.updateEmail(email)
                 ?.addOnCompleteListener {

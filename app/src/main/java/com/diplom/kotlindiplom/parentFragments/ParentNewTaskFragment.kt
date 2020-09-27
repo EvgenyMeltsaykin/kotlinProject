@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -47,7 +48,6 @@ class ParentNewTaskFragment : Fragment() {
         requireActivity().invalidateOptionsMenu()
         activity?.title = title
         val navController = Navigation.findNavController(requireActivity(),R.id.navFragment)
-        val firebase = FunctionsFirebase()
         val time = Calendar.getInstance().time
         val currentTime = time.toLocaleString()
         addTaskButtonParent.setOnClickListener {

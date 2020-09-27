@@ -18,6 +18,8 @@ import androidx.core.widget.doAfterTextChanged
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.Network.network
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.*
 import com.diplom.kotlindiplom.models.apiResponse.cities.City
@@ -68,7 +70,6 @@ class ParentMyProfileFragment : Fragment() {
             }
         }
 
-
         saveChangeButtonParentMyProfile?.setOnClickListener {
             //firebase.uploadImageToFirebase(selectedPhotoUri, requireActivity(), "parents")
             saveChangeInParentProfile()
@@ -84,7 +85,7 @@ class ParentMyProfileFragment : Fragment() {
         val cities: MutableList<City> = mutableListOf()
         cityAutoCompleteTextViewParentMyProfile?.doAfterTextChanged {
             saveChangeButtonParentMyProfile?.isVisible = true
-            MainActivity.Network.network.getNodeCities(cityAutoCompleteTextViewParentMyProfile, requireContext(), cities)
+            network.getNodeCities(cityAutoCompleteTextViewParentMyProfile, requireContext(), cities)
         }
 
         cityAutoCompleteTextViewParentMyProfile?.setOnItemClickListener { parent, view, position, id ->
@@ -92,7 +93,6 @@ class ParentMyProfileFragment : Fragment() {
         }
     }
     private fun loadInformationFromFirebase() {
-        val firebase = FunctionsFirebase()
         firebase.getParent(firebase.uidUser, object : Callback<Parent> {
             override fun onComplete(value: Parent) {
                 usernameTextInputParentMyProfile?.editText?.setText(value.username)
@@ -109,7 +109,6 @@ class ParentMyProfileFragment : Fragment() {
         val email = emailTextInputParentMyProfile?.editText?.text.toString()
         val username = usernameTextInputParentMyProfile?.editText?.text.toString()
         val city = cityAutoCompleteTextViewParentMyProfile?.text.toString()
-        val firebase = FunctionsFirebase()
         if (changeEmail) {
             user?.updateEmail(emailTextInputParentMyProfile?.editText?.text.toString())
                 ?.addOnCompleteListener {

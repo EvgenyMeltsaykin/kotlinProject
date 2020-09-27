@@ -10,6 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Lesson
@@ -62,7 +63,6 @@ class PagerMyScheduleFragment : Fragment() , AddLessonFragment.OnInputListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = GroupAdapter<ViewHolder>()
-        val firebase = FunctionsFirebase()
         firebase.getLessonMyScheduleOutFirebase(weekday.toLowerCase(),object : Callback<List<Lesson>> {
             override fun onComplete(value: List<Lesson>) {
                 var i = 0

@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.Award
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -65,7 +66,6 @@ class ListAwardsFragment : Fragment() {
     }
     fun updateAwardList(){
         val adapter = GroupAdapter<ViewHolder>()
-        val firebase = FunctionsFirebase()
         firebase.getFieldUserDatabase(firebase.uidUser!!,"parentUid",object :Callback<String>{
             override fun onComplete(value: String) {
                 adapter.clear()

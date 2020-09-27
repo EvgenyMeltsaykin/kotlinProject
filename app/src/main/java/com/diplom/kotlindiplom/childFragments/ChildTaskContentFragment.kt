@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -51,7 +52,6 @@ class ChildTaskContentFragment : Fragment() {
         //requireActivity().invalidateOptionsMenu()
         activity?.title = title
         val navController = Navigation.findNavController(requireActivity(), R.id.navFragment)
-        val firebase = FunctionsFirebase()
         firebase.getTask(taskId.toString(), object : Callback<Task> {
             override fun onComplete(value: Task) {
                 titleContentTaskTextViewChild?.text = "Название:" +value.title

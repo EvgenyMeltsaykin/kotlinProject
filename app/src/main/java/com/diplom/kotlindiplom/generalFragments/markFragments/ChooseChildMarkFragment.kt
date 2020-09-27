@@ -10,6 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.recyclerViewItems.ChildDiaryItem
@@ -121,7 +122,6 @@ class ChooseChildMarkFragment : Fragment() {
             }
         })
         adapter.setOnItemClickListener { item, view ->
-            val firebase = FunctionsFirebase()
             val childDiaryItem = item as ChildDiaryItem
             val bundle = bundleOf()
             bundle.putString("id","${childDiaryItem.child.id}")

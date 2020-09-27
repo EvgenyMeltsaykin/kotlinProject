@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_detail_award.*
@@ -62,7 +63,6 @@ class DetailAwardFragment : Fragment() {
         requireActivity().invalidateOptionsMenu()
         activity?.title = "Вознаграждение"
         childTakeAwardTextView?.isVisible = false
-        val firebase = FunctionsFirebase()
         awardNameTextView?.text = "Вознаграждение: $nameAward"
         costAwardTxtView?.text = "Стоимость: $costAward"
         if (role == "children"){

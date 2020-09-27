@@ -11,6 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_details_final_mark.*
@@ -57,7 +58,6 @@ class DetailsFinalMarkFragment : Fragment() {
         //requireActivity().invalidateOptionsMenu()
         lessonNameTextView?.text = "Предмет: $lessonName"
         yearMarkTextView?.text = "Годовая оценка: $yearMark"
-        val firebase = FunctionsFirebase()
         val detailMark = mutableListOf<String>()
         firebase.getFieldDiary(firebase.uidUser!!,"semestrName",object :Callback<String>{
             override fun onComplete(semestrName: String) {

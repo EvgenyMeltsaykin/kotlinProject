@@ -13,6 +13,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -58,7 +59,6 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
         requireActivity().invalidateOptionsMenu()
         progressBar?.isVisible = false
         activity?.title = ""
-        val firebase = FunctionsFirebase()
         firebase.getFieldDiary(firebase.uidUser!!,"login",object : Callback<String>{
             override fun onComplete(value: String) {
                 if(value.isNotEmpty()){
@@ -112,6 +112,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         }
                         val bundle = bundleOf()
                         bundle.putString("login",login)
+                        bundle.putString("urlDiary",urlDiary)
                         Navigation.findNavController(
                             requireActivity(),
                             R.id.navFragment
@@ -161,7 +162,6 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
         enterDiaryButton?.isVisible = true
         writeMailButton?.isVisible = true
         staticMessageTextView?.isVisible = true
-        val firebase = FunctionsFirebase()
         var arrayAdapter: ArrayAdapter<String>? = null
         firebase.getDiaries(object : Callback<List<String>> {
             override fun onComplete(value: List<String>) {

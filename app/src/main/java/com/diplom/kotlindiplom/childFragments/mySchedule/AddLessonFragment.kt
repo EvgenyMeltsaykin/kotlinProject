@@ -18,6 +18,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.diplom.kotlindiplom.ActivityCallback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Lesson
@@ -120,7 +121,6 @@ class AddLessonFragment : DialogFragment() {
         }
 
         addLessonButton?.setOnClickListener {
-            val firebase = FunctionsFirebase()
             val lessonName = lessonNameTextInput?.editText?.text.toString().capitalize()
             val time = lessonBeginTimeTextView?.text.toString() + "-" + lessonEndTimeTextView?.text.toString()
             val cabinet = cabinetTextInput.editText?.text.toString()
@@ -135,7 +135,6 @@ class AddLessonFragment : DialogFragment() {
             }
         }
         deleteLessonButton?.setOnClickListener {
-            val firebase = FunctionsFirebase()
             val lesson = Lesson()
             firebase.addLessonMyScheduleInFirebase(day,numberLesson!!,lesson)
             onInputListener.sendInput(indexTab)

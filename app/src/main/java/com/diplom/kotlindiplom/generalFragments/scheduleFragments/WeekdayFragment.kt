@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -92,8 +93,6 @@ class WeekdayFragment : Fragment() {
     }
     @ExperimentalStdlibApi
     private fun updateSchedule(updateWithoutCheck: Boolean, calendar: Calendar) {
-        val firebase = FunctionsFirebase()
-
         val showButtons = {
             mondayButton?.isVisible = true
             tuesdayButton?.isVisible = true
@@ -169,7 +168,6 @@ class WeekdayFragment : Fragment() {
     private fun setupCalendar() {
         calendarView?.isVisible = false
         //val selectedDate = calendarView?.date
-        val firebase = FunctionsFirebase()
         val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
         firebase.getDateUpdateInSchedule(object : Callback<LocalDate> {
             @RequiresApi(Build.VERSION_CODES.O)

@@ -12,6 +12,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -55,7 +56,6 @@ class ChooseSemestrElschoolFragment : Fragment() {
         //requireActivity().invalidateOptionsMenu()
         activity?.title = "Выберите"
         val bundle = bundleOf()
-        val firebase = FunctionsFirebase()
         progressBar?.isVisible = false
         firebase.getFieldMarks("dateUpdate", object : Callback<String> {
             @RequiresApi(Build.VERSION_CODES.O)
@@ -105,8 +105,6 @@ class ChooseSemestrElschoolFragment : Fragment() {
 
     @ExperimentalStdlibApi
     fun refreshMarks() {
-        val firebase = FunctionsFirebase()
-
         val hideButtons = {
             refreshMarkButton?.isVisible = false
             firstSemestrButton?.isVisible = false

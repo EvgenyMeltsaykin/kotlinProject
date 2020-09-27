@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_new_award.*
@@ -54,7 +55,6 @@ class NewAwardFragment : Fragment() {
             if (nameAward.isEmpty() || costAward.isEmpty()){
                 Toast.makeText(requireContext(),"Заполните все поля",Toast.LENGTH_SHORT).show()
             }else{
-                val firebase = FunctionsFirebase()
                 firebase.addAwardInFirebase(nameAward,costAward)
                 Toast.makeText(requireContext(),"Вознаграждение добавлено",Toast.LENGTH_SHORT).show()
                 Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_newAwardFragment_to_listAwardsFragment)

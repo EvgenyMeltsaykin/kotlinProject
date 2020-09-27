@@ -21,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.childFragments.RequestParentFragment
 import com.diplom.kotlindiplom.models.FunctionsApi
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -83,8 +84,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             navController.navigate(R.id.parentMyProfileFragment)
             drawer.closeDrawer(GravityCompat.START)
         }
-
-        val firebase = FunctionsFirebase()
         val uiFunctions = FunctionsUI()
         val ref = firebase.parentRef.child(firebase.uidUser!!)
         ref.addChildEventListener(object : ChildEventListener {
@@ -236,7 +235,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             drawer?.closeDrawer(GravityCompat.START)
         }*/
         setupDrawerAndToolbar()
-        val firebase = FunctionsFirebase()
         val uiFunctions = FunctionsUI()
         val requestRef = firebase.childRef.child(firebase.uidUser!!)
         requestRef.addChildEventListener(object : ChildEventListener {
@@ -367,7 +365,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         menuInflater.inflate(R.menu.nav_menu, menu)
         if (roleUser == "child") {
             val item = menu?.findItem(R.id.menuPointsChild)
-            val firebase = FunctionsFirebase()
             firebase.getPointChild(
                 firebase.uidUser!!,
                 object : Callback<String> {

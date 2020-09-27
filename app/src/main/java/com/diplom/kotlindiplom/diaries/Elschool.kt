@@ -47,8 +47,10 @@ class Elschool {
 
     fun deleteDiary() {
         val firebase = FunctionsFirebase()
+
         firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/semestrName", "")
         firebase.setFieldUserDatabase(firebase.uidUser, "diary/idChild", "")
+        firebase.setFieldUserDatabase(firebase.uidUser, "diary/cookie", "")
         firebase.setFieldUserDatabase(firebase.uidUser, "diary/login", "")
         firebase.setFieldUserDatabase(firebase.uidUser, "diary/password", "")
         firebase.setFieldUserDatabase(firebase.uidUser, "diary/url", "")
@@ -61,6 +63,7 @@ class Elschool {
     fun login(login: String, password: String): Boolean {
         val cookies: HashMap<String, String> = HashMap()
         var title = ""
+        Log.d("Tag", "$login $password")
         Log.d("Tag",System.currentTimeMillis().toString())
         try {
             val document = Jsoup.connect(urlLogin)
@@ -77,6 +80,7 @@ class Elschool {
                 val id = parseDoc.text().substringAfter("ID ").substringBefore(" ")
                 val firebase = FunctionsFirebase()
                 firebase.setFieldDiary(firebase.uidUser!!, "idChild", id)
+                firebase.setFieldDiary(firebase.uidUser,"cookie","")
                 firebase.setFieldDiary(
                     firebase.uidUser,
                     "cookie",
