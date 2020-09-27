@@ -50,7 +50,7 @@ class ParentNodeChildrenFragment : Fragment() {
         updateRecyclerView(firebase,adapter)
         childrenRecyclerViewParent?.adapter = adapter
         addChildButton?.setOnClickListener {
-            firebase.sendRequestChild(childIdTextInputParentMyProfile?.editText,requireContext())
+            firebase.sendRequestChild(childIdTextInputParentMyProfile?.editText?.text.toString(),requireContext())
         }
 
         firebase.parentRef.child(firebase.uidUser!!).addChildEventListener(object : ChildEventListener{

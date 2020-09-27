@@ -37,8 +37,6 @@ class ListAwardsFragment : Fragment() {
         super.onAttach(context)
         val activityCallback = context as ActivityCallback
         role = activityCallback.getRoleUser().toString()
-        if (role == "child") role = "children"
-        else role = "parents"
     }
 
     override fun onCreateView(
@@ -54,7 +52,7 @@ class ListAwardsFragment : Fragment() {
         requireActivity().invalidateOptionsMenu()
         activity?.title = "Вознаграждение"
         emptyListAwardTextView?.isVisible = false
-        if (role == "children"){
+        if (role == "child"){
             addAwardButton?.isVisible = false
         }
         addAwardButton?.setOnClickListener {
@@ -71,7 +69,7 @@ class ListAwardsFragment : Fragment() {
                 adapter.clear()
                 if (value.isEmpty()){
                     listAwardProgressBar?.isVisible = false
-                    if (role == "children"){
+                    if (role == "child"){
                         emptyListAwardTextView?.text = "Не привязан родительский аккаунт"
                         emptyListAwardTextView?.isVisible = true
                     }
@@ -80,10 +78,10 @@ class ListAwardsFragment : Fragment() {
                     override fun onComplete(value: List<Award>) {
                         listAwardProgressBar?.isVisible = false
                         if (value.isEmpty()){
-                            if (role == "children"){
+                            if (role == "child"){
                                 emptyListAwardTextView?.text = "Родители ещё не добавили вознаграждения"
                             }
-                            if (role == "parents"){
+                            if (role == "parent"){
                                 emptyListAwardTextView?.text = "Чтобы у ребенка была дополнительная мотивация делать задания, добавляйте ему вознаграждение. Это очень просто! Просто нажмите на кнопку добавить"
                             }
                             emptyListAwardTextView?.isVisible = true

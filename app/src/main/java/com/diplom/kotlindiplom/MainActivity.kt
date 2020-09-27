@@ -466,13 +466,13 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 navController.navigate(R.id.action_parentNodeChildrenFragment_to_loginDiaryFragment)
                 return
             }
-            R.id.mailFragment -> {
+            /*R.id.mailFragment -> {
                 moveFragment(
                     R.id.action_mailFragment_to_mainFragment,
                     R.id.action_mailFragment_to_loginDiaryFragment
                 )
                 return
-            }
+            }*/
         }
         if (roleUser == "child") {
             if (navController.currentDestination?.id == R.id.mainFragment) {

@@ -55,8 +55,6 @@ class DetailAwardFragment : Fragment() {
         super.onAttach(context)
         val activityCallback = context as ActivityCallback
         role = activityCallback.getRoleUser().toString()
-        if (role == "child") role = "children"
-        else role = "parents"
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,7 +63,7 @@ class DetailAwardFragment : Fragment() {
         childTakeAwardTextView?.isVisible = false
         awardNameTextView?.text = "Вознаграждение: $nameAward"
         costAwardTxtView?.text = "Стоимость: $costAward"
-        if (role == "children"){
+        if (role == "child"){
             deleteButton?.isVisible = false
             if (status == 1){
                 messageForChildTextView?.isVisible = true
@@ -73,7 +71,7 @@ class DetailAwardFragment : Fragment() {
             }
 
         }
-        if (role == "parents"){
+        if (role == "parent"){
             takeButton?.isVisible = false
             if (status != 0){
                 deleteButton?.isVisible = false

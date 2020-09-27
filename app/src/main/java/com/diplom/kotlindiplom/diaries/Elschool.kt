@@ -102,11 +102,7 @@ class Elschool {
         val firebase = FunctionsFirebase()
         firebase.getRoleByUid(firebase.uidUser!!, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-
-                val ref = firebase.rootRef.child("users").child(role).child(firebase.uidUser)
+                val ref = firebase.rootRef.child("users").child(answer).child(firebase.uidUser)
                     .child("diary").child("schedule")
                 ref.child("понедельник").removeValue()
                 ref.child("вторник").removeValue()
@@ -549,9 +545,6 @@ class Elschool {
                     GlobalScope.launch(Dispatchers.Main) {
                         firebase.getRoleByUid(firebase.uidUser!!, object : Callback<String> {
                             override fun onComplete(answer: String) {
-                                var role = ""
-                                if (answer == "child") role = "children"
-                                else role = "parents"
                                 if (!end) {
                                     Toast.makeText(
                                         context,
@@ -561,7 +554,7 @@ class Elschool {
                                     progressBar.isVisible = false
                                     showButtons()
                                 }
-                                val ref = firebase.rootRef.child("users").child(role)
+                                val ref = firebase.rootRef.child("users").child(answer)
                                     .child(firebase.uidUser).child("diary").child("marks")
                                 ref.addChildEventListener(object : ChildEventListener {
                                     override fun onChildAdded(

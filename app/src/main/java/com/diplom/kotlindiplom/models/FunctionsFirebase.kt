@@ -29,8 +29,8 @@ class FunctionsFirebase {
     val rootRef = FirebaseDatabase.getInstance().reference
     val diariesRef = rootRef.child("diaries")
     val secretKey = "applicatonFromDiplom"
-    val childRef = rootRef.child("users").child("children")
-    val parentRef = rootRef.child("users").child("parents")
+    val childRef = rootRef.child("users").child("child")
+    val parentRef = rootRef.child("users").child("parent")
     val taskRef = rootRef.child("tasks")
     val awardsRef = rootRef.child("awards")
     val rolesRef = rootRef.child("roles")
@@ -208,7 +208,7 @@ class FunctionsFirebase {
                 if (snapshot.exists()) {
                     snapshot.children.forEach { awardSnapshot ->
                         award = getAllFieldAward(awardSnapshot)
-                        if (role == "children") {
+                        if (role == "child") {
                             if (award.status == 0 || (award.status == 1 && award.childUid == uidUser)) {
                                 awards.add(award)
                             }
@@ -216,8 +216,8 @@ class FunctionsFirebase {
                             awards.add(award)
                         }
                     }
-                    firebaseCallBack.onComplete(awards)
                 }
+                firebaseCallBack.onComplete(awards)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -239,7 +239,7 @@ class FunctionsFirebase {
     }
 
     fun clearAcceptRequest(childUid: String) {
-        val ref = rootRef.child("users").child("children").child(childUid)
+        val ref = rootRef.child("users").child("child").child(childUid)
         ref.child("acceptName").setValue("")
         ref.child("acceptUid").setValue("")
     }
@@ -333,11 +333,8 @@ class FunctionsFirebase {
         lessonName: String,
         firebaseCallBack: Callback<List<Int>>
     ) {
-        var roleFirebase = ""
-        if (role == "child") roleFirebase = "children"
-        else roleFirebase = "parents"
         val ref =
-            rootRef.child("users").child(roleFirebase).child(uidUser!!).child("diary")
+            rootRef.child("users").child(role).child(uidUser!!).child("diary")
                 .child("marks").orderByChild("lessonName").equalTo(lessonName)
         ref.keepSynced(true)
         val marksSemestr = mutableListOf<Int>()
@@ -369,11 +366,8 @@ class FunctionsFirebase {
     fun getFieldMarks(field: String, firebaseCallBack: Callback<String>) {
         getRoleByUid(uidUser!!, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
                 val ref =
-                    rootRef.child("users").child(role).child(uidUser).child("diary")
+                    rootRef.child("users").child(answer).child(uidUser).child("diary")
                         .child("marks")
                 ref.keepSynced(true)
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -490,11 +484,8 @@ class FunctionsFirebase {
     ) {
         getRoleByUid(uidUser!!, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
                 val ref =
-                    rootRef.child("users").child(role).child(uidUser).child("diary")
+                    rootRef.child("users").child(answer).child(uidUser).child("diary")
                         .child("marks").orderByChild("lessonName").equalTo(lessonName)
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -531,11 +522,8 @@ class FunctionsFirebase {
     ) {
         getRoleByUid(uidUser!!, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
                 val ref =
-                    rootRef.child("users").child(role).child(uidUser).child("diary")
+                    rootRef.child("users").child(answer).child(uidUser).child("diary")
                         .child("marks").orderByChild("lessonName").equalTo(lessonName)
                 val detailMarksMap = mutableMapOf<String, String>()
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -624,10 +612,7 @@ class FunctionsFirebase {
     fun setFieldDiary(uid: String, field: String, value: Any) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-                val ref = rootRef.child("users").child(role).child(uid).child("diary")
+                val ref = rootRef.child("users").child(answer).child(uid).child("diary")
                 ref.child(field).setValue(value)
             }
         })
@@ -637,11 +622,7 @@ class FunctionsFirebase {
         val lessons = mutableListOf<Lesson>()
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-
-                val ref = rootRef.child("users").child(role).child(uid).child("diary")
+                val ref = rootRef.child("users").child(answer).child(uid).child("diary")
                     .child("schedule").child(day)
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
@@ -677,10 +658,7 @@ class FunctionsFirebase {
     fun getPointChild(uid: String, firebaseCallBack: Callback<String>) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-                val ref = rootRef.child("users").child(role).child(uid)
+                val ref = rootRef.child("users").child(answer).child(uid)
                 ref.addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                         TODO("Not yet implemented")
@@ -708,11 +686,7 @@ class FunctionsFirebase {
     ) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-
-                val ref = rootRef.child("users").child(role).child(uid)
+                val ref = rootRef.child("users").child(answer).child(uid)
                 ref.keepSynced(true)
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
@@ -736,11 +710,8 @@ class FunctionsFirebase {
     fun getDateUpdateInSchedule(firebaseCallBack: Callback<LocalDate>) {
         getRoleByUid(uidUser!!, object : Callback<String> {
             override fun onComplete(value: String) {
-                var role = ""
-                if (value == "child") role = "children"
-                else role = "parents"
                 val ref =
-                    rootRef.child("users").child(role).child(uidUser).child("diary")
+                    rootRef.child("users").child(value).child(uidUser).child("diary")
                         .child("schedule")
 
                 var year: Int = 1
@@ -778,11 +749,7 @@ class FunctionsFirebase {
     fun setDateUpdateSсhedule(year: String, month: String, day: String) {
         getRoleByUid(uidUser!!, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role: String = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-
-                val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
+                val ref = rootRef.child("users").child(answer).child(uidUser!!).child("diary")
                     .child("schedule")
                 ref.child("year").setValue(year)
                 ref.child("month").setValue(month)
@@ -794,11 +761,7 @@ class FunctionsFirebase {
     fun setFieldSchedule(uid: String, field: String, value: Any) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role: String = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-
-                val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
+                val ref = rootRef.child("users").child(answer).child(uidUser!!).child("diary")
                     .child("schedule")
                 ref.child(field).setValue(value)
             }
@@ -808,11 +771,8 @@ class FunctionsFirebase {
     fun getFieldScheduleDay(uid: String, day: String, firebaseCallBack: Callback<String>) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
                 val ref =
-                    rootRef.child("users").child(role).child(uid).child("diary")
+                    rootRef.child("users").child(answer).child(uid).child("diary")
                         .child("schedule")
                         .child(day)
                 var value = ""
@@ -840,11 +800,8 @@ class FunctionsFirebase {
     fun getFieldSchedule(uid: String, field: String, firebaseCallBack: Callback<String>) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
                 val ref =
-                    rootRef.child("users").child(role).child(uid).child("diary")
+                    rootRef.child("users").child(answer).child(uid).child("diary")
                         .child("schedule")
                 var value = ""
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -871,11 +828,7 @@ class FunctionsFirebase {
     fun getFieldDiary(uid: String, field: String, firebaseCallBack: Callback<String>) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-
-                val ref = rootRef.child("users").child(role).child(uid).child("diary")
+                val ref = rootRef.child("users").child(answer).child(uid).child("diary")
                 var value = ""
                 ref.keepSynced(true)
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -905,11 +858,7 @@ class FunctionsFirebase {
     ) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-
-                val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
+                val ref = rootRef.child("users").child(answer).child(uidUser!!).child("diary")
                 val value = mutableMapOf<String, String>()
 
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -970,11 +919,7 @@ class FunctionsFirebase {
     ) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role: String = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-
-                val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
+                val ref = rootRef.child("users").child(answer).child(uidUser!!).child("diary")
                 val value = mutableListOf<String>()
 
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -1006,10 +951,7 @@ class FunctionsFirebase {
     ) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-                val ref = rootRef.child("users").child(role).child(uid)
+                val ref = rootRef.child("users").child(answer).child(uid)
                 ref.keepSynced(true)
                 ref.child("$field").setValue(value)
                 firebaseCallBack.onComplete(true)
@@ -1020,10 +962,7 @@ class FunctionsFirebase {
     fun setFieldUserDatabase(uid: String, field: String, value: Any?) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
-                var role = ""
-                if (answer == "child") role = "children"
-                else role = "parents"
-                val ref = rootRef.child("users").child(role).child(uid)
+                val ref = rootRef.child("users").child(answer).child(uid)
                 ref.keepSynced(true)
                 ref.child("$field").setValue(value)
             }
@@ -1083,11 +1022,10 @@ class FunctionsFirebase {
         })
     }
 
-    fun sendRequestChild(editTextId: EditText?, context: Context) {
+    fun sendRequestChild(idChild:String, context: Context) {
         //clearAcceptRequest()
-        val idChild = editTextId?.text.toString()
-        val childRef = rootRef.child("users").child("children").orderByChild("id").equalTo(idChild.toDouble())
-        childRef.addListenerForSingleValueEvent(object :ValueEventListener{
+        val ref = childRef.orderByChild("id").equalTo(idChild.toDouble())
+        ref.addListenerForSingleValueEvent(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()){
                     snapshot.children.forEach {child->

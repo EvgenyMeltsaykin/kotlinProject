@@ -32,7 +32,6 @@ class RegistryActivity : AppCompatActivity() {
             startActivity(intent)
         }
         registryButtonRegistry?.setOnClickListener {
-
             registryButtonRegistry?.isVisible = false
             alreadyRegistryTextViewRegistry?.isVisible = false
             registryProgressBar?.isVisible = true
@@ -115,7 +114,7 @@ class RegistryActivity : AppCompatActivity() {
                     Toast.makeText(
                         applicationContext,
                         "На email ${emailTextInputRegistry.editText?.text.toString()} отправлено письмо. Перейдите по ссылке в письме для подтверждения своего email.",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_LONG
                     ).show()
                     FirebaseAuth.getInstance().signOut()
                     val intent = Intent(this@RegistryActivity, ChooseActivity::class.java)
@@ -126,7 +125,7 @@ class RegistryActivity : AppCompatActivity() {
                     Toast.makeText(
                         applicationContext,
                         "При отправке сообщения на электронную почту произошла ошибка",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_LONG
                     ).show()
                     overridePendingTransition(0, 0);
                     finish()
@@ -143,12 +142,6 @@ class RegistryActivity : AppCompatActivity() {
         val user = Child(firebase.uidUser!!, username, email)
         val refCount = FirebaseDatabase.getInstance().getReference("/users")
         refCount.keepSynced(true)
-        firebase.getCountChildren(object :Callback<String>{
-            override fun onComplete(value: String) {
-                val countChildren = value.toInt() + 1
-                firebase.setFieldUserDatabase(firebase.uidUser,"id",countChildren)
-            }
-        })
         ref.setValue(user)
         firebase.setFieldUserDatabase(firebase.uidUser!!, "role", "child")
         val weekday = listOf<String>("понедельник","вторник","среда","четверг","пятница","суббота")
@@ -162,10 +155,16 @@ class RegistryActivity : AppCompatActivity() {
                 firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/lessonName", "")
             }
         }
+        firebase.getCountChildren(object :Callback<String>{
+            override fun onComplete(value: String) {
+                val countChildren = value.toInt() + 1
+                firebase.setFieldUserDatabase(firebase.uidUser,"id",countChildren)
+            }
+        })
     }
     private fun saveParentToFirebaseDatabase(username: String, email: String) {
         val firebase = FunctionsFirebase()
-        val ref = FirebaseDatabase.getInstance().getReference("/users/parents/${firebase.uidUser}")
+        val ref = firebase.parentRef.child(firebase.uidUser!!)
         firebase.rolesRef.child("${firebase.uidUser}").setValue("parent")
         val user = Parent(firebase.uidUser!!, username, email)
         ref.setValue(user)

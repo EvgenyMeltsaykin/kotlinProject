@@ -113,8 +113,6 @@ class LessonsMarkFragment : Fragment() {
 
         val activityCallback = context as ActivityCallback
         role = activityCallback.getRoleUser().toString()
-        if (role == "child") role = "children"
-        else role = "parents"
     }
 
     companion object {

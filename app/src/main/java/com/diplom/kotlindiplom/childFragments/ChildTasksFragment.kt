@@ -50,7 +50,7 @@ class ChildTasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //requireActivity().invalidateOptionsMenu()
+        requireActivity().invalidateOptionsMenu()
         activity?.title = "Задания"
         val navController = Navigation.findNavController(
             requireActivity(),
