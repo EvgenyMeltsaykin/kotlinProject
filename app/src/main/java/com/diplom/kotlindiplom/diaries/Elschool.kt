@@ -136,7 +136,7 @@ class Elschool {
                                 .cookies(cookies)
                                 .method(Connection.Method.GET)
                                 .get()
-                            var scheduleHtml: org.jsoup.nodes.Document
+                            val scheduleHtml: org.jsoup.nodes.Document
                             if (id.isEmpty()) {
                                 scheduleHtml =
                                     Jsoup.connect("${document.baseUri()}&year=$year&week=$week&log=false")
@@ -151,16 +151,18 @@ class Elschool {
                             }
                             //тест
                             Log.d("Tag","connect" + System.currentTimeMillis().toString())
-                            scheduleHtml = Jsoup.connect("https://elschool.ru/users/diaries/details?rooId=18&instituteId=233&departmentId=91120&pupilId=1588026&year=$year&week=$week&log=false")
-                                .cookies(cookies)
-                                .get()
+                            //scheduleHtml = Jsoup.connect("https://elschool.ru/users/diaries/details?rooId=18&instituteId=233&departmentId=91120&pupilId=1588026&year=$year&week=$week&log=false").cookies(cookies).get()
                             val dayOfWeekHtml = scheduleHtml.select("tbody")
                             Log.d("Tag","begin parse" + System.currentTimeMillis().toString())
                             dayOfWeekHtml.forEach { it ->
                                 //example понедельник 17.08
-                                val dayDate =
-                                    it.select("td[class=diary__dayweek ]").select("p").text()
+                                var dayDate:String
+                                dayDate  = it.select("td[class=diary__dayweek]").select("p").text()
                                         .toString()
+                                if (dayDate.isEmpty()){
+                                    dayDate  = it.select("td[class=diary__dayweek  diary__dayweek_today]").select("p").text()
+                                        .toString()
+                                }
                                 val items = it.select("tr[class=diary__lesson]")
                                 val lessons = mutableListOf<Lesson>()
                                 var cabinetAndTime = ""
