@@ -6,11 +6,15 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.diplom.kotlindiplom.models.Lesson
 import com.google.firebase.auth.FirebaseAuth
+import java.util.*
 
 
 class SplashActivity : AppCompatActivity() {
+    @ExperimentalStdlibApi
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +23,7 @@ class SplashActivity : AppCompatActivity() {
         verifyUserIsLoggedIn()
     }
 
+    @ExperimentalStdlibApi
     private fun verifyUserIsLoggedIn() {
         val uid = FirebaseAuth.getInstance().uid
         val user = FirebaseAuth.getInstance().currentUser
@@ -26,18 +31,34 @@ class SplashActivity : AppCompatActivity() {
             if (user.isEmailVerified) {
                 val firebase = FunctionsFirebase()
                 firebase.getRoleByUid(uid!!, object : Callback<String> {
-                    override fun onComplete(value: String) {
-                        if (value == "child") {
-                            intent = Intent(applicationContext, MainActivity::class.java)
-                            intent.putExtra("role", "child")
-                        }
-                        if (value == "parent") {
-                            intent = Intent(applicationContext, MainActivity::class.java)
-                            intent.putExtra("role", "parent")
-                        }
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
+                    override fun onComplete(role: String) {
+                        val fields = listOf("url","idChild")
+                        firebase.getFieldsDiary(firebase.uidUser!!,fields,object:Callback<Map<String,String>>{
+                            override fun onComplete(value: Map<String,String>) {
+                                val diary = Diary()
+                                val calendar = Calendar.getInstance()
+                                val week = calendar.get(Calendar.WEEK_OF_YEAR)
+                                val year = calendar.get(Calendar.YEAR)
+                                if (!value["idChild"].isNullOrEmpty()) {
+                                    when (value["url"]) {
+                                        diary.elschool.url -> {
+                                            diary.elschool.getSchedule(
+                                                year,
+                                                week,
+                                                value["idChild"]!!,
+                                                object : Callback<MutableMap<String, List<Lesson>>> {
+                                                    override fun onComplete(value: MutableMap<String, List<Lesson>>) {
+                                                        goToMainActivity(role)
+                                                    }
+                                                })
+                                        }
+                                    }
+                                }else{
+                                    goToMainActivity(role)
+                                }
+                            }
+                        })
+
                     }
 
                 })
@@ -57,5 +78,12 @@ class SplashActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
+    }
+    fun goToMainActivity(role:String){
+        intent = Intent(applicationContext, MainActivity::class.java)
+        intent.putExtra("role", role)
+        intent.flags =
+            Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }

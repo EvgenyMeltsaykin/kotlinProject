@@ -69,6 +69,7 @@ class ChildAllTasksFragment : Fragment() {
                             override fun onComplete(value: List<Task>) {
                                 if (value.isEmpty()){
                                     tasksEmptyTextView?.isVisible = true
+                                    return
                                     //taskRecyclerViewChild.isVisible = false
                                 }
                                 value.forEach {
@@ -96,6 +97,7 @@ class ChildAllTasksFragment : Fragment() {
                 override fun onComplete(value: List<Task>) {
                     if (value.isEmpty()){
                         tasksEmptyTextView?.isVisible = true
+                        return
                        // taskRecyclerViewChild.isVisible = false
                     }
                     value.forEach {

@@ -39,7 +39,7 @@ class WeekdayFragment : Fragment() {
     private var updateWithoutCheck: Boolean = false
     var selectedWeek = 0
     var selectedYear = 0
-    val calendar = Calendar.getInstance()
+    val calendar: Calendar = Calendar.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {

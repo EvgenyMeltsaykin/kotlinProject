@@ -61,9 +61,11 @@ class ParentAllTasksFragment : Fragment() {
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
         firebase.getTasksParentUid(firebase.uidUser!!,status,object: Callback<List<Task>>{
-
             override fun onComplete(value: List<Task>) {
-                if (value.isEmpty())taskEmptyTextViewParent?.isVisible = true
+                if (value.isEmpty()){
+                    taskEmptyTextViewParent?.isVisible = true
+                    return
+                }
                 value.forEach {
                     adapter.add(TaskItem(it))
                 }

@@ -618,6 +618,37 @@ class FunctionsFirebase {
         })
     }
 
+    fun getScheduleFromFirebase(firebaseCallback: Callback<MutableMap<String, List<Lesson>>>){
+        val schedule = mutableMapOf<String, List<Lesson>>()
+        getRoleByUid(uidUser!!,object :Callback<String>{
+            override fun onComplete(value: String) {
+                val ref = rootRef.child("users").child(value).child("diary").child("schedule")
+                ref.addListenerForSingleValueEvent(object :ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        snapshot.children.forEach {dayFirebase->
+                            if (dayFirebase.childrenCount != 0L){
+                                val day = dayFirebase.key.toString()
+                                getScheduleDay(uidUser,day,object :Callback<List<Lesson>>{
+                                    override fun onComplete(value: List<Lesson>) {
+                                        schedule[day]=value
+                                    }
+                                })
+                            }
+                        }
+                        firebaseCallback.onComplete(schedule)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+            }
+
+        })
+
+    }
+
     fun getScheduleDay(uid: String, day: String, firebaseCallBack: Callback<List<Lesson>>) {
         val lessons = mutableListOf<Lesson>()
         getRoleByUid(uid, object : Callback<String> {
@@ -824,7 +855,34 @@ class FunctionsFirebase {
             }
         })
     }
+    fun getFieldsDiary(uid:String,fields:List<String>,firebaseCallBack: Callback<Map<String, String>>){
+        getRoleByUid(uid, object : Callback<String> {
+            override fun onComplete(answer: String) {
+                val ref = rootRef.child("users").child(answer).child(uid).child("diary")
+                val value = mutableMapOf<String,String>()
+                ref.keepSynced(true)
+                ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
 
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            p0.children.forEach {
+                                fields.forEach {field->
+                                    if (it.key.toString() == field) {
+                                        value[field] = it.value.toString()
+                                    }
+                                }
+
+                            }
+                        }
+                        firebaseCallBack.onComplete(value)
+                    }
+                })
+            }
+        })
+    }
     fun getFieldDiary(uid: String, field: String, firebaseCallBack: Callback<String>) {
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
@@ -1279,7 +1337,6 @@ class FunctionsFirebase {
 
             override fun onDataChange(p0: DataSnapshot) {
                 task = getAllFieldsTask(p0)
-                Log.d("TAG", task.childUid)
                 firebaseCallBack.onComplete(task)
             }
 
@@ -1342,8 +1399,8 @@ class FunctionsFirebase {
                             }
                         }
                     }
-                    firebaseCallBack.onComplete(tasks)
                 }
+                firebaseCallBack.onComplete(tasks)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -1373,8 +1430,8 @@ class FunctionsFirebase {
                             }
                         }
                     }
-                    firebaseCallBack.onComplete(tasks)
                 }
+                firebaseCallBack.onComplete(tasks)
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")

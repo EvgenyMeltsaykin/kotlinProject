@@ -113,7 +113,6 @@ class Elschool {
             }
         })
     }
-
     @ExperimentalStdlibApi
     fun getSchedule(
         year: Int,
