@@ -97,7 +97,7 @@ class DetailAwardFragment : Fragment() {
                                 Toast.makeText(requireContext(),"Успешно",Toast.LENGTH_SHORT).show()
                                 firebase.setFieldAward(awardId,"status","1")
                                 firebase.setFieldAward(awardId,"showNotification","1")
-                                firebase.setFieldAward(awardId,"childUid",firebase.uidUser)
+                                firebase.setFieldAward(awardId,"childUid",firebase.uidUser!!)
                                 firebase.setFieldUserDatabase(firebase.uidUser!!,"point",value.toInt() - costAward.toInt())
                                 Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailAwardFragment_to_listAwardsFragment)
                             }else{

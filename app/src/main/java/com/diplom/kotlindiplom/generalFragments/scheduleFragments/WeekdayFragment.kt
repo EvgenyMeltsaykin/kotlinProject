@@ -34,18 +34,17 @@ private const val ARG_PARAM2 = "param2"
  */
 class WeekdayFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var updateSchedule: Boolean = false
     private var id: String = ""
-    private var updateWithoutCheck: Boolean = false
     var selectedWeek = 0
     var selectedYear = 0
     val calendar: Calendar = Calendar.getInstance()
+    private var updateSchedule = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             updateSchedule = it.getBoolean("updateSchedule", false)
             id = it.getString("id", "")
-            updateWithoutCheck = it.getBoolean("updateWithoutCheck", false)
+            //updateWithoutCheck = it.getBoolean("updateWithoutCheck", false)
         }
     }
 
@@ -119,11 +118,10 @@ class WeekdayFragment : Fragment() {
         firebase.getFieldDiary(firebase.uidUser!!, "url", object : Callback<String> {
             override fun onComplete(value: String) {
                 firebase.getFieldSchedule(
-                    firebase.uidUser,
+                    firebase.uidUser!!,
                     "weekUpdate",
                     object : Callback<String> {
                         override fun onComplete(weekUpdate: String) {
-                            Log.d("Tag", "$selectedWeek = $weekUpdate")
                             if (selectedWeek != weekUpdate.toInt() || updateWithoutCheck) {
                                 diaryUrl = value
                                 when (value) {
@@ -174,6 +172,7 @@ class WeekdayFragment : Fragment() {
             override fun onComplete(value: LocalDate) {
                 if (updateSchedule) {
                     calendar.timeInMillis = System.currentTimeMillis()
+                    updateSchedule(true, calendar)
                 } else {
                     calendar.set(value.year, value.monthValue - 1, value.dayOfMonth)
                     calendarView?.date = calendar.timeInMillis
@@ -199,8 +198,8 @@ class WeekdayFragment : Fragment() {
             calendarView.isVisible = false
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
-            updateSchedule(updateWithoutCheck, calendar)
+            updateSchedule(false, calendar)
         }
-        updateSchedule(updateWithoutCheck, calendar)
+       //updateSchedule(updateWithoutCheck, calendar)
     }
 }

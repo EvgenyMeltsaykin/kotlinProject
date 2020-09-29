@@ -114,11 +114,11 @@ class Elschool {
         })
     }
     @ExperimentalStdlibApi
-    fun getSchedule(
+    fun getScheduleFromElschool(
         year: Int,
         week: Int,
         id: String = "",
-        firebaseCallback: Callback<MutableMap<String, List<Lesson>>>
+        firebaseCallback: Callback<Boolean>
     ) {
         val firebase = FunctionsFirebase()
         val schedule = mutableMapOf<String, List<Lesson>>()
@@ -127,11 +127,14 @@ class Elschool {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
+                        Log.d("Tag","begin" + System.currentTimeMillis().toString())
                         val cookies = hashMapOf<String, String>()
                         cookies[keyCookie] = value
                         try {
+                            Log.d("Tag","connect document" + System.currentTimeMillis().toString())
                             val document = Jsoup.connect(urlDiary)
                                 .cookies(cookies)
+                                .method(Connection.Method.GET)
                                 .get()
                             var scheduleHtml: org.jsoup.nodes.Document
                             if (id.isEmpty()) {
@@ -147,10 +150,12 @@ class Elschool {
                                         .get()
                             }
                             //тест
+                            Log.d("Tag","connect" + System.currentTimeMillis().toString())
                             scheduleHtml = Jsoup.connect("https://elschool.ru/users/diaries/details?rooId=18&instituteId=233&departmentId=91120&pupilId=1588026&year=$year&week=$week&log=false")
                                 .cookies(cookies)
                                 .get()
                             val dayOfWeekHtml = scheduleHtml.select("tbody")
+                            Log.d("Tag","begin parse" + System.currentTimeMillis().toString())
                             dayOfWeekHtml.forEach { it ->
                                 //example понедельник 17.08
                                 val dayDate =
@@ -181,7 +186,11 @@ class Elschool {
                                 }
                                 schedule[dayDate] = lessons
                             }
+                            Log.d("Tag","end parse" + System.currentTimeMillis().toString())
                             deleteSchedule()
+                            Log.d("Tag","delete diary" + System.currentTimeMillis().toString())
+                            firebaseCallback.onComplete(true)
+                            Log.d("Tag","end" + System.currentTimeMillis().toString())
                             schedule.forEach { (s, list) ->
                                 var i = 0
                                 val day = s.substringBefore(" ")
@@ -227,9 +236,8 @@ class Elschool {
                                     )
                                 }
                             }
-                            firebaseCallback.onComplete(schedule)
                         } catch (e: IOException) {
-                            firebaseCallback.onComplete(schedule)
+                            firebaseCallback.onComplete(false)
                             e.printStackTrace()
                         }
                     }
@@ -362,18 +370,18 @@ class Elschool {
         Toast.makeText(context, "Подождите, идет загрузка расписания", Toast.LENGTH_SHORT).show()
         progressBar.isVisible = true
         hideButtons()
-        getSchedule(
+        getScheduleFromElschool(
             selectedYear,
             selectedWeek,
             id,
-            object : Callback<MutableMap<String, List<Lesson>>> {
+            object : Callback<Boolean> {
                 @RequiresApi(Build.VERSION_CODES.N)
-                override fun onComplete(value: MutableMap<String, List<Lesson>>) {
+                override fun onComplete(value: Boolean) {
                     GlobalScope.launch(Dispatchers.Main) {
                         delay(2000)
                         progressBar.isVisible = false
                         showButtons()
-                        if (value.isNullOrEmpty()) {
+                        if (!value) {
                             Toast.makeText(
                                 context,
                                 "Не удалось загрузить расписание. Сайт не отвечает.Если вы недавно сменили пароль, авторизуйтесь заново.",

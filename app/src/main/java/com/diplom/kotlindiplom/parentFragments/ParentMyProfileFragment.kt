@@ -137,8 +137,8 @@ class ParentMyProfileFragment : Fragment() {
                 }
         }
         firebase.setFieldUserDatabase(firebase.uidUser!!,"username",username)
-        firebase.setFieldUserDatabase(firebase.uidUser,"cityId",cityId)
-        firebase.setFieldUserDatabase(firebase.uidUser,"city",city)
+        firebase.setFieldUserDatabase(firebase.uidUser!!,"cityId",cityId)
+        firebase.setFieldUserDatabase(firebase.uidUser!!,"city",city)
         val header = requireActivity().navView.getHeaderView(0);
         val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         userNameHeader.text = username

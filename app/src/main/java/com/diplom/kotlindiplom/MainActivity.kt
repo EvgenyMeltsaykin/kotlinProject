@@ -29,6 +29,7 @@ import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.header.view.*
 
@@ -46,7 +47,10 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
     object FirebaseSingleton {
-        val firebase = FunctionsFirebase()
+        var  firebase = FunctionsFirebase()
+        fun newInstance(){
+            firebase = FunctionsFirebase()
+        }
     }
 
     object Network {
@@ -58,6 +62,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         roleUser = intent.getStringExtra("role").toString()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        FirebaseSingleton.newInstance()
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navFragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -111,7 +116,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    firebase.setFieldUserDatabase(firebase.uidUser, "acceptAnswer", "-1")
+                    firebase.setFieldUserDatabase(firebase.uidUser!!, "acceptAnswer", "-1")
                 }
             }
 
@@ -308,7 +313,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
                 firebase.getFieldUserDatabase(
-                    firebase.uidUser,
+                    firebase.uidUser!!,
                     "parentUid",
                     object : Callback<String> {
                         override fun onComplete(value: String) {

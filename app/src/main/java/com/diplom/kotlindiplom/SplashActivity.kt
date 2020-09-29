@@ -35,19 +35,30 @@ class SplashActivity : AppCompatActivity() {
                         val fields = listOf("url","idChild")
                         firebase.getFieldsDiary(firebase.uidUser!!,fields,object:Callback<Map<String,String>>{
                             override fun onComplete(value: Map<String,String>) {
-                                val diary = Diary()
-                                val calendar = Calendar.getInstance()
-                                val week = calendar.get(Calendar.WEEK_OF_YEAR)
-                                val year = calendar.get(Calendar.YEAR)
                                 if (!value["idChild"].isNullOrEmpty()) {
+                                    val diary = Diary()
+                                    val calendar = Calendar.getInstance()
+                                    calendar.timeInMillis = System.currentTimeMillis()
+                                    val week = calendar.get(Calendar.WEEK_OF_YEAR)
+                                    val year = calendar.get(Calendar.YEAR)
+                                    firebase.setDateUpdateSсhedule(
+                                        calendar.get(Calendar.YEAR).toString(),
+                                        (calendar.get(Calendar.MONTH) + 1).toString(),
+                                        calendar.get(Calendar.DAY_OF_MONTH).toString()
+                                    )
+                                    firebase.setFieldSchedule(
+                                        MainActivity.FirebaseSingleton.firebase.uidUser!!,
+                                        "weekUpdate",
+                                        week
+                                    )
                                     when (value["url"]) {
                                         diary.elschool.url -> {
-                                            diary.elschool.getSchedule(
+                                            diary.elschool.getScheduleFromElschool(
                                                 year,
                                                 week,
                                                 value["idChild"]!!,
-                                                object : Callback<MutableMap<String, List<Lesson>>> {
-                                                    override fun onComplete(value: MutableMap<String, List<Lesson>>) {
+                                                object : Callback<Boolean> {
+                                                    override fun onComplete(value: Boolean) {
                                                         goToMainActivity(role)
                                                     }
                                                 })

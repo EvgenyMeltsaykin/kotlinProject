@@ -108,11 +108,12 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         GlobalScope.launch(Dispatchers.IO) {
                             firebase.createDiary(urlDiary)
                             firebase.setLoginAndPasswordDiary(login,password)
-                            firebase.setFieldUserDatabase(firebase.uidUser, "diary/url", urlDiary)
+                            firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", urlDiary)
                         }
                         val bundle = bundleOf()
                         bundle.putString("login",login)
                         bundle.putString("urlDiary",urlDiary)
+                        bundle.putBoolean("firstEnter",true)
                         Navigation.findNavController(
                             requireActivity(),
                             R.id.navFragment

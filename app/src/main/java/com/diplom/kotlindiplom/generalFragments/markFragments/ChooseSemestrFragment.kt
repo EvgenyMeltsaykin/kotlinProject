@@ -122,7 +122,7 @@ class ChooseSemestrElschoolFragment : Fragment() {
         firebase.getFieldDiary(firebase.uidUser!!, "url", object : Callback<String> {
             override fun onComplete(url: String) {
                 firebase.getFieldDiary(
-                    firebase.uidUser,
+                    firebase.uidUser!!,
                     "idChild",
                     object : Callback<String> {
                         @RequiresApi(Build.VERSION_CODES.O)

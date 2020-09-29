@@ -12,6 +12,7 @@ import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_diary.*
+import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,12 +29,14 @@ class DiaryFragment : Fragment() {
 
     private lateinit var login: String
     private lateinit var urlDiary: String
+    private var firstEnter by Delegates.notNull<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             login = it.getString("login","")
             urlDiary = it.getString("urlDiary","")
+            firstEnter = it.getBoolean("firstEnter",false)
         }
     }
 
@@ -63,7 +66,10 @@ class DiaryFragment : Fragment() {
                     scheduleButton?.setOnClickListener {
                         if (value == "child") {
                             val bundle = bundleOf()
-                            bundle.putBoolean("updateSchedule", true)
+                            if (firstEnter){
+                                bundle.putBoolean("updateSchedule", true)
+                                firstEnter = false
+                            }
                             Navigation.findNavController(requireActivity(), R.id.navFragment)
                                 .navigate(
                                     R.id.action_diaryFragment_to_weekdayFragment,
@@ -91,7 +97,7 @@ class DiaryFragment : Fragment() {
         loginDiaryTextView?.text = login
         diaryTextView?.text = urlDiary
         if (urlDiary.isEmpty()){
-            firebase.getFieldDiary(firebase.uidUser, "url", object : Callback<String> {
+            firebase.getFieldDiary(firebase.uidUser!!, "url", object : Callback<String> {
                 override fun onComplete(value: String) {
                     diaryTextView?.text = value
                 }

@@ -204,7 +204,7 @@ class ChildMyProfileFragment : Fragment() {
         firebase.setFieldUserDatabase(firebase.uidUser!!, "city", city)
         firebase.setFieldUserDatabase(firebase.uidUser!!, "educationalInstitutionId", schoolId)
         firebase.setFieldUserDatabase(
-            firebase.uidUser,
+            firebase.uidUser!!,
             "educationalInstitution",
             educationalInstitution
         )
