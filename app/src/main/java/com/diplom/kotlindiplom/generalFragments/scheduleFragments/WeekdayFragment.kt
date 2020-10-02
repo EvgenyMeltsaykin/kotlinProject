@@ -65,9 +65,10 @@ class WeekdayFragment : Fragment() {
         activity?.title = "Расписание"
         setupCalendar()
         progressBar?.isVisible = false
-
+        changeColorTodayWeekdayButton()
         refreshScheduleButton?.setOnClickListener {
-            updateSchedule(true, calendar)
+            updateSchedule(true)
+            changeColorTodayWeekdayButton()
             calendarView?.isVisible = false
         }
         mondayButton?.setOnClickListener {
@@ -90,8 +91,30 @@ class WeekdayFragment : Fragment() {
         }
 
     }
+    private fun changeColorTodayWeekdayButton(){
+        when(calendar.get(Calendar.DAY_OF_WEEK) - 1){
+            1 ->{
+                mondayButton?.setBackgroundResource(R.drawable.rounded_today_weekday_button)
+            }
+            2 ->{
+                tuesdayButton?.setBackgroundResource(R.drawable.rounded_today_weekday_button)
+            }
+            3 ->{
+                wednesdayButton?.setBackgroundResource(R.drawable.rounded_today_weekday_button)
+            }
+            4 ->{
+                thursdayButton?.setBackgroundResource(R.drawable.rounded_today_weekday_button)
+            }
+            5 ->{
+                fridayButton?.setBackgroundResource(R.drawable.rounded_today_weekday_button)
+            }
+            6 ->{
+                saturdayButton?.setBackgroundResource(R.drawable.rounded_today_weekday_button)
+            }
+        }
+    }
     @ExperimentalStdlibApi
-    private fun updateSchedule(updateWithoutCheck: Boolean, calendar: Calendar) {
+    private fun updateSchedule(updateWithoutCheck: Boolean) {
         val showButtons = {
             mondayButton?.isVisible = true
             tuesdayButton?.isVisible = true
@@ -172,7 +195,7 @@ class WeekdayFragment : Fragment() {
             override fun onComplete(value: LocalDate) {
                 if (updateSchedule) {
                     calendar.timeInMillis = System.currentTimeMillis()
-                    updateSchedule(true, calendar)
+                    updateSchedule(true)
                 } else {
                     calendar.set(value.year, value.monthValue - 1, value.dayOfMonth)
                     calendarView?.date = calendar.timeInMillis
@@ -198,7 +221,7 @@ class WeekdayFragment : Fragment() {
             calendarView.isVisible = false
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
-            updateSchedule(false, calendar)
+            updateSchedule(false)
         }
        //updateSchedule(updateWithoutCheck, calendar)
     }

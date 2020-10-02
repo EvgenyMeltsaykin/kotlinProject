@@ -3,6 +3,9 @@ package com.diplom.kotlindiplom
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +35,7 @@ class SplashActivity : AppCompatActivity() {
                 val firebase = FunctionsFirebase()
                 firebase.getRoleByUid(uid!!, object : Callback<String> {
                     override fun onComplete(role: String) {
+                        Log.d("Tag","begin")
                         val fields = listOf("url","idChild")
                         firebase.getFieldsDiary(firebase.uidUser!!,fields,object:Callback<Map<String,String>>{
                             override fun onComplete(value: Map<String,String>) {
@@ -59,17 +63,17 @@ class SplashActivity : AppCompatActivity() {
                                                 value["idChild"]!!,
                                                 object : Callback<Boolean> {
                                                     override fun onComplete(value: Boolean) {
-                                                        goToMainActivity(role)
+                                                        //goToMainActivity(role)
                                                     }
                                                 })
                                         }
                                     }
-                                }else{
-                                    goToMainActivity(role)
                                 }
                             }
                         })
-
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            goToMainActivity(role)
+                            },1500)
                     }
 
                 })
