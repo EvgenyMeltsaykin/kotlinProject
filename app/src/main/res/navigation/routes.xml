@@ -410,8 +410,8 @@
             android:id="@+id/action_schoolBooksFragment_to_mailFragment"
             app:destination="@id/mailFragment"
             app:enterAnim="@anim/from_down"
-            app:exitAnim="@anim/to_up"
-            app:popEnterAnim="@anim/from_up"
+            app:exitAnim="@anim/to_down"
+            app:popEnterAnim="@anim/from_down"
             app:popExitAnim="@anim/to_down" />
     </fragment>
     <fragment

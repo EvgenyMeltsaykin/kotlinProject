@@ -13,6 +13,9 @@ class LessonItem(val lesson: Lesson) : Item<ViewHolder>() {
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.lessonNameTextView.text = lesson.name
+        if (lesson.homework.isNotEmpty()){
+            viewHolder.itemView.homeworkIndicatorImageView.setBackgroundResource(R.drawable.ic_circle_green)
+        }
         if (lesson.cabinet.isEmpty())
             viewHolder.itemView.numberCabinetAndTimeTextView.text = "${lesson.form}\nВремя:${lesson.time}"
         else{

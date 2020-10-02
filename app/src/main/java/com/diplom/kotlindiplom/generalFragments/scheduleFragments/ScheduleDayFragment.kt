@@ -72,6 +72,7 @@ class ScheduleDayFragment : Fragment() {
         firebase.getScheduleDay(firebase.uidUser!!, day.toLowerCase(),object : Callback<List<Lesson>>{
             override fun onComplete(value: List<Lesson>) {
                 var fl = true
+                scheduleDayProgressBar?.isVisible = false
                 value.forEach {
                     if (it.name.isNotEmpty()){
                         adapter.add(LessonItem(it))

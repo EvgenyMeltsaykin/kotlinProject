@@ -12,7 +12,7 @@ class LessonMyScheduleItem(val lesson: Lesson, val number: Int) : Item<ViewHolde
         if (lesson.homework.isNotEmpty()) {
             viewHolder.itemView.homeworkIndicatorActiveImageView?.isVisible = true
         }else{
-            viewHolder.itemView.homeworkIndicatorNotActiveImageView?.isVisible = true
+            viewHolder.itemView.homeworkIndicatorImageView?.isVisible = true
         }
         viewHolder.itemView.lessonNameTextView.text = lesson.name
         viewHolder.itemView.lessonTimeTextView.text = "Время: ${lesson.time}"
