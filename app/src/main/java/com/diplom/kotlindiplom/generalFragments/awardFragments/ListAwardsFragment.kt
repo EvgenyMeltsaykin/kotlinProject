@@ -64,41 +64,58 @@ class ListAwardsFragment : Fragment() {
     }
     fun updateAwardList(){
         val adapter = GroupAdapter<ViewHolder>()
-        firebase.getFieldUserDatabase(firebase.uidUser!!,"parentUid",object :Callback<String>{
-            override fun onComplete(value: String) {
-                adapter.clear()
-                if (value.isEmpty()){
+        if (role == "parent"){
+            firebase.getAwardOutFirebaseWithParentUid(role, firebase.uidUser,object :Callback<List<Award>>{
+                override fun onComplete(value: List<Award>) {
                     listAwardProgressBar?.isVisible = false
-                    if (role == "child"){
-                        emptyListAwardTextView?.text = "Не привязан родительский аккаунт"
+                    if (value.isEmpty()){
+                        emptyListAwardTextView?.text = "Чтобы у ребенка была дополнительная мотивация делать задания, добавляйте ему вознаграждение. Это очень просто! Просто нажмите на кнопку добавить"
                         emptyListAwardTextView?.isVisible = true
+                        return
+                    }
+                    value.forEach {
+                        val status = it.status
+                        val nameAward = it.name
+                        val costAward = it.cost
+                        val awardId = it.awardId
+                        adapter.add(AwardItem(nameAward,costAward,awardId,status))
+                        listAwardRecyclerView?.adapter = adapter
                     }
                 }
-                firebase.getAwardOutFirebaseWithParentUid(role,value,object :Callback<List<Award>>{
-                    override fun onComplete(value: List<Award>) {
+            })
+        }
+        if (role == "child"){
+            firebase.getFieldUserDatabase(firebase.uidUser,"parentUid",object :Callback<String>{
+                override fun onComplete(value: String) {
+                    adapter.clear()
+                    if (value.isEmpty()){
                         listAwardProgressBar?.isVisible = false
-                        if (value.isEmpty()){
-                            if (role == "child"){
-                                emptyListAwardTextView?.text = "Родители ещё не добавили вознаграждения"
+                        emptyListAwardTextView?.text = "Не привязан родительский аккаунт"
+                        emptyListAwardTextView?.isVisible = true
+                    }else{
+                        firebase.getAwardOutFirebaseWithParentUid(role,value,object :Callback<List<Award>>{
+                            override fun onComplete(value: List<Award>) {
+                                listAwardProgressBar?.isVisible = false
+                                if (value.isEmpty()){
+                                    emptyListAwardTextView?.text = "Родители ещё не добавили вознаграждения"
+                                    emptyListAwardTextView?.isVisible = true
+                                    return
+                                }
+                                value.forEach {
+                                    val status = it.status
+                                    val nameAward = it.name
+                                    val costAward = it.cost
+                                    val awardId = it.awardId
+                                    adapter.add(AwardItem(nameAward,costAward,awardId,status))
+                                    listAwardRecyclerView?.adapter = adapter
+                                }
                             }
-                            if (role == "parent"){
-                                emptyListAwardTextView?.text = "Чтобы у ребенка была дополнительная мотивация делать задания, добавляйте ему вознаграждение. Это очень просто! Просто нажмите на кнопку добавить"
-                            }
-                            emptyListAwardTextView?.isVisible = true
-                            return
-                        }
-                        value.forEach {
-                            val status = it.status
-                            val nameAward = it.name
-                            val costAward = it.cost
-                            val awardId = it.awardId
-                            adapter.add(AwardItem(nameAward,costAward,awardId,status))
-                            listAwardRecyclerView?.adapter = adapter
-                        }
+                        })
                     }
-                })
-            }
-        })
+
+                }
+            })
+        }
         adapter.setOnItemClickListener { item , view ->
             val bundle = bundleOf()
             val f = item as AwardItem

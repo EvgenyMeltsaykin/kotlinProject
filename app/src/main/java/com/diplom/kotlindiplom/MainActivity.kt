@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             drawer.closeDrawer(GravityCompat.START)
         }
         val uiFunctions = FunctionsUI()
-        val ref = firebase.parentRef.child(firebase.uidUser!!)
+        val ref = firebase.userRef.child(firebase.uidUser)
         ref.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
@@ -241,7 +241,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         }*/
         setupDrawerAndToolbar()
         val uiFunctions = FunctionsUI()
-        val requestRef = firebase.childRef.child(firebase.uidUser!!)
+        val requestRef = firebase.userRef.child(firebase.uidUser!!)
         requestRef.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")

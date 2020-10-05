@@ -13,7 +13,9 @@ import retrofit2.http.Query
 interface ApiService {
     @GET("method/database.getCities")
     fun searchCity(
+        @Query("lang") lang: Int,
         @Query("country_id") countryId: Int,
+        @Query("count")count: Int,
         @Query("need_all") needAll: Int,
         @Query("access_token") accessToken: String,
         @Query("v") version: String,
@@ -27,7 +29,9 @@ interface ApiService {
 
     @GET ("method/database.getSchools")
     fun searchSchool(
+        @Query("lang")lang: Int,
         @Query("city_id")cityId: Int?,
+        @Query("count")count: Int,
         @Query("access_token") accessToken: String,
         @Query("v") version: String,
         @Query("q") q: String):Observable<SearchSchoolClassResponse>

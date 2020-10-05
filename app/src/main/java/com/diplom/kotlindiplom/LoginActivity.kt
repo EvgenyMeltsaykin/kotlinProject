@@ -45,11 +45,11 @@ class LoginActivity : AppCompatActivity() {
                     val user = FirebaseAuth.getInstance().currentUser
                     if (user!!.isEmailVerified){
                         val firebase = FunctionsFirebase()
-                        firebase.getRoleByUid(firebase.uidUser!!,object : Callback<String>{
+                        firebase.getFieldUserDatabase(firebase.uidUser,"role",object :Callback<String>{
                             override fun onComplete(value: String) {
                                 Toast.makeText(this@LoginActivity,"Вход выполнен успешно!", Toast.LENGTH_SHORT).show()
                                 intent = Intent(this@LoginActivity, MainActivity::class.java)
-                                intent.putExtra("role","$value")
+                                intent.putExtra("role",value)
                                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 startActivity(intent)
                             }

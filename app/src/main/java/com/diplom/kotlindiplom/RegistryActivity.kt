@@ -137,13 +137,13 @@ class RegistryActivity : AppCompatActivity() {
 
     private fun saveChildToFirebaseDatabase(username: String, email: String) {
         val firebase = FunctionsFirebase()
-        val ref = firebase.childRef.child("${firebase.uidUser}")
-        firebase.rolesRef.child("${firebase.uidUser}").setValue("child")
-        val user = Child(firebase.uidUser!!, username, email)
-        val refCount = FirebaseDatabase.getInstance().getReference("/users")
+        val ref = firebase.userRef.child(firebase.uidUser)
+        //firebase.rolesRef.child("${firebase.uidUser}").setValue("child")
+        val user = Child(firebase.uidUser, username, email)
+        val refCount = firebase.userRef
         refCount.keepSynced(true)
         ref.setValue(user)
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "role", "child")
+
         val weekday = listOf<String>("понедельник","вторник","среда","четверг","пятница","суббота")
         weekday.forEach {
             for(i in 0..6){
@@ -164,11 +164,10 @@ class RegistryActivity : AppCompatActivity() {
     }
     private fun saveParentToFirebaseDatabase(username: String, email: String) {
         val firebase = FunctionsFirebase()
-        val ref = firebase.parentRef.child(firebase.uidUser!!)
-        firebase.rolesRef.child("${firebase.uidUser}").setValue("parent")
-        val user = Parent(firebase.uidUser!!, username, email)
+        val ref = firebase.userRef.child(firebase.uidUser)
+        //firebase.rolesRef.child("${firebase.uidUser}").setValue("parent")
+        val user = Parent(firebase.uidUser, username, email)
         ref.setValue(user)
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "role", "parent")
     }
 }
 

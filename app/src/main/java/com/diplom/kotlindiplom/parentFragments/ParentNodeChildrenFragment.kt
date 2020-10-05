@@ -53,7 +53,7 @@ class ParentNodeChildrenFragment : Fragment() {
             firebase.sendRequestChild(childIdTextInputParentMyProfile?.editText?.text.toString(),requireContext())
         }
 
-        firebase.parentRef.child(firebase.uidUser!!).addChildEventListener(object : ChildEventListener{
+        firebase.userRef.child(firebase.uidUser).addChildEventListener(object : ChildEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }

@@ -33,11 +33,9 @@ class SplashActivity : AppCompatActivity() {
         if (user != null) {
             if (user.isEmailVerified) {
                 val firebase = FunctionsFirebase()
-                firebase.getRoleByUid(uid!!, object : Callback<String> {
-                    override fun onComplete(role: String) {
                         Log.d("Tag","begin")
                         val fields = listOf("url","idChild")
-                        firebase.getFieldsDiary(firebase.uidUser!!,fields,object:Callback<Map<String,String>>{
+                        firebase.getFieldsDiary(firebase.uidUser,fields,object:Callback<Map<String,String>>{
                             override fun onComplete(value: Map<String,String>) {
                                 if (!value["idChild"].isNullOrEmpty()) {
                                     val diary = Diary()
@@ -71,11 +69,13 @@ class SplashActivity : AppCompatActivity() {
                                 }
                             }
                         })
+                firebase.getFieldUserDatabase(firebase.uidUser,"role",object : Callback<String>{
+                    override fun onComplete(value: String) {
                         Handler(Looper.getMainLooper()).postDelayed({
-                            goToMainActivity(role)
-                            },1500)
-                    }
+                            goToMainActivity(value)
 
+                        },1500)
+                    }
                 })
             } else {
                 Toast.makeText(

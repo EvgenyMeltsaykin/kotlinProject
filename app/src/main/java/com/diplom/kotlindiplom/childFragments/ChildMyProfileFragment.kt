@@ -33,7 +33,6 @@ import kotlinx.android.synthetic.main.fragment_child_my_profile.view.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-var changeEmail: Boolean = false
 var cityId: Int? = -1
 var schoolId: Int? = -1
 
@@ -55,11 +54,7 @@ class ChildMyProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
         activity?.title = "Мой профиль"
-        changeEmail = false
         loadInformationFromFirebase()
-        emailTextInputChildMyProfile?.editText?.setOnClickListener {
-            changeEmail = true
-        }
         usernameTextInputChildMyProfile?.editText?.doAfterTextChanged {
             saveChangeButtonChildMyProfile?.isVisible = true
         }
@@ -166,7 +161,7 @@ class ChildMyProfileFragment : Fragment() {
             educationalInstitutionAutoCompleteTextViewChildMyProfile?.text.toString()
         val email = emailTextInputChildMyProfile?.editText?.text.toString()
         val point = pointTextViewChildMyProfile?.text.toString().toInt()
-
+/*
         val user = FirebaseAuth.getInstance().currentUser
         if (changeEmail) {
             user?.updateEmail(email)
@@ -196,6 +191,7 @@ class ChildMyProfileFragment : Fragment() {
                     ).show()
                 }
         }
+ */
         val header = requireActivity().navView.getHeaderView(0);
         val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         userNameHeader.text = username

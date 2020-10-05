@@ -100,9 +100,7 @@ class Elschool {
 
     fun deleteSchedule() {
         val firebase = FunctionsFirebase()
-        firebase.getRoleByUid(firebase.uidUser!!, object : Callback<String> {
-            override fun onComplete(answer: String) {
-                val ref = firebase.rootRef.child("users").child(answer).child(firebase.uidUser)
+                val ref = firebase.userRef.child(firebase.uidUser)
                     .child("diary").child("schedule")
                 ref.child("понедельник").removeValue()
                 ref.child("вторник").removeValue()
@@ -110,8 +108,6 @@ class Elschool {
                 ref.child("четверг").removeValue()
                 ref.child("пятница").removeValue()
                 ref.child("суббота").removeValue()
-            }
-        })
     }
     @ExperimentalStdlibApi
     fun getScheduleFromElschool(
@@ -250,7 +246,7 @@ class Elschool {
 
     fun getChildrenFromFirebase(firebaseCallback: Callback<List<ChildForElschool>>) {
         val firebase = FunctionsFirebase()
-        val ref = firebase.parentRef.child(firebase.uidUser!!).child("diary").child("children")
+        val ref = firebase.userRef.child(firebase.uidUser).child("diary").child("children")
         val children = mutableListOf<ChildForElschool>()
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -552,8 +548,6 @@ class Elschool {
             object : Callback<Boolean> {
                 override fun onComplete(end: Boolean) {
                     GlobalScope.launch(Dispatchers.Main) {
-                        firebase.getRoleByUid(firebase.uidUser!!, object : Callback<String> {
-                            override fun onComplete(answer: String) {
                                 if (!end) {
                                     Toast.makeText(
                                         context,
@@ -563,8 +557,7 @@ class Elschool {
                                     progressBar.isVisible = false
                                     showButtons()
                                 }
-                                val ref = firebase.rootRef.child("users").child(answer)
-                                    .child(firebase.uidUser).child("diary").child("marks")
+                                val ref = firebase.userRef.child(firebase.uidUser).child("diary").child("marks")
                                 ref.addChildEventListener(object : ChildEventListener {
                                     override fun onChildAdded(
                                         p0: DataSnapshot,
@@ -597,9 +590,6 @@ class Elschool {
                                     }
 
                                 })
-                            }
-                        })
-
                     }
                 }
             })

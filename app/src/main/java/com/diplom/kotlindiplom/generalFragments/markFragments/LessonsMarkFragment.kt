@@ -62,7 +62,7 @@ class LessonsMarkFragment : Fragment() {
         val firebase = FunctionsFirebase()
         if (finalGrades){
             activity?.title = "Итоговые оценки"
-            firebase.getLessonsAndFinalMark(role,object : Callback<Map<String,String>>{
+            firebase.getLessonsAndFinalMark(object : Callback<Map<String,String>>{
                 override fun onComplete(value: Map<String, String>) {
                     value.forEach { (lessonName, middleMark) ->
                         adapter.add(LessonsMarkItem(lessonName,middleMark))
@@ -84,7 +84,7 @@ class LessonsMarkFragment : Fragment() {
             }
         }else{
             activity?.title = "Предметы"
-            firebase.getLessonsAndMiddleMark(role,semestrNumber,object : Callback<Map<String,String>> {
+            firebase.getLessonsAndMiddleMark(semestrNumber,object : Callback<Map<String,String>> {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: Map<String,String>) {
                     value.forEach { (lessonName, middleMark) ->
