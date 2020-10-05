@@ -13,7 +13,6 @@ import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_details_final_mark.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -61,13 +60,23 @@ class DetailsFinalMarkFragment : Fragment() {
         val detailMark = mutableListOf<String>()
         firebase.getFieldDiary(firebase.uidUser!!,"semestrName",object :Callback<String>{
             override fun onComplete(semestrName: String) {
-                firebase.getMarksLessonSemestr(role,lessonName!!,object :Callback<List<Int>>{
+                firebase.getMarksLessonSemester(role,lessonName!!,object :Callback<List<Int>>{
                     override fun onComplete(value: List<Int>) {
                         var i = 0
+                        var countMark = 0
+                        var sumMark = 0.0
                         value.forEach {
                             i++
                             detailMark.add("${semestrName.capitalize()} $i. Оценка: $it")
+                            if (it != 0) {
+                                countMark++
+                                sumMark+=it
+                            }
                         }
+                        if (countMark != 0){
+                            yearMarkTextView?.text = "Годовая оценка: ${sumMark/countMark}"
+                        }
+
                         val adapter = ArrayAdapter<String>(requireContext(),android.R.layout.simple_list_item_1,detailMark)
                         detailFinalMarkListView?.adapter = adapter
                         detailFinalMarkListView?.setOnItemClickListener { adapterView, view, position, id ->

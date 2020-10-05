@@ -11,8 +11,8 @@ import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 
 class FunctionsUI {
-    val NOTIFY_ID = 101
-    val CHANNEL_ID = "Task channel"
+    private val NOTIFY_ID = 101
+    private val CHANNEL_ID = "Task channel"
 
     fun createNotificationChannel(context:Context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){

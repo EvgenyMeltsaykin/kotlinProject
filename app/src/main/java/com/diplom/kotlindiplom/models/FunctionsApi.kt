@@ -15,7 +15,7 @@ class FunctionsApi() {
     private val api = ApiService.create()
     private val accessToken =
         "82ec654d82ec654d82ec654d1d829c76b5882ec82ec654ddcb339961b9dc274bcd1e19a"
-    val versionVkApi = "5.103"
+    private val versionVkApi = "5.103"
     fun getNodeCities(editText: AutoCompleteTextView, context: Context, cities: MutableList<City>) {
 
         val citiesString: MutableList<String> = mutableListOf()

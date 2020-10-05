@@ -1,8 +1,5 @@
 package com.diplom.kotlindiplom.models
-
-import java.sql.Time
-
-class Task(
+data class Task(
     var taskId:String,
     var title:String,
     var description:String,

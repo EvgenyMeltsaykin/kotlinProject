@@ -65,6 +65,12 @@ class DetailsMarksFragment : Fragment() {
         firebase.getMiddleMark(lessonName,semestrNumber,object :Callback<String>{
             override fun onComplete(value: String) {
                 middleMarkTextView?.text = "Средний балл: $value"
+                if (value == "0"){
+                    noMarkTextView?.isVisible = true
+                    plotGraphButton?.isVisible = false
+                }else{
+                    noMarkTextView?.isVisible = false
+                }
             }
         })
         lessonNameTextView?.text = "Предмет: $lessonName"

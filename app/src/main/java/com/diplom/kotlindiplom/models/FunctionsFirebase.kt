@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.util.Log
-import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -328,7 +327,7 @@ class FunctionsFirebase {
         })
     }
 
-    fun getMarksLessonSemestr(
+    fun getMarksLessonSemester(
         role: String,
         lessonName: String,
         firebaseCallBack: Callback<List<Int>>
@@ -337,7 +336,7 @@ class FunctionsFirebase {
             rootRef.child("users").child(role).child(uidUser!!).child("diary")
                 .child("marks").orderByChild("lessonName").equalTo(lessonName)
         ref.keepSynced(true)
-        val marksSemestr = mutableListOf<Int>()
+        val marksSemester = mutableListOf<Int>()
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
@@ -345,14 +344,14 @@ class FunctionsFirebase {
                         lesson.children.forEach { semestr ->
                             semestr.children.forEach {
                                 if (it.key.toString() == "middleMark") {
-                                    marksSemestr.add(
+                                    marksSemester.add(
                                         it.value.toString().toFloat().roundToInt()
                                     )
                                 }
                             }
                         }
                     }
-                    firebaseCallBack.onComplete(marksSemestr)
+                    firebaseCallBack.onComplete(marksSemester)
                 }
             }
 
@@ -437,7 +436,7 @@ class FunctionsFirebase {
 
     fun getLessonsAndMiddleMark(
         role: String,
-        semestrNumber: String,
+        semesterNumber: String,
         firebaseCallBack: Callback<Map<String, String>>
     ) {
         val ref = rootRef.child("users").child(role).child(uidUser!!).child("diary")
@@ -452,7 +451,7 @@ class FunctionsFirebase {
                             if (info.key.toString() == "lessonName") {
                                 lessonName = info.value.toString()
                                 lesson.children.forEach { semestr ->
-                                    if (semestr.key.toString() == "semestr$semestrNumber") {
+                                    if (semestr.key.toString() == "semestr$semesterNumber") {
                                         var mark = ""
                                         semestr.children.forEach { middleMark ->
                                             if (middleMark.key.toString() == "middleMark") {
@@ -479,7 +478,7 @@ class FunctionsFirebase {
 
     fun getMiddleMark(
         lessonName: String,
-        semestrNumber: String,
+        semesterNumber: String,
         firebaseCallBack: Callback<String>
     ) {
         getRoleByUid(uidUser!!, object : Callback<String> {
@@ -492,7 +491,7 @@ class FunctionsFirebase {
                         if (snapshot.exists()) {
                             snapshot.children.forEach { lesson ->
                                 lesson.children.forEach { semestr ->
-                                    if (semestr.key.toString() == "semestr$semestrNumber") {
+                                    if (semestr.key.toString() == "semestr$semesterNumber") {
                                         semestr.children.forEach { middleMark ->
                                             if (middleMark.key.toString() == "middleMark") {
                                                 val mark = middleMark.value.toString()
@@ -676,9 +675,9 @@ class FunctionsFirebase {
     }
 
     fun setLoginAndPasswordDiary(login: String, password: String) {
-        val cryptor = AES256JNCryptor()
+        val crypto = AES256JNCryptor()
         val cipherText =
-            cryptor.encryptData(password.toByteArray(), secretKey.toCharArray())
+            crypto.encryptData(password.toByteArray(), secretKey.toCharArray())
         val temp = Arrays.toString(cipherText)
         setFieldUserDatabase(uidUser!!, "diary/login", login)
         setFieldUserDatabase(uidUser!!, "diary/password", temp)
@@ -855,6 +854,7 @@ class FunctionsFirebase {
             }
         })
     }
+
     fun getFieldsDiary(uid:String,fields:List<String>,firebaseCallBack: Callback<Map<String, String>>){
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
@@ -1489,56 +1489,6 @@ class FunctionsFirebase {
                 firebaseCallBack.onComplete(diaries)
             }
 
-        })
-    }
-
-    fun getFieldDiaryChild(
-        childUid: String,
-        field: String,
-        firebaseCallBack: Callback<String>
-    ) {
-        val ref = childRef.child("${childUid}").child("diary")
-        var value = ""
-
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    p0.children.forEach {
-                        if (it.key.toString() == field) {
-                            firebaseCallBack.onComplete(it.value.toString())
-                        }
-                    }
-                }
-            }
-        })
-    }
-
-    fun getFieldDiaryParent(
-        parentUid: String,
-        field: String,
-        firebaseCallBack: Callback<String>
-    ) {
-        val ref = parentRef.child("${parentUid}").child("diary")
-        var value = ""
-
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    p0.children.forEach {
-                        if (it.key.toString() == field) {
-                            firebaseCallBack.onComplete(it.value.toString())
-                        }
-                    }
-                }
-            }
         })
     }
 }
