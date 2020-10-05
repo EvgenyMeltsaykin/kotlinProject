@@ -363,6 +363,21 @@ class FunctionsFirebase {
     }
 
     fun getFieldMarks(field: String, firebaseCallBack: Callback<String>) {
+
+        /*val ref1 = rootRef.child("users").orderByKey().equalTo(uidUser)
+        ref1.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {
+                    Log.d("Tag",it.key.toString())
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })*/
+
         getRoleByUid(uidUser!!, object : Callback<String> {
             override fun onComplete(answer: String) {
                 val ref =
@@ -854,7 +869,9 @@ class FunctionsFirebase {
             }
         })
     }
+    fun getFieldsUserDatabase(uid:String, fields: List<String>, firebaseCallBack: Callback<Map<String,String>>){
 
+    }
     fun getFieldsDiary(uid:String,fields:List<String>,firebaseCallBack: Callback<Map<String, String>>){
         getRoleByUid(uid, object : Callback<String> {
             override fun onComplete(answer: String) {
@@ -1257,7 +1274,7 @@ class FunctionsFirebase {
                 parent.profileImageUrl = it.value.toString()
             }
             if (it.key.toString() == "parentUid") {
-                parent.parentUid = it.value.toString()
+                parent.userUid = it.value.toString()
             }
             if (it.key.toString() == "username") {
                 parent.username = it.value.toString()
@@ -1290,8 +1307,8 @@ class FunctionsFirebase {
             if (it.key.toString() == "acceptUid") {
                 child.acceptUid = it.value.toString()
             }
-            if (it.key.toString() == "childUid") {
-                child.childUid = it.value.toString()
+            if (it.key.toString() == "userUid") {
+                child.userUid = it.value.toString()
             }
             if (it.key.toString() == "city") {
                 child.city = it.value.toString()
