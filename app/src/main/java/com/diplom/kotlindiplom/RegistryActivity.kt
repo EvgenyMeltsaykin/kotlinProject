@@ -11,7 +11,6 @@ import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Parent
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_registry.*
 
 
@@ -87,7 +86,6 @@ class RegistryActivity : AppCompatActivity() {
                 else saveParentToFirebaseDatabase(username, email)
                 val mAuthListener = FirebaseAuth.AuthStateListener {
                     val user = FirebaseAuth.getInstance().currentUser
-                    Log.d("Tag", "user = " + user.toString())
                     if (user != null) {
                         sendVerificationEmail()
                     } else {
@@ -139,10 +137,10 @@ class RegistryActivity : AppCompatActivity() {
         val firebase = FunctionsFirebase()
         val ref = firebase.userRef.child(firebase.uidUser)
         //firebase.rolesRef.child("${firebase.uidUser}").setValue("child")
-        val user = Child(firebase.uidUser, username, email)
+
         val refCount = firebase.userRef
         refCount.keepSynced(true)
-        ref.setValue(user)
+
 
         val weekday = listOf<String>("понедельник","вторник","среда","четверг","пятница","суббота")
         weekday.forEach {
@@ -155,10 +153,10 @@ class RegistryActivity : AppCompatActivity() {
                 firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/lessonName", "")
             }
         }
-        firebase.getCountChildren(object :Callback<String>{
-            override fun onComplete(value: String) {
-                val countChildren = value.toInt() + 1
-                firebase.setFieldUserDatabase(firebase.uidUser,"id",countChildren)
+        firebase.getNextIdChild(object :Callback<Int>{
+            override fun onComplete(value: Int) {
+                val user = Child(firebase.uidUser, username, email,id = value)
+                ref.setValue(user)
             }
         })
     }

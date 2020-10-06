@@ -23,6 +23,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.childFragments.RequestParentFragment
+import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsApi
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI

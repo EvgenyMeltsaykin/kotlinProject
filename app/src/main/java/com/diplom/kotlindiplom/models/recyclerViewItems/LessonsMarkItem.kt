@@ -12,6 +12,11 @@ class LessonsMarkItem(val lessonName: String, val middleMark:String) : Item<View
     }
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.lessonsNameTextView.text = lessonName
-        viewHolder.itemView.middleMarkTextView.text = middleMark
+        if (middleMark != "0"){
+            viewHolder.itemView.middleMarkTextView.text = middleMark
+        }else{
+            viewHolder.itemView.middleMarkTextView.text = " "
+        }
+
     }
 }

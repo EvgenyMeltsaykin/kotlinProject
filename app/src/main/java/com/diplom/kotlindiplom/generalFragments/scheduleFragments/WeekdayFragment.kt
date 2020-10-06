@@ -160,15 +160,11 @@ class WeekdayFragment : Fragment() {
                                         )
                                     }
                                 }
-                                firebase.setFieldSchedule(
-                                    firebase.uidUser!!,
-                                    "weekUpdate",
-                                    selectedWeek
-                                )
                                 firebase.setDateUpdateSсhedule(
                                     calendar.get(Calendar.YEAR).toString(),
                                     (calendar.get(Calendar.MONTH) + 1).toString(),
-                                    calendar.get(Calendar.DAY_OF_MONTH).toString()
+                                    calendar.get(Calendar.DAY_OF_MONTH).toString(),
+                                    selectedWeek
                                 )
                             }
                         }

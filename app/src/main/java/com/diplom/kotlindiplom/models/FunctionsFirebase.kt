@@ -241,12 +241,22 @@ class FunctionsFirebase {
         ref.child("acceptUid").setValue("")
     }
 
-    fun getCountChildren(firebaseCallBack: Callback<String>) {
+    fun getNextIdChild(firebaseCallBack: Callback<Int>) {
         val ref = userRef.orderByChild("role").equalTo("child")
         ref.keepSynced(true)
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                firebaseCallBack.onComplete(snapshot.childrenCount.toString())
+                var maxId = 0
+                snapshot.children.forEach {
+                    it.children.forEach {fieldChild->
+                        if (fieldChild.key.toString() == "id"){
+                            if (fieldChild.value.toString().toInt() > maxId){
+                                maxId = fieldChild.value.toString().toInt()
+                            }
+                        }
+                    }
+                }
+                firebaseCallBack.onComplete(maxId+1)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -743,13 +753,14 @@ class FunctionsFirebase {
         })
     }
 
-    fun setDateUpdateSсhedule(year: String, month: String, day: String) {
+    fun setDateUpdateSсhedule(year: String, month: String, day: String,weekUpdate: Int) {
 
         val ref = userRef.child(uidUser!!).child("diary")
             .child("schedule")
         ref.child("year").setValue(year)
         ref.child("month").setValue(month)
         ref.child("day").setValue(day)
+        ref.child("weekUpdate").setValue(weekUpdate)
     }
 
     fun setFieldSchedule(uid: String, field: String, value: Any) {

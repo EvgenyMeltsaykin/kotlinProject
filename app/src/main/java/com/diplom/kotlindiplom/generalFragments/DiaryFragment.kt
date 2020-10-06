@@ -58,9 +58,9 @@ class DiaryFragment : Fragment() {
             fm.popBackStack()
         }
         activity?.title = "Электронный дневник"
-        firebase.getFieldUserDatabase(
-            firebase.uidUser!!,
-            "role",
+        firebase.getFieldDiary(
+            firebase.uidUser,
+            "roleDiary",
             object : Callback<String> {
                 override fun onComplete(value: String) {
                     scheduleButton?.setOnClickListener {

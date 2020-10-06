@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -85,7 +86,21 @@ class ParentMyProfileFragment : Fragment() {
         val cities: MutableList<City> = mutableListOf()
         cityAutoCompleteTextViewParentMyProfile?.doAfterTextChanged {
             saveChangeButtonParentMyProfile?.isVisible = true
-            network.getNodeCities(cityAutoCompleteTextViewParentMyProfile, requireContext(), cities)
+            network.getNodeCities(
+                cityAutoCompleteTextViewParentMyProfile?.text.toString(),
+                cities,
+                object :Callback<List<String>>{
+                    override fun onComplete(value: List<String>) {
+                        val adapterCity = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_list_item_1,
+                            value
+                        )
+                        cityAutoCompleteTextViewParentMyProfile.setAdapter(adapterCity)
+                        cityAutoCompleteTextViewParentMyProfile.setOnFocusChangeListener { v, hasFocus -> if (hasFocus) cityAutoCompleteTextViewParentMyProfile.showDropDown() }
+                    }
+                }
+            )
         }
 
         cityAutoCompleteTextViewParentMyProfile?.setOnItemClickListener { parent, view, position, id ->

@@ -2,6 +2,7 @@ package com.diplom.kotlindiplom.diaries
 
 import android.content.Context
 import android.os.Build
+import android.os.SystemClock
 import android.util.Log
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -21,46 +22,58 @@ import kotlinx.coroutines.*
 import org.decimal4j.util.DoubleRounder
 import org.jsoup.Connection
 import org.jsoup.Jsoup
+import org.w3c.dom.Document
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.util.*
 import kotlin.collections.HashMap
 
 class Elschool {
-    val urlLogin = "https://elschool.ru/Logon/Index"
+    private val urlLogin = "https://elschool.ru/Logon/Index"
     val urlDiary = "https://elschool.ru/users/diaries"
-    val cabinetText = "каб."
+    private val cabinetText = "каб."
     val keyCookie = "JWToken"
     val url = "elschool.ru"
     fun createDiary() {
         val firebase = FunctionsFirebase()
-        Log.d("Tag", "Create")
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/login", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/semestrName", "триместр")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/password", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/url", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/marks/dateUpdate", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/schedule/weekUpdate", 0)
+        firebase.setFieldDiary(firebase.uidUser, "login", "")
+        firebase.setFieldDiary(firebase.uidUser, "semestrName", "триместр")
+        firebase.setFieldDiary(firebase.uidUser, "password", "")
+        firebase.setFieldDiary(firebase.uidUser, "url", "")
+        firebase.setFieldDiary(firebase.uidUser, "marks/dateUpdate", "")
+        firebase.setFieldDiary(firebase.uidUser, "schedule/weekUpdate", 0)
     }
 
     fun deleteDiary() {
         val firebase = FunctionsFirebase()
 
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/semestrName", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/idChild", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/cookie", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/login", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/password", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/url", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/schedule", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/marks", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/marks/dateUpdate", "")
-        firebase.setFieldUserDatabase(firebase.uidUser, "diary/schedule/weekUpdate", 0)
+        firebase.setFieldDiary(firebase.uidUser, "semestrName", "")
+        firebase.setFieldDiary(firebase.uidUser, "idChild", "")
+        firebase.setFieldDiary(firebase.uidUser, "roleDiary", "")
+        firebase.setFieldDiary(firebase.uidUser, "cookie", "")
+        firebase.setFieldDiary(firebase.uidUser, "login", "")
+        firebase.setFieldDiary(firebase.uidUser, "password", "")
+        firebase.setFieldDiary(firebase.uidUser, "url", "")
+        firebase.setFieldDiary(firebase.uidUser, "schedule", "")
+        firebase.setFieldDiary(firebase.uidUser, "marks", "")
+        firebase.setFieldDiary(firebase.uidUser, "marks/dateUpdate", "")
+        firebase.setFieldDiary(firebase.uidUser, "schedule/weekUpdate", 0)
     }
+    private fun getRoleFromDiary(document: org.jsoup.nodes.Document){
+        //dayDate  = it.select("td[class=diary__dayweek]").select("p").text().toString()
+        val role = document.select("div[class=border-block flex-grow-1 p-3 mb-3]").select("h3").text().toString()
+        val firebase = FunctionsFirebase()
 
+        if (role == "Родители"){
+            firebase.setFieldDiary(firebase.uidUser,"roleDiary","child")
+        }
+        if (role == "Дети") {
+            firebase.setFieldDiary(firebase.uidUser,"roleDiary","parent")
+        }
+    }
     fun login(login: String, password: String): Boolean {
         val cookies: HashMap<String, String> = HashMap()
-        var title = ""
-        Log.d("Tag","begin"+System.currentTimeMillis().toString())
         try {
             val document = Jsoup.connect(urlLogin)
                 .data("login", login)
@@ -71,12 +84,14 @@ class Elschool {
                 .userAgent("mozilla")
                 .execute()
             val parseDoc = document.parse()
-            title = parseDoc.title()
+
+            val title = parseDoc.title()
             if (title == "Личный кабинет") {
+                getRoleFromDiary(parseDoc)
                 val id = parseDoc.text().substringAfter("ID ").substringBefore(" ")
                 val firebase = FunctionsFirebase()
                 GlobalScope.launch(Dispatchers.IO) {
-                    firebase.setFieldDiary(firebase.uidUser!!, "idChild", id)
+                    firebase.setFieldDiary(firebase.uidUser, "idChild", id)
                     firebase.setFieldDiary(firebase.uidUser,"cookie","")
                     firebase.setFieldDiary(
                         firebase.uidUser,
@@ -84,17 +99,13 @@ class Elschool {
                         document.cookies()[keyCookie].toString()
                     )
                 }
-                Log.d("Tag","true" + System.currentTimeMillis().toString())
                 return true
             } else {
-                Log.d("Tag","false1" + System.currentTimeMillis().toString())
                 return false
             }
         } catch (e: IOException) {
-            Log.d("Tag","IOException" + System.currentTimeMillis().toString())
             e.printStackTrace()
         }
-        Log.d("Tag","false2" + System.currentTimeMillis().toString())
         return false
     }
 
@@ -454,10 +465,10 @@ class Elschool {
                                             it.select("td[class=gradesaa-marks]")
                                         firebase.setFieldDiary(
                                             firebase.uidUser,
-                                            "marks/lesson$lessonCount/lessonName",
+                                            "marks/$lessonCount/lessonName",
                                             lessonName
                                         )
-                                        var semestrCount = 1
+                                        var semesterCount = 1
                                         gradesMark.forEach { marksHtml ->
                                             val marks =
                                                 marksHtml.select("span[class=mark-span]")
@@ -480,19 +491,21 @@ class Elschool {
                                                             .substringBefore("<p>")
                                                             .substringAfterLast(" ")
                                                     add = true
+                                                    val nowDate = Calendar.getInstance().time
+                                                    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
                                                     firebase.setFieldDiary(
                                                         firebase.uidUser,
                                                         "marks/dateUpdate",
-                                                        LocalDate.now().toString()
+                                                        formatter
                                                     )
                                                     firebase.setFieldDiary(
                                                         firebase.uidUser,
-                                                        "marks/lesson$lessonCount/semestr$semestrCount/mark$markCount/date",
+                                                        "marks/$lessonCount/semestr$semesterCount/mark$markCount/date",
                                                         date
                                                     )
                                                     firebase.setFieldDiary(
                                                         firebase.uidUser,
-                                                        "marks/lesson$lessonCount/semestr$semestrCount/mark$markCount/value",
+                                                        "marks/$lessonCount/semestr$semesterCount/mark$markCount/value",
                                                         mark
                                                     )
                                                     markCount++
@@ -501,14 +514,14 @@ class Elschool {
                                             if (markCountForMiddleMark == 0) {
                                                 middleMark = 0f
                                             } else {
-                                                middleMark = middleMark / (markCountForMiddleMark)
+                                                middleMark /= (markCountForMiddleMark)
                                             }
                                             firebase.setFieldDiary(
                                                 firebase.uidUser,
-                                                "marks/lesson$lessonCount/semestr$semestrCount/middleMark",
+                                                "marks/$lessonCount/semestr$semesterCount/middleMark",
                                                 DoubleRounder.round(middleMark.toDouble(), 2)
                                             )
-                                            semestrCount++
+                                            semesterCount++
                                         }
 
                                     }

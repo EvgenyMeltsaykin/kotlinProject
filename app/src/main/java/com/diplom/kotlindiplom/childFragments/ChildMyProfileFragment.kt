@@ -85,9 +85,19 @@ class ChildMyProfileFragment : Fragment() {
             educationalInstitutionAutoCompleteTextViewChildMyProfile?.text?.clear()
             schoolId = -1
             network.getNodeCities(
-                cityAutoCompleteTextViewChildMyProfile!!,
-                requireContext(),
-                cities
+                cityAutoCompleteTextViewChildMyProfile?.text.toString(),
+                cities,
+                object :Callback<List<String>>{
+                    override fun onComplete(value: List<String>) {
+                        val adapterCity = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_list_item_1,
+                            value
+                        )
+                        cityAutoCompleteTextViewChildMyProfile.setAdapter(adapterCity)
+                        cityAutoCompleteTextViewChildMyProfile.setOnFocusChangeListener { v, hasFocus -> if (hasFocus) cityAutoCompleteTextViewChildMyProfile.showDropDown() }
+                    }
+                }
             )
         }
         cityAutoCompleteTextViewChildMyProfile?.setOnItemClickListener { parent, view, position, id ->
@@ -134,7 +144,6 @@ class ChildMyProfileFragment : Fragment() {
     }
 
     private fun loadInformationFromFirebase() {
-
         firebase.getChild(firebase.uidUser!!, object : Callback<Child> {
             override fun onComplete(value: Child) {
                 val header = requireActivity().navView.getHeaderView(0);

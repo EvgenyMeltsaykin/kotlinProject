@@ -17,7 +17,9 @@ import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_choose_semestr.*
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,7 +64,6 @@ class ChooseSemestrElschoolFragment : Fragment() {
             override fun onComplete(value: String) {
                 dateUpdateTextView?.text = "Дата обновления: $value"
                 if (value.isEmpty() || idChild.isNotEmpty()) {
-                    dateUpdateTextView?.text = "Дата обновления: ${LocalDate.now()}"
                     refreshMarks()
                 }
             }
@@ -105,6 +106,9 @@ class ChooseSemestrElschoolFragment : Fragment() {
 
     @ExperimentalStdlibApi
     fun refreshMarks() {
+        val nowDate = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
+        dateUpdateTextView?.text = "Дата обновления: $formatter"
         val hideButtons = {
             refreshMarkButton?.isVisible = false
             firstSemestrButton?.isVisible = false
