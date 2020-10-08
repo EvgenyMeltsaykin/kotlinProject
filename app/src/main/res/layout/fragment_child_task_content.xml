@@ -11,21 +11,21 @@
     android:fillViewport="true"
     tools:context=".childFragments.ChildTaskContentFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:orientation="vertical"
         android:background="@drawable/background_text">
 
 
         <TextView
             android:id="@+id/statusContentTaskTextViewChild"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Статус"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:textColor="@color/colorText"
+            app:layout_constraintEnd_toStartOf="@+id/costContentTaskTextViewChild"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,14 +43,12 @@
 
         <TextView
             android:id="@+id/costContentTaskTextViewChild"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Стоимость:"
+            android:layout_marginTop="8dp"
             android:textColor="@color/colorText"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleContentTaskTextViewChild" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/divider2"
@@ -60,14 +58,14 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/costContentTaskTextViewChild"
+            app:layout_constraintTop_toBottomOf="@+id/titleContentTaskTextViewChild"
             tools:background="@color/colorPrimaryDark" />
 
         <TextView
             android:id="@+id/textView1"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="Описание:"
             android:textColor="@color/colorText"
             app:layout_constraintStart_toStartOf="parent"
@@ -77,9 +75,9 @@
             android:id="@+id/descriptionTaskContentTextViewChild"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
+            android:layout_weight="1"
             android:text="Описание"
             android:textColor="@color/colorText"
             android:textSize="18sp"
@@ -104,5 +102,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.504"
             app:layout_constraintStart_toStartOf="parent" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

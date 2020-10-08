@@ -51,7 +51,7 @@ class FunctionsUI {
     ) {
         val firebase = FunctionsFirebase()
         firebase.getFieldUserDatabase(
-            firebase.uidUser!!,
+            firebase.uidUser,
             "parentUid",
             object : Callback<String> {
                 @RequiresApi(Build.VERSION_CODES.O)

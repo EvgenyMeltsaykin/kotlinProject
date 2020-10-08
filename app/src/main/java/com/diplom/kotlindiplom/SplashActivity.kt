@@ -5,20 +5,12 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.CalendarContract
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.models.Lesson
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.util.*
 
 
 class SplashActivity : AppCompatActivity() {
@@ -40,12 +32,12 @@ class SplashActivity : AppCompatActivity() {
             if (user.isEmailVerified) {
                 val firebase = FunctionsFirebase()
                 Log.d("Tag", "begin")
-                updateScheduleAndMark()
+                firebase.updateSchedule()
                 firebase.getFieldUserDatabase(firebase.uidUser, "role", object : Callback<String> {
                     override fun onComplete(value: String) {
                         Handler(Looper.getMainLooper()).postDelayed({
                             goToMainActivity(value)
-                        }, 1500)
+                        }, 2000)
                     }
                 })
             } else {
@@ -65,45 +57,6 @@ class SplashActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-    @ExperimentalStdlibApi
-    private fun updateScheduleAndMark() {
-        val firebase = FunctionsFirebase()
-        val fields = listOf("url", "idChild")
-        firebase.getFieldsDiary(firebase.uidUser, fields, object : Callback<Map<String, String>> {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onComplete(value: Map<String, String>) {
-                val idChild = value["idChild"]
-                val urlDiary = value["url"]
-                if (!idChild.isNullOrEmpty() && !urlDiary.isNullOrEmpty()) {
-                    val diary = Diary()
-                    val calendar = Calendar.getInstance()
-                    calendar.timeInMillis = System.currentTimeMillis()
-                    val week = calendar.get(Calendar.WEEK_OF_YEAR)
-                    val year = calendar.get(Calendar.YEAR)
-                    firebase.setDateUpdateSсhedule(
-                        calendar.get(Calendar.YEAR).toString(),
-                        (calendar.get(Calendar.MONTH) + 1).toString(),
-                        calendar.get(Calendar.DAY_OF_MONTH).toString(),
-                        week
-                    )
-                    when (urlDiary) {
-                        diary.elschool.url -> {
-                            diary.elschool.getScheduleFromElschool(
-                                year,
-                                week,
-                                idChild,
-                                object : Callback<Boolean> {
-                                    override fun onComplete(value: Boolean) {
-
-                                    }
-                                })
-                        }
-                    }
-                }
-            }
-        })
-    }
-
     private fun goToMainActivity(role: String) {
         intent = Intent(applicationContext, MainActivity::class.java)
         intent.putExtra("role", role)

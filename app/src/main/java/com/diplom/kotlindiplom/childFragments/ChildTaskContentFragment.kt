@@ -70,7 +70,7 @@ class ChildTaskContentFragment : Fragment() {
         sendTaskButtonChild?.setOnClickListener {
             firebase.setFieldDatabaseTask(taskId.toString(),"status",0)
             firebase.setFieldDatabaseTask(taskId.toString(),"showNotification",0)
-            firebase.setFieldDatabaseTask(taskId.toString(),"childUid",firebase.uidUser!!)
+            firebase.setFieldDatabaseTask(taskId.toString(),"childUid",firebase.uidUser)
             Toast.makeText(requireContext(),"Задание отправлено на проверку", Toast.LENGTH_SHORT).show()
             navController.popBackStack()
             requireActivity().title = "Невыполненные"

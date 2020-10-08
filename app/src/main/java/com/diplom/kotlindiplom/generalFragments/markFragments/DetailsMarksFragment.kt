@@ -57,7 +57,7 @@ class DetailsMarksFragment : Fragment() {
         lessonNameTextView?.isVisible = false
         middleMarkTextView?.isVisible = false
 
-        firebase.getFieldDiary(firebase.uidUser!!,"semestrName",object : Callback<String>{
+        firebase.getFieldDiary(firebase.uidUser,"semestrName",object : Callback<String>{
             override fun onComplete(value: String) {
                 semestrNumberTextView?.text = "${value.capitalize()}: $semestrNumber"
             }

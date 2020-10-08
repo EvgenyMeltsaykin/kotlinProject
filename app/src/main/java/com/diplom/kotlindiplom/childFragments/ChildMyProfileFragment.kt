@@ -144,7 +144,7 @@ class ChildMyProfileFragment : Fragment() {
     }
 
     private fun loadInformationFromFirebase() {
-        firebase.getChild(firebase.uidUser!!, object : Callback<Child> {
+        firebase.getChild(firebase.uidUser, object : Callback<Child> {
             override fun onComplete(value: Child) {
                 val header = requireActivity().navView.getHeaderView(0);
                 val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
@@ -177,7 +177,7 @@ class ChildMyProfileFragment : Fragment() {
                 ?.addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
                     if (emailTextInputChildMyProfile?.editText?.text != null) {
-                        firebase.setFieldUserDatabase(firebase.uidUser!!, "email", email)
+                        firebase.setFieldUserDatabase(firebase.uidUser, "email", email)
                     }
                     Toast.makeText(
                         requireContext(),
@@ -204,12 +204,12 @@ class ChildMyProfileFragment : Fragment() {
         val header = requireActivity().navView.getHeaderView(0);
         val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         userNameHeader.text = username
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "username", username)
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "cityId", cityId)
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "city", city)
-        firebase.setFieldUserDatabase(firebase.uidUser!!, "educationalInstitutionId", schoolId)
+        firebase.setFieldUserDatabase(firebase.uidUser, "username", username)
+        firebase.setFieldUserDatabase(firebase.uidUser, "cityId", cityId)
+        firebase.setFieldUserDatabase(firebase.uidUser, "city", city)
+        firebase.setFieldUserDatabase(firebase.uidUser, "educationalInstitutionId", schoolId)
         firebase.setFieldUserDatabase(
-            firebase.uidUser!!,
+            firebase.uidUser,
             "educationalInstitution",
             educationalInstitution
         )
@@ -228,9 +228,4 @@ class ChildMyProfileFragment : Fragment() {
         }
 
     }
-
-    override fun onDetach() {
-        super.onDetach()
-    }
-
 }

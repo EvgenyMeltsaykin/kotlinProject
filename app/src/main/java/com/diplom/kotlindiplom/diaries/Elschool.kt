@@ -129,7 +129,7 @@ class Elschool {
     ) {
         val firebase = FunctionsFirebase()
         val schedule = mutableMapOf<String, List<Lesson>>()
-        firebase.getFieldDiary(firebase.uidUser!!, "cookie",
+        firebase.getFieldDiary(firebase.uidUser, "cookie",
             object : Callback<String> {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: String) {
@@ -289,7 +289,7 @@ class Elschool {
     fun writeChildrenDiaryInFirebase(firebaseCallback: Callback<Boolean>) {
         val firebase = FunctionsFirebase()
         val children = mutableListOf<ChildForElschool>()
-        firebase.getFieldDiary(firebase.uidUser!!, "cookie",
+        firebase.getFieldDiary(firebase.uidUser, "cookie",
             object : Callback<String> {
                 override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
@@ -415,7 +415,7 @@ class Elschool {
         firebaseCallback: Callback<Boolean>
     ) {
         val firebase = FunctionsFirebase()
-        firebase.setFieldDiary(firebase.uidUser!!, "marks", "")
+        firebase.setFieldDiary(firebase.uidUser, "marks", "")
         GlobalScope.launch(Dispatchers.IO) {
             firebase.getFieldDiary(firebase.uidUser, "cookie", object : Callback<String> {
                 override fun onComplete(value: String) {

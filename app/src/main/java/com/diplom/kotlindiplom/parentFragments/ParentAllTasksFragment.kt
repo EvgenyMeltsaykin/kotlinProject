@@ -60,7 +60,7 @@ class ParentAllTasksFragment : Fragment() {
         taskEmptyTextViewParent?.isVisible = false
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
-        firebase.getTasksParentUid(firebase.uidUser!!,status,object: Callback<List<Task>>{
+        firebase.getTasksParentUid(firebase.uidUser,status,object: Callback<List<Task>>{
             override fun onComplete(value: List<Task>) {
                 if (value.isEmpty()){
                     taskEmptyTextViewParent?.isVisible = true
@@ -73,8 +73,8 @@ class ParentAllTasksFragment : Fragment() {
                 adapter.setOnItemClickListener { item, view ->
                     val taskItem = item as TaskItem
                     val bundle: Bundle = bundleOf()
-                    bundle.putString("title", "${taskItem.task.title}")
-                    bundle.putString("taskId", "${taskItem.task.taskId}")
+                    bundle.putString("title", taskItem.task.title)
+                    bundle.putString("taskId", taskItem.task.taskId)
                     val navController =
                         Navigation.findNavController(requireActivity(), R.id.navFragment)
                     navController.navigate(R.id.action_parentAllTasksFragment_to_parentTaskContentFragment, bundle)

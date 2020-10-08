@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
@@ -55,7 +56,7 @@ class MainFragment : Fragment() {
         }
     }
     private fun setupChildFragment(){
-        firebase.getFieldUserDatabase(firebase.uidUser!!,"acceptName",object :Callback<String>{
+        firebase.getFieldUserDatabase(firebase.uidUser,"acceptName",object :Callback<String>{
             override fun onComplete(parentName: String) {
                 if (parentName.isNotEmpty()){
                     val requestParentFragment = RequestParentFragment()
@@ -84,6 +85,18 @@ class MainFragment : Fragment() {
         }
         saturdayMainButton?.setOnClickListener {
             navigateToDay("суббота")
+        }
+
+        importScheduleButton?.setOnClickListener {
+            firebase.importScheduleToMySchedule(object : Callback<Boolean>{
+                override fun onComplete(value: Boolean) {
+                    if (value){
+                        Toast.makeText(requireContext(),"Расписание успешно загружено",Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(requireContext(),"Расписание в электронном дневнике отсутствует. Зайдите в электронный дневник или обновите расписание",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            })
         }
     }
     private fun navigateToDay(day : String){

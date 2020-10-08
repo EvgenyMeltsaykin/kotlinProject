@@ -138,10 +138,10 @@ class WeekdayFragment : Fragment() {
             refreshScheduleButton?.isVisible = false
         }
 
-        firebase.getFieldDiary(firebase.uidUser!!, "url", object : Callback<String> {
+        firebase.getFieldDiary(firebase.uidUser, "url", object : Callback<String> {
             override fun onComplete(value: String) {
                 firebase.getFieldSchedule(
-                    firebase.uidUser!!,
+                    firebase.uidUser,
                     "weekUpdate",
                     object : Callback<String> {
                         override fun onComplete(weekUpdate: String) {

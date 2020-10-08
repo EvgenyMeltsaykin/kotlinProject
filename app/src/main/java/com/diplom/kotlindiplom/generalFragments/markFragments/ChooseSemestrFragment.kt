@@ -70,7 +70,7 @@ class ChooseSemestrElschoolFragment : Fragment() {
         })
 
         firebase.getFieldDiary(
-            firebase.uidUser!!,
+            firebase.uidUser,
             "semestrName",
             object : Callback<String> {
                 override fun onComplete(value: String) {
@@ -123,10 +123,10 @@ class ChooseSemestrElschoolFragment : Fragment() {
             thirdSemestrButton?.isVisible = true
             yearsMarksButton?.isVisible = true
         }
-        firebase.getFieldDiary(firebase.uidUser!!, "url", object : Callback<String> {
+        firebase.getFieldDiary(firebase.uidUser, "url", object : Callback<String> {
             override fun onComplete(url: String) {
                 firebase.getFieldDiary(
-                    firebase.uidUser!!,
+                    firebase.uidUser,
                     "idChild",
                     object : Callback<String> {
                         @RequiresApi(Build.VERSION_CODES.O)

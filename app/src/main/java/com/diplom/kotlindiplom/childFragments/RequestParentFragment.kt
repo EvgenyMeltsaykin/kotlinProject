@@ -55,16 +55,16 @@ class RequestParentFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        invitationTextView?.text = "Пользователь ${parentName} запрашивает привязку аккаунта"
+        invitationTextView?.text = "Пользователь $parentName запрашивает привязку аккаунта"
         rejectButton?.setOnClickListener {
             dismiss()
             firebase.getFieldUserDatabase(
-                firebase.uidUser!!,
+                firebase.uidUser,
                 "acceptUid",
                 object : Callback<String> {
                     override fun onComplete(value: String) {
                         firebase.setFieldUserDatabase(value, "acceptAnswer", "0")
-                        firebase.clearAcceptRequest(firebase.uidUser!!)
+                        firebase.clearAcceptRequest(firebase.uidUser)
                     }
                 })
 
@@ -73,13 +73,12 @@ class RequestParentFragment : DialogFragment() {
         acceptButton?.setOnClickListener {
             dismiss()
             firebase.getFieldUserDatabase(
-                firebase.uidUser!!,
+                firebase.uidUser,
                 "acceptUid",
                 object : Callback<String> {
                     override fun onComplete(parentUid: String) {
-                        Log.d("TAG", "$parentUid")
                         firebase.setFieldUserDatabase(
-                            firebase.uidUser!!,
+                            firebase.uidUser,
                             "parentUid",
                             parentUid
                         )
@@ -88,7 +87,7 @@ class RequestParentFragment : DialogFragment() {
                             "acceptAnswer",
                             "1"
                         )
-                        firebase.clearAcceptRequest(firebase.uidUser!!)
+                        firebase.clearAcceptRequest(firebase.uidUser)
                     }
                 })
 

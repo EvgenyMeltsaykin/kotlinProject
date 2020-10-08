@@ -1,6 +1,7 @@
 package com.diplom.kotlindiplom.generalFragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,6 @@ import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_login_diary.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -59,7 +59,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
         requireActivity().invalidateOptionsMenu()
         progressBar?.isVisible = true
         activity?.title = ""
-        firebase.getFieldDiary(firebase.uidUser!!,"login",object : Callback<String>{
+        firebase.getFieldDiary(firebase.uidUser,"login",object : Callback<String>{
             override fun onComplete(value: String) {
                 if(value.isNotEmpty()){
                     if (!deletedDiary){
@@ -105,15 +105,13 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
-                        GlobalScope.launch(Dispatchers.IO) {
-                            firebase.createDiary(urlDiary)
-                            firebase.setLoginAndPasswordDiary(login,password)
-                            firebase.setFieldUserDatabase(firebase.uidUser!!, "diary/url", urlDiary)
-                        }
+                        firebase.createDiary(urlDiary)
+                        firebase.setLoginAndPasswordDiary(login,password)
+                        firebase.setFieldDiary(firebase.uidUser, "url", urlDiary)
+                        firebase.updateSchedule()
                         val bundle = bundleOf()
                         bundle.putString("login",login)
                         bundle.putString("urlDiary",urlDiary)
-                        bundle.putBoolean("firstEnter",true)
                         Navigation.findNavController(
                             requireActivity(),
                             R.id.navFragment

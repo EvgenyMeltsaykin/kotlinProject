@@ -29,14 +29,12 @@ class DiaryFragment : Fragment() {
 
     private lateinit var login: String
     private lateinit var urlDiary: String
-    private var firstEnter by Delegates.notNull<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             login = it.getString("login","")
             urlDiary = it.getString("urlDiary","")
-            firstEnter = it.getBoolean("firstEnter",false)
         }
     }
 
@@ -48,6 +46,7 @@ class DiaryFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_diary, container, false)
     }
 
+    @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //requireActivity().invalidateOptionsMenu()
@@ -66,10 +65,6 @@ class DiaryFragment : Fragment() {
                     scheduleButton?.setOnClickListener {
                         if (value == "child") {
                             val bundle = bundleOf()
-                            if (firstEnter){
-                                bundle.putBoolean("updateSchedule", true)
-                                firstEnter = false
-                            }
                             Navigation.findNavController(requireActivity(), R.id.navFragment)
                                 .navigate(
                                     R.id.action_diaryFragment_to_weekdayFragment,
@@ -97,7 +92,7 @@ class DiaryFragment : Fragment() {
         loginDiaryTextView?.text = login
         diaryTextView?.text = urlDiary
         if (urlDiary.isEmpty()){
-            firebase.getFieldDiary(firebase.uidUser!!, "url", object : Callback<String> {
+            firebase.getFieldDiary(firebase.uidUser, "url", object : Callback<String> {
                 override fun onComplete(value: String) {
                     diaryTextView?.text = value
                 }

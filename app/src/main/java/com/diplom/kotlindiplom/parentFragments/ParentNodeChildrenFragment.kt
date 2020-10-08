@@ -82,7 +82,7 @@ class ParentNodeChildrenFragment : Fragment() {
     }
     private fun updateRecyclerView(firebase:FunctionsFirebase,adapter:GroupAdapter<ViewHolder>){
         adapter.clear()
-        firebase.getChildrenByParentUid(firebase.uidUser!!,object : Callback<List<Child>>{
+        firebase.getChildrenByParentUid(firebase.uidUser,object : Callback<List<Child>>{
             override fun onComplete(value: List<Child>) {
                 emptyChildTextView?.isVisible = value.isEmpty()
                 value.forEach {

@@ -12,7 +12,6 @@ import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Task
 import com.diplom.kotlindiplom.models.recyclerViewItems.TaskItem
 import com.xwray.groupie.GroupAdapter
@@ -55,68 +54,51 @@ class ChildAllTasksFragment : Fragment() {
 
         tasksEmptyTextView?.isVisible = false
         var status: Int = -2
-        if (title == "Невыполненные") status = -1;
-        if (title == "На проверке") status = 0;
-        if (title == "Выполненные") status = 1;
-        val adapter = GroupAdapter<ViewHolder>()
+        if (title == "Невыполненные") status = -1
+        if (title == "На проверке") status = 0
+        if (title == "Выполненные") status = 1
         if (status != 1) {
             firebase.getFieldUserDatabase(
-                firebase.uidUser!!,
+                firebase.uidUser,
                 "parentUid",
                 object : Callback<String> {
                     override fun onComplete(value: String) {
                         firebase.getTasksParentUid(value, status, object : Callback<List<Task>> {
                             override fun onComplete(value: List<Task>) {
-                                if (value.isEmpty()){
-                                    tasksEmptyTextView?.isVisible = true
-                                    return
-                                    //taskRecyclerViewChild.isVisible = false
-                                }
-                                value.forEach {
-                                    adapter.add(TaskItem(it))
-                                }
-                                taskRecyclerViewChild?.adapter = adapter
-                                adapter.setOnItemClickListener { item, view ->
-                                    val taskItem = item as TaskItem
-                                    val bundle: Bundle = bundleOf()
-                                    bundle.putString("title", "${taskItem.task.title}")
-                                    bundle.putString("taskId", "${taskItem.task.taskId}")
-                                    val navController = Navigation.findNavController(
-                                        requireActivity(),
-                                        R.id.navFragment
-                                    )
-                                    navController.navigate(R.id.action_childAllTasksFragment_to_childTaskContentFragment, bundle)
-                                }
+                                addTasksInRecyclerView(value)
                             }
 
                         })
                     }
                 })
         }else{
-            firebase.getTasksChildUid(firebase.uidUser!!,status,object : Callback<List<Task>>{
+            firebase.getTasksChildUid(firebase.uidUser,status,object : Callback<List<Task>>{
                 override fun onComplete(value: List<Task>) {
-                    if (value.isEmpty()){
-                        tasksEmptyTextView?.isVisible = true
-                        return
-                       // taskRecyclerViewChild.isVisible = false
-                    }
-                    value.forEach {
-                        adapter.add(TaskItem(it))
-                    }
-                    taskRecyclerViewChild?.adapter = adapter
-                    adapter.setOnItemClickListener { item, view ->
-                        val taskItem = item as TaskItem
-                        val bundle: Bundle = bundleOf()
-                        bundle.putString("title", "${taskItem.task.title}")
-                        bundle.putString("taskId", "${taskItem.task.taskId}")
-                        val navController = Navigation.findNavController(
-                            requireActivity(),
-                            R.id.navFragment
-                        )
-                        navController.navigate(R.id.childTaskContentFragment, bundle)
-                    }
+                    addTasksInRecyclerView(value)
                 }
             })
+        }
+    }
+    private fun addTasksInRecyclerView(tasks:List<Task>){
+        val adapter = GroupAdapter<ViewHolder>()
+        if (tasks.isEmpty()){
+            tasksEmptyTextView?.isVisible = true
+            return
+        }
+        tasks.forEach {
+            adapter.add(TaskItem(it))
+        }
+        taskRecyclerViewChild?.adapter = adapter
+        adapter.setOnItemClickListener { item, view ->
+            val taskItem = item as TaskItem
+            val bundle: Bundle = bundleOf()
+            bundle.putString("title", taskItem.task.title)
+            bundle.putString("taskId", taskItem.task.taskId)
+            val navController = Navigation.findNavController(
+                requireActivity(),
+                R.id.navFragment
+            )
+            navController.navigate(R.id.action_childAllTasksFragment_to_childTaskContentFragment, bundle)
         }
     }
 

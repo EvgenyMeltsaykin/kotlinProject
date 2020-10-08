@@ -22,13 +22,12 @@
 
     <TextView
         android:id="@+id/numberCabinetAndTimeTextView"
-        android:textColor="@color/colorButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:text="TextView"
+        android:textColor="@color/colorButtonText"
         app:layout_constraintEnd_toStartOf="@+id/divider3"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

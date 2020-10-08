@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     private lateinit var menuNavigationView: Menu
     private var backPressed: Long = 0
     private var roleUser = ""
-    override fun getRoleUser(): String? {
+    override fun getRoleUser(): String {
         return intent.getStringExtra("role").toString()
     }
 
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    firebase.setFieldUserDatabase(firebase.uidUser!!, "acceptAnswer", "-1")
+                    firebase.setFieldUserDatabase(firebase.uidUser, "acceptAnswer", "-1")
                 }
             }
 
@@ -242,7 +242,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         }*/
         setupDrawerAndToolbar()
         val uiFunctions = FunctionsUI()
-        val requestRef = firebase.userRef.child(firebase.uidUser!!)
+        val requestRef = firebase.userRef.child(firebase.uidUser)
         requestRef.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
@@ -314,7 +314,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
                 firebase.getFieldUserDatabase(
-                    firebase.uidUser!!,
+                    firebase.uidUser,
                     "parentUid",
                     object : Callback<String> {
                         override fun onComplete(value: String) {
@@ -372,7 +372,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         if (roleUser == "child") {
             val item = menu?.findItem(R.id.menuPointsChild)
             firebase.getPointChild(
-                firebase.uidUser!!,
+                firebase.uidUser,
                 object : Callback<String> {
                     override fun onComplete(value: String) {
                         item?.title = value
@@ -390,7 +390,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             val item = menu?.findItem(R.id.menuPointsChild)
             val firebase = FunctionsFirebase()
             firebase.getPointChild(
-                firebase.uidUser!!,
+                firebase.uidUser,
                 object : Callback<String> {
                     override fun onComplete(value: String) {
                         item?.title = value
@@ -539,7 +539,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         val firebase = FunctionsFirebase()
         //Загрузка фото и имени в боковое меню при запуске приложения
         firebase.getFieldUserDatabase(
-            firebase.uidUser!!,
+            firebase.uidUser,
             "username",
             object : Callback<String> {
                 override fun onComplete(value: String) {
@@ -559,7 +559,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         drawer.addDrawerListener(toggle)
         toggle.syncState()
         /*if (role == "child"){
-            firebase.getChild(firebase.uidUser!!, object : FirebaseCallback<Child> {
+            firebase.getChild(firebase.uidUser, object : FirebaseCallback<Child> {
                 override fun onComplete(value: Child) {
 
                     /*if (value.profileImageUrl.isNotEmpty()) {
@@ -570,7 +570,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             })
         }
         if(role == "parent"){
-            firebase.getParent(firebase.uidUser!!, object : FirebaseCallback<Parent> {
+            firebase.getParent(firebase.uidUser, object : FirebaseCallback<Parent> {
                 override fun onComplete(value: Parent) {
 
                     header.usernameTextviewDrawer.text = value.username

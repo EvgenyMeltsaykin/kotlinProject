@@ -129,7 +129,7 @@ class ParentMyProfileFragment : Fragment() {
                 ?.addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
                     if (emailTextInputParentMyProfile?.editText?.text != null) {
-                        firebase.setFieldUserDatabase(firebase.uidUser!!,"email",email)
+                        firebase.setFieldUserDatabase(firebase.uidUser,"email",email)
                     }
                     Toast.makeText(
                         requireContext(),
@@ -151,9 +151,9 @@ class ParentMyProfileFragment : Fragment() {
                     ).show()
                 }
         }
-        firebase.setFieldUserDatabase(firebase.uidUser!!,"username",username)
-        firebase.setFieldUserDatabase(firebase.uidUser!!,"cityId",cityId)
-        firebase.setFieldUserDatabase(firebase.uidUser!!,"city",city)
+        firebase.setFieldUserDatabase(firebase.uidUser,"username",username)
+        firebase.setFieldUserDatabase(firebase.uidUser,"cityId",cityId)
+        firebase.setFieldUserDatabase(firebase.uidUser,"city",city)
         val header = requireActivity().navView.getHeaderView(0);
         val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         userNameHeader.text = username

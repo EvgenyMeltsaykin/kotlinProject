@@ -1,6 +1,7 @@
 package com.diplom.kotlindiplom.childFragments.mySchedule
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Lesson
@@ -54,7 +56,6 @@ class MyScheduleDayFragment : Fragment() {
         activity?.title =day?.capitalize()
         emptyLessonTextView?.isVisible = false
         val adapter = GroupAdapter<ViewHolder>()
-        val firebase = FunctionsFirebase()
         firebase.getLessonMyScheduleOutFirebase(day!!,object :Callback<List<Lesson>>{
             override fun onComplete(value: List<Lesson>) {
                 var i = 0

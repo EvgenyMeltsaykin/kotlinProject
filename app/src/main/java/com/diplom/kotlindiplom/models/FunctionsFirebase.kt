@@ -32,7 +32,54 @@ class FunctionsFirebase {
     val taskRef = rootRef.child("tasks")
     val awardsRef = rootRef.child("awards")
     val uidUser = FirebaseAuth.getInstance().uid.toString()
+    val diaryRef = userRef.child(uidUser).child("diary")
+    val scheduleRef = diaryRef.child("schedule")
+    val myScheduleRef = userRef.child(uidUser).child("mySchedule")
 
+    fun importScheduleToMySchedule(firebaseCallBack: Callback<Boolean>){
+        getAllLessonsFromDiary(object :Callback<Map<String,List<Lesson>>>{
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onComplete(value: Map<String, List<Lesson>>) {
+                value.forEach { (weekday, lessons) ->
+                    var i = 0
+                    lessons.forEach {lessonInfo->
+                        addLessonMyScheduleInFirebase(weekday,i.toString(),lessonInfo)
+                        i++
+                    }
+                }
+                firebaseCallBack.onComplete(value.isNotEmpty())
+            }
+        })
+    }
+    private fun getAllLessonsFromDiary(firebaseCallBack: Callback<Map<String, List<Lesson>>>){
+        val lessons = mutableMapOf<String, List<Lesson>>()
+        val listWeekday = listOf("понедельник","вторник","среда","четверг","пятница","суббота")
+            scheduleRef.keepSynced(true)
+            scheduleRef.addListenerForSingleValueEvent(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.children.forEach {
+                        val weekday = it.key.toString()
+                        listWeekday.forEach {listWeekdayElement->
+                            if (weekday == listWeekdayElement){
+                                val lessonsFromDay = mutableListOf<Lesson>()
+                                it.children.forEach {fieldsLesson->
+                                    if (fieldsLesson.key.toString() != "date"){
+                                        lessonsFromDay.add(getLesson(fieldsLesson))
+                                    }
+                                }
+                                lessons[weekday] = lessonsFromDay
+                            }
+                        }
+                    }
+                    firebaseCallBack.onComplete(lessons)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+    }
     fun removeAllListener() {
         rootRef.removeEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -56,7 +103,45 @@ class FunctionsFirebase {
             }
         })
     }
+    @ExperimentalStdlibApi
+    fun updateSchedule(){
+        val fields = listOf("url", "idChild")
+        Log.d("Tag","updateSchedule")
+        getFieldsDiary(uidUser, fields, object : Callback<Map<String, String>> {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onComplete(value: Map<String, String>) {
+                val idChild = value["idChild"].toString()
+                val urlDiary = value["url"].toString()
+                Log.d("Tag",idChild + " " + urlDiary)
+                if (idChild.isNotEmpty() && urlDiary.isNotEmpty()) {
+                    val diary = Diary()
+                    val calendar = Calendar.getInstance()
+                    calendar.timeInMillis = System.currentTimeMillis()
+                    val week = calendar.get(Calendar.WEEK_OF_YEAR)
+                    val year = calendar.get(Calendar.YEAR)
+                    setDateUpdateSсhedule(
+                        calendar.get(Calendar.YEAR).toString(),
+                        (calendar.get(Calendar.MONTH) + 1).toString(),
+                        calendar.get(Calendar.DAY_OF_MONTH).toString(),
+                        week
+                    )
+                    when (urlDiary) {
+                        diary.elschool.url -> {
+                            diary.elschool.getScheduleFromElschool(
+                                year,
+                                week,
+                                idChild,
+                                object : Callback<Boolean> {
+                                    override fun onComplete(value: Boolean) {
 
+                                    }
+                                })
+                        }
+                    }
+                }
+            }
+        })
+    }
     fun updateLessonMyScheduleInFirebase(
         weekday: String,
         numberLesson: String,
@@ -95,12 +180,11 @@ class FunctionsFirebase {
         }
         return lesson
     }
-
     fun getLessonMyScheduleOutFirebase(
         weekday: String,
         firebaseCallBack: Callback<List<Lesson>>
     ) {
-        val ref = userRef.child(uidUser).child("mySchedule").child(weekday)
+        val ref = myScheduleRef.child(weekday)
         val lessons = mutableListOf<Lesson>()
         ref.keepSynced(true)
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -124,13 +208,12 @@ class FunctionsFirebase {
     }
 
     fun addLessonMyScheduleInFirebase(weekday: String, numberLesson: String, lesson: Lesson) {
-        val ref = userRef.child(uidUser).child("mySchedule").child(weekday).child(numberLesson)
+        val ref = myScheduleRef.child(weekday).child(numberLesson)
 
         ref.child("homework").setValue("")
         ref.child("lessonName").setValue(lesson.name)
         ref.child("cabinet").setValue(lesson.cabinet)
         ref.child("time").setValue(lesson.time)
-        ref.child("number").setValue(numberLesson)
     }
 
     fun deleteAward(awardId: String) {
@@ -410,7 +493,7 @@ class FunctionsFirebase {
     fun getLessonsAndFinalMark(
         firebaseCallBack: Callback<Map<String, String>>
     ) {
-        val ref = userRef.child(uidUser!!).child("diary")
+        val ref = userRef.child(uidUser).child("diary")
             .child("marks")
         val lessons = mutableMapOf<String, String>()
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -603,7 +686,7 @@ class FunctionsFirebase {
     }
 
     fun deleteDiary() {
-        getFieldDiary(uidUser!!, "url", object : Callback<String> {
+        getFieldDiary(uidUser, "url", object : Callback<String> {
             override fun onComplete(value: String) {
                 val diary = Diary()
                 when (value) {
@@ -669,8 +752,8 @@ class FunctionsFirebase {
         val cipherText =
             crypto.encryptData(password.toByteArray(), secretKey.toCharArray())
         val temp = Arrays.toString(cipherText)
-        setFieldUserDatabase(uidUser!!, "diary/login", login)
-        setFieldUserDatabase(uidUser!!, "diary/password", temp)
+        setFieldUserDatabase(uidUser, "diary/login", login)
+        setFieldUserDatabase(uidUser, "diary/password", temp)
 
 
     }
@@ -755,7 +838,7 @@ class FunctionsFirebase {
 
     fun setDateUpdateSсhedule(year: String, month: String, day: String,weekUpdate: Int) {
 
-        val ref = userRef.child(uidUser!!).child("diary")
+        val ref = userRef.child(uidUser).child("diary")
             .child("schedule")
         ref.child("year").setValue(year)
         ref.child("month").setValue(month)
@@ -764,7 +847,7 @@ class FunctionsFirebase {
     }
 
     fun setFieldSchedule(uid: String, field: String, value: Any) {
-        val ref = userRef.child(uidUser!!).child("diary")
+        val ref = userRef.child(uidUser).child("diary")
             .child("schedule")
         ref.child(field).setValue(value)
     }
@@ -842,6 +925,7 @@ class FunctionsFirebase {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
                     p0.children.forEach {
+                        Log.d("Tag",it.key.toString() + " " + it.value.toString())
                         fields.forEach { field ->
                             if (it.key.toString() == field) {
                                 value[field] = it.value.toString()
@@ -882,7 +966,7 @@ class FunctionsFirebase {
         uid: String,
         firebaseCallBack: Callback<Map<String, String>>
     ) {
-        val ref = userRef.child(uidUser!!).child("diary")
+        val ref = userRef.child(uidUser).child("diary")
         val value = mutableMapOf<String, String>()
 
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -939,7 +1023,7 @@ class FunctionsFirebase {
         field: String,
         firebaseCallBack: Callback<List<String>>
     ) {
-                val ref = userRef.child(uidUser!!).child("diary")
+                val ref = userRef.child(uidUser).child("diary")
                 val value = mutableListOf<String>()
 
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -977,7 +1061,7 @@ class FunctionsFirebase {
 
         val ref = userRef.child(uid)
         ref.keepSynced(true)
-        ref.child("$field").setValue(value)
+        ref.child(field).setValue(value)
 
     }
 
@@ -1067,7 +1151,7 @@ class FunctionsFirebase {
                                             override fun onComplete(value: String) {
                                                 if (value.isEmpty()) {
                                                     getFieldUserDatabase(
-                                                        uidUser!!,
+                                                        uidUser,
                                                         "username",
                                                         object : Callback<String> {
                                                             override fun onComplete(
@@ -1125,7 +1209,7 @@ class FunctionsFirebase {
         val fileRef = FirebaseStorage.getInstance().getReference("/image/$filename")
 
 
-        getFieldUserDatabase(uidUser!!, "profileImageName", object : Callback<String> {
+        getFieldUserDatabase(uidUser, "profileImageName", object : Callback<String> {
             override fun onComplete(value: String) {
                 if (value.isNotEmpty()) {
                     val deleteRef =
