@@ -59,6 +59,7 @@ class Elschool {
         firebase.setFieldDiary(firebase.uidUser, "marks", "")
         firebase.setFieldDiary(firebase.uidUser, "marks/dateUpdate", "")
         firebase.setFieldDiary(firebase.uidUser, "schedule/weekUpdate", 0)
+        firebase.diaryRef.child("children").removeValue()
     }
     private fun getRoleFromDiary(document: org.jsoup.nodes.Document){
         //dayDate  = it.select("td[class=diary__dayweek]").select("p").text().toString()

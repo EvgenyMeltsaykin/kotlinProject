@@ -12,33 +12,22 @@
         android:id="@+id/unfulfilledButtonChildTasks"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible"
         android:background="@drawable/simple_button"
         android:text="Невыполненные задания"
         android:textColor="@color/colorButtonText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/completedButtonChildTasks"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/simple_button"
-        android:text="Выполненные задания"
-        android:textColor="@color/colorButtonText"
-        app:layout_constraintEnd_toEndOf="@+id/checkButtonChildTasks"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/checkButtonChildTasks"
-        app:layout_constraintTop_toBottomOf="@+id/checkButtonChildTasks" />
-
     <Button
         android:id="@+id/checkButtonChildTasks"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@drawable/simple_button"
+        android:visibility="invisible"
         android:text="Задания на проверке"
         android:textColor="@color/colorButtonText"
         app:layout_constraintEnd_toEndOf="@+id/unfulfilledButtonChildTasks"
@@ -47,17 +36,55 @@
         app:layout_constraintTop_toBottomOf="@+id/unfulfilledButtonChildTasks" />
 
     <Button
+        android:id="@+id/completedButtonChildTasks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible"
+        android:background="@drawable/simple_button"
+        android:text="Выполненные задания"
+        android:textColor="@color/colorButtonText"
+        app:layout_constraintEnd_toEndOf="@+id/checkButtonChildTasks"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/checkButtonChildTasks"
+        app:layout_constraintTop_toBottomOf="@+id/checkButtonChildTasks" />
+
+
+    <Button
         android:id="@+id/additionalButtonChildTasks"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@drawable/simple_button"
+        android:visibility="invisible"
         android:text="Дополнительные задания"
         android:textColor="@color/colorButtonText"
         app:layout_constraintEnd_toEndOf="@+id/completedButtonChildTasks"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/completedButtonChildTasks"
         app:layout_constraintTop_toBottomOf="@+id/completedButtonChildTasks" />
+
+    <TextView
+        android:id="@+id/emptyParentuidTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:text="Не привязан родительский аккаунт"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/childTasksProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

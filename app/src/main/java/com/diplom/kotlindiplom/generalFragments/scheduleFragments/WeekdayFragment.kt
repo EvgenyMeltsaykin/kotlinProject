@@ -1,5 +1,6 @@
 package com.diplom.kotlindiplom.generalFragments.scheduleFragments
 
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -68,7 +69,6 @@ class WeekdayFragment : Fragment() {
         changeColorTodayWeekdayButton()
         refreshScheduleButton?.setOnClickListener {
             updateSchedule(true)
-            changeColorTodayWeekdayButton()
             calendarView?.isVisible = false
         }
         mondayButton?.setOnClickListener {
@@ -91,7 +91,16 @@ class WeekdayFragment : Fragment() {
         }
 
     }
+    private fun setResourceOnButton(){
+        mondayButton?.setBackgroundResource(R.drawable.simple_button)
+        tuesdayButton?.setBackgroundResource(R.drawable.simple_button)
+        wednesdayButton?.setBackgroundResource(R.drawable.simple_button)
+        thursdayButton?.setBackgroundResource(R.drawable.simple_button)
+        fridayButton?.setBackgroundResource(R.drawable.simple_button)
+        saturdayButton?.setBackgroundResource(R.drawable.simple_button)
+    }
     private fun changeColorTodayWeekdayButton(){
+        setResourceOnButton()
         when(calendar.get(Calendar.DAY_OF_WEEK) - 1){
             1 ->{
                 mondayButton?.setBackgroundResource(R.drawable.rounded_today_weekday_button)
@@ -217,6 +226,7 @@ class WeekdayFragment : Fragment() {
             calendarView.isVisible = false
             selectedWeek = calendar.get(Calendar.WEEK_OF_YEAR)
             selectedYear = calendar.get(Calendar.YEAR)
+            changeColorTodayWeekdayButton()
             updateSchedule(false)
         }
        //updateSchedule(updateWithoutCheck, calendar)

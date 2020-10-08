@@ -8,7 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import kotlinx.android.synthetic.main.fragment_child_tasks.*
 
@@ -51,31 +54,39 @@ class ChildTasksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
         activity?.title = "Задания"
-        val navController = Navigation.findNavController(
-            requireActivity(),
-            R.id.navFragment
-        )
-
+        firebase.getFieldUserDatabase(firebase.uidUser,"parentUid",object :Callback<String>{
+            override fun onComplete(value: String) {
+                childTasksProgressBar?.isVisible = false
+                if (value.isEmpty()){
+                    emptyParentuidTextView?.isVisible = true
+                    unfulfilledButtonChildTasks?.isVisible = false
+                    completedButtonChildTasks?.isVisible = false
+                    checkButtonChildTasks?.isVisible = false
+                }else{
+                    unfulfilledButtonChildTasks?.isVisible = true
+                    completedButtonChildTasks?.isVisible = true
+                    checkButtonChildTasks?.isVisible = true
+                }
+            }
+        })
         unfulfilledButtonChildTasks?.setOnClickListener {
-            val bundle : Bundle = bundleOf()
-            bundle.putString("title","Невыполненные")
-            navController.navigate(R.id.action_childTasksFragment_to_childAllTasksFragment,bundle)
+            navigateNextFragment("Невыполненные")
         }
         completedButtonChildTasks?.setOnClickListener {
-            val bundle : Bundle = bundleOf()
-            bundle.putString("title","Выполненные")
-            navController.navigate(R.id.action_childTasksFragment_to_childAllTasksFragment,bundle)
+            navigateNextFragment("Выполненные")
         }
         checkButtonChildTasks?.setOnClickListener {
-            val bundle : Bundle = bundleOf()
-            bundle.putString("title","На проверке")
-            navController.navigate(R.id.action_childTasksFragment_to_childAllTasksFragment,bundle)
+            navigateNextFragment("На проверке")
         }
         additionalButtonChildTasks?.setOnClickListener {
-            val bundle : Bundle = bundleOf()
-            bundle.putString("title","Дополнительные")
-            navController.navigate(R.id.action_childTasksFragment_to_childAllTasksFragment,bundle)
+            navigateNextFragment("Дополнительные")
         }
+    }
+
+    private fun navigateNextFragment(title:String){
+        val bundle : Bundle = bundleOf()
+        bundle.putString("title",title)
+        Navigation.findNavController(requireActivity(), R.id.navFragment).navigate(R.id.action_childTasksFragment_to_childAllTasksFragment,bundle)
     }
     /**
      * This interface must be implemented by activities that contain this

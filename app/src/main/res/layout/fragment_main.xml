@@ -88,10 +88,9 @@
 
         <Button
             android:id="@+id/importScheduleButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/simple_button"
-            android:padding="8dp"
             android:text="Загрузить расписание из дневника"
             android:textColor="@color/colorButtonText"
             app:layout_constraintBottom_toBottomOf="parent"
