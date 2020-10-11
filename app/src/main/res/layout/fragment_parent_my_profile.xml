@@ -106,6 +106,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/simple_button"
+            android:visibility="invisible"
             android:text="Сохранить изменения"
             android:textColor="@color/colorButtonText"
             app:layout_constraintBottom_toBottomOf="parent"

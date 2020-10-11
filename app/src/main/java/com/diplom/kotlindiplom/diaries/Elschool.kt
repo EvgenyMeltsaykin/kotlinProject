@@ -2,7 +2,6 @@ package com.diplom.kotlindiplom.diaries
 
 import android.content.Context
 import android.os.Build
-import android.os.SystemClock
 import android.util.Log
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -22,7 +21,6 @@ import kotlinx.coroutines.*
 import org.decimal4j.util.DoubleRounder
 import org.jsoup.Connection
 import org.jsoup.Jsoup
-import org.w3c.dom.Document
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -63,13 +61,15 @@ class Elschool {
     }
     private fun getRoleFromDiary(document: org.jsoup.nodes.Document){
         //dayDate  = it.select("td[class=diary__dayweek]").select("p").text().toString()
-        val role = document.select("div[class=border-block flex-grow-1 p-3 mb-3]").select("h3").text().toString()
+        val roleWithTable = document.select("div[class=col-12 col-xl d-flex flex-column]").select("div[class=border-block p-3 mb-3 flex-grow-1]").select("tbody").select("td").text().toString()
+        val role = roleWithTable.substringBefore(" ")
+
         val firebase = FunctionsFirebase()
 
-        if (role == "Родители"){
+        if (role.decapitalize(Locale.ROOT) == "учащийся"){
             firebase.setFieldDiary(firebase.uidUser,"roleDiary","child")
         }
-        if (role == "Дети") {
+        if (role.decapitalize(Locale.ROOT) == "родитель") {
             firebase.setFieldDiary(firebase.uidUser,"roleDiary","parent")
         }
     }
@@ -121,6 +121,36 @@ class Elschool {
                 ref.child("пятница").removeValue()
                 ref.child("суббота").removeValue()
     }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setSeeMarks(scheduleHtml: org.jsoup.nodes.Document,cookies:HashMap<String,String>){
+        //scheduleHtml example
+        //https://elschool.ru/users/diaries/details?rooId=18&instituteId=233&departmentId=123400&pupilId=1588026&year=2020&week=42&log=false
+        //tempUri example
+        //https://elschool.ru/users/diaries/confirmregularmarksbydaterange?rooId=18&instituteId=233&departmentId=123400&pupilId=1588026&year=2020&week=42&log=false
+        var tempUri = scheduleHtml.baseUri().replace("details","confirmregularmarksbydaterange")
+        val year = tempUri.substringAfter("year=").substringBefore("&")
+        val week = tempUri.substringAfter("week=").substringBefore("&")
+        if (year.isNotEmpty()){
+            val startYearDate = LocalDate.of(year.toInt(),1,1)
+            val dateWithWeek = startYearDate.plusWeeks((week).toLong()-1)
+            val countDay = dateWithWeek.dayOfWeek.ordinal
+            val startDate = dateWithWeek.minusDays(countDay.toLong())
+            val endDate = dateWithWeek.plusDays((6-countDay).toLong())
+            //tempUri example
+            //https://elschool.ru/users/diaries/confirmregularmarksbydaterange?rooId=18&instituteId=233&departmentId=123400&pupilId=1588026
+            tempUri = tempUri.substringBefore("&year=")
+            //
+            val resultUri = "$tempUri&startDate=$startDate&endDate=$endDate"
+            val document = Jsoup.connect(resultUri)
+                .ignoreContentType(true)
+                .cookies(cookies)
+                .userAgent("mozilla")
+                .method(Connection.Method.GET)
+                .get()
+            Log.d("Tag",document.toString())
+        }
+
+    }
     @ExperimentalStdlibApi
     fun getScheduleFromElschool(
         year: Int,
@@ -135,11 +165,9 @@ class Elschool {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
-                        Log.d("Tag","begin" + System.currentTimeMillis().toString())
                         val cookies = hashMapOf<String, String>()
                         cookies[keyCookie] = value
                         try {
-                            Log.d("Tag","connect document" + System.currentTimeMillis().toString())
                             val document = Jsoup.connect(urlDiary)
                                 .cookies(cookies)
                                 .method(Connection.Method.GET)
@@ -158,10 +186,8 @@ class Elschool {
                                         .get()
                             }
                             //тест
-                            Log.d("Tag","connect" + System.currentTimeMillis().toString())
-                            //scheduleHtml = Jsoup.connect("https://elschool.ru/users/diaries/details?rooId=18&instituteId=233&departmentId=91120&pupilId=1588026&year=$year&week=$week&log=false").cookies(cookies).get()
+                            //scheduleHtml = Jsoup.connect("https://elschool.ru/users/diaries/details?rooId=18&instituteId=233&departmentId=91120&pupilId=1588026&year=2020&week=3&log=false").cookies(cookies).get()
                             val dayOfWeekHtml = scheduleHtml.select("tbody")
-                            Log.d("Tag","begin parse" + System.currentTimeMillis().toString())
                             dayOfWeekHtml.forEach { it ->
                                 //example понедельник 17.08
                                 var dayDate:String
@@ -196,11 +222,8 @@ class Elschool {
                                 }
                                 schedule[dayDate] = lessons
                             }
-                            Log.d("Tag","end parse" + System.currentTimeMillis().toString())
                             deleteSchedule()
-                            Log.d("Tag","delete diary" + System.currentTimeMillis().toString())
                             firebaseCallback.onComplete(true)
-                            Log.d("Tag","end" + System.currentTimeMillis().toString())
                             schedule.forEach { (s, list) ->
                                 var i = 0
                                 val day = s.substringBefore(" ")
@@ -246,6 +269,17 @@ class Elschool {
                                     )
                                 }
                             }
+                            firebase.getFieldDiary(firebase.uidUser,"roleDiary",object :Callback<String>{
+                                override fun onComplete(value: String) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && value == "parent") {
+                                        GlobalScope.launch(Dispatchers.IO) {
+                                            setSeeMarks(scheduleHtml,cookies)
+                                        }
+
+                                    }
+                                }
+                            })
+
                         } catch (e: IOException) {
                             firebaseCallback.onComplete(false)
                             e.printStackTrace()

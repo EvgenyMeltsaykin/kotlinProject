@@ -12,7 +12,6 @@
         android:id="@+id/unfulfilledButtonChildTasks"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:visibility="invisible"
         android:background="@drawable/simple_button"
         android:text="Невыполненные задания"
@@ -21,19 +20,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <Button
-        android:id="@+id/checkButtonChildTasks"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/simple_button"
-        android:visibility="invisible"
-        android:text="Задания на проверке"
-        android:textColor="@color/colorButtonText"
-        app:layout_constraintEnd_toEndOf="@+id/unfulfilledButtonChildTasks"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/unfulfilledButtonChildTasks"
-        app:layout_constraintTop_toBottomOf="@+id/unfulfilledButtonChildTasks" />
 
     <Button
         android:id="@+id/completedButtonChildTasks"
@@ -48,6 +34,20 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/checkButtonChildTasks"
         app:layout_constraintTop_toBottomOf="@+id/checkButtonChildTasks" />
+
+    <Button
+        android:id="@+id/checkButtonChildTasks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/simple_button"
+        android:visibility="invisible"
+        android:text="Задания на проверке"
+        android:textColor="@color/colorButtonText"
+        app:layout_constraintEnd_toEndOf="@+id/unfulfilledButtonChildTasks"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/unfulfilledButtonChildTasks"
+        app:layout_constraintTop_toBottomOf="@+id/unfulfilledButtonChildTasks" />
 
 
     <Button

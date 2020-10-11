@@ -4,15 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fillViewport="true"
     android:layout_marginTop="?attr/actionBarSize"
     tools:context=".childFragments.ChildMyProfileFragment">
-
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:background="@drawable/background_text"
         android:layout_margin="8dp"
         android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/childMyProfileProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <!--<Button
             android:id="@+id/selectphotoButtonChildmyprofile"
             android:layout_width="150dp"
@@ -69,6 +81,7 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/simple_button"
             android:text="Сохранить изменения"
+            android:visibility="invisible"
             android:textColor="@color/colorButtonText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -154,7 +167,6 @@
                 android:id="@+id/educationalInstitutionAutoCompleteTextViewChildMyProfile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:completionThreshold="1"
                 android:ems="10"
                 android:hint="Школа/лицей/гимназия"
@@ -207,4 +219,5 @@
             app:layout_constraintTop_toTopOf="@+id/countryTextViewChildMyProfile" />
 -->
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.core.widget.NestedScrollView>

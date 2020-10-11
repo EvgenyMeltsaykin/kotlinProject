@@ -140,23 +140,22 @@ class RegistryActivity : AppCompatActivity() {
 
         val refCount = firebase.userRef
         refCount.keepSynced(true)
-
-
-        val weekday = listOf<String>("понедельник","вторник","среда","четверг","пятница","суббота")
-        weekday.forEach {
-            for(i in 0..6){
-                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/cabinet", "")
-                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/dateHomework", "")
-                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/homework", "")
-                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/number", i)
-                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/time", "")
-                firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/lessonName", "")
-            }
-        }
         firebase.getNextIdChild(object :Callback<Int>{
             override fun onComplete(value: Int) {
                 val user = Child(firebase.uidUser, username, email,id = value)
                 ref.setValue(user)
+                val weekday = listOf<String>("понедельник","вторник","среда","четверг","пятница","суббота")
+                weekday.forEach {
+                    for(i in 0..6){
+                        Log.d("Tag",firebase.uidUser)
+                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/cabinet", "")
+                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/dateHomework", "")
+                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/homework", "")
+                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/number", i)
+                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/time", "")
+                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/lessonName", "")
+                    }
+                }
             }
         })
     }

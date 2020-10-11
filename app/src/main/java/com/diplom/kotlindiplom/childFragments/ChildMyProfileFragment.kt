@@ -37,24 +37,51 @@ var cityId: Int? = -1
 var schoolId: Int? = -1
 
 class ChildMyProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Log.d("Tag","onAttach")
 
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
-
         return inflater.inflate(R.layout.fragment_child_my_profile, container, false)
     }
 
+    private fun hideView(){
+        usernameTextInputChildMyProfile?.isVisible = false
+        emailTextInputChildMyProfile?.isVisible = false
+        pointTextViewChildMyProfile?.isVisible = false
+        cityAutoCompleteTextViewChildMyProfile?.isVisible = false
+        educationalInstitutionAutoCompleteTextViewChildMyProfile?.isVisible = false
+        idTextViewChildMyProfile?.isVisible = false
+        balanceTextviewChildMyProfile?.isVisible = false
+        childMyProfileProgressBar?.isVisible = true
+    }
+    private fun showView(){
+        usernameTextInputChildMyProfile?.isVisible = true
+        emailTextInputChildMyProfile?.isVisible = true
+        pointTextViewChildMyProfile?.isVisible = true
+        cityAutoCompleteTextViewChildMyProfile?.isVisible = true
+        educationalInstitutionAutoCompleteTextViewChildMyProfile?.isVisible = true
+        idTextViewChildMyProfile?.isVisible = true
+        balanceTextviewChildMyProfile?.isVisible = true
+        childMyProfileProgressBar?.isVisible = false
+    }
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        hideView()
+        loadInformationFromFirebase(object :Callback<Boolean>{
+            override fun onComplete(value: Boolean) {
+                showView()
+            }
+        })
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
+        Log.d("Tag","onCreated")
         activity?.title = "Мой профиль"
-        loadInformationFromFirebase()
         usernameTextInputChildMyProfile?.editText?.doAfterTextChanged {
             saveChangeButtonChildMyProfile?.isVisible = true
         }
@@ -143,7 +170,7 @@ class ChildMyProfileFragment : Fragment() {
         }
     }
 
-    private fun loadInformationFromFirebase() {
+    private fun loadInformationFromFirebase(callback: Callback<Boolean>) {
         firebase.getChild(firebase.uidUser, object : Callback<Child> {
             override fun onComplete(value: Child) {
                 val header = requireActivity().navView.getHeaderView(0);
@@ -158,6 +185,7 @@ class ChildMyProfileFragment : Fragment() {
                 schoolId = value.educationalInstitutionId.toString().toInt()
                 idTextViewChildMyProfile?.text = "id: " + value.id;
                 saveChangeButtonChildMyProfile?.isVisible = false
+                callback.onComplete(true)
             }
         })
     }

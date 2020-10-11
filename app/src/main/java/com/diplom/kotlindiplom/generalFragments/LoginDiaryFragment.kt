@@ -119,6 +119,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     }
                 }
             } else {
+
                 showButtons()
             }
         }
@@ -133,6 +134,8 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
         enterDiaryButton?.isVisible = true
         staticMessageTextView?.isVisible = true
         writeMailButton?.isVisible = true
+        loginDiaryTextInput?.editText?.isEnabled = true
+        passwordDiaryTextInput?.editText?.isEnabled = true
     }
     private fun hideButtons(){
         staticMessageTextView?.isVisible = false
@@ -140,6 +143,8 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
         enterDiaryButton?.isVisible = false
         staticMessageTextView?.isVisible = false
         writeMailButton?.isVisible = false
+        loginDiaryTextInput?.editText?.isEnabled = false
+        passwordDiaryTextInput?.editText?.isEnabled = false
     }
     private fun validateLogin(login:String, password:String):Boolean{
         var fl = true
