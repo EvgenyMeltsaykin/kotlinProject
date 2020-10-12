@@ -275,7 +275,6 @@ class Elschool {
                                         GlobalScope.launch(Dispatchers.IO) {
                                             setSeeMarks(scheduleHtml,cookies)
                                         }
-
                                     }
                                 }
                             })

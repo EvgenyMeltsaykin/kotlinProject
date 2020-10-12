@@ -50,6 +50,10 @@
             android:icon="@drawable/ic_feedback"
             android:title="Обратная связь" />
         <item
+            android:id="@+id/settingsFragment"
+            android:icon="@drawable/ic_settings"
+            android:title="Настройки" />
+        <item
             android:id="@+id/exitApplication"
             android:icon="@drawable/ic_exit"
             android:title="Выйти" />

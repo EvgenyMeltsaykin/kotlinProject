@@ -3,16 +3,37 @@ package com.diplom.kotlindiplom.models
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
+import com.google.android.material.navigation.NavigationView
 
 class FunctionsUI {
     private val NOTIFY_ID = 101
     private val CHANNEL_ID = "Task channel"
+    val APP_PREFERENCES_MODE = "onlyDiary"
+
+
+    fun changeMode(activity: Activity){
+        val prefs:SharedPreferences = activity.getSharedPreferences("settings",Context.MODE_PRIVATE)
+        if(prefs.contains(APP_PREFERENCES_MODE)){
+            val onlyDiary = prefs.getBoolean(APP_PREFERENCES_MODE,false)
+            val navigationView: NavigationView = activity.findViewById(R.id.navView)
+            val menuNavigationView = navigationView.menu
+            menuNavigationView.findItem(R.id.childTasksFragment)?.isVisible = !onlyDiary
+            menuNavigationView.findItem(R.id.listAwardsFragment)?.isVisible = !onlyDiary
+            menuNavigationView.findItem(R.id.parentTasksFragment)?.isVisible = !onlyDiary
+            menuNavigationView.findItem(R.id.listAwardsFragment)?.isVisible = !onlyDiary
+            menuNavigationView.findItem(R.id.parentNodeChildrenFragment)?.isVisible = !onlyDiary
+            activity.invalidateOptionsMenu()
+        }
+    }
 
     fun createNotificationChannel(context:Context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){

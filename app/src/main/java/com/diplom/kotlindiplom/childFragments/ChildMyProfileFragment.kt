@@ -2,6 +2,7 @@ package com.diplom.kotlindiplom.childFragments
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +18,7 @@ import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.FunctionUiSingleton.functionsUI
 import com.diplom.kotlindiplom.MainActivity.Network.network
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.*
@@ -35,12 +37,15 @@ private const val ARG_PARAM2 = "param2"
 
 var cityId: Int? = -1
 var schoolId: Int? = -1
-
+private lateinit var prefs:SharedPreferences
+private var onlyDiary = false
 class ChildMyProfileFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.d("Tag","onAttach")
-
+        prefs = requireActivity().getSharedPreferences("settings",Context.MODE_PRIVATE)
+        if(prefs.contains(functionsUI.APP_PREFERENCES_MODE)){
+            onlyDiary = prefs.getBoolean(functionsUI.APP_PREFERENCES_MODE,false)
+        }
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,9 +56,10 @@ class ChildMyProfileFragment : Fragment() {
     }
 
     private fun hideView(){
+        pointTextViewChildMyProfile?.isVisible = false
+
         usernameTextInputChildMyProfile?.isVisible = false
         emailTextInputChildMyProfile?.isVisible = false
-        pointTextViewChildMyProfile?.isVisible = false
         cityAutoCompleteTextViewChildMyProfile?.isVisible = false
         educationalInstitutionAutoCompleteTextViewChildMyProfile?.isVisible = false
         idTextViewChildMyProfile?.isVisible = false
@@ -61,13 +67,15 @@ class ChildMyProfileFragment : Fragment() {
         childMyProfileProgressBar?.isVisible = true
     }
     private fun showView(){
+        pointTextViewChildMyProfile?.isVisible = !onlyDiary
+        balanceTextviewChildMyProfile?.isVisible = !onlyDiary
+
         usernameTextInputChildMyProfile?.isVisible = true
         emailTextInputChildMyProfile?.isVisible = true
-        pointTextViewChildMyProfile?.isVisible = true
+
         cityAutoCompleteTextViewChildMyProfile?.isVisible = true
         educationalInstitutionAutoCompleteTextViewChildMyProfile?.isVisible = true
         idTextViewChildMyProfile?.isVisible = true
-        balanceTextviewChildMyProfile?.isVisible = true
         childMyProfileProgressBar?.isVisible = false
     }
     @RequiresApi(Build.VERSION_CODES.M)
@@ -80,7 +88,6 @@ class ChildMyProfileFragment : Fragment() {
         })
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
-        Log.d("Tag","onCreated")
         activity?.title = "Мой профиль"
         usernameTextInputChildMyProfile?.editText?.doAfterTextChanged {
             saveChangeButtonChildMyProfile?.isVisible = true

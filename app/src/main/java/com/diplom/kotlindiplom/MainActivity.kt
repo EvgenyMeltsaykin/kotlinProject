@@ -1,7 +1,9 @@
 package com.diplom.kotlindiplom
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -41,12 +43,17 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     private lateinit var navController: NavController
     private lateinit var navigationView: NavigationView
     private lateinit var menuNavigationView: Menu
+    private var onlyDiary = false
+    lateinit var prefs:SharedPreferences
     private var backPressed: Long = 0
     private var roleUser = ""
     override fun getRoleUser(): String {
         return intent.getStringExtra("role").toString()
     }
 
+    object FunctionUiSingleton{
+        val functionsUI = FunctionsUI()
+    }
     object FirebaseSingleton {
         var  firebase = FunctionsFirebase()
         fun newInstance(){
@@ -63,6 +70,10 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         roleUser = intent.getStringExtra("role").toString()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        prefs = getSharedPreferences("settings",Context.MODE_PRIVATE)
+        if (prefs.contains(FunctionUiSingleton.functionsUI.APP_PREFERENCES_MODE)){
+            onlyDiary = prefs.getBoolean(FunctionUiSingleton.functionsUI.APP_PREFERENCES_MODE,false)
+        }
         FirebaseSingleton.newInstance()
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navFragment) as NavHostFragment
@@ -388,14 +399,21 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         if (roleUser == "child") {
             val item = menu?.findItem(R.id.menuPointsChild)
-            val firebase = FunctionsFirebase()
-            firebase.getPointChild(
-                firebase.uidUser,
-                object : Callback<String> {
-                    override fun onComplete(value: String) {
-                        item?.title = value
-                    }
-                })
+            if (prefs.contains(FunctionUiSingleton.functionsUI.APP_PREFERENCES_MODE)) {
+                val onlyDiary = prefs.getBoolean(FunctionUiSingleton.functionsUI.APP_PREFERENCES_MODE, false)
+                item?.isVisible = !onlyDiary
+            }
+            if (item?.isVisible!!){
+                val firebase = FunctionsFirebase()
+                firebase.getPointChild(
+                    firebase.uidUser,
+                    object : Callback<String> {
+                        override fun onComplete(value: String) {
+                            item.title = value
+                        }
+                    })
+            }
+
         }
         if (navController.currentDestination?.id == R.id.listAwardsFragment) {
             val item = menu?.findItem(R.id.updateInformation)
@@ -470,6 +488,10 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             }
             R.id.parentNodeChildrenFragment -> {
                 navController.navigate(R.id.action_parentNodeChildrenFragment_to_loginDiaryFragment)
+                return
+            }
+            R.id.settingsFragment->{
+                moveFragment(R.id.action_settingsFragment_to_mainFragment,R.id.action_settingsFragment_to_loginDiaryFragment)
                 return
             }
             /*R.id.mailFragment -> {
@@ -556,6 +578,9 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             firebase.removeAllListener()
             return@setOnMenuItemClickListener true
         }
+        //Настройка отображение параметров
+        FunctionUiSingleton.functionsUI.changeMode(this)
+
         drawer.addDrawerListener(toggle)
         toggle.syncState()
         /*if (role == "child"){
