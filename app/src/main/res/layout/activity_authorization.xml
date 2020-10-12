@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".RegistryActivity">
+    tools:context=".AuthorizationActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/usernameTextInputRegistry"
@@ -84,36 +84,21 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-
     <Button
         android:id="@+id/registryButtonRegistry"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:background="@drawable/simple_button"
-        android:textColor="@color/colorButtonText"
         android:text="Зарегистрироваться"
+        android:textColor="@color/colorButtonText"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordTextInputRegistry" />
-
-    <TextView
-        android:id="@+id/alreadyRegistryTextViewRegistry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Уже зарегистрированы?"
-        android:textColor="@color/colorText"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="@+id/registryButtonRegistry"
-        app:layout_constraintStart_toStartOf="@+id/registryButtonRegistry"
-        app:layout_constraintTop_toBottomOf="@+id/registryButtonRegistry" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/myToolbar"
@@ -132,8 +117,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:text="Регистрация"
+        android:text="Авторизация"
         android:textColor="@color/colorButtonText"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/myToolbar"
@@ -152,4 +136,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordTextInputRegistry" />
+
+    <Button
+        android:id="@+id/loginButtonRegistry"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/simple_button"
+        android:text="Войти"
+        android:textColor="@color/colorButtonText"
+        app:layout_constraintEnd_toEndOf="@+id/registryButtonRegistry"
+        app:layout_constraintStart_toStartOf="@+id/registryButtonRegistry"
+        app:layout_constraintTop_toBottomOf="@+id/registryButtonRegistry" />
 </androidx.constraintlayout.widget.ConstraintLayout>

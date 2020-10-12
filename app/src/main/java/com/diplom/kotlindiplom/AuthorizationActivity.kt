@@ -11,10 +11,10 @@ import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Parent
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_registry.*
+import kotlinx.android.synthetic.main.activity_authorization.*
 
 
-class RegistryActivity : AppCompatActivity() {
+class AuthorizationActivity : AppCompatActivity() {
 
     companion object {
         const val TAG = "RegistryActivity"
@@ -22,19 +22,16 @@ class RegistryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_registry)
+        setContentView(R.layout.activity_authorization)
         registryProgressBar?.isVisible = false
-        alreadyRegistryTextViewRegistry?.setOnClickListener {
-            val parentOrNot = intent.getBooleanExtra("parentOrNot", false)
-            intent = Intent(this, LoginActivity::class.java)
-            intent.putExtra("parentOrNot", parentOrNot)
-            startActivity(intent)
-        }
         registryButtonRegistry?.setOnClickListener {
-            registryButtonRegistry?.isVisible = false
-            alreadyRegistryTextViewRegistry?.isVisible = false
-            registryProgressBar?.isVisible = true
+            hideButtons()
             performRegistry()
+        }
+
+        loginButtonRegistry?.setOnClickListener {
+            hideButtons()
+            loginApplication()
         }
         usernameTextInputRegistry?.editText?.doAfterTextChanged {
             usernameTextInputRegistry?.error = null
@@ -46,7 +43,66 @@ class RegistryActivity : AppCompatActivity() {
             passwordTextInputRegistry?.error = null
         }
     }
+    private fun validateLogin(email:String,password:String):Boolean{
+        var fl = true
+        if (email.isEmpty()){
+            emailTextInputRegistry?.error = resources.getString(R.string.messageEmptyField)
+            fl = false
+        }
+        if (password.isEmpty()){
+            passwordTextInputRegistry?.error = resources.getString(R.string.messageEmptyField)
+            fl = false
+        }
+        return fl
+    }
+    private fun loginApplication(){
+        val email = emailTextInputRegistry?.editText?.text.toString()
+        val password = passwordTextInputRegistry?.editText?.text.toString()
+        if(!validateLogin(email, password)){
+            showButtons()
+            return
+        }
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
+            .addOnCompleteListener {
+                if(!it.isSuccessful){
+                    return@addOnCompleteListener
+                }
+                val user = FirebaseAuth.getInstance().currentUser
+                if (user!!.isEmailVerified){
+                    val firebase = FunctionsFirebase()
+                    firebase.getFieldUserDatabase(firebase.uidUser,"role",object :Callback<String>{
+                        override fun onComplete(value: String) {
+                            Toast.makeText(this@AuthorizationActivity,"Вход выполнен успешно!", Toast.LENGTH_SHORT).show()
+                            intent = Intent(this@AuthorizationActivity, MainActivity::class.java)
+                            intent.putExtra("role",value)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            startActivity(intent)
+                        }
+                    })
+                }else{
+                    Toast.makeText(applicationContext,"Подтвердите электронную почту",Toast.LENGTH_LONG).show()
+                    FirebaseAuth.getInstance().signOut()
+                    showButtons()
+                }
 
+
+            }
+            .addOnFailureListener{
+                showButtons()
+                Toast.makeText(this,"Ошибка при входе: ${it.message}",Toast.LENGTH_SHORT).show()
+            }
+    }
+    private fun showButtons(){
+        registryButtonRegistry?.isVisible = true
+        loginButtonRegistry?.isVisible = true
+        registryProgressBar?.isVisible = false
+    }
+
+    private fun hideButtons(){
+        registryButtonRegistry?.isVisible = false
+        loginButtonRegistry?.isVisible = false
+        registryProgressBar?.isVisible = true
+    }
     private fun validateRegistry(username:String, email:String,password:String):Boolean{
         var fl = true
         if (username.isEmpty()){
@@ -72,9 +128,7 @@ class RegistryActivity : AppCompatActivity() {
 
 
         if (!validateRegistry(username,email,password)){
-            registryButtonRegistry?.isVisible = true
-            alreadyRegistryTextViewRegistry?.isVisible = true
-            registryProgressBar?.isVisible = false
+            showButtons()
             return
         }
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
@@ -96,9 +150,7 @@ class RegistryActivity : AppCompatActivity() {
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Ошибка регистрации: ${it.message}", Toast.LENGTH_LONG).show()
-                registryButtonRegistry?.isVisible = true
-                alreadyRegistryTextViewRegistry?.isVisible = true
-                registryProgressBar.isVisible = false
+                showButtons()
             }
 
     }
@@ -115,7 +167,7 @@ class RegistryActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                     FirebaseAuth.getInstance().signOut()
-                    val intent = Intent(this@RegistryActivity, ChooseActivity::class.java)
+                    val intent = Intent(this@AuthorizationActivity, ChooseActivity::class.java)
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
