@@ -60,7 +60,7 @@ class ParentAllTasksFragment : Fragment() {
         taskEmptyTextViewParent?.isVisible = false
         val adapter = GroupAdapter<ViewHolder>()
         val firebase = FunctionsFirebase()
-        firebase.getTasksParentUid(firebase.uidUser,status,object: Callback<List<Task>>{
+        firebase.getTasksParentUid(firebase.userUid,status,object: Callback<List<Task>>{
             override fun onComplete(value: List<Task>) {
                 if (value.isEmpty()){
                     taskEmptyTextViewParent?.isVisible = true

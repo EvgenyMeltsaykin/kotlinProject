@@ -1,6 +1,5 @@
 package com.diplom.kotlindiplom.childFragments
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -54,7 +53,7 @@ class ChildTasksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().invalidateOptionsMenu()
         activity?.title = "Задания"
-        firebase.getFieldUserDatabase(firebase.uidUser,"parentUid",object :Callback<String>{
+        firebase.getFieldUserDatabase(firebase.userUid,"parentUid",object :Callback<String>{
             override fun onComplete(value: String) {
                 childTasksProgressBar?.isVisible = false
                 if (value.isEmpty()){

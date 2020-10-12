@@ -1,12 +1,9 @@
 package com.diplom.kotlindiplom.childFragments
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -14,9 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.Callback
-import com.diplom.kotlindiplom.MainActivity
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.MainActivity.FunctionUiSingleton.functionsUI
 import com.diplom.kotlindiplom.MainActivity.Network.network
@@ -24,7 +19,6 @@ import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.*
 import com.diplom.kotlindiplom.models.apiResponse.cities.City
 import com.diplom.kotlindiplom.models.apiResponse.schoolClass.SchoolClass
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_child_my_profile.*
 //import kotlinx.android.synthetic.main.fragment_child_my_profile.*
@@ -178,7 +172,7 @@ class ChildMyProfileFragment : Fragment() {
     }
 
     private fun loadInformationFromFirebase(callback: Callback<Boolean>) {
-        firebase.getChild(firebase.uidUser, object : Callback<Child> {
+        firebase.getChild(firebase.userUid, object : Callback<Child> {
             override fun onComplete(value: Child) {
                 val header = requireActivity().navView.getHeaderView(0);
                 val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
@@ -239,12 +233,12 @@ class ChildMyProfileFragment : Fragment() {
         val header = requireActivity().navView.getHeaderView(0);
         val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         userNameHeader.text = username
-        firebase.setFieldUserDatabase(firebase.uidUser, "username", username)
-        firebase.setFieldUserDatabase(firebase.uidUser, "cityId", cityId)
-        firebase.setFieldUserDatabase(firebase.uidUser, "city", city)
-        firebase.setFieldUserDatabase(firebase.uidUser, "educationalInstitutionId", schoolId)
+        firebase.setFieldUserDatabase(firebase.userUid, "username", username)
+        firebase.setFieldUserDatabase(firebase.userUid, "cityId", cityId)
+        firebase.setFieldUserDatabase(firebase.userUid, "city", city)
+        firebase.setFieldUserDatabase(firebase.userUid, "educationalInstitutionId", schoolId)
         firebase.setFieldUserDatabase(
-            firebase.uidUser,
+            firebase.userUid,
             "educationalInstitution",
             educationalInstitution
         )

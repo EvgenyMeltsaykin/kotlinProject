@@ -1,9 +1,7 @@
 package com.diplom.kotlindiplom.generalFragments.scheduleFragments
 
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +14,6 @@ import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_weekday.*
 import java.text.DateFormat
 import java.time.LocalDate
@@ -147,10 +144,10 @@ class WeekdayFragment : Fragment() {
             refreshScheduleButton?.isVisible = false
         }
 
-        firebase.getFieldDiary(firebase.uidUser, "url", object : Callback<String> {
+        firebase.getFieldDiary(firebase.userUid, "url", object : Callback<String> {
             override fun onComplete(value: String) {
                 firebase.getFieldSchedule(
-                    firebase.uidUser,
+                    firebase.userUid,
                     "weekUpdate",
                     object : Callback<String> {
                         override fun onComplete(weekUpdate: String) {

@@ -14,7 +14,6 @@ import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_details_marks.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -57,7 +56,7 @@ class DetailsMarksFragment : Fragment() {
         lessonNameTextView?.isVisible = false
         middleMarkTextView?.isVisible = false
 
-        firebase.getFieldDiary(firebase.uidUser,"semestrName",object : Callback<String>{
+        firebase.getFieldDiary(firebase.userUid,"semestrName",object : Callback<String>{
             override fun onComplete(value: String) {
                 semestrNumberTextView?.text = "${value.capitalize()}: $semestrNumber"
             }

@@ -74,7 +74,7 @@ class ChooseChildMarkFragment : Fragment() {
         progressBar?.isVisible = true
         refreshButton?.isVisible = false
         val firebase = FunctionsFirebase()
-        firebase.getFieldDiary(firebase.uidUser,"url",object :Callback<String> {
+        firebase.getFieldDiary(firebase.userUid,"url",object :Callback<String> {
             override fun onComplete(value: String) {
                 when (value) {
                     diary.elschool.url -> {
@@ -126,7 +126,7 @@ class ChooseChildMarkFragment : Fragment() {
             val bundle = bundleOf()
             bundle.putString("id","${childDiaryItem.child.id}")
             bundle.putBoolean("finalGrades",finalGrades)
-            firebase.setFieldDiary(firebase.uidUser,"idChild",childDiaryItem.child.id)
+            firebase.setFieldDiary(firebase.userUid,"idChild",childDiaryItem.child.id)
             Navigation.findNavController(requireActivity(), R.id.navFragment).navigate(R.id.action_chooseChildMarkFragment_to_chooseSemestrElschoolFragment,bundle)
 
         }

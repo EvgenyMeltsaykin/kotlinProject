@@ -53,7 +53,7 @@ class ParentNodeChildrenFragment : Fragment() {
             firebase.sendRequestChild(childIdTextInputParentMyProfile?.editText?.text.toString(),requireContext())
         }
 
-        firebase.userRef.child(firebase.uidUser).addChildEventListener(object : ChildEventListener{
+        firebase.userRef.child(firebase.userUid).addChildEventListener(object : ChildEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -82,7 +82,7 @@ class ParentNodeChildrenFragment : Fragment() {
     }
     private fun updateRecyclerView(firebase:FunctionsFirebase,adapter:GroupAdapter<ViewHolder>){
         adapter.clear()
-        firebase.getChildrenByParentUid(firebase.uidUser,object : Callback<List<Child>>{
+        firebase.getChildrenByParentUid(firebase.userUid,object : Callback<List<Child>>{
             override fun onComplete(value: List<Child>) {
                 emptyChildTextView?.isVisible = value.isEmpty()
                 value.forEach {

@@ -2,7 +2,6 @@ package com.diplom.kotlindiplom.parentFragments
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
@@ -13,12 +12,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.diplom.kotlindiplom.ChooseActivity
 import com.diplom.kotlindiplom.Callback
-import com.diplom.kotlindiplom.MainActivity
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.MainActivity.Network.network
 import com.diplom.kotlindiplom.R
@@ -108,7 +105,7 @@ class ParentMyProfileFragment : Fragment() {
         }
     }
     private fun loadInformationFromFirebase() {
-        firebase.getParent(firebase.uidUser, object : Callback<Parent> {
+        firebase.getParent(firebase.userUid, object : Callback<Parent> {
             override fun onComplete(value: Parent) {
                 usernameTextInputParentMyProfile?.editText?.setText(value.username)
                 emailTextInputParentMyProfile?.editText?.setText(value.email)
@@ -129,7 +126,7 @@ class ParentMyProfileFragment : Fragment() {
                 ?.addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
                     if (emailTextInputParentMyProfile?.editText?.text != null) {
-                        firebase.setFieldUserDatabase(firebase.uidUser,"email",email)
+                        firebase.setFieldUserDatabase(firebase.userUid,"email",email)
                     }
                     Toast.makeText(
                         requireContext(),
@@ -151,9 +148,9 @@ class ParentMyProfileFragment : Fragment() {
                     ).show()
                 }
         }
-        firebase.setFieldUserDatabase(firebase.uidUser,"username",username)
-        firebase.setFieldUserDatabase(firebase.uidUser,"cityId",cityId)
-        firebase.setFieldUserDatabase(firebase.uidUser,"city",city)
+        firebase.setFieldUserDatabase(firebase.userUid,"username",username)
+        firebase.setFieldUserDatabase(firebase.userUid,"cityId",cityId)
+        firebase.setFieldUserDatabase(firebase.userUid,"city",city)
         val header = requireActivity().navView.getHeaderView(0);
         val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         userNameHeader.text = username

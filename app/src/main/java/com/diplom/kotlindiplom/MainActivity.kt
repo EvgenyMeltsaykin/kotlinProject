@@ -25,14 +25,12 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.childFragments.RequestParentFragment
-import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsApi
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.header.view.*
 
@@ -102,7 +100,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             drawer.closeDrawer(GravityCompat.START)
         }
         val uiFunctions = FunctionsUI()
-        val ref = firebase.userRef.child(firebase.uidUser)
+        val ref = firebase.userRef.child(firebase.userUid)
         ref.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
@@ -128,7 +126,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    firebase.setFieldUserDatabase(firebase.uidUser, "acceptAnswer", "-1")
+                    firebase.setFieldUserDatabase(firebase.userUid, "acceptAnswer", "-1")
                 }
             }
 
@@ -155,7 +153,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
-                if (task.parentUid == firebase.uidUser) {
+                if (task.parentUid == firebase.userUid) {
                     if (task.showNotification == 1 || task.status != 0) return
                     uiFunctions.createNotificationParent(
                         applicationContext,
@@ -184,7 +182,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val award = firebase.getAllFieldAward(snapshot)
-                if (award.parentUid == firebase.uidUser) {
+                if (award.parentUid == firebase.userUid) {
                     if (award.showNotification != 1) return
                     uiFunctions.createNotificationChildTakeAward(
                         applicationContext,
@@ -253,7 +251,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         }*/
         setupDrawerAndToolbar()
         val uiFunctions = FunctionsUI()
-        val requestRef = firebase.userRef.child(firebase.uidUser)
+        val requestRef = firebase.userRef.child(firebase.userUid)
         requestRef.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
@@ -298,7 +296,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
 
-                if (task.childUid == firebase.uidUser) {
+                if (task.childUid == firebase.userUid) {
                     if (task.showNotification == 2 && task.status == -1) {
                         uiFunctions.createNotificationChild(
                             applicationContext,
@@ -325,7 +323,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val task = firebase.getAllFieldsTask(p0)
                 firebase.getFieldUserDatabase(
-                    firebase.uidUser,
+                    firebase.userUid,
                     "parentUid",
                     object : Callback<String> {
                         override fun onComplete(value: String) {
@@ -374,6 +372,9 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             R.id.editScheduleDay -> {
                 navController.navigate(R.id.action_myScheduleDayFragment_to_editScheduleFragment)
             }
+            R.id.listFeedback->{
+                navController.navigate(R.id.action_mailFragment_to_listFeedbackFragment)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -383,7 +384,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         if (roleUser == "child") {
             val item = menu?.findItem(R.id.menuPointsChild)
             firebase.getPointChild(
-                firebase.uidUser,
+                firebase.userUid,
                 object : Callback<String> {
                     override fun onComplete(value: String) {
                         item?.title = value
@@ -406,7 +407,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             if (item?.isVisible!!){
                 val firebase = FunctionsFirebase()
                 firebase.getPointChild(
-                    firebase.uidUser,
+                    firebase.userUid,
                     object : Callback<String> {
                         override fun onComplete(value: String) {
                             item.title = value
@@ -425,6 +426,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         }
         if (navController.currentDestination?.id == R.id.myScheduleDayFragment) {
             val item = menu?.findItem(R.id.editScheduleDay)
+            item?.isVisible = true
+        }
+
+        if (navController.currentDestination?.id == R.id.mailFragment){
+            val item = menu?.findItem(R.id.listFeedback)
             item?.isVisible = true
         }
         return super.onPrepareOptionsMenu(menu)
@@ -561,7 +567,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         val firebase = FunctionsFirebase()
         //Загрузка фото и имени в боковое меню при запуске приложения
         firebase.getFieldUserDatabase(
-            firebase.uidUser,
+            firebase.userUid,
             "username",
             object : Callback<String> {
                 override fun onComplete(value: String) {

@@ -13,7 +13,6 @@ import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_detail_award.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -89,7 +88,7 @@ class DetailAwardFragment : Fragment() {
         takeButton?.setOnClickListener {
             if (takeButton?.text == "Забрать"){
                 firebase.getFieldUserDatabase(
-                    firebase.uidUser,
+                    firebase.userUid,
                     "point",
                     object : Callback<String> {
                         override fun onComplete(value: String) {
@@ -97,8 +96,8 @@ class DetailAwardFragment : Fragment() {
                                 Toast.makeText(requireContext(),"Успешно",Toast.LENGTH_SHORT).show()
                                 firebase.setFieldAward(awardId,"status","1")
                                 firebase.setFieldAward(awardId,"showNotification","1")
-                                firebase.setFieldAward(awardId,"childUid",firebase.uidUser)
-                                firebase.setFieldUserDatabase(firebase.uidUser,"point",value.toInt() - costAward.toInt())
+                                firebase.setFieldAward(awardId,"childUid",firebase.userUid)
+                                firebase.setFieldUserDatabase(firebase.userUid,"point",value.toInt() - costAward.toInt())
                                 Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_detailAwardFragment_to_listAwardsFragment)
                             }else{
                                 Toast.makeText(requireContext(),"У Вас не хватает баллов",Toast.LENGTH_SHORT).show()

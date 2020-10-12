@@ -10,9 +10,7 @@ import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_diary.*
-import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,7 +56,7 @@ class DiaryFragment : Fragment() {
         }
         activity?.title = "Электронный дневник"
         firebase.getFieldDiary(
-            firebase.uidUser,
+            firebase.userUid,
             "roleDiary",
             object : Callback<String> {
                 override fun onComplete(value: String) {
@@ -92,7 +90,7 @@ class DiaryFragment : Fragment() {
         loginDiaryTextView?.text = login
         diaryTextView?.text = urlDiary
         if (urlDiary.isEmpty()){
-            firebase.getFieldDiary(firebase.uidUser, "url", object : Callback<String> {
+            firebase.getFieldDiary(firebase.userUid, "url", object : Callback<String> {
                 override fun onComplete(value: String) {
                     diaryTextView?.text = value
                 }

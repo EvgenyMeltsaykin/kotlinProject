@@ -1,7 +1,6 @@
 package com.diplom.kotlindiplom.childFragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import androidx.fragment.app.DialogFragment
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.accept_parent.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -59,12 +57,12 @@ class RequestParentFragment : DialogFragment() {
         rejectButton?.setOnClickListener {
             dismiss()
             firebase.getFieldUserDatabase(
-                firebase.uidUser,
+                firebase.userUid,
                 "acceptUid",
                 object : Callback<String> {
                     override fun onComplete(value: String) {
                         firebase.setFieldUserDatabase(value, "acceptAnswer", "0")
-                        firebase.clearAcceptRequest(firebase.uidUser)
+                        firebase.clearAcceptRequest(firebase.userUid)
                     }
                 })
 
@@ -73,12 +71,12 @@ class RequestParentFragment : DialogFragment() {
         acceptButton?.setOnClickListener {
             dismiss()
             firebase.getFieldUserDatabase(
-                firebase.uidUser,
+                firebase.userUid,
                 "acceptUid",
                 object : Callback<String> {
                     override fun onComplete(parentUid: String) {
                         firebase.setFieldUserDatabase(
-                            firebase.uidUser,
+                            firebase.userUid,
                             "parentUid",
                             parentUid
                         )
@@ -87,7 +85,7 @@ class RequestParentFragment : DialogFragment() {
                             "acceptAnswer",
                             "1"
                         )
-                        firebase.clearAcceptRequest(firebase.uidUser)
+                        firebase.clearAcceptRequest(firebase.userUid)
                     }
                 })
 

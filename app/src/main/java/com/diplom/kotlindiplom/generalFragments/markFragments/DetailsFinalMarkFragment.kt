@@ -58,7 +58,7 @@ class DetailsFinalMarkFragment : Fragment() {
         lessonNameTextView?.text = "Предмет: $lessonName"
         yearMarkTextView?.text = "Годовая оценка: $yearMark"
         val detailMark = mutableListOf<String>()
-        firebase.getFieldDiary(firebase.uidUser,"semestrName",object :Callback<String>{
+        firebase.getFieldDiary(firebase.userUid,"semestrName",object :Callback<String>{
             override fun onComplete(semestrName: String) {
                 firebase.getMarksLessonSemester(lessonName!!,object :Callback<List<Int>>{
                     override fun onComplete(value: List<Int>) {

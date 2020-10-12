@@ -33,7 +33,7 @@ class SplashActivity : AppCompatActivity() {
                 val firebase = FunctionsFirebase()
                 Log.d("Tag", "begin")
                 firebase.updateSchedule()
-                firebase.getFieldUserDatabase(firebase.uidUser, "role", object : Callback<String> {
+                firebase.getFieldUserDatabase(firebase.userUid, "role", object : Callback<String> {
                     override fun onComplete(value: String) {
                         Handler(Looper.getMainLooper()).postDelayed({
                             goToMainActivity(value)

@@ -15,10 +15,8 @@ import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_choose_semestr.*
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -70,7 +68,7 @@ class ChooseSemestrElschoolFragment : Fragment() {
         })
 
         firebase.getFieldDiary(
-            firebase.uidUser,
+            firebase.userUid,
             "semestrName",
             object : Callback<String> {
                 override fun onComplete(value: String) {
@@ -123,10 +121,10 @@ class ChooseSemestrElschoolFragment : Fragment() {
             thirdSemestrButton?.isVisible = true
             yearsMarksButton?.isVisible = true
         }
-        firebase.getFieldDiary(firebase.uidUser, "url", object : Callback<String> {
+        firebase.getFieldDiary(firebase.userUid, "url", object : Callback<String> {
             override fun onComplete(url: String) {
                 firebase.getFieldDiary(
-                    firebase.uidUser,
+                    firebase.userUid,
                     "idChild",
                     object : Callback<String> {
                         @RequiresApi(Build.VERSION_CODES.O)

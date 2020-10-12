@@ -35,28 +35,28 @@ class Elschool {
     val url = "elschool.ru"
     fun createDiary() {
         val firebase = FunctionsFirebase()
-        firebase.setFieldDiary(firebase.uidUser, "login", "")
-        firebase.setFieldDiary(firebase.uidUser, "semestrName", "триместр")
-        firebase.setFieldDiary(firebase.uidUser, "password", "")
-        firebase.setFieldDiary(firebase.uidUser, "url", "")
-        firebase.setFieldDiary(firebase.uidUser, "marks/dateUpdate", "")
-        firebase.setFieldDiary(firebase.uidUser, "schedule/weekUpdate", 0)
+        firebase.setFieldDiary(firebase.userUid, "login", "")
+        firebase.setFieldDiary(firebase.userUid, "semestrName", "триместр")
+        firebase.setFieldDiary(firebase.userUid, "password", "")
+        firebase.setFieldDiary(firebase.userUid, "url", "")
+        firebase.setFieldDiary(firebase.userUid, "marks/dateUpdate", "")
+        firebase.setFieldDiary(firebase.userUid, "schedule/weekUpdate", 0)
     }
 
     fun deleteDiary() {
         val firebase = FunctionsFirebase()
 
-        firebase.setFieldDiary(firebase.uidUser, "semestrName", "")
-        firebase.setFieldDiary(firebase.uidUser, "idChild", "")
-        firebase.setFieldDiary(firebase.uidUser, "roleDiary", "")
-        firebase.setFieldDiary(firebase.uidUser, "cookie", "")
-        firebase.setFieldDiary(firebase.uidUser, "login", "")
-        firebase.setFieldDiary(firebase.uidUser, "password", "")
-        firebase.setFieldDiary(firebase.uidUser, "url", "")
-        firebase.setFieldDiary(firebase.uidUser, "schedule", "")
-        firebase.setFieldDiary(firebase.uidUser, "marks", "")
-        firebase.setFieldDiary(firebase.uidUser, "marks/dateUpdate", "")
-        firebase.setFieldDiary(firebase.uidUser, "schedule/weekUpdate", 0)
+        firebase.setFieldDiary(firebase.userUid, "semestrName", "")
+        firebase.setFieldDiary(firebase.userUid, "idChild", "")
+        firebase.setFieldDiary(firebase.userUid, "roleDiary", "")
+        firebase.setFieldDiary(firebase.userUid, "cookie", "")
+        firebase.setFieldDiary(firebase.userUid, "login", "")
+        firebase.setFieldDiary(firebase.userUid, "password", "")
+        firebase.setFieldDiary(firebase.userUid, "url", "")
+        firebase.setFieldDiary(firebase.userUid, "schedule", "")
+        firebase.setFieldDiary(firebase.userUid, "marks", "")
+        firebase.setFieldDiary(firebase.userUid, "marks/dateUpdate", "")
+        firebase.setFieldDiary(firebase.userUid, "schedule/weekUpdate", 0)
         firebase.diaryRef.child("children").removeValue()
     }
     private fun getRoleFromDiary(document: org.jsoup.nodes.Document){
@@ -67,10 +67,10 @@ class Elschool {
         val firebase = FunctionsFirebase()
 
         if (role.decapitalize(Locale.ROOT) == "учащийся"){
-            firebase.setFieldDiary(firebase.uidUser,"roleDiary","child")
+            firebase.setFieldDiary(firebase.userUid,"roleDiary","child")
         }
         if (role.decapitalize(Locale.ROOT) == "родитель") {
-            firebase.setFieldDiary(firebase.uidUser,"roleDiary","parent")
+            firebase.setFieldDiary(firebase.userUid,"roleDiary","parent")
         }
     }
     fun login(login: String, password: String): Boolean {
@@ -92,10 +92,10 @@ class Elschool {
                 val id = parseDoc.text().substringAfter("ID ").substringBefore(" ")
                 val firebase = FunctionsFirebase()
                 GlobalScope.launch(Dispatchers.IO) {
-                    firebase.setFieldDiary(firebase.uidUser, "idChild", id)
-                    firebase.setFieldDiary(firebase.uidUser,"cookie","")
+                    firebase.setFieldDiary(firebase.userUid, "idChild", id)
+                    firebase.setFieldDiary(firebase.userUid,"cookie","")
                     firebase.setFieldDiary(
-                        firebase.uidUser,
+                        firebase.userUid,
                         "cookie",
                         document.cookies()[keyCookie].toString()
                     )
@@ -112,7 +112,7 @@ class Elschool {
 
     fun deleteSchedule() {
         val firebase = FunctionsFirebase()
-                val ref = firebase.userRef.child(firebase.uidUser)
+                val ref = firebase.userRef.child(firebase.userUid)
                     .child("diary").child("schedule")
                 ref.child("понедельник").removeValue()
                 ref.child("вторник").removeValue()
@@ -160,7 +160,7 @@ class Elschool {
     ) {
         val firebase = FunctionsFirebase()
         val schedule = mutableMapOf<String, List<Lesson>>()
-        firebase.getFieldDiary(firebase.uidUser, "cookie",
+        firebase.getFieldDiary(firebase.userUid, "cookie",
             object : Callback<String> {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(value: String) {
@@ -232,44 +232,44 @@ class Elschool {
                                     list.forEach {
                                         i++
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser,
+                                            firebase.userUid,
                                             "diary/schedule/$day/lesson$i/lessonName",
                                             it.name
                                         )
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser,
+                                            firebase.userUid,
                                             "diary/schedule/$day/lesson$i/time",
                                             it.time
                                         )
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser,
+                                            firebase.userUid,
                                             "diary/schedule/$day/lesson$i/cabinet",
                                             it.cabinet
                                         )
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser,
+                                            firebase.userUid,
                                             "diary/schedule/$day/lesson$i/form",
                                             it.form
                                         )
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser,
+                                            firebase.userUid,
                                             "diary/schedule/$day/lesson$i/homework",
                                             it.homework
                                         )
                                         firebase.setFieldUserDatabase(
-                                            firebase.uidUser,
+                                            firebase.userUid,
                                             "diary/schedule/$day/lesson$i/mark",
                                             it.mark
                                         )
                                     }
                                     firebase.setFieldUserDatabase(
-                                        firebase.uidUser,
+                                        firebase.userUid,
                                         "diary/schedule/$day/date",
                                         date
                                     )
                                 }
                             }
-                            firebase.getFieldDiary(firebase.uidUser,"roleDiary",object :Callback<String>{
+                            firebase.getFieldDiary(firebase.userUid,"roleDiary",object :Callback<String>{
                                 override fun onComplete(value: String) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && value == "parent") {
                                         GlobalScope.launch(Dispatchers.IO) {
@@ -291,7 +291,7 @@ class Elschool {
 
     fun getChildrenFromFirebase(firebaseCallback: Callback<List<ChildForElschool>>) {
         val firebase = FunctionsFirebase()
-        val ref = firebase.userRef.child(firebase.uidUser).child("diary").child("children")
+        val ref = firebase.userRef.child(firebase.userUid).child("diary").child("children")
         val children = mutableListOf<ChildForElschool>()
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -323,7 +323,7 @@ class Elschool {
     fun writeChildrenDiaryInFirebase(firebaseCallback: Callback<Boolean>) {
         val firebase = FunctionsFirebase()
         val children = mutableListOf<ChildForElschool>()
-        firebase.getFieldDiary(firebase.uidUser, "cookie",
+        firebase.getFieldDiary(firebase.userUid, "cookie",
             object : Callback<String> {
                 override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
@@ -348,17 +348,17 @@ class Elschool {
                                     children.add(childForElschool)
                                 }
                             }
-                            firebase.setFieldDiary(firebase.uidUser, "children", "")
+                            firebase.setFieldDiary(firebase.userUid, "children", "")
                             var i = 0
                             children.forEach {
                                 i++
                                 firebase.setFieldDiary(
-                                    firebase.uidUser,
+                                    firebase.userUid,
                                     "children/child$i/id",
                                     it.id
                                 )
                                 firebase.setFieldDiary(
-                                    firebase.uidUser,
+                                    firebase.userUid,
                                     "children/child$i/name",
                                     it.name
                                 )
@@ -449,9 +449,9 @@ class Elschool {
         firebaseCallback: Callback<Boolean>
     ) {
         val firebase = FunctionsFirebase()
-        firebase.setFieldDiary(firebase.uidUser, "marks", "")
+        firebase.setFieldDiary(firebase.userUid, "marks", "")
         GlobalScope.launch(Dispatchers.IO) {
-            firebase.getFieldDiary(firebase.uidUser, "cookie", object : Callback<String> {
+            firebase.getFieldDiary(firebase.userUid, "cookie", object : Callback<String> {
                 override fun onComplete(value: String) {
                     GlobalScope.launch(Dispatchers.IO) {
                         val cookies = hashMapOf<String, String>()
@@ -498,7 +498,7 @@ class Elschool {
                                         val gradesMark =
                                             it.select("td[class=gradesaa-marks]")
                                         firebase.setFieldDiary(
-                                            firebase.uidUser,
+                                            firebase.userUid,
                                             "marks/$lessonCount/lessonName",
                                             lessonName
                                         )
@@ -528,17 +528,17 @@ class Elschool {
                                                     val nowDate = Calendar.getInstance().time
                                                     val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
                                                     firebase.setFieldDiary(
-                                                        firebase.uidUser,
+                                                        firebase.userUid,
                                                         "marks/dateUpdate",
                                                         formatter
                                                     )
                                                     firebase.setFieldDiary(
-                                                        firebase.uidUser,
+                                                        firebase.userUid,
                                                         "marks/$lessonCount/semestr$semesterCount/mark$markCount/date",
                                                         date
                                                     )
                                                     firebase.setFieldDiary(
-                                                        firebase.uidUser,
+                                                        firebase.userUid,
                                                         "marks/$lessonCount/semestr$semesterCount/mark$markCount/value",
                                                         mark
                                                     )
@@ -551,7 +551,7 @@ class Elschool {
                                                 middleMark /= (markCountForMiddleMark)
                                             }
                                             firebase.setFieldDiary(
-                                                firebase.uidUser,
+                                                firebase.userUid,
                                                 "marks/$lessonCount/semestr$semesterCount/middleMark",
                                                 DoubleRounder.round(middleMark.toDouble(), 2)
                                             )
@@ -604,7 +604,7 @@ class Elschool {
                                     progressBar.isVisible = false
                                     showButtons()
                                 }
-                                val ref = firebase.userRef.child(firebase.uidUser).child("diary").child("marks")
+                                val ref = firebase.userRef.child(firebase.userUid).child("diary").child("marks")
                                 ref.addChildEventListener(object : ChildEventListener {
                                     override fun onChildAdded(
                                         p0: DataSnapshot,

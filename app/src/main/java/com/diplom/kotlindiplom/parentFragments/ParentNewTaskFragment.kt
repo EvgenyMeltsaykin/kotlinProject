@@ -10,7 +10,6 @@ import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import kotlinx.android.synthetic.main.fragment_parent_new_task.*
 import java.util.*
 
@@ -64,7 +63,7 @@ class ParentNewTaskFragment : Fragment() {
                 titleTaskEditTextParent?.text.toString(),
                 descriptionTaskEditTextParent?.text.toString(),
                 costTaskEditTextParent?.text.toString().toInt(),
-                firebase.uidUser.toString(),
+                firebase.userUid.toString(),
                 currentTime.toString()
             )
             navController.popBackStack()

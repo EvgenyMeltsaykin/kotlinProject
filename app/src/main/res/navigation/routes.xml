@@ -416,7 +416,7 @@
     </fragment>
     <fragment
         android:id="@+id/mailFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.MailFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.feedbackFragments.MailFragment"
         android:label="fragment_mail"
         tools:layout="@layout/fragment_mail" >
         <action
@@ -429,6 +429,13 @@
         <action
             android:id="@+id/action_mailFragment_to_loginDiaryFragment"
             app:destination="@id/loginDiaryFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_mailFragment_to_listFeedbackFragment"
+            app:destination="@id/listFeedbackFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
@@ -592,4 +599,22 @@
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
     </fragment>
+    <fragment
+        android:id="@+id/listFeedbackFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.feedbackFragments.ListFeedbackFragment"
+        android:label="fragment_list_feedback"
+        tools:layout="@layout/fragment_list_feedback" >
+        <action
+            android:id="@+id/action_listFeedbackFragment_to_feedbackDetailsFragment"
+            app:destination="@id/feedbackDetailsFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            app:popEnterAnim="@anim/from_right"
+            app:popExitAnim="@anim/to_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/feedbackDetailsFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.feedbackFragments.FeedbackDetailsFragment"
+        android:label="fragment_feedback_details"
+        tools:layout="@layout/fragment_feedback_details" />
 </navigation>

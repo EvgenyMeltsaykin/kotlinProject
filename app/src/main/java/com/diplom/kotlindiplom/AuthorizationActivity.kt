@@ -17,8 +17,10 @@ import kotlinx.android.synthetic.main.activity_authorization.*
 class AuthorizationActivity : AppCompatActivity() {
 
     companion object {
-        const val TAG = "RegistryActivity"
+        const val TAG = "AuthorizationActivity"
     }
+
+    private lateinit var firebase:FunctionsFirebase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,83 +45,108 @@ class AuthorizationActivity : AppCompatActivity() {
             passwordTextInputRegistry?.error = null
         }
     }
-    private fun validateLogin(email:String,password:String):Boolean{
+
+    private fun validateLogin(email: String, password: String): Boolean {
         var fl = true
-        if (email.isEmpty()){
+        if (email.isEmpty()) {
             emailTextInputRegistry?.error = resources.getString(R.string.messageEmptyField)
             fl = false
         }
-        if (password.isEmpty()){
+        if (password.isEmpty()) {
             passwordTextInputRegistry?.error = resources.getString(R.string.messageEmptyField)
             fl = false
         }
         return fl
     }
-    private fun loginApplication(){
+
+    private fun loginApplication() {
         val email = emailTextInputRegistry?.editText?.text.toString()
         val password = passwordTextInputRegistry?.editText?.text.toString()
-        if(!validateLogin(email, password)){
+        if (!validateLogin(email, password)) {
             showButtons()
             return
         }
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
-                if(!it.isSuccessful){
+                if (!it.isSuccessful) {
+                    showButtons()
                     return@addOnCompleteListener
                 }
                 val user = FirebaseAuth.getInstance().currentUser
-                if (user!!.isEmailVerified){
-                    val firebase = FunctionsFirebase()
-                    firebase.getFieldUserDatabase(firebase.uidUser,"role",object :Callback<String>{
-                        override fun onComplete(value: String) {
-                            Toast.makeText(this@AuthorizationActivity,"Вход выполнен успешно!", Toast.LENGTH_SHORT).show()
-                            intent = Intent(this@AuthorizationActivity, MainActivity::class.java)
-                            intent.putExtra("role",value)
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                            startActivity(intent)
-                        }
-                    })
-                }else{
-                    Toast.makeText(applicationContext,"Подтвердите электронную почту",Toast.LENGTH_LONG).show()
+                if (user!!.isEmailVerified) {
+                    firebase = FunctionsFirebase()
+                    firebase.getFieldUserDatabase(
+                        firebase.userUid,
+                        "role",
+                        object : Callback<String> {
+                            override fun onComplete(value: String) {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Вход выполнен успешно!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                intent =
+                                    Intent(applicationContext, MainActivity::class.java)
+                                intent.putExtra("role", value)
+                                intent.flags =
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                startActivity(intent)
+                            }
+                        })
+                } else {
+                    Toast.makeText(
+                        applicationContext,
+                        "Подтвердите электронную почту",
+                        Toast.LENGTH_LONG
+                    ).show()
                     FirebaseAuth.getInstance().signOut()
                     showButtons()
                 }
 
 
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 showButtons()
-                Toast.makeText(this,"Ошибка при входе: ${it.message}",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Ошибка при входе: ${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
-    private fun showButtons(){
+
+    private fun showButtons() {
+        usernameTextInputRegistry?.editText?.isEnabled = true
+        emailTextInputRegistry?.editText?.isEnabled = true
+        passwordTextInputRegistry?.editText?.isEnabled = true
         registryButtonRegistry?.isVisible = true
         loginButtonRegistry?.isVisible = true
         registryProgressBar?.isVisible = false
     }
 
-    private fun hideButtons(){
+    private fun hideButtons() {
+        usernameTextInputRegistry?.editText?.isEnabled = false
+        emailTextInputRegistry?.editText?.isEnabled = false
+        passwordTextInputRegistry?.editText?.isEnabled = false
         registryButtonRegistry?.isVisible = false
         loginButtonRegistry?.isVisible = false
         registryProgressBar?.isVisible = true
     }
-    private fun validateRegistry(username:String, email:String,password:String):Boolean{
+
+    private fun validateRegistry(username: String, email: String, password: String): Boolean {
         var fl = true
-        if (username.isEmpty()){
+        if (username.isEmpty()) {
             usernameTextInputRegistry?.error = resources.getString(R.string.messageEmptyField)
             fl = false
         }
-        if (email.isEmpty()){
+        if (email.isEmpty()) {
             emailTextInputRegistry?.error = resources.getString(R.string.messageEmptyField)
             fl = false
         }
-        if (password.isEmpty()){
+        if (password.isEmpty()) {
             passwordTextInputRegistry?.error = resources.getString(R.string.messageEmptyField)
             fl = false
         }
         return fl
 
     }
+
     private fun performRegistry() {
         val email = emailTextInputRegistry?.editText?.text.toString()
         val password = passwordTextInputRegistry?.editText?.text.toString()
@@ -127,7 +154,7 @@ class AuthorizationActivity : AppCompatActivity() {
         val parentOrNot = intent.getBooleanExtra("parentOrNot", false)
 
 
-        if (!validateRegistry(username,email,password)){
+        if (!validateRegistry(username, email, password)) {
             showButtons()
             return
         }
@@ -167,7 +194,7 @@ class AuthorizationActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                     FirebaseAuth.getInstance().signOut()
-                    val intent = Intent(this@AuthorizationActivity, ChooseActivity::class.java)
+                    val intent = Intent(applicationContext, ChooseActivity::class.java)
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
@@ -185,37 +212,71 @@ class AuthorizationActivity : AppCompatActivity() {
             }
     }
 
+    private fun setMySchedule(){
+        val weekday = listOf(
+            "понедельник",
+            "вторник",
+            "среда",
+            "четверг",
+            "пятница",
+            "суббота"
+        )
+        weekday.forEach {
+            for (i in 0..6) {
+                firebase.setFieldUserDatabase(
+                    firebase.userUid,
+                    "mySchedule/$it/$i/cabinet",
+                    ""
+                )
+                firebase.setFieldUserDatabase(
+                    firebase.userUid,
+                    "mySchedule/$it/$i/dateHomework",
+                    ""
+                )
+                firebase.setFieldUserDatabase(
+                    firebase.userUid,
+                    "mySchedule/$it/$i/homework",
+                    ""
+                )
+                firebase.setFieldUserDatabase(
+                    firebase.userUid,
+                    "mySchedule/$it/$i/number",
+                    i
+                )
+                firebase.setFieldUserDatabase(
+                    firebase.userUid,
+                    "mySchedule/$it/$i/time",
+                    ""
+                )
+                firebase.setFieldUserDatabase(
+                    firebase.userUid,
+                    "mySchedule/$it/$i/lessonName",
+                    ""
+                )
+            }
+        }
+    }
+
     private fun saveChildToFirebaseDatabase(username: String, email: String) {
-        val firebase = FunctionsFirebase()
-        val ref = firebase.userRef.child(firebase.uidUser)
-        //firebase.rolesRef.child("${firebase.uidUser}").setValue("child")
+        firebase = FunctionsFirebase()
+        val ref = firebase.userRef.child(firebase.userUid)
 
         val refCount = firebase.userRef
         refCount.keepSynced(true)
-        firebase.getNextIdChild(object :Callback<Int>{
+        firebase.getNextIdChild(object : Callback<Int> {
             override fun onComplete(value: Int) {
-                val user = Child(firebase.uidUser, username, email,id = value)
+                val user = Child(firebase.userUid, username, email, id = value)
                 ref.setValue(user)
-                val weekday = listOf<String>("понедельник","вторник","среда","четверг","пятница","суббота")
-                weekday.forEach {
-                    for(i in 0..6){
-                        Log.d("Tag",firebase.uidUser)
-                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/cabinet", "")
-                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/dateHomework", "")
-                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/homework", "")
-                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/number", i)
-                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/time", "")
-                        firebase.setFieldUserDatabase(firebase.uidUser, "mySchedule/$it/$i/lessonName", "")
-                    }
-                }
+                setMySchedule()
             }
         })
     }
+
     private fun saveParentToFirebaseDatabase(username: String, email: String) {
-        val firebase = FunctionsFirebase()
-        val ref = firebase.userRef.child(firebase.uidUser)
+        firebase = FunctionsFirebase()
+        val ref = firebase.userRef.child(firebase.userUid)
         //firebase.rolesRef.child("${firebase.uidUser}").setValue("parent")
-        val user = Parent(firebase.uidUser, username, email)
+        val user = Parent(firebase.userUid, username, email)
         ref.setValue(user)
     }
 }

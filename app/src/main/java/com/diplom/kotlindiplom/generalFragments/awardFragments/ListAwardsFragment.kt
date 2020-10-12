@@ -14,7 +14,6 @@ import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.Award
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.recyclerViewItems.AwardItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
@@ -65,7 +64,7 @@ class ListAwardsFragment : Fragment() {
     fun updateAwardList(){
         val adapter = GroupAdapter<ViewHolder>()
         if (role == "parent"){
-            firebase.getAwardOutFirebaseWithParentUid(role, firebase.uidUser,object :Callback<List<Award>>{
+            firebase.getAwardOutFirebaseWithParentUid(role, firebase.userUid,object :Callback<List<Award>>{
                 override fun onComplete(value: List<Award>) {
                     listAwardProgressBar?.isVisible = false
                     if (value.isEmpty()){
@@ -85,7 +84,7 @@ class ListAwardsFragment : Fragment() {
             })
         }
         if (role == "child"){
-            firebase.getFieldUserDatabase(firebase.uidUser,"parentUid",object :Callback<String>{
+            firebase.getFieldUserDatabase(firebase.userUid,"parentUid",object :Callback<String>{
                 override fun onComplete(value: String) {
                     adapter.clear()
                     if (value.isEmpty()){

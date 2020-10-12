@@ -77,7 +77,7 @@ class ChooseChildScheduleFragment : Fragment() {
         progressBar?.isVisible = true
         refreshButton?.isVisible = false
         val firebase = FunctionsFirebase()
-        firebase.getFieldDiary(firebase.uidUser, "url", object : Callback<String> {
+        firebase.getFieldDiary(firebase.userUid, "url", object : Callback<String> {
             override fun onComplete(value: String) {
                 when (value) {
                     diary.elschool.url -> {
@@ -136,7 +136,7 @@ class ChooseChildScheduleFragment : Fragment() {
             val firebase = FunctionsFirebase()
             bundle.putString("id", childDiaryItem.child.id)
             firebase.getFieldDiary(
-                firebase.uidUser,
+                firebase.userUid,
                 "idChild",
                 object : Callback<String> {
                     override fun onComplete(idChild: String) {
@@ -147,7 +147,7 @@ class ChooseChildScheduleFragment : Fragment() {
                             bundle.putBoolean("updateWithoutCheck", false)
                         }
                         firebase.setFieldDiary(
-                            firebase.uidUser,
+                            firebase.userUid,
                             "idChild",
                             childDiaryItem.child.id
                         )

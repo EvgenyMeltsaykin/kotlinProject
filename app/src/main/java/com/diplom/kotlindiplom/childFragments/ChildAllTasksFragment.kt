@@ -59,7 +59,7 @@ class ChildAllTasksFragment : Fragment() {
         if (title == "Выполненные") status = 1
         if (status != 1) {
             firebase.getFieldUserDatabase(
-                firebase.uidUser,
+                firebase.userUid,
                 "parentUid",
                 object : Callback<String> {
                     override fun onComplete(value: String) {
@@ -72,7 +72,7 @@ class ChildAllTasksFragment : Fragment() {
                     }
                 })
         }else{
-            firebase.getTasksChildUid(firebase.uidUser,status,object : Callback<List<Task>>{
+            firebase.getTasksChildUid(firebase.userUid,status,object : Callback<List<Task>>{
                 override fun onComplete(value: List<Task>) {
                     addTasksInRecyclerView(value)
                 }

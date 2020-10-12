@@ -5,11 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.google.android.material.navigation.NavigationView
@@ -72,7 +70,7 @@ class FunctionsUI {
     ) {
         val firebase = FunctionsFirebase()
         firebase.getFieldUserDatabase(
-            firebase.uidUser,
+            firebase.userUid,
             "parentUid",
             object : Callback<String> {
                 @RequiresApi(Build.VERSION_CODES.O)
@@ -106,7 +104,7 @@ class FunctionsUI {
         task: Task
     ) {
         val firebase = FunctionsFirebase()
-        if (task.parentUid != firebase.uidUser) return
+        if (task.parentUid != firebase.userUid) return
         createNotificationChannel(context)
 
         val intent = Intent(context, intentClass)
@@ -132,7 +130,7 @@ class FunctionsUI {
         award: Award
     ){
         val firebase = FunctionsFirebase()
-        if (award.parentUid != firebase.uidUser) return
+        if (award.parentUid != firebase.userUid) return
         createNotificationChannel(context)
         val intent = Intent(context, intentClass)
         intent.putExtra("role","parent")

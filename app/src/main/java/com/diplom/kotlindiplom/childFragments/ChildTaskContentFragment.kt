@@ -12,7 +12,6 @@ import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Task
 import kotlinx.android.synthetic.main.fragment_child_task_content.*
 
@@ -70,7 +69,7 @@ class ChildTaskContentFragment : Fragment() {
         sendTaskButtonChild?.setOnClickListener {
             firebase.setFieldDatabaseTask(taskId.toString(),"status",0)
             firebase.setFieldDatabaseTask(taskId.toString(),"showNotification",0)
-            firebase.setFieldDatabaseTask(taskId.toString(),"childUid",firebase.uidUser)
+            firebase.setFieldDatabaseTask(taskId.toString(),"childUid",firebase.userUid)
             Toast.makeText(requireContext(),"Задание отправлено на проверку", Toast.LENGTH_SHORT).show()
             navController.popBackStack()
             requireActivity().title = "Невыполненные"

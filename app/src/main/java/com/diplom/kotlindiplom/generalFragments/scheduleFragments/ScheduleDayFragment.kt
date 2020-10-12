@@ -62,14 +62,14 @@ class ScheduleDayFragment : Fragment() {
         val day = activity?.title.toString().substringBefore(" ")
         val date = activity?.title.toString().substringAfter(day)
         if (date.isEmpty()){
-            firebase.getFieldScheduleDay(firebase.uidUser,day.toLowerCase(),object : Callback<String>{
+            firebase.getFieldScheduleDay(firebase.userUid,day.toLowerCase(),object : Callback<String>{
                 override fun onComplete(value: String) {
                     activity?.title = "${activity?.title} $value"
                 }
             })
         }
         adapter.clear()
-        firebase.getScheduleDay(firebase.uidUser, day.toLowerCase(),object : Callback<List<Lesson>>{
+        firebase.getScheduleDay(firebase.userUid, day.toLowerCase(),object : Callback<List<Lesson>>{
             override fun onComplete(value: List<Lesson>) {
                 var fl = true
                 scheduleDayProgressBar?.isVisible = false

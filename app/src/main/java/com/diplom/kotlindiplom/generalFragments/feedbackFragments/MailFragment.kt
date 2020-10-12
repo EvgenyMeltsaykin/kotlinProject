@@ -1,6 +1,5 @@
-package com.diplom.kotlindiplom.generalFragments
+package com.diplom.kotlindiplom.generalFragments.feedbackFragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import kotlinx.android.synthetic.main.fragment_mail.*
 
@@ -27,6 +28,11 @@ class MailFragment : Fragment() {
     private var numberClass: String? = null
     private var subjectName: String? = null
     private var topic: String? = null
+    private val CODE_ADD_DIARY = 1
+    private val CODE_ADD_SCHOOLBOOK = 2
+    private val CODE_OTHER = 0
+    private var codeQuestion = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,20 +56,27 @@ class MailFragment : Fragment() {
         requireActivity().invalidateOptionsMenu()
         activity?.title = "Обратная связь"
         messageUserTextView?.isVisible = false
+
         if (topic == "Добавить учебник"){
             addSchoolBook()
+            codeQuestion = 2
         }
         if (topic == "Добавить дневник"){
             addDiary()
+            codeQuestion = 1
         }
         sendEmailButton?.setOnClickListener {
             if (contentMessageEditText?.text?.isEmpty()!! || topicMessageEditText?.text?.isEmpty()!!){
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
             }else{
-                val to = resources.getString(R.string.emailSupport)
+                //val to = resources.getString(R.string.emailSupport)
                 val topic = topicMessageEditText?.text.toString()
                 val message = contentMessageEditText?.text.toString()
-
+                firebase.addFeedback(codeQuestion,topic, message)
+                Toast.makeText(requireContext(),"Обращение успешно отправлено",Toast.LENGTH_SHORT).show()
+                topicMessageEditText?.setText("")
+                contentMessageEditText?.setText("")
+/*
                 val email = Intent(Intent.ACTION_SEND)
                 email.putExtra(Intent.EXTRA_EMAIL, arrayOf(to))
                 email.putExtra(Intent.EXTRA_SUBJECT, topic)
@@ -73,16 +86,16 @@ class MailFragment : Fragment() {
                 email.type = "message/rfc822"
 
                 startActivity(Intent.createChooser(email, "Выберите email клиент :"))
-
+*/
             }
 
         }
     }
-    fun addDiary(){
+    private fun addDiary(){
         topicMessageEditText?.setText(topic.toString())
         contentMessageEditText?.hint = "Введите электронный адрес или название электронного дневника"
     }
-    fun addSchoolBook(){
+    private fun addSchoolBook(){
         var name = ""
         when(subjectName){
             "computerScience" -> name = resources.getString(R.string.computerScience)

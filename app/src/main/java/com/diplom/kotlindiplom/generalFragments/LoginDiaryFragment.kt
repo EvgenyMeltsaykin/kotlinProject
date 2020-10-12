@@ -1,7 +1,6 @@
 package com.diplom.kotlindiplom.generalFragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,7 +58,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
         requireActivity().invalidateOptionsMenu()
         progressBar?.isVisible = true
         activity?.title = ""
-        firebase.getFieldDiary(firebase.uidUser,"login",object : Callback<String>{
+        firebase.getFieldDiary(firebase.userUid,"login",object : Callback<String>{
             override fun onComplete(value: String) {
                 if(value.isNotEmpty()){
                     if (!deletedDiary){
@@ -107,7 +106,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     } else {
                         firebase.createDiary(urlDiary)
                         firebase.setLoginAndPasswordDiary(login,password)
-                        firebase.setFieldDiary(firebase.uidUser, "url", urlDiary)
+                        firebase.setFieldDiary(firebase.userUid, "url", urlDiary)
                         firebase.updateSchedule()
                         val bundle = bundleOf()
                         bundle.putString("login",login)
