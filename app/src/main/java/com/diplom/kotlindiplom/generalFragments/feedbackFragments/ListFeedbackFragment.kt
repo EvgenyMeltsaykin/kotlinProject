@@ -48,21 +48,31 @@ class ListFeedbackFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list_feedback, container, false)
     }
-
+    val adapter = GroupAdapter<ViewHolder>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         requireActivity().invalidateOptionsMenu()
         requireActivity().title = "Список вопросов"
         super.onViewCreated(view, savedInstanceState)
-        val adapter = GroupAdapter<ViewHolder>()
+        listFeedbackRecyclerView?.adapter = adapter
         firebase.getListFeedback(object : Callback<List<Feedback>> {
             override fun onComplete(value: List<Feedback>) {
                 if (value.isEmpty()){
                     emptyFeedbackTextView?.isVisible  = true
                 }
-                value.forEach {
-                    adapter.add(FeedbackItem(it.topic,it.status,it.id))
+                adapter.clear()
+                val feedbackId = mutableListOf<String>()
+                var fl = true
+                value.forEach {feedback->
+                    feedbackId.forEach{
+                        if (it ==  feedback.id){
+                            fl = false
+                        }
+                    }
+                    if (fl){
+                        feedbackId.add(feedback.id)
+                        adapter.add(FeedbackItem(feedback.topic,feedback.status,feedback.id))
+                    }
                 }
-                listFeedbackRecyclerView?.adapter = adapter
             }
         })
         adapter.setOnItemClickListener { item, view ->

@@ -23,7 +23,7 @@
             android:background="@drawable/simple_edit_text"
             android:ems="10"
             android:hint="Тема"
-            android:inputType="textPersonName"
+            android:inputType="text"
             android:paddingLeft="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -438,10 +438,10 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         //Отключение клавиатуры
-        if (currentFocus != null) {
+        /*if (currentFocus != null) {
             val imn = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             imn.hideSoftInputFromWindow(window.decorView.windowToken, 0)
-        }
+        }*/
         return super.dispatchTouchEvent(ev)
     }
 

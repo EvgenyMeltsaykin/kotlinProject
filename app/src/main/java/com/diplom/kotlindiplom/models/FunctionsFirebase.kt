@@ -18,7 +18,9 @@ import com.diplom.kotlindiplom.diaries.Diary
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.fragment_choose_semestr.*
 import org.cryptonode.jncryptor.AES256JNCryptor
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 import kotlin.math.roundToInt
@@ -36,6 +38,13 @@ class FunctionsFirebase {
     val scheduleRef = diaryRef.child("schedule")
     val myScheduleRef = userRef.child(userUid).child("mySchedule")
     val feedbackRef = rootRef.child("feedback")
+    fun sendMessageFeedback(feedbackId:String, textMessage:String, author:String){
+        val nowDate = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
+        val messageFeedback = MessageFeedback(author,textMessage,formatter)
+        val ref = feedbackRef.child(feedbackId).child("messages").push()
+        ref.setValue(messageFeedback)
+    }
     private fun getAllMessagesInFeedback(detailsFeedback: DataSnapshot): MutableList<MessageFeedback> {
         val messages = mutableListOf<MessageFeedback>()
         detailsFeedback.children.forEach {
@@ -47,6 +56,9 @@ class FunctionsFirebase {
                     }
                     "text" -> {
                         messageFeedback.text = detailMessage.value.toString()
+                    }
+                    "time" ->{
+                        messageFeedback.time = detailMessage.value.toString()
                     }
                 }
             }
@@ -82,8 +94,9 @@ class FunctionsFirebase {
         return feedback
     }
 
-    fun getFeedBack(id: String, callback: Callback<Feedback>) {
+    fun getFeedback(id: String, callback: Callback<Feedback>) {
         val ref = feedbackRef.orderByChild("id").equalTo(id)
+        Log.d("Tag","enter get feedback")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach { feedbacks ->
@@ -131,6 +144,9 @@ class FunctionsFirebase {
         val messageRef = ref.child("messages").push()
         messageRef.child("text").setValue(message)
         messageRef.child("author").setValue("user")
+        val nowDate = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
+        messageRef.child("time").setValue(formatter)
     }
 
     fun importScheduleToMySchedule(firebaseCallBack: Callback<Boolean>) {
