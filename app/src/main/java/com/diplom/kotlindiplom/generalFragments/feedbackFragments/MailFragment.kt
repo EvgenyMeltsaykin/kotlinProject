@@ -1,12 +1,14 @@
 package com.diplom.kotlindiplom.generalFragments.feedbackFragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
@@ -70,12 +72,23 @@ class MailFragment : Fragment() {
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
             }else{
                 //val to = resources.getString(R.string.emailSupport)
-                val topic = topicMessageEditText?.text.toString()
-                val message = contentMessageEditText?.text.toString()
-                firebase.addFeedback(codeQuestion,topic, message)
-                Toast.makeText(requireContext(),"Обращение успешно отправлено",Toast.LENGTH_SHORT).show()
-                topicMessageEditText?.setText("")
-                contentMessageEditText?.setText("")
+                firebase.getCountOpenFeedback(object :Callback<Int>{
+                    override fun onComplete(value: Int) {
+                        Log.d("Tag",value.toString())
+                        if (value >= 3){
+                            Toast.makeText(requireContext(),"Ошибка при создании обращения. Подождите пока служба поддержки ответит на ваши вопросы.",Toast.LENGTH_SHORT).show()
+                        }else{
+                            val topic = topicMessageEditText?.text.toString()
+                            val message = contentMessageEditText?.text.toString()
+                            firebase.addFeedback(codeQuestion,topic, message)
+                            Toast.makeText(requireContext(),"Обращение успешно отправлено",Toast.LENGTH_SHORT).show()
+                            topicMessageEditText?.setText("")
+                            contentMessageEditText?.setText("")
+                            Navigation.findNavController(requireActivity(),R.id.navFragment).popBackStack()
+                        }
+                    }
+                })
+
 /*
                 val email = Intent(Intent.ACTION_SEND)
                 email.putExtra(Intent.EXTRA_EMAIL, arrayOf(to))

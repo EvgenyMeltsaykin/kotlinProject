@@ -93,6 +93,7 @@ class FeedbackDetailsFragment : Fragment() {
                             }
                             adapter.add(MessageItem(it.author,it.text,it.time))
                         }
+                        messagesRecyclerView?.smoothScrollToPosition(messagesRecyclerView.adapter?.itemCount!!-1);
                     }
                 })
             }

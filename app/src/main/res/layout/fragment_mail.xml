@@ -39,6 +39,7 @@
             android:gravity="start|top"
             android:hint="Сообщение"
             android:inputType="textMultiLine"
+            android:maxLength="400"
             android:minHeight="50dp"
             android:paddingLeft="8dp"
             android:paddingTop="8dp"

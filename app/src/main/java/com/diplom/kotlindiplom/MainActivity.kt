@@ -372,9 +372,9 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             R.id.editScheduleDay -> {
                 navController.navigate(R.id.action_myScheduleDayFragment_to_editScheduleFragment)
             }
-            R.id.listFeedback->{
+            /*R.id.listFeedback->{
                 navController.navigate(R.id.action_mailFragment_to_listFeedbackFragment)
-            }
+            }*/
         }
         return super.onOptionsItemSelected(item)
     }
@@ -429,10 +429,10 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             item?.isVisible = true
         }
 
-        if (navController.currentDestination?.id == R.id.mailFragment){
+        /*if (navController.currentDestination?.id == R.id.mailFragment){
             val item = menu?.findItem(R.id.listFeedback)
             item?.isVisible = true
-        }
+        }*/
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -500,7 +500,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 moveFragment(R.id.action_settingsFragment_to_mainFragment,R.id.action_settingsFragment_to_loginDiaryFragment)
                 return
             }
-            /*R.id.mailFragment -> {
+            /*R.id.listFeedbackFragment->{
+                moveFragment(R.id.action_listFeedbackFragment_to_mainFragment,R.id.action_listFeedbackFragment_to_loginDiaryFragment)
+                return
+            }
+            R.id.mailFragment -> {
                 moveFragment(
                     R.id.action_mailFragment_to_mainFragment,
                     R.id.action_mailFragment_to_loginDiaryFragment

@@ -46,7 +46,7 @@
         android:id="@+id/grp4"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/mailFragment"
+            android:id="@+id/listFeedbackFragment"
             android:icon="@drawable/ic_feedback"
             android:title="Обратная связь" />
         <item

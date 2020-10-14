@@ -38,6 +38,31 @@ class FunctionsFirebase {
     val scheduleRef = diaryRef.child("schedule")
     val myScheduleRef = userRef.child(userUid).child("mySchedule")
     val feedbackRef = rootRef.child("feedback")
+
+    fun getCountOpenFeedback(callback: Callback<Int>){
+        val ref = feedbackRef.orderByChild("userUid").equalTo(userUid)
+        ref.keepSynced(true)
+        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var count = 0
+                snapshot.children.forEach {
+                    it.children.forEach{
+                        if (it.key.toString() == "status"){
+                            if (it.value.toString().toInt() == -1){
+                                count++;
+                            }
+                        }
+                    }
+                }
+                callback.onComplete(count)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
     fun sendMessageFeedback(feedbackId:String, textMessage:String, author:String){
         val nowDate = Calendar.getInstance().time
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
@@ -89,6 +114,9 @@ class FunctionsFirebase {
                 "id" -> {
                     feedback.id = value
                 }
+                "time"->{
+                    feedback.time = value
+                }
             }
         }
         return feedback
@@ -97,6 +125,7 @@ class FunctionsFirebase {
     fun getFeedback(id: String, callback: Callback<Feedback>) {
         val ref = feedbackRef.orderByChild("id").equalTo(id)
         Log.d("Tag","enter get feedback")
+        ref.keepSynced(true)
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach { feedbacks ->
@@ -135,17 +164,18 @@ class FunctionsFirebase {
 
     fun addFeedback(codeQuestion: Int, topic: String, message: String) {
         val ref = feedbackRef.push()
+        val nowDate = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
         ref.child("codeQuestion").setValue(codeQuestion)
         ref.child("topic").setValue(topic)
         ref.child("userUid").setValue(userUid)
         ref.child("status").setValue(-1)
-
+        ref.child("time").setValue(formatter)
         ref.child("id").setValue(ref.key)
         val messageRef = ref.child("messages").push()
         messageRef.child("text").setValue(message)
         messageRef.child("author").setValue("user")
-        val nowDate = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
+
         messageRef.child("time").setValue(formatter)
     }
 

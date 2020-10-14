@@ -48,14 +48,15 @@ class ListFeedbackFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list_feedback, container, false)
     }
-    val adapter = GroupAdapter<ViewHolder>()
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        requireActivity().invalidateOptionsMenu()
-        requireActivity().title = "Список вопросов"
-        super.onViewCreated(view, savedInstanceState)
-        listFeedbackRecyclerView?.adapter = adapter
+
+    override fun onResume() {
+        super.onResume()
+        refreshListFeedback()
+    }
+    fun refreshListFeedback(){
         firebase.getListFeedback(object : Callback<List<Feedback>> {
             override fun onComplete(value: List<Feedback>) {
+                listFeedbackProgressBar?.isVisible = false
                 if (value.isEmpty()){
                     emptyFeedbackTextView?.isVisible  = true
                 }
@@ -75,6 +76,15 @@ class ListFeedbackFragment : Fragment() {
                 }
             }
         })
+    }
+    val adapter = GroupAdapter<ViewHolder>()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        requireActivity().invalidateOptionsMenu()
+        requireActivity().title = "Список вопросов"
+        super.onViewCreated(view, savedInstanceState)
+        listFeedbackRecyclerView?.adapter = adapter
+
+        refreshListFeedback()
         adapter.setOnItemClickListener { item, view ->
             val bundle = bundleOf()
             val feedback = item as FeedbackItem
@@ -82,6 +92,10 @@ class ListFeedbackFragment : Fragment() {
             bundle.putString("topic",feedback.topic)
             Log.d("Tag",feedback.id.toString())
             Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_listFeedbackFragment_to_feedbackDetailsFragment,bundle)
+        }
+
+        writeFeedbackButton?.setOnClickListener {
+            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_listFeedbackFragment_to_mailFragment)
         }
     }
 

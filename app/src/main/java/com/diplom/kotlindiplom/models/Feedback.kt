@@ -5,5 +5,6 @@ data class Feedback(
     var topic:String = "",
     var status:Int = -1,
     var codeQuestion:Int = 0,
+    var time:String = "",
     var messages:List<MessageFeedback> = listOf()
 )
