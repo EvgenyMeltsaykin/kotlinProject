@@ -62,8 +62,8 @@
 
     <ImageView
         android:id="@+id/homeworkIndicatorImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="18dp"
+        android:layout_height="16dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/ic_circle_gray"
         android:visibility="visible"

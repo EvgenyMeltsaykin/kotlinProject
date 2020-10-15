@@ -71,7 +71,7 @@ class ListFeedbackFragment : Fragment() {
                     }
                     if (fl){
                         feedbackId.add(feedback.id)
-                        adapter.add(FeedbackItem(feedback.topic,feedback.status,feedback.id))
+                        adapter.add(FeedbackItem(feedback))
                     }
                 }
             }
@@ -88,9 +88,8 @@ class ListFeedbackFragment : Fragment() {
         adapter.setOnItemClickListener { item, view ->
             val bundle = bundleOf()
             val feedback = item as FeedbackItem
-            bundle.putString("feedbackId",feedback.id)
-            bundle.putString("topic",feedback.topic)
-            Log.d("Tag",feedback.id.toString())
+            bundle.putString("feedbackId",feedback.feedback.id)
+            bundle.putString("topic",feedback.feedback.topic)
             Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_listFeedbackFragment_to_feedbackDetailsFragment,bundle)
         }
 
