@@ -69,6 +69,7 @@ class FunctionsFirebase {
         val messageFeedback = MessageFeedback(author,textMessage,formatter)
         val ref = feedbackRef.child(feedbackId).child("messages").push()
         messageFeedback.id = ref.key.toString()
+        Log.d("Tag",messageFeedback.toString())
         ref.setValue(messageFeedback)
     }
     private fun getAllMessagesInFeedback(detailsFeedback: DataSnapshot): MutableList<MessageFeedback> {
