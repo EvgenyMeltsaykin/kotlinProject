@@ -5,12 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.R
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
 class FunctionsUI {
     private val NOTIFY_ID = 101
@@ -18,10 +22,11 @@ class FunctionsUI {
     val APP_PREFERENCES_MODE = "onlyDiary"
 
 
-    fun changeMode(activity: Activity){
-        val prefs:SharedPreferences = activity.getSharedPreferences("settings",Context.MODE_PRIVATE)
-        if(prefs.contains(APP_PREFERENCES_MODE)){
-            val onlyDiary = prefs.getBoolean(APP_PREFERENCES_MODE,false)
+    fun changeMode(activity: Activity) {
+        val prefs: SharedPreferences =
+            activity.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        if (prefs.contains(APP_PREFERENCES_MODE)) {
+            val onlyDiary = prefs.getBoolean(APP_PREFERENCES_MODE, false)
             val navigationView: NavigationView = activity.findViewById(R.id.navView)
             val menuNavigationView = navigationView.menu
             menuNavigationView.findItem(R.id.childTasksFragment)?.isVisible = !onlyDiary
@@ -33,21 +38,27 @@ class FunctionsUI {
         }
     }
 
-    fun createNotificationChannel(context:Context){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+    fun createNotificationChannel(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Notification Title"
             val descriptionText = "Notification Description"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID,name,importance).apply {
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
-            val notificationManager:NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager: NotificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
 
-    fun sendNotification(context:Context, title:String,text:String,contentIntent: PendingIntent){
-        val builder = NotificationCompat.Builder(context,CHANNEL_ID)
+    fun sendNotification(
+        context: Context,
+        title: String,
+        text: String,
+        contentIntent: PendingIntent
+    ) {
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentIntent(contentIntent)
             .setWhen(System.currentTimeMillis())
             .setColor(context.resources.getColor(R.color.colorNotificationIco))
@@ -57,10 +68,38 @@ class FunctionsUI {
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
-        with(NotificationManagerCompat.from(context)){
-            notify(NOTIFY_ID,builder.build())
+        with(NotificationManagerCompat.from(context)) {
+            notify(NOTIFY_ID, builder.build())
         }
     }
+
+    fun createNotificationNewMessage(
+        context: Context,
+        intentClass: Class<*>,
+        contentTitle: String,
+        contentText: String,
+        feedback: Feedback
+    ) {
+        createNotificationChannel(context)
+        val intent = Intent(context, intentClass)
+        val firebase = FunctionsFirebase()
+        firebase.getRoleByUid(object :Callback<String>{
+            override fun onComplete(value: String) {
+                intent.putExtra("role", value)
+                intent.putExtra("feedbackId", feedback.id)
+                intent.putExtra("topic", feedback.topic)
+                val pendingIntent = PendingIntent.getActivity(
+                    context,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+                sendNotification(context, contentTitle, contentText, pendingIntent)
+            }
+        })
+
+    }
+
     fun createNotificationChild(
         context: Context,
         intentClass: Class<*>,
@@ -78,16 +117,16 @@ class FunctionsUI {
                     if (task.parentUid == value) {
                         createNotificationChannel(context)
                         val intent = Intent(context, intentClass)
-                        intent.putExtra("role","child")
-                        intent.putExtra("taskId",task.taskId)
-                        intent.putExtra("title",task.title)
+                        intent.putExtra("role", "child")
+                        intent.putExtra("taskId", task.taskId)
+                        intent.putExtra("title", task.title)
                         val pendingIntent = PendingIntent.getActivity(
                             context,
                             0,
                             intent,
                             PendingIntent.FLAG_CANCEL_CURRENT
                         )
-                        sendNotification(context,contentTitle,contentText,pendingIntent)
+                        sendNotification(context, contentTitle, contentText, pendingIntent)
                         firebase.setFieldDatabaseTask(task.taskId, "showNotification", 1)
                     }
                 }
@@ -108,16 +147,16 @@ class FunctionsUI {
         createNotificationChannel(context)
 
         val intent = Intent(context, intentClass)
-        intent.putExtra("role","parent")
-        intent.putExtra("taskId",task.taskId)
-        intent.putExtra("title",task.title)
+        intent.putExtra("role", "parent")
+        intent.putExtra("taskId", task.taskId)
+        intent.putExtra("title", task.title)
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
             intent,
             PendingIntent.FLAG_CANCEL_CURRENT
         )
-        sendNotification(context,contentTitle,contentText,pendingIntent)
+        sendNotification(context, contentTitle, contentText, pendingIntent)
         firebase.setFieldDatabaseTask(task.taskId, "showNotification", 1)
     }
 
@@ -128,25 +167,24 @@ class FunctionsUI {
         contentTitle: String,
         contentText: String,
         award: Award
-    ){
+    ) {
         val firebase = FunctionsFirebase()
         if (award.parentUid != firebase.userUid) return
         createNotificationChannel(context)
         val intent = Intent(context, intentClass)
-        intent.putExtra("role","parent")
-        intent.putExtra("awardId",award.awardId)
-        intent.putExtra("nameAward",award.name)
-        intent.putExtra("costAward",award.cost)
-        intent.putExtra("status",1)
+        intent.putExtra("role", "parent")
+        intent.putExtra("awardId", award.awardId)
+        intent.putExtra("nameAward", award.name)
+        intent.putExtra("costAward", award.cost)
+        intent.putExtra("status", 1)
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
             intent,
             PendingIntent.FLAG_CANCEL_CURRENT
         )
-        sendNotification(context,contentTitle,contentText,pendingIntent)
-        firebase.setFieldAward(award.awardId,"showNotification",0)
-
+        sendNotification(context, contentTitle, contentText, pendingIntent)
+        firebase.setFieldAward(award.awardId, "showNotification", 0)
     }
 
 }

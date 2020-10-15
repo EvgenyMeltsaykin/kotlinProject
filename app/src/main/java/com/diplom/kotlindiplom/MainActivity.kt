@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.FunctionUiSingleton.functionsUI
 import com.diplom.kotlindiplom.childFragments.RequestParentFragment
 import com.diplom.kotlindiplom.models.FunctionsApi
 import com.diplom.kotlindiplom.models.FunctionsFirebase
@@ -42,19 +43,20 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     private lateinit var navigationView: NavigationView
     private lateinit var menuNavigationView: Menu
     private var onlyDiary = false
-    lateinit var prefs:SharedPreferences
+    lateinit var prefs: SharedPreferences
     private var backPressed: Long = 0
     private var roleUser = ""
     override fun getRoleUser(): String {
         return intent.getStringExtra("role").toString()
     }
 
-    object FunctionUiSingleton{
+    object FunctionUiSingleton {
         val functionsUI = FunctionsUI()
     }
+
     object FirebaseSingleton {
-        var  firebase = FunctionsFirebase()
-        fun newInstance(){
+        var firebase = FunctionsFirebase()
+        fun newInstance() {
             firebase = FunctionsFirebase()
         }
     }
@@ -63,14 +65,19 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         val network = FunctionsApi()
     }
 
+
+    override fun onResume() {
+        super.onResume()
+    }
     @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         roleUser = intent.getStringExtra("role").toString()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        prefs = getSharedPreferences("settings",Context.MODE_PRIVATE)
-        if (prefs.contains(FunctionUiSingleton.functionsUI.APP_PREFERENCES_MODE)){
-            onlyDiary = prefs.getBoolean(FunctionUiSingleton.functionsUI.APP_PREFERENCES_MODE,false)
+        prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        if (prefs.contains(functionsUI.APP_PREFERENCES_MODE)) {
+            onlyDiary =
+                prefs.getBoolean(functionsUI.APP_PREFERENCES_MODE, false)
         }
         FirebaseSingleton.newInstance()
         navHostFragment =
@@ -81,12 +88,52 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         navigationView = findViewById(R.id.navView)
         navigationView.setupWithNavController(navController)
         menuNavigationView = navigationView.menu
+        setMessageListener()
         if (roleUser == "child") {
             settingsChild()
         }
         if (roleUser == "parent") {
             settingsParent()
         }
+    }
+
+    private fun setMessageListener() {
+
+        firebase.feedbackRef.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val feedback = firebase.getAllFieldsFeedback(snapshot)
+                if (feedback.userUid == firebase.userUid) {
+                    if (feedback.messages.isNotEmpty()){
+                        if (feedback.messages.last().author != "user" && feedback.messages.last().readStatus == "0") {
+                            functionsUI.createNotificationNewMessage(
+                                applicationContext,
+                                MainActivity::class.java,
+                                "Служба поддержки ответила на Ваш вопрос",
+                                feedback.topic,
+                                feedback
+                            )
+                        }
+                    }
+                }
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
     }
 
     private fun settingsParent() {
@@ -210,6 +257,16 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
 
         })
 
+        if (!intent.getStringExtra("feedbackId").isNullOrBlank()) {
+            val bundle = bundleOf()
+            bundle.putString("feedbackId", intent.getStringExtra("feedbackId"))
+            bundle.putString("topic", intent.getStringExtra("topic"))
+            Log.d("Tag", bundle.toString())
+            navController.navigate(
+                R.id.action_loginDiaryFragment_to_feedbackDetailsFragment,
+                bundle
+            )
+        }
         if (!intent.getStringExtra("taskId").isNullOrBlank()) {
             val bundle = bundleOf()
             bundle.putString("taskId", intent.getStringExtra("taskId"))
@@ -225,7 +282,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             bundle.putString("nameAward", intent.getStringExtra("nameAward"))
             bundle.putString("costAward", intent.getStringExtra("costAward"))
             bundle.putString("status", intent.getStringExtra("status"))
-            Log.d("Tag", bundle.toString())
             navController.navigate(R.id.action_loginDiaryFragment_to_detailAwardFragment, bundle)
         }
     }
@@ -353,6 +409,15 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             bundle.putString("title", intent.getStringExtra("title"))
             navController.navigate(R.id.action_mainFragment_to_childTaskContentFragment, bundle)
         }
+        if (!intent.getStringExtra("feedbackId").isNullOrBlank() ) {
+            val bundle = bundleOf()
+            bundle.putString("feedbackId", intent.getStringExtra("feedbackId"))
+            bundle.putString("topic", intent.getStringExtra("topic"))
+            navController.navigate(
+                R.id.action_mainFragment_to_feedbackDetailsFragment,
+                bundle
+            )
+        }
 
     }
 
@@ -401,10 +466,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
         if (roleUser == "child") {
             val item = menu?.findItem(R.id.menuPointsChild)
             if (prefs.contains(FunctionUiSingleton.functionsUI.APP_PREFERENCES_MODE)) {
-                val onlyDiary = prefs.getBoolean(FunctionUiSingleton.functionsUI.APP_PREFERENCES_MODE, false)
+                val onlyDiary =
+                    prefs.getBoolean(FunctionUiSingleton.functionsUI.APP_PREFERENCES_MODE, false)
                 item?.isVisible = !onlyDiary
             }
-            if (item?.isVisible!!){
+            if (item?.isVisible!!) {
                 val firebase = FunctionsFirebase()
                 firebase.getPointChild(
                     firebase.userUid,
@@ -496,8 +562,11 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
                 navController.navigate(R.id.action_parentNodeChildrenFragment_to_loginDiaryFragment)
                 return
             }
-            R.id.settingsFragment->{
-                moveFragment(R.id.action_settingsFragment_to_mainFragment,R.id.action_settingsFragment_to_loginDiaryFragment)
+            R.id.settingsFragment -> {
+                moveFragment(
+                    R.id.action_settingsFragment_to_mainFragment,
+                    R.id.action_settingsFragment_to_loginDiaryFragment
+                )
                 return
             }
             /*R.id.listFeedbackFragment->{

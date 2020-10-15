@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.FunctionUiSingleton.functionsUI
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.Feedback
 import com.diplom.kotlindiplom.models.recyclerViewItems.MessageItem
@@ -39,7 +40,7 @@ class FeedbackDetailsFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            feedbackId = it.getString("feedbackId","0")
+            feedbackId = it.getString("feedbackId","")
             topic = it.getString("topic")
         }
         requireActivity().title = topic

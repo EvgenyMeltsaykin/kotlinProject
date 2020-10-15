@@ -68,6 +68,7 @@ class FunctionsFirebase {
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
         val messageFeedback = MessageFeedback(author,textMessage,formatter)
         val ref = feedbackRef.child(feedbackId).child("messages").push()
+        messageFeedback.id = ref.key.toString()
         ref.setValue(messageFeedback)
     }
     private fun getAllMessagesInFeedback(detailsFeedback: DataSnapshot): MutableList<MessageFeedback> {
@@ -75,15 +76,22 @@ class FunctionsFirebase {
         detailsFeedback.children.forEach {
             val messageFeedback = MessageFeedback()
             it.children.forEach { detailMessage ->
+                val value = detailMessage.value.toString()
                 when (detailMessage.key.toString()) {
+                    "id"->{
+                        messageFeedback.id = value
+                    }
                     "author" -> {
-                        messageFeedback.author = detailMessage.value.toString()
+                        messageFeedback.author = value
                     }
                     "text" -> {
-                        messageFeedback.text = detailMessage.value.toString()
+                        messageFeedback.text = value
                     }
                     "time" ->{
-                        messageFeedback.time = detailMessage.value.toString()
+                        messageFeedback.time = value
+                    }
+                    "readStatus"->{
+                        messageFeedback.readStatus = value
                     }
                 }
             }
@@ -117,6 +125,9 @@ class FunctionsFirebase {
                 "time"->{
                     feedback.time = value
                 }
+                "userUid"->{
+                    feedback.userUid = value
+                }
             }
         }
         return feedback
@@ -124,12 +135,18 @@ class FunctionsFirebase {
 
     fun getFeedback(id: String, callback: Callback<Feedback>) {
         val ref = feedbackRef.orderByChild("id").equalTo(id)
-        Log.d("Tag","enter get feedback")
         ref.keepSynced(true)
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach { feedbacks ->
-                    callback.onComplete(getAllFieldsFeedback(feedbacks))
+                    val feedback  = getAllFieldsFeedback(feedbacks)
+                    feedback.messages.forEach {
+                        if (it.author != "user" && it.readStatus != "1" && it.id.isNotEmpty()){
+                            feedbackRef.child(feedback.id).child("messages").child(it.id).child("readStatus").setValue("1")
+                        }
+                    }
+
+                    callback.onComplete(feedback)
                 }
             }
 
@@ -175,7 +192,7 @@ class FunctionsFirebase {
         val messageRef = ref.child("messages").push()
         messageRef.child("text").setValue(message)
         messageRef.child("author").setValue("user")
-
+        messageRef.child("id").setValue(messageRef.key.toString())
         messageRef.child("time").setValue(formatter)
     }
 
@@ -421,7 +438,18 @@ class FunctionsFirebase {
         })
 
     }
+    fun getRoleByUid(callback: Callback<String>){
+        userRef.child(userUid).child("role").addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                callback.onComplete(snapshot.value.toString())
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
     fun getAwardOutFirebaseWithParentUid(
         role: String,
         parentUid: String,
