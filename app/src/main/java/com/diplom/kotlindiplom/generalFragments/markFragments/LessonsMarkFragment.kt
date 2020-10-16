@@ -112,7 +112,7 @@ class LessonsMarkFragment : Fragment() {
         super.onAttach(context)
 
         val activityCallback = context as ActivityCallback
-        role = activityCallback.getRoleUser().toString()
+        role = activityCallback.getRoleUser()
     }
 
     companion object {

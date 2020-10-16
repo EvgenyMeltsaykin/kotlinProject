@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     private var backPressed: Long = 0
     private var roleUser = ""
     override fun getRoleUser(): String {
-        return intent.getStringExtra("role").toString()
+        return prefs.getString(functionsUI.APP_PREFERENCES_ROLE, "").toString()
     }
 
     object FunctionUiSingleton {
@@ -66,15 +66,13 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
 
-    override fun onResume() {
-        super.onResume()
-    }
     @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
-        roleUser = intent.getStringExtra("role").toString()
+        prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        roleUser = prefs.getString(functionsUI.APP_PREFERENCES_ROLE, "").toString()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+
         if (prefs.contains(functionsUI.APP_PREFERENCES_MODE)) {
             onlyDiary =
                 prefs.getBoolean(functionsUI.APP_PREFERENCES_MODE, false)

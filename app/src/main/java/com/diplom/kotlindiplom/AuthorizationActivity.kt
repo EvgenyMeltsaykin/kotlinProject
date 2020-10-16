@@ -1,5 +1,6 @@
 package com.diplom.kotlindiplom
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.diplom.kotlindiplom.models.Child
 import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.diplom.kotlindiplom.models.FunctionsUI
 import com.diplom.kotlindiplom.models.Parent
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_authorization.*
@@ -80,16 +82,20 @@ class AuthorizationActivity : AppCompatActivity() {
                         "role",
                         object : Callback<String> {
                             override fun onComplete(value: String) {
+                                val functionUI = FunctionsUI()
+                                val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+                                val editor = prefs.edit()
+                                editor.putString(functionUI.APP_PREFERENCES_ROLE,value).apply()
+                                intent =
+                                    Intent(applicationContext, MainActivity::class.java)
+                                //intent.putExtra("role", value)
+                                intent.flags =
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 Toast.makeText(
                                     applicationContext,
                                     "Вход выполнен успешно!",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                intent =
-                                    Intent(applicationContext, MainActivity::class.java)
-                                intent.putExtra("role", value)
-                                intent.flags =
-                                    Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 startActivity(intent)
                             }
                         })
@@ -107,7 +113,7 @@ class AuthorizationActivity : AppCompatActivity() {
             }
             .addOnFailureListener {
                 showButtons()
-                Toast.makeText(this, "Ошибка при входе: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Ошибка при входе: ${it.message}", Toast.LENGTH_LONG).show()
             }
     }
 

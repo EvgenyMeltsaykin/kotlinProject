@@ -50,7 +50,7 @@ class DetailsFinalMarkFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val activityCallback = context as ActivityCallback
-        role = activityCallback.getRoleUser().toString()
+        role = activityCallback.getRoleUser()
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

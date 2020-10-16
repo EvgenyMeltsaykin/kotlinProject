@@ -27,20 +27,14 @@ class MainFragment : Fragment() {
         super.onAttach(context)
 
         val activityCallback = context as ActivityCallback
-        role = activityCallback.getRoleUser()!!
+        role = activityCallback.getRoleUser()
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        if (role == "child"){
-            return inflater.inflate(R.layout.fragment_main, container, false)
-        }
-        if (role == "parent"){
-            return inflater.inflate(R.layout.fragment_login_diary, container, false)
-        }
-        return null
+        return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     @ExperimentalStdlibApi

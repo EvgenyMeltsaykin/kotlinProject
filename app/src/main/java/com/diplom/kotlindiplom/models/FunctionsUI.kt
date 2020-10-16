@@ -20,7 +20,7 @@ class FunctionsUI {
     private val NOTIFY_ID = 101
     private val CHANNEL_ID = "Task channel"
     val APP_PREFERENCES_MODE = "onlyDiary"
-
+    val APP_PREFERENCES_ROLE = "role"
 
     fun changeMode(activity: Activity) {
         val prefs: SharedPreferences =
@@ -35,6 +35,14 @@ class FunctionsUI {
             menuNavigationView.findItem(R.id.listAwardsFragment)?.isVisible = !onlyDiary
             menuNavigationView.findItem(R.id.parentNodeChildrenFragment)?.isVisible = !onlyDiary
             activity.invalidateOptionsMenu()
+        }
+    }
+
+    fun setPreferences(preferences:String, activity: Activity){
+        val prefs: SharedPreferences =
+            activity.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        if (prefs.contains(preferences)) {
+
         }
     }
 
