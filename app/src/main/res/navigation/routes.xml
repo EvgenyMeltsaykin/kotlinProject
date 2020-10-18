@@ -336,6 +336,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_diaryFragment_to_weekdayTeacherFragment"
+            app:destination="@id/weekdayTeacherFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/chooseChildMarkFragment"
@@ -652,4 +659,9 @@
         android:name="com.diplom.kotlindiplom.generalFragments.feedbackFragments.FeedbackDetailsFragment"
         android:label="fragment_feedback_details"
         tools:layout="@layout/fragment_feedback_details" />
+    <fragment
+        android:id="@+id/weekdayTeacherFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.teacherFragment.WeekdayTeacherFragment"
+        android:label="fragment_weekday_teacher"
+        tools:layout="@layout/fragment_weekday_teacher" />
 </navigation>

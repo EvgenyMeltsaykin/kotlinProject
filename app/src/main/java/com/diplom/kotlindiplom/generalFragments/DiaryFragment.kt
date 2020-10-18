@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
@@ -33,7 +34,7 @@ class DiaryFragment : Fragment(),
 
     private lateinit var login: String
     private lateinit var urlDiary: String
-
+    private lateinit var  roleInDiary:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -66,22 +67,8 @@ class DiaryFragment : Fragment(),
             "roleDiary",
             object : Callback<String> {
                 override fun onComplete(value: String) {
+                    roleInDiary = value
                     setupSpinner(value)
-                    scheduleButton?.setOnClickListener {
-                        if (value == "child") {
-                            val bundle = bundleOf()
-                            Navigation.findNavController(requireActivity(), R.id.navFragment)
-                                .navigate(
-                                    R.id.action_diaryFragment_to_weekdayFragment,
-                                    bundle
-                                )
-                        }
-                        if (value == "parent") {
-                            Navigation.findNavController(requireActivity(), R.id.navFragment)
-                                .navigate(R.id.action_diaryFragment_to_chooseChildScheduleFragment)
-                        }
-
-                    }
                     marksButton?.setOnClickListener {
                         if (value == "child") {
                             Navigation.findNavController(requireActivity(), R.id.navFragment)
@@ -94,6 +81,25 @@ class DiaryFragment : Fragment(),
                     }
                 }
             })
+
+        scheduleButton?.setOnClickListener {
+            if (roleInDiary == "child") {
+                val bundle = bundleOf()
+                Navigation.findNavController(requireActivity(), R.id.navFragment)
+                    .navigate(
+                        R.id.action_diaryFragment_to_weekdayFragment,
+                        bundle
+                    )
+            }
+            if (roleInDiary == "parent") {
+                Navigation.findNavController(requireActivity(), R.id.navFragment)
+                    .navigate(R.id.action_diaryFragment_to_chooseChildScheduleFragment)
+            }
+            if (roleInDiary == "teacher"){
+                Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_diaryFragment_to_weekdayTeacherFragment)
+            }
+
+        }
         loginDiaryTextView?.text = login
         diaryTextView?.text = urlDiary
         if (urlDiary.isEmpty()){
@@ -139,12 +145,16 @@ class DiaryFragment : Fragment(),
         })
         roleDiarySpinner?.onItemSelectedListener = this
     }
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val item = parent?.getItemAtPosition(position) as String
         firebase.getRolesDiary(object :Callback<List<RoleDiary>>{
             override fun onComplete(value: List<RoleDiary>) {
                 value.forEach {
                     if (it.name == item){
+                        if (it.roleInDatabase == "child" || it.roleInDatabase == "parent"){
+                            marksButton?.isVisible = true
+                        }
+                        roleInDiary = it.roleInDatabase
                         firebase.setFieldDiary(firebase.userUid,"roleDiary",it.roleInDatabase)
                         return
                     }

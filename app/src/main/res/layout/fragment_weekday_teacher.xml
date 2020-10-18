@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        tools:context=".generalFragments.teacherFragment.WeekdayTeacherFragment">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/openCalendarButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/simple_button"
+                android:padding="8dp"
+                android:text="Открыть календарь"
+                android:textColor="@color/colorButtonText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/refreshScheduleButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/simple_button"
+                android:padding="10dp"
+                android:text="Обновить"
+                android:textColor="@color/colorButtonText"
+                app:layout_constraintBottom_toBottomOf="@+id/openCalendarButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/openCalendarButton"
+                app:layout_constraintTop_toTopOf="@+id/openCalendarButton" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text=""
+            android:textColor="@color/colorText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
+
+        <Button
+            android:id="@+id/mondayButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/simple_button"
+            android:text="Понедельник"
+            android:textColor="@color/colorButtonText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+
+        <Button
+            android:id="@+id/tuesdayButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/simple_button"
+            android:text="Вторник"
+            android:textColor="@color/colorButtonText"
+            app:layout_constraintEnd_toEndOf="@+id/mondayButton"
+            app:layout_constraintStart_toStartOf="@+id/mondayButton"
+            app:layout_constraintTop_toBottomOf="@+id/mondayButton" />
+
+        <Button
+            android:id="@+id/wednesdayButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/simple_button"
+            android:text="Среда"
+            android:textColor="@color/colorButtonText"
+            app:layout_constraintEnd_toEndOf="@+id/tuesdayButton"
+            app:layout_constraintStart_toStartOf="@+id/tuesdayButton"
+            app:layout_constraintTop_toBottomOf="@+id/tuesdayButton" />
+
+        <Button
+            android:id="@+id/thursdayButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/simple_button"
+            android:text="Четверг"
+            android:textColor="@color/colorButtonText"
+            app:layout_constraintEnd_toEndOf="@+id/wednesdayButton"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/wednesdayButton"
+            app:layout_constraintTop_toBottomOf="@+id/wednesdayButton" />
+
+        <Button
+            android:id="@+id/fridayButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/simple_button"
+            android:text="Пятница"
+            android:textColor="@color/colorButtonText"
+            app:layout_constraintEnd_toEndOf="@+id/thursdayButton"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/thursdayButton"
+            app:layout_constraintTop_toBottomOf="@+id/thursdayButton" />
+
+        <Button
+            android:id="@+id/saturdayButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/simple_button"
+            android:text="Суббота"
+            android:textColor="@color/colorButtonText"
+            app:layout_constraintEnd_toEndOf="@+id/fridayButton"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/fridayButton"
+            app:layout_constraintTop_toBottomOf="@+id/fridayButton" />
+
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:elevation="2dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
+
+
+        <TextView
+            android:id="@+id/messageForUserTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center|center_horizontal"
+            android:text="Расписание загружается с сайта электронного дневника."
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/saturdayButton"
+            app:layout_constraintStart_toStartOf="@+id/saturdayButton"
+            app:layout_constraintTop_toBottomOf="@+id/saturdayButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
