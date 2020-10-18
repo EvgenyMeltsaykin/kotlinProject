@@ -32,8 +32,9 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         this.window.statusBarColor = resources.getColor(R.color.colorActionBarSplash)
         prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        verifyUserIsLoggedIn()
 
+        verifyUserIsLoggedIn()
+        val diary = Diary().elschool
     }
 
     @ExperimentalStdlibApi
@@ -44,7 +45,13 @@ class SplashActivity : AppCompatActivity() {
             if (user.isEmailVerified) {
                 val firebase = FunctionsFirebase()
                 Log.d("Tag", "begin")
-                firebase.updateSchedule()
+                firebase.getFieldDiary(firebase.userUid,"roleDiary",object :Callback<String>{
+                    override fun onComplete(value: String) {
+                        if (value == "child" || value == "parent"){
+                            firebase.updateSchedule()
+                        }
+                    }
+                })
                 firebase.getFieldUserDatabase(firebase.userUid, "role", object : Callback<String> {
                     override fun onComplete(value: String) {
                         Handler(Looper.getMainLooper()).postDelayed({

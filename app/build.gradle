@@ -114,14 +114,5 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
-
-
-
-
-
-
-
-
-
-
+    implementation 'com.beust:klaxon:5.0.1'
 }

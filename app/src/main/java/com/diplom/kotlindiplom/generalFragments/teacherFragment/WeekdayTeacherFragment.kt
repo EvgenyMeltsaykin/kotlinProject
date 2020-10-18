@@ -8,9 +8,25 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.diaries.Diary
+import kotlinx.android.synthetic.main.fragment_weekday.*
 import kotlinx.android.synthetic.main.fragment_weekday_teacher.*
+import kotlinx.android.synthetic.main.fragment_weekday_teacher.calendarView
+import kotlinx.android.synthetic.main.fragment_weekday_teacher.dateTextView
+import kotlinx.android.synthetic.main.fragment_weekday_teacher.fridayButton
+import kotlinx.android.synthetic.main.fragment_weekday_teacher.mondayButton
+import kotlinx.android.synthetic.main.fragment_weekday_teacher.openCalendarButton
+import kotlinx.android.synthetic.main.fragment_weekday_teacher.progressBar
+import kotlinx.android.synthetic.main.fragment_weekday_teacher.saturdayButton
+import kotlinx.android.synthetic.main.fragment_weekday_teacher.thursdayButton
+import kotlinx.android.synthetic.main.fragment_weekday_teacher.tuesdayButton
 import kotlinx.android.synthetic.main.fragment_weekday_teacher.view.*
+import kotlinx.android.synthetic.main.fragment_weekday_teacher.wednesdayButton
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -62,28 +78,35 @@ class WeekdayTeacherFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.title = "Дни недели"
         val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
         dateTextView?.text = dateFormatter.format(calendar.time)
         calendarView?.isVisible = false
         progressBar?.isVisible = false
         setupNameWeekday()
         mondayButton?.setOnClickListener {
-            openFragmentDay("Понедельник")
+            openFragmentDay(mondayButton?.text.toString())
+            updateTeacherSchedule("Понедельник",getDate(1))
         }
         tuesdayButton?.setOnClickListener {
-            openFragmentDay("Вторник")
+            openFragmentDay(tuesdayButton?.text.toString())
+            updateTeacherSchedule("Вторник",getDate(2))
         }
         wednesdayButton?.setOnClickListener {
-            openFragmentDay("Среда")
+            openFragmentDay(wednesdayButton?.text.toString())
+            updateTeacherSchedule("Среда",getDate(3))
         }
         thursdayButton?.setOnClickListener {
-            openFragmentDay("Четверг")
+            openFragmentDay(thursdayButton?.text.toString())
+            updateTeacherSchedule("Четверг",getDate(4))
         }
         fridayButton?.setOnClickListener {
-            openFragmentDay("Пятница")
+            openFragmentDay(fridayButton?.text.toString())
+            updateTeacherSchedule("Пятница",getDate(5))
         }
         saturdayButton?.setOnClickListener {
-            openFragmentDay("Суббота")
+            openFragmentDay(saturdayButton?.text.toString())
+            updateTeacherSchedule("Суббота",getDate(6))
         }
 
         openCalendarButton?.setOnClickListener {
@@ -104,12 +127,24 @@ class WeekdayTeacherFragment : Fragment() {
             calendarView.isVisible = false
         }
     }
-
+    private fun updateTeacherSchedule(day:String,date:String){
+        val diary = Diary();
+        firebase.getFieldDiary(firebase.userUid, "url", object :
+            Callback<String> {
+            override fun onComplete(value: String) {
+                when (value) {
+                    diary.elschool.url -> {
+                        diary.elschool.getTeacherScheduleFromDiary(day.decapitalize(),date)
+                    }
+                }
+            }
+        })
+    }
     private fun openFragmentDay(day: String) {
         val bundle: Bundle = bundleOf()
-        bundle.putString("title", day)
-        //Navigation.findNavController(requireActivity(), R.id.navFragment)
-         //   .navigate(R.id.action_weekdayFragment_to_scheduleDayFragment, bundle)
+        bundle.putString("title", day.toLowerCase(Locale.ROOT))
+        Navigation.findNavController(requireActivity(), R.id.navFragment)
+            .navigate(R.id.action_weekdayTeacherFragment_to_dayLessonsTeachersFragment, bundle)
     }
 
     companion object {

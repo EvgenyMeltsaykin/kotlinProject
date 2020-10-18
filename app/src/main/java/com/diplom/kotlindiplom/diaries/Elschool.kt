@@ -8,8 +8,11 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
+import com.beust.klaxon.JsonReader
+import com.beust.klaxon.Klaxon
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.models.*
+import com.diplom.kotlindiplom.models.elschool.SchoolSubjectElschool
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,6 +22,7 @@ import org.decimal4j.util.DoubleRounder
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import java.io.IOException
+import java.io.StringReader
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -27,20 +31,21 @@ import kotlin.collections.HashMap
 class Elschool {
     private val urlLogin = "https://elschool.ru/Logon/Index"
     val urlDiary = "https://elschool.ru/users/diaries"
+    val urlMainPage = "https://elschool.ru/users/privateoffice"
     private val cabinetText = "каб."
     val keyCookie = "JWToken"
     val url = "elschool.ru"
-    private fun roleDiaryToRoleDatabase(role:String):String{
-        if (role.decapitalize(Locale.ROOT) == "сотрудник ОО"){
+    private fun roleDiaryToRoleDatabase(role: String): String {
+        if (role.decapitalize(Locale.ROOT) == "сотрудник ОО") {
             return "employee";
         }
-        if (role.decapitalize(Locale.ROOT) == "учитель"){
+        if (role.decapitalize(Locale.ROOT) == "учитель") {
             return "teacher";
         }
-        if (role.decapitalize(Locale.ROOT) == "классный руководитель"){
+        if (role.decapitalize(Locale.ROOT) == "классный руководитель") {
             return "classTeacher";
         }
-        if (role.decapitalize(Locale.ROOT) == "учащийся"){
+        if (role.decapitalize(Locale.ROOT) == "учащийся") {
             return "child";
         }
         if (role.decapitalize(Locale.ROOT) == "родитель") {
@@ -48,6 +53,7 @@ class Elschool {
         }
         return ""
     }
+
     fun createDiary() {
         val firebase = FunctionsFirebase()
         firebase.setFieldDiary(firebase.userUid, "login", "")
@@ -75,29 +81,33 @@ class Elschool {
         firebase.diaryRef.child("children").removeValue()
         firebase.diaryRef.child("roles").removeValue()
     }
+
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun getRoleFromDiary(document: org.jsoup.nodes.Document){
-        val roleTable = document.select("div[class=col-12 col-xl d-flex flex-column]").select("div[class=border-block p-3 mb-3 flex-grow-1]").select("tbody").select("td").select("td")
+    private fun getRoleFromDiary(document: org.jsoup.nodes.Document) {
+        val roleTable = document.select("div[class=col-12 col-xl d-flex flex-column]")
+            .select("div[class=border-block p-3 mb-3 flex-grow-1]").select("tbody").select("td")
+            .select("td")
         var i = 0
         val firebase = FunctionsFirebase()
-        var role =""
+        var role = ""
         val roleInDiary = RoleDiary()
         roleTable.forEach {
-            if (i % 2 == 0){
-                if (role.isEmpty()){
+            if (i % 2 == 0) {
+                if (role.isEmpty()) {
                     role = it.text()
                 }
                 roleInDiary.name = it.text()
-            }else{
+            } else {
                 roleInDiary.state = it.text()
                 roleInDiary.roleInDatabase = roleDiaryToRoleDatabase(roleInDiary.name)
-                firebase.setNewRoleDiary(i/2,roleInDiary)
+                firebase.setNewRoleDiary(i / 2, roleInDiary)
             }
             i++
         }
         val roleDatabase = roleDiaryToRoleDatabase(role)
-        firebase.setFieldDiary(firebase.userUid,"roleDiary",roleDatabase)
+        firebase.setFieldDiary(firebase.userUid, "roleDiary", roleDatabase)
     }
+
     @RequiresApi(Build.VERSION_CODES.N)
     fun login(login: String, password: String): Boolean {
         val cookies: HashMap<String, String> = HashMap()
@@ -119,7 +129,7 @@ class Elschool {
                 val firebase = FunctionsFirebase()
                 GlobalScope.launch(Dispatchers.IO) {
                     firebase.setFieldDiary(firebase.userUid, "idChild", id)
-                    firebase.setFieldDiary(firebase.userUid,"cookie","")
+                    firebase.setFieldDiary(firebase.userUid, "cookie", "")
                     firebase.setFieldDiary(
                         firebase.userUid,
                         "cookie",
@@ -138,30 +148,31 @@ class Elschool {
 
     fun deleteSchedule() {
         val firebase = FunctionsFirebase()
-                val ref = firebase.userRef.child(firebase.userUid)
-                    .child("diary").child("schedule")
-                ref.child("понедельник").removeValue()
-                ref.child("вторник").removeValue()
-                ref.child("среда").removeValue()
-                ref.child("четверг").removeValue()
-                ref.child("пятница").removeValue()
-                ref.child("суббота").removeValue()
+        val ref = firebase.userRef.child(firebase.userUid)
+            .child("diary").child("schedule")
+        ref.child("понедельник").removeValue()
+        ref.child("вторник").removeValue()
+        ref.child("среда").removeValue()
+        ref.child("четверг").removeValue()
+        ref.child("пятница").removeValue()
+        ref.child("суббота").removeValue()
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun setSeeMarks(scheduleHtml: org.jsoup.nodes.Document,cookies:HashMap<String,String>){
+    fun setSeeMarks(scheduleHtml: org.jsoup.nodes.Document, cookies: HashMap<String, String>) {
         //scheduleHtml example
         //https://elschool.ru/users/diaries/details?rooId=18&instituteId=233&departmentId=123400&pupilId=1588026&year=2020&week=42&log=false
         //tempUri example
         //https://elschool.ru/users/diaries/confirmregularmarksbydaterange?rooId=18&instituteId=233&departmentId=123400&pupilId=1588026&year=2020&week=42&log=false
-        var tempUri = scheduleHtml.baseUri().replace("details","confirmregularmarksbydaterange")
+        var tempUri = scheduleHtml.baseUri().replace("details", "confirmregularmarksbydaterange")
         val year = tempUri.substringAfter("year=").substringBefore("&")
         val week = tempUri.substringAfter("week=").substringBefore("&")
-        if (year.isNotEmpty()){
-            val startYearDate = LocalDate.of(year.toInt(),1,1)
-            val dateWithWeek = startYearDate.plusWeeks((week).toLong()-1)
+        if (year.isNotEmpty()) {
+            val startYearDate = LocalDate.of(year.toInt(), 1, 1)
+            val dateWithWeek = startYearDate.plusWeeks((week).toLong() - 1)
             val countDay = dateWithWeek.dayOfWeek.ordinal
             val startDate = dateWithWeek.minusDays(countDay.toLong())
-            val endDate = dateWithWeek.plusDays((6-countDay).toLong())
+            val endDate = dateWithWeek.plusDays((6 - countDay).toLong())
             //tempUri example
             //https://elschool.ru/users/diaries/confirmregularmarksbydaterange?rooId=18&instituteId=233&departmentId=123400&pupilId=1588026
             tempUri = tempUri.substringBefore("&year=")
@@ -177,6 +188,7 @@ class Elschool {
         }
 
     }
+
     @ExperimentalStdlibApi
     fun getScheduleFromElschool(
         year: Int,
@@ -216,12 +228,14 @@ class Elschool {
                             val dayOfWeekHtml = scheduleHtml.select("tbody")
                             dayOfWeekHtml.forEach { it ->
                                 //example понедельник 17.08
-                                var dayDate:String
-                                dayDate  = it.select("td[class=diary__dayweek]").select("p").text()
-                                        .toString()
-                                if (dayDate.isEmpty()){
-                                    dayDate  = it.select("td[class=diary__dayweek  diary__dayweek_today]").select("p").text()
-                                        .toString()
+                                var dayDate: String
+                                dayDate = it.select("td[class=diary__dayweek]").select("p").text()
+                                    .toString()
+                                if (dayDate.isEmpty()) {
+                                    dayDate =
+                                        it.select("td[class=diary__dayweek  diary__dayweek_today]")
+                                            .select("p").text()
+                                            .toString()
                                 }
                                 val items = it.select("tr[class=diary__lesson]")
                                 val lessons = mutableListOf<Lesson>()
@@ -295,15 +309,18 @@ class Elschool {
                                     )
                                 }
                             }
-                            firebase.getFieldDiary(firebase.userUid,"roleDiary",object :Callback<String>{
-                                override fun onComplete(value: String) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && value == "parent") {
-                                        GlobalScope.launch(Dispatchers.IO) {
-                                            setSeeMarks(scheduleHtml,cookies)
+                            firebase.getFieldDiary(
+                                firebase.userUid,
+                                "roleDiary",
+                                object : Callback<String> {
+                                    override fun onComplete(value: String) {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && value == "parent") {
+                                            GlobalScope.launch(Dispatchers.IO) {
+                                                setSeeMarks(scheduleHtml, cookies)
+                                            }
                                         }
                                     }
-                                }
-                            })
+                                })
 
                         } catch (e: IOException) {
                             firebaseCallback.onComplete(false)
@@ -468,6 +485,52 @@ class Elschool {
                 }
             })
     }
+    fun setTeacherLessonDatabase(lesson:List<SchoolSubjectElschool>, day:String){
+        val firebase = FunctionsFirebase()
+        firebase.diaryRef.child("schedule").child(day).removeValue()
+        lesson.forEach {
+            val ref = firebase.diaryRef.child("schedule").child(day).push()
+            ref.keepSynced(true)
+            ref.setValue(it)
+        }
+
+    }
+    fun getTeacherScheduleFromDiary(day:String,date:String) {
+        val firebase = FunctionsFirebase()
+        firebase.getFieldDiary(firebase.userUid, "cookie", object : Callback<String> {
+            override fun onComplete(value: String) {
+                GlobalScope.launch(Dispatchers.IO) {
+                    val cookies = hashMapOf<String, String>()
+                    cookies[keyCookie] = value
+                    try {
+                        val document =
+                            Jsoup.connect("https://elschool.ru/MenuToLayout/MenuToLayout/ScheduleJSON?date=$date")
+                                .ignoreContentType(true)
+                                .cookies(cookies)
+                                .userAgent("mozilla")
+                                .method(Connection.Method.POST)
+                                .post()
+
+                        val tempAnswer = document.select("body").text().toString().replace("\\", "")
+                        val jsonAnswer = tempAnswer.substringAfter("\",").substringAfter(":").substringBeforeLast("}")
+                        val schoolSubjects = arrayListOf<SchoolSubjectElschool>()
+                        val klaxon = Klaxon()
+                        JsonReader(StringReader(jsonAnswer)).use { reader ->
+                            reader.beginArray {
+                                while (reader.hasNext()) {
+                                    val subject = klaxon.parse<SchoolSubjectElschool>(reader)
+                                    schoolSubjects.add(subject!!)
+                                }
+                                setTeacherLessonDatabase(schoolSubjects,day)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.d("Tag",e.toString())
+                    }
+                }
+            }
+        })
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getMarksFromDiary(
@@ -501,7 +564,7 @@ class Elschool {
                             }
                             val gradeUrl =
                                 scheduleHtml.baseUri().replace("details", "gradesandabsences")
-                            Log.d("Tag",gradeUrl)
+                            Log.d("Tag", gradeUrl)
                             //тест
                             //gradeUrl = "https://elschool.ru/users/diaries/gradesandabsences?rooId=18&instituteId=233&departmentId=91120&pupilId=1588026"
                             val gradeHtml = Jsoup.connect(gradeUrl)
@@ -552,7 +615,10 @@ class Elschool {
                                                             .substringAfterLast(" ")
                                                     add = true
                                                     val nowDate = Calendar.getInstance().time
-                                                    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
+                                                    val formatter = SimpleDateFormat(
+                                                        "yyyy-MM-dd HH:mm",
+                                                        Locale.getDefault()
+                                                    ).format(nowDate)
                                                     firebase.setFieldDiary(
                                                         firebase.userUid,
                                                         "marks/dateUpdate",
@@ -621,48 +687,49 @@ class Elschool {
             object : Callback<Boolean> {
                 override fun onComplete(end: Boolean) {
                     GlobalScope.launch(Dispatchers.Main) {
-                                if (!end) {
-                                    Toast.makeText(
-                                        context,
-                                        "При загрузке оценок произошла ошибка. Возможно, оценки еще не добавлены.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    progressBar.isVisible = false
-                                    showButtons()
-                                }
-                                val ref = firebase.userRef.child(firebase.userUid).child("diary").child("marks")
-                                ref.addChildEventListener(object : ChildEventListener {
-                                    override fun onChildAdded(
-                                        p0: DataSnapshot,
-                                        p1: String?
-                                    ) {
-                                        progressBar.isVisible = false
-                                        showButtons()
-                                    }
+                        if (!end) {
+                            Toast.makeText(
+                                context,
+                                "При загрузке оценок произошла ошибка. Возможно, оценки еще не добавлены.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            progressBar.isVisible = false
+                            showButtons()
+                        }
+                        val ref =
+                            firebase.userRef.child(firebase.userUid).child("diary").child("marks")
+                        ref.addChildEventListener(object : ChildEventListener {
+                            override fun onChildAdded(
+                                p0: DataSnapshot,
+                                p1: String?
+                            ) {
+                                progressBar.isVisible = false
+                                showButtons()
+                            }
 
-                                    override fun onChildChanged(
-                                        p0: DataSnapshot,
-                                        p1: String?
-                                    ) {
-                                        return
-                                    }
+                            override fun onChildChanged(
+                                p0: DataSnapshot,
+                                p1: String?
+                            ) {
+                                return
+                            }
 
-                                    override fun onChildRemoved(p0: DataSnapshot) {
-                                        return
-                                    }
+                            override fun onChildRemoved(p0: DataSnapshot) {
+                                return
+                            }
 
-                                    override fun onChildMoved(
-                                        p0: DataSnapshot,
-                                        p1: String?
-                                    ) {
-                                        return
-                                    }
+                            override fun onChildMoved(
+                                p0: DataSnapshot,
+                                p1: String?
+                            ) {
+                                return
+                            }
 
-                                    override fun onCancelled(p0: DatabaseError) {
-                                        return
-                                    }
+                            override fun onCancelled(p0: DatabaseError) {
+                                return
+                            }
 
-                                })
+                        })
                     }
                 }
             })

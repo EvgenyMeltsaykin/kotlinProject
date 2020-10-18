@@ -663,5 +663,18 @@
         android:id="@+id/weekdayTeacherFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.teacherFragment.WeekdayTeacherFragment"
         android:label="fragment_weekday_teacher"
-        tools:layout="@layout/fragment_weekday_teacher" />
+        tools:layout="@layout/fragment_weekday_teacher" >
+        <action
+            android:id="@+id/action_weekdayTeacherFragment_to_dayLessonsTeachersFragment"
+            app:destination="@id/dayLessonsTeachersFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/dayLessonsTeachersFragment"
+        android:name="com.diplom.kotlindiplom.generalFragments.teacherFragment.DayLessonsTeachersFragment"
+        android:label="fragment_day_lessons_teachers"
+        tools:layout="@layout/fragment_day_lessons_teachers" />
 </navigation>
