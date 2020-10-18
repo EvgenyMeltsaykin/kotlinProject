@@ -9,10 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
 import com.diplom.kotlindiplom.Callback
-import com.diplom.kotlindiplom.models.ChildForElschool
-import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.models.Lesson
-import com.diplom.kotlindiplom.models.FunctionsNetwork
+import com.diplom.kotlindiplom.models.*
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,6 +30,24 @@ class Elschool {
     private val cabinetText = "каб."
     val keyCookie = "JWToken"
     val url = "elschool.ru"
+    fun roleDiaryToRoleDatabase(role:String):String{
+        if (role.decapitalize(Locale.ROOT) == "сотрудник ОО"){
+            return "employee";
+        }
+        if (role.decapitalize(Locale.ROOT) == "учитель"){
+            return "teacher";
+        }
+        if (role.decapitalize(Locale.ROOT) == "классный руководитель"){
+            return "classTeacher";
+        }
+        if (role.decapitalize(Locale.ROOT) == "учащийся"){
+            return "child";
+        }
+        if (role.decapitalize(Locale.ROOT) == "родитель") {
+            return "parent";
+        }
+        return ""
+    }
     fun createDiary() {
         val firebase = FunctionsFirebase()
         firebase.setFieldDiary(firebase.userUid, "login", "")
@@ -58,21 +73,32 @@ class Elschool {
         firebase.setFieldDiary(firebase.userUid, "marks/dateUpdate", "")
         firebase.setFieldDiary(firebase.userUid, "schedule/weekUpdate", 0)
         firebase.diaryRef.child("children").removeValue()
+        firebase.diariesRef.child("roles").removeValue()
     }
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun getRoleFromDiary(document: org.jsoup.nodes.Document){
-        //dayDate  = it.select("td[class=diary__dayweek]").select("p").text().toString()
-        val roleWithTable = document.select("div[class=col-12 col-xl d-flex flex-column]").select("div[class=border-block p-3 mb-3 flex-grow-1]").select("tbody").select("td").text().toString()
-        val role = roleWithTable.substringBefore(" ")
-
+        val roleTable = document.select("div[class=col-12 col-xl d-flex flex-column]").select("div[class=border-block p-3 mb-3 flex-grow-1]").select("tbody").select("td").select("td")
+        var i = 0
         val firebase = FunctionsFirebase()
-
-        if (role.decapitalize(Locale.ROOT) == "учащийся"){
-            firebase.setFieldDiary(firebase.userUid,"roleDiary","child")
+        var role =""
+        val roleInDiary = RoleDiary()
+        roleTable.forEach {
+            if (i % 2 == 0){
+                if (role.isEmpty()){
+                    role = it.text()
+                }
+                roleInDiary.name = it.text()
+            }else{
+                roleInDiary.state = it.text()
+                roleInDiary.roleInDatabase = roleDiaryToRoleDatabase(roleInDiary.name)
+                firebase.setNewRoleDiary(i/2,roleInDiary)
+            }
+            i++
         }
-        if (role.decapitalize(Locale.ROOT) == "родитель") {
-            firebase.setFieldDiary(firebase.userUid,"roleDiary","parent")
-        }
+        val roleDatabase = roleDiaryToRoleDatabase(role)
+        firebase.setFieldDiary(firebase.userUid,"roleDiary",roleDatabase)
     }
+    @RequiresApi(Build.VERSION_CODES.N)
     fun login(login: String, password: String): Boolean {
         val cookies: HashMap<String, String> = HashMap()
         try {
@@ -141,13 +167,13 @@ class Elschool {
             tempUri = tempUri.substringBefore("&year=")
             //
             val resultUri = "$tempUri&startDate=$startDate&endDate=$endDate"
+            //Просмотр оценки
             val document = Jsoup.connect(resultUri)
                 .ignoreContentType(true)
                 .cookies(cookies)
                 .userAgent("mozilla")
                 .method(Connection.Method.GET)
                 .get()
-            Log.d("Tag",document.toString())
         }
 
     }

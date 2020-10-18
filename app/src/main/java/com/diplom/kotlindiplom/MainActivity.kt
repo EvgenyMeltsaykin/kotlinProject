@@ -259,7 +259,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             val bundle = bundleOf()
             bundle.putString("feedbackId", intent.getStringExtra("feedbackId"))
             bundle.putString("topic", intent.getStringExtra("topic"))
-            Log.d("Tag", bundle.toString())
             navController.navigate(
                 R.id.action_loginDiaryFragment_to_feedbackDetailsFragment,
                 bundle

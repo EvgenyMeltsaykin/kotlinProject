@@ -167,8 +167,6 @@ class AuthorizationActivity : AppCompatActivity() {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (!it.isSuccessful) return@addOnCompleteListener
-                Log.d(TAG, "email:$email")
-                Log.d(TAG, "password:$password")
                 if (!parentOrNot) saveChildToFirebaseDatabase(username, email)
                 else saveParentToFirebaseDatabase(username, email)
                 val mAuthListener = FirebaseAuth.AuthStateListener {

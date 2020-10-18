@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment.DIRECTORY_DOWNLOADS
+import android.service.autofill.Dataset
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -65,7 +66,7 @@ class FunctionsFirebase {
     }
     fun sendMessageFeedback(feedbackId:String, textMessage:String, author:String){
         val nowDate = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(nowDate)
         val messageFeedback = MessageFeedback(author,textMessage,formatter)
         val ref = feedbackRef.child(feedbackId).child("messages").push()
         messageFeedback.id = ref.key.toString()
@@ -276,7 +277,6 @@ class FunctionsFirebase {
             override fun onComplete(value: Map<String, String>) {
                 val idChild = value["idChild"].toString()
                 val urlDiary = value["url"].toString()
-                Log.d("Tag", idChild + " " + urlDiary)
                 if (idChild.isNotEmpty() && urlDiary.isNotEmpty()) {
                     val diary = Diary()
                     val calendar = Calendar.getInstance()
@@ -872,7 +872,46 @@ class FunctionsFirebase {
             }
         })
     }
+    fun getAllFieldsRoleDiary(role :DataSnapshot):RoleDiary{
+        val roleDiary = RoleDiary()
+        role.children.forEach {detailRole->
+            val key = detailRole.key.toString()
+            val value = detailRole.value.toString()
+            if (key == "name"){
+                roleDiary.name = value
+            }
+            if (key == "state"){
+                roleDiary.state = value
+            }
+            if (key == "roleInDatabase"){
+                roleDiary.roleInDatabase = value
+            }
+        }
+        return roleDiary
+    }
+    fun getRolesDiary(firebaseCallBack: Callback<List<RoleDiary>>){
+        val ref = diaryRef.child("roles")
+        val roles = mutableListOf<RoleDiary>()
+        ref.keepSynced(true)
 
+        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {role->
+                    roles.add(getAllFieldsRoleDiary(role))
+                }
+                firebaseCallBack.onComplete(roles)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+    fun setNewRoleDiary(count:Int,role:RoleDiary){
+        val ref = diaryRef.child("roles").child(count.toString())
+        ref.setValue(role)
+    }
     fun setFieldDiary(uid: String, field: String, value: Any) {
         val ref = userRef.child(uid).child("diary")
         ref.child(field).setValue(value)
@@ -1102,7 +1141,6 @@ class FunctionsFirebase {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
                     p0.children.forEach {
-                        Log.d("Tag", it.key.toString() + " " + it.value.toString())
                         fields.forEach { field ->
                             if (it.key.toString() == field) {
                                 value[field] = it.value.toString()
@@ -1249,7 +1287,6 @@ class FunctionsFirebase {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
                     p0.children.forEach {
-                        Log.d("TAG", it.key.toString())
                         if (it.key.toString() == field) {
                             firebaseCallBack.onComplete(it.value.toString())
                         }

@@ -12,7 +12,6 @@ class MyPagerAdapter(fragmentManager: FragmentManager):FragmentPagerAdapter(frag
     }
 
     override fun getItem(position: Int): Fragment {
-        Log.d("Tag","mypager = $position")
         return PagerMyScheduleFragment.newInstance(getPageTitle(position).toString(),position)
     }
 

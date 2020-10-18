@@ -11,10 +11,15 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.FunctionsUI
+import com.diplom.kotlindiplom.models.RoleDiary
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class SplashActivity : AppCompatActivity() {
@@ -28,6 +33,19 @@ class SplashActivity : AppCompatActivity() {
         this.window.statusBarColor = resources.getColor(R.color.colorActionBarSplash)
         prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
         verifyUserIsLoggedIn()
+
+        val elschool = Diary().elschool
+        GlobalScope.launch(Dispatchers.IO) {
+            elschool.login("ФазлыеваЛИ1", "Dineeva11")
+        }
+        val firebase = FunctionsFirebase()
+        firebase.getRolesDiary(object :Callback<List<RoleDiary>>{
+            override fun onComplete(value: List<RoleDiary>) {
+                value.forEach {
+                    Log.d("Tag",it.toString())
+                }
+            }
+        })
     }
 
     @ExperimentalStdlibApi
