@@ -30,7 +30,7 @@ class Elschool {
     private val cabinetText = "каб."
     val keyCookie = "JWToken"
     val url = "elschool.ru"
-    fun roleDiaryToRoleDatabase(role:String):String{
+    private fun roleDiaryToRoleDatabase(role:String):String{
         if (role.decapitalize(Locale.ROOT) == "сотрудник ОО"){
             return "employee";
         }
@@ -73,7 +73,7 @@ class Elschool {
         firebase.setFieldDiary(firebase.userUid, "marks/dateUpdate", "")
         firebase.setFieldDiary(firebase.userUid, "schedule/weekUpdate", 0)
         firebase.diaryRef.child("children").removeValue()
-        firebase.diariesRef.child("roles").removeValue()
+        firebase.diaryRef.child("roles").removeValue()
     }
     @RequiresApi(Build.VERSION_CODES.N)
     private fun getRoleFromDiary(document: org.jsoup.nodes.Document){
@@ -668,4 +668,6 @@ class Elschool {
             })
 
     }
+
+
 }

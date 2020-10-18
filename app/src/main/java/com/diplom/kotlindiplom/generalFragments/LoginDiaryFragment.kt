@@ -1,5 +1,6 @@
 package com.diplom.kotlindiplom.generalFragments
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -52,6 +54,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     var urlDiary: String = ""
+    @RequiresApi(Build.VERSION_CODES.N)
     @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

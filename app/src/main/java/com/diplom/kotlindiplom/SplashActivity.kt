@@ -34,18 +34,6 @@ class SplashActivity : AppCompatActivity() {
         prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
         verifyUserIsLoggedIn()
 
-        val elschool = Diary().elschool
-        GlobalScope.launch(Dispatchers.IO) {
-            elschool.login("ФазлыеваЛИ1", "Dineeva11")
-        }
-        val firebase = FunctionsFirebase()
-        firebase.getRolesDiary(object :Callback<List<RoleDiary>>{
-            override fun onComplete(value: List<RoleDiary>) {
-                value.forEach {
-                    Log.d("Tag",it.toString())
-                }
-            }
-        })
     }
 
     @ExperimentalStdlibApi
