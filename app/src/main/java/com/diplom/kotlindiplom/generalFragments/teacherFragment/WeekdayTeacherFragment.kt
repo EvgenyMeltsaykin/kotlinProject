@@ -1,10 +1,13 @@
 package com.diplom.kotlindiplom.generalFragments.teacherFragment
 
 import android.os.Bundle
+import android.telecom.Call
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -27,6 +30,10 @@ import kotlinx.android.synthetic.main.fragment_weekday_teacher.thursdayButton
 import kotlinx.android.synthetic.main.fragment_weekday_teacher.tuesdayButton
 import kotlinx.android.synthetic.main.fragment_weekday_teacher.view.*
 import kotlinx.android.synthetic.main.fragment_weekday_teacher.wednesdayButton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -85,28 +92,22 @@ class WeekdayTeacherFragment : Fragment() {
         progressBar?.isVisible = false
         setupNameWeekday()
         mondayButton?.setOnClickListener {
-            openFragmentDay(mondayButton?.text.toString())
-            updateTeacherSchedule("Понедельник",getDate(1))
+            updateTeacherSchedule(mondayButton,"Понедельник",getDate(1))
         }
         tuesdayButton?.setOnClickListener {
-            openFragmentDay(tuesdayButton?.text.toString())
-            updateTeacherSchedule("Вторник",getDate(2))
+            updateTeacherSchedule(tuesdayButton,"Вторник",getDate(2))
         }
         wednesdayButton?.setOnClickListener {
-            openFragmentDay(wednesdayButton?.text.toString())
-            updateTeacherSchedule("Среда",getDate(3))
+            updateTeacherSchedule(wednesdayButton,"Среда",getDate(3))
         }
         thursdayButton?.setOnClickListener {
-            openFragmentDay(thursdayButton?.text.toString())
-            updateTeacherSchedule("Четверг",getDate(4))
+            updateTeacherSchedule(thursdayButton,"Четверг",getDate(4))
         }
         fridayButton?.setOnClickListener {
-            openFragmentDay(fridayButton?.text.toString())
-            updateTeacherSchedule("Пятница",getDate(5))
+            updateTeacherSchedule(fridayButton,"Пятница",getDate(5))
         }
         saturdayButton?.setOnClickListener {
-            openFragmentDay(saturdayButton?.text.toString())
-            updateTeacherSchedule("Суббота",getDate(6))
+            updateTeacherSchedule(saturdayButton,"Суббота",getDate(6))
         }
 
         openCalendarButton?.setOnClickListener {
@@ -127,22 +128,39 @@ class WeekdayTeacherFragment : Fragment() {
             calendarView.isVisible = false
         }
     }
-    private fun updateTeacherSchedule(day:String,date:String){
-        val diary = Diary();
+    private fun updateTeacherSchedule(button: Button,day:String,date:String){
+        val diary = Diary()
         firebase.getFieldDiary(firebase.userUid, "url", object :
             Callback<String> {
             override fun onComplete(value: String) {
+                Toast.makeText(requireContext(),"Подождите, идет загрузка",Toast.LENGTH_SHORT).show()
                 when (value) {
                     diary.elschool.url -> {
-                        diary.elschool.getTeacherScheduleFromDiary(day.decapitalize(),date)
+                        diary.elschool.getTeacherScheduleFromDiary(day.decapitalize(),date,object :Callback<Boolean>{
+                            override fun onComplete(value: Boolean) {
+                                GlobalScope.launch(Dispatchers.Main) {
+                                    if (value){
+                                        Toast.makeText(requireContext(),"Успешно загружено",Toast.LENGTH_SHORT).show()
+                                        try{
+                                            openFragmentDay(button.text.toString(),day)
+                                        }catch (e:Exception){
+
+                                        }
+                                    }else{
+                                        Toast.makeText(requireContext(),"При загрузке произошла ошибка",Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        })
                     }
                 }
             }
         })
     }
-    private fun openFragmentDay(day: String) {
+    private fun openFragmentDay(title: String,day:String) {
         val bundle: Bundle = bundleOf()
-        bundle.putString("title", day.toLowerCase(Locale.ROOT))
+        bundle.putString("title", title.toLowerCase(Locale.ROOT))
+        bundle.putString("day",day)
         Navigation.findNavController(requireActivity(), R.id.navFragment)
             .navigate(R.id.action_weekdayTeacherFragment_to_dayLessonsTeachersFragment, bundle)
     }

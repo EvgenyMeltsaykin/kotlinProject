@@ -5,7 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.diaries.Diary
+import com.diplom.kotlindiplom.models.elschool.SchoolSubjectElschool
+import com.diplom.kotlindiplom.models.recyclerViewItems.SchoolSubjectElschoolItem
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.fragment_day_lessons_teachers.*
+import java.security.acl.Group
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -19,13 +29,13 @@ private const val ARG_PARAM2 = "param2"
  */
 class DayLessonsTeachersFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    private var day: String? = null
     private var title: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
+            day = it.getString("day")
             title = it.getString("title")
         }
     }
@@ -41,6 +51,28 @@ class DayLessonsTeachersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.title = title
+        val diary = Diary()
+        val adapter = GroupAdapter<ViewHolder>()
+        lessonsRecyclerView?.adapter = adapter
+        firebase.getFieldDiary(firebase.userUid,"url",object :Callback<String>{
+            override fun onComplete(value: String) {
+                when(value){
+                    diary.elschool.url->{
+                        diary.elschool.getTeacherLessonsDay(day!!,object :Callback<List<SchoolSubjectElschool>>{
+                            override fun onComplete(value: List<SchoolSubjectElschool>) {
+                                if (value.isEmpty()){
+                                    messageTextView?.isVisible = true
+                                }
+                                scheduleDayProgressBar?.isVisible = false
+                                value.forEach {
+                                    adapter.add(SchoolSubjectElschoolItem(it))
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        })
     }
 
     companion object {

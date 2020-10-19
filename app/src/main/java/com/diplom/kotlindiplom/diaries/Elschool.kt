@@ -485,49 +485,134 @@ class Elschool {
                 }
             })
     }
-    fun setTeacherLessonDatabase(lesson:List<SchoolSubjectElschool>, day:String){
+    fun getLessonTeacher(snapshot: DataSnapshot): SchoolSubjectElschool? {
+        if (snapshot.child("changeName").value == null){
+            return null
+        }
+        val changeName = snapshot.child("changeName").value.toString()
+        val number =snapshot.child("number").value.toString().toInt()
+        val startTime = snapshot.child("startTime").value.toString()
+        val endTime= snapshot.child("endTime").value.toString()
+        val rooId= snapshot.child("rooId").value.toString().toInt()
+        val instituteId= snapshot.child("instituteId").value.toString().toInt()
+        val departmentId= snapshot.child("departmentId").value.toString().toInt()
+        val departmentName= snapshot.child("departmentName").value.toString()
+        var groupId:Int?
+        if (snapshot.child("groupId").value == null){
+            groupId = null
+        }else{
+            groupId = snapshot.child("groupId").value.toString().toInt()
+        }
+        val disciplineId= snapshot.child("disciplineId").value.toString().toInt()
+        val disciplineName= snapshot.child("disciplineName").value.toString()
+        val periodId= snapshot.child("periodId").value.toString().toInt()
+        return SchoolSubjectElschool(changeName,number, startTime, endTime, rooId, instituteId, departmentId, departmentName, groupId, disciplineId, disciplineName, periodId)
+
+    }
+    fun getTeacherLessonsDay(day: String,callback: Callback<List<SchoolSubjectElschool>>){
         val firebase = FunctionsFirebase()
-        firebase.diaryRef.child("schedule").child(day).removeValue()
+        val ref = firebase.scheduleRef
+        ref.keepSynced(true)
+        val lessons = mutableListOf<SchoolSubjectElschool>()
+        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {schedule->
+                    val key = schedule.key.toString()
+                    if (key == day.toLowerCase(Locale.ROOT)) {
+                        schedule.children.forEach {
+                            //val school = it.getValue(SchoolSubjectElschool::class.java)
+                            val lesson = getLessonTeacher(it)
+                            if (lesson != null) {
+                                lessons.add(lesson)
+                            }
+                        }
+                    }
+                }
+                callback.onComplete(lessons)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+    fun getFieldFromScheduleTeacher(day: String, field: String, callback: Callback<String>) {
+        val firebase = FunctionsFirebase()
+        val ref = firebase.scheduleRef.child(day).child(field)
+        ref.keepSynced(true)
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                callback.onComplete(snapshot.value.toString())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun setTeacherLessonDatabase(lesson: List<SchoolSubjectElschool>, day: String, date: String) {
+        val firebase = FunctionsFirebase()
+        firebase.scheduleRef.child(day).removeValue()
+        firebase.scheduleRef.child(day).child("date").setValue(date)
         lesson.forEach {
-            val ref = firebase.diaryRef.child("schedule").child(day).push()
+            val ref = firebase.scheduleRef.child(day).push()
             ref.keepSynced(true)
             ref.setValue(it)
         }
 
     }
-    fun getTeacherScheduleFromDiary(day:String,date:String) {
+
+    fun getTeacherScheduleFromDiary(day: String, date: String, callback: Callback<Boolean>) {
         val firebase = FunctionsFirebase()
         firebase.getFieldDiary(firebase.userUid, "cookie", object : Callback<String> {
             override fun onComplete(value: String) {
-                GlobalScope.launch(Dispatchers.IO) {
+
                     val cookies = hashMapOf<String, String>()
                     cookies[keyCookie] = value
                     try {
-                        val document =
-                            Jsoup.connect("https://elschool.ru/MenuToLayout/MenuToLayout/ScheduleJSON?date=$date")
-                                .ignoreContentType(true)
-                                .cookies(cookies)
-                                .userAgent("mozilla")
-                                .method(Connection.Method.POST)
-                                .post()
-
-                        val tempAnswer = document.select("body").text().toString().replace("\\", "")
-                        val jsonAnswer = tempAnswer.substringAfter("\",").substringAfter(":").substringBeforeLast("}")
-                        val schoolSubjects = arrayListOf<SchoolSubjectElschool>()
-                        val klaxon = Klaxon()
-                        JsonReader(StringReader(jsonAnswer)).use { reader ->
-                            reader.beginArray {
-                                while (reader.hasNext()) {
-                                    val subject = klaxon.parse<SchoolSubjectElschool>(reader)
-                                    schoolSubjects.add(subject!!)
+                        getFieldFromScheduleTeacher(day, "date", object : Callback<String> {
+                            override fun onComplete(value: String) {
+                                if (value == date){
+                                    callback.onComplete(true)
+                                    return
                                 }
-                                setTeacherLessonDatabase(schoolSubjects,day)
+                                GlobalScope.launch(Dispatchers.IO) {
+                                    val document =
+                                        Jsoup.connect("https://elschool.ru/MenuToLayout/MenuToLayout/ScheduleJSON?date=$date")
+                                            .ignoreContentType(true)
+                                            .cookies(cookies)
+                                            .userAgent("mozilla")
+                                            .method(Connection.Method.POST)
+                                            .post()
+
+                                    val tempAnswer =
+                                        document.select("body").text().toString().replace("\\", "")
+                                    val jsonAnswer =
+                                        tempAnswer.substringAfter("\",").substringAfter(":")
+                                            .substringBeforeLast("}")
+                                    val schoolSubjects = arrayListOf<SchoolSubjectElschool>()
+                                    val klaxon = Klaxon()
+                                    JsonReader(StringReader(jsonAnswer)).use { reader ->
+                                        reader.beginArray {
+                                            while (reader.hasNext()) {
+                                                val subject =
+                                                    klaxon.parse<SchoolSubjectElschool>(reader)
+                                                schoolSubjects.add(subject!!)
+                                            }
+                                            setTeacherLessonDatabase(schoolSubjects, day, date)
+                                            callback.onComplete(true)
+                                        }
+                                    }
+                                }
                             }
-                        }
+                        })
+
                     } catch (e: Exception) {
-                        Log.d("Tag",e.toString())
+                        callback.onComplete(false)
                     }
-                }
             }
         })
     }
