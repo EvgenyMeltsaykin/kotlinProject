@@ -50,14 +50,14 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         requireActivity().invalidateOptionsMenu()
         super.onViewCreated(view, savedInstanceState)
-        if (prefs.contains(functionsUI.APP_PREFERENCES_MODE)){
+        /*if (prefs.contains(functionsUI.APP_PREFERENCES_MODE)){
             onlyDiarySwitch?.isChecked = prefs.getBoolean(functionsUI.APP_PREFERENCES_MODE,false)
         }
         onlyDiarySwitch?.setOnCheckedChangeListener { compoundButton, b ->
             val editor = prefs.edit()
             editor.putBoolean(functionsUI.APP_PREFERENCES_MODE,b).apply()
             functionsUI.changeMode(requireActivity())
-        }
+        }*/
     }
 
     companion object {

@@ -29,7 +29,7 @@
             android:title="Учебники" />
 
     </group>
-
+    <!--
     <group
         android:id="@+id/grp3"
         android:checkableBehavior="single">
@@ -42,6 +42,7 @@
             android:icon="@drawable/ic_award"
             android:title="Вознаграждение" />
     </group>
+    -->
     <group
         android:id="@+id/grp4"
         android:checkableBehavior="single">
