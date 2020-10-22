@@ -18,6 +18,7 @@ import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.diaries.Diary
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_choose_semestr.*
 import org.cryptonode.jncryptor.AES256JNCryptor
@@ -1229,7 +1230,7 @@ class FunctionsFirebase {
         })
 
     }
-
+/*
     fun uploadImageToFirebase(selectedPhotoUri: Uri?, activity: Activity, role: String) {
         Log.d("TAG", "$selectedPhotoUri")
         if (selectedPhotoUri == null) return
@@ -1273,7 +1274,7 @@ class FunctionsFirebase {
                 ).show()
             }
     }
-
+*/
     fun getParent(parentUid: String?, firebaseCallBack: Callback<Parent>) {
         userRef.child(parentUid!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -1305,9 +1306,6 @@ class FunctionsFirebase {
             if (it.key.toString() == "email") {
                 parent.email = it.value.toString()
             }
-            if (it.key.toString() == "profileImageUrl") {
-                parent.profileImageUrl = it.value.toString()
-            }
             if (it.key.toString() == "userUid") {
                 parent.userUid = it.value.toString()
             }
@@ -1334,47 +1332,9 @@ class FunctionsFirebase {
     }
 
     fun getAllFieldsChild(p0: DataSnapshot): Child {
-        val child = Child("", "", "")
-        p0.children.forEach {
-            if (it.key.toString() == "acceptName") {
-                child.acceptName = it.value.toString()
-            }
-            if (it.key.toString() == "acceptUid") {
-                child.acceptUid = it.value.toString()
-            }
-            if (it.key.toString() == "userUid") {
-                child.userUid = it.value.toString()
-            }
-            if (it.key.toString() == "city") {
-                child.city = it.value.toString()
-            }
-            if (it.key.toString() == "cityId") {
-                child.cityId = it.value.toString().toInt()
-            }
-            if (it.key.toString() == "educationalInstitution") {
-                child.educationalInstitution = it.value.toString()
-            }
-            if (it.key.toString() == "educationalInstitutionId") {
-                child.educationalInstitutionId = it.value.toString().toInt()
-            }
-            if (it.key.toString() == "email") {
-                child.email = it.value.toString()
-            }
-            if (it.key.toString() == "id") {
-                child.id = it.value.toString().toInt()
-            }
-            if (it.key.toString() == "parentUid") {
-                child.parentUid = it.value.toString()
-            }
-            if (it.key.toString() == "point") {
-                child.point = it.value.toString().toInt()
-            }
-            if (it.key.toString() == "profileImageUrl") {
-                child.profileImageUrl = it.value.toString()
-            }
-            if (it.key.toString() == "username") {
-                child.username = it.value.toString()
-            }
+        val child = p0.getValue<Child>()
+        if (child == null){
+            return Child()
         }
         return child
     }

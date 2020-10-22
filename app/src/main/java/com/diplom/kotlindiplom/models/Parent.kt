@@ -4,7 +4,6 @@ data class Parent (
     var userUid:String,
     var username:String,
     var email:String,
-    var profileImageUrl: String = "",
     var acceptAnswer: String = "",
     var city:String ="",
     var cityId : Int = -1,

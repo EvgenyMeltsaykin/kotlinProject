@@ -34,7 +34,6 @@ class SplashActivity : AppCompatActivity() {
         prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
 
         verifyUserIsLoggedIn()
-        val diary = Diary().elschool
     }
 
     @ExperimentalStdlibApi
