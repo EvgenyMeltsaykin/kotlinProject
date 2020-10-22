@@ -11,11 +11,10 @@ import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import com.diplom.kotlindiplom.models.elschool.SchoolSubjectElschool
-import com.diplom.kotlindiplom.models.recyclerViewItems.SchoolSubjectElschoolItem
+import com.diplom.kotlindiplom.models.recyclerViewItems.SchoolLessonTeacherElschoolItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_day_lessons_teachers.*
-import java.security.acl.Group
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -65,7 +64,7 @@ class DayLessonsTeachersFragment : Fragment() {
                                 }
                                 scheduleDayProgressBar?.isVisible = false
                                 value.forEach {
-                                    adapter.add(SchoolSubjectElschoolItem(it))
+                                    adapter.add(SchoolLessonTeacherElschoolItem(it))
                                 }
                             }
                         })

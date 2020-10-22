@@ -313,11 +313,10 @@ class Elschool {
                                 firebase.userUid,
                                 "roleDiary",
                                 object : Callback<String> {
+                                    @RequiresApi(Build.VERSION_CODES.O)
                                     override fun onComplete(value: String) {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && value == "parent") {
-                                            GlobalScope.launch(Dispatchers.IO) {
-                                                setSeeMarks(scheduleHtml, cookies)
-                                            }
+                                        GlobalScope.launch(Dispatchers.IO) {
+                                            setSeeMarks(scheduleHtml, cookies)
                                         }
                                     }
                                 })
