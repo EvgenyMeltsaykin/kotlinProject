@@ -66,7 +66,6 @@ class Elschool {
 
     fun deleteDiary() {
         val firebase = FunctionsFirebase()
-
         firebase.setFieldDiary(firebase.userUid, "semestrName", "")
         firebase.setFieldDiary(firebase.userUid, "idChild", "")
         firebase.setFieldDiary(firebase.userUid, "roleDiary", "")
@@ -496,7 +495,7 @@ class Elschool {
         val instituteId= snapshot.child("instituteId").value.toString().toInt()
         val departmentId= snapshot.child("departmentId").value.toString().toInt()
         val departmentName= snapshot.child("departmentName").value.toString()
-        var groupId:Int?
+        val groupId:Int?
         if (snapshot.child("groupId").value == null){
             groupId = null
         }else{

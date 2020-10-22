@@ -19,7 +19,7 @@
             android:title="Мой профиль" />
     </group>
 
-    <!--
+<!--
     <group
         android:id="@+id/grp3"
         android:checkableBehavior="single">
@@ -36,7 +36,7 @@
             android:icon="@drawable/ic_child"
             android:title="Список детей" />
     </group>
-    -->
+-->
     <group android:checkableBehavior="single" android:id="@+id/grp4">
         <item
             android:id="@+id/listFeedbackFragment"

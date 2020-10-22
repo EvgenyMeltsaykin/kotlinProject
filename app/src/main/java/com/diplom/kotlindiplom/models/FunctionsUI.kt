@@ -22,30 +22,6 @@ class FunctionsUI {
     val APP_PREFERENCES_MODE = "onlyDiary"
     val APP_PREFERENCES_ROLE = "role"
 
-    fun changeMode(activity: Activity) {
-        val prefs: SharedPreferences =
-            activity.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        if (prefs.contains(APP_PREFERENCES_MODE)) {
-            val onlyDiary = prefs.getBoolean(APP_PREFERENCES_MODE, false)
-            val navigationView: NavigationView = activity.findViewById(R.id.navView)
-            val menuNavigationView = navigationView.menu
-            menuNavigationView.findItem(R.id.childTasksFragment)?.isVisible = !onlyDiary
-            menuNavigationView.findItem(R.id.listAwardsFragment)?.isVisible = !onlyDiary
-            menuNavigationView.findItem(R.id.parentTasksFragment)?.isVisible = !onlyDiary
-            menuNavigationView.findItem(R.id.listAwardsFragment)?.isVisible = !onlyDiary
-            menuNavigationView.findItem(R.id.parentNodeChildrenFragment)?.isVisible = !onlyDiary
-            activity.invalidateOptionsMenu()
-        }
-    }
-
-    fun setPreferences(preferences:String, activity: Activity){
-        val prefs: SharedPreferences =
-            activity.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        if (prefs.contains(preferences)) {
-
-        }
-    }
-
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Notification Title"
@@ -106,93 +82,6 @@ class FunctionsUI {
             }
         })
 
-    }
-
-    fun createNotificationChild(
-        context: Context,
-        intentClass: Class<*>,
-        contentTitle: String,
-        contentText: String,
-        task: Task
-    ) {
-        val firebase = FunctionsFirebase()
-        firebase.getFieldUserDatabase(
-            firebase.userUid,
-            "parentUid",
-            object : Callback<String> {
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun onComplete(value: String) {
-                    if (task.parentUid == value) {
-                        createNotificationChannel(context)
-                        val intent = Intent(context, intentClass)
-                        intent.putExtra("role", "child")
-                        intent.putExtra("taskId", task.taskId)
-                        intent.putExtra("title", task.title)
-                        val pendingIntent = PendingIntent.getActivity(
-                            context,
-                            0,
-                            intent,
-                            PendingIntent.FLAG_CANCEL_CURRENT
-                        )
-                        sendNotification(context, contentTitle, contentText, pendingIntent)
-                        firebase.setFieldDatabaseTask(task.taskId, "showNotification", 1)
-                    }
-                }
-            })
-
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun createNotificationParent(
-        context: Context,
-        intentClass: Class<*>,
-        contentTitle: String,
-        contentText: String,
-        task: Task
-    ) {
-        val firebase = FunctionsFirebase()
-        if (task.parentUid != firebase.userUid) return
-        createNotificationChannel(context)
-
-        val intent = Intent(context, intentClass)
-        intent.putExtra("role", "parent")
-        intent.putExtra("taskId", task.taskId)
-        intent.putExtra("title", task.title)
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
-        sendNotification(context, contentTitle, contentText, pendingIntent)
-        firebase.setFieldDatabaseTask(task.taskId, "showNotification", 1)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun createNotificationChildTakeAward(
-        context: Context,
-        intentClass: Class<*>,
-        contentTitle: String,
-        contentText: String,
-        award: Award
-    ) {
-        val firebase = FunctionsFirebase()
-        if (award.parentUid != firebase.userUid) return
-        createNotificationChannel(context)
-        val intent = Intent(context, intentClass)
-        intent.putExtra("role", "parent")
-        intent.putExtra("awardId", award.awardId)
-        intent.putExtra("nameAward", award.name)
-        intent.putExtra("costAward", award.cost)
-        intent.putExtra("status", 1)
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
-        sendNotification(context, contentTitle, contentText, pendingIntent)
-        firebase.setFieldAward(award.awardId, "showNotification", 0)
     }
 
 }

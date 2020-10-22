@@ -11,33 +11,12 @@
         android:label="Главная"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_mainFragment_to_childTaskContentFragment"
-            app:destination="@id/childTaskContentFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-        <action
-            android:id="@+id/action_mainFragment_to_parentTaskContentFragment"
-            app:destination="@id/parentTaskContentFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-        <action
             android:id="@+id/action_mainFragment_to_myScheduleDayFragment"
             app:destination="@id/myScheduleDayFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
-        <action
-            android:id="@+id/action_mainFragment_to_detailAwardFragment"
-            app:destination="@id/detailAwardFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_mainFragment_to_feedbackDetailsFragment"
             app:destination="@id/feedbackDetailsFragment"
@@ -59,48 +38,7 @@
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
     </fragment>
-    <fragment
-        android:id="@+id/childTasksFragment"
-        android:name="com.diplom.kotlindiplom.childFragments.ChildTasksFragment"
-        android:label="fragment_child_tasks"
-        tools:layout="@layout/fragment_child_tasks" >
-        <action
-            android:id="@+id/action_childTasksFragment_to_childAllTasksFragment"
-            app:destination="@id/childAllTasksFragment"
-            app:enterAnim="@anim/from_right"
-            app:exitAnim="@anim/to_left"
-            app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/to_right" />
-        <action
-            android:id="@+id/action_childTasksFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
-    <fragment
-        android:id="@+id/childAllTasksFragment"
-        android:name="com.diplom.kotlindiplom.childFragments.ChildAllTasksFragment"
-        android:label="fragment_child_all_tasks"
-        tools:layout="@layout/fragment_child_all_tasks" >
-        <argument
-            android:name="titile"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_childAllTasksFragment_to_childTaskContentFragment"
-            app:destination="@id/childTaskContentFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
-    <fragment
-        android:id="@+id/childTaskContentFragment"
-        android:name="com.diplom.kotlindiplom.childFragments.ChildTaskContentFragment"
-        android:label="fragment_child_task_content"
-        tools:layout="@layout/fragment_child_task_content" />
-    <fragment
+       <fragment
         android:id="@+id/weekdayFragment"
         android:name="com.diplom.kotlindiplom.generalFragments.scheduleFragments.WeekdayFragment"
         android:label="fragment_weekday"
@@ -138,20 +76,6 @@
         <action
             android:id="@+id/action_loginDiaryFragment_to_mainFragment"
             app:destination="@id/mainFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-        <action
-            android:id="@+id/action_loginDiaryFragment_to_parentTaskContentFragment"
-            app:destination="@id/parentTaskContentFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-        <action
-            android:id="@+id/action_loginDiaryFragment_to_detailAwardFragment"
-            app:destination="@id/detailAwardFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
@@ -206,56 +130,6 @@
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
     </fragment>
-    <fragment
-        android:id="@+id/parentTasksFragment"
-        android:name="com.diplom.kotlindiplom.parentFragments.ParentTasksFragment"
-        android:label="fragment_parent_tasks"
-        tools:layout="@layout/fragment_parent_tasks" >
-        <action
-            android:id="@+id/action_parentTasksFragment_to_parentAllTasksFragment"
-            app:destination="@id/parentAllTasksFragment"
-            app:enterAnim="@anim/from_right"
-            app:exitAnim="@anim/to_left"
-            app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/to_right" />
-        <action
-            android:id="@+id/action_parentTasksFragment_to_parentNewTaskFragment"
-            app:destination="@id/parentNewTaskFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-        <action
-            android:id="@+id/action_parentTasksFragment_to_loginDiaryFragment"
-            app:destination="@id/loginDiaryFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
-    <fragment
-        android:id="@+id/parentAllTasksFragment"
-        android:name="com.diplom.kotlindiplom.parentFragments.ParentAllTasksFragment"
-        android:label="fragment_parent_all_tasks"
-        tools:layout="@layout/fragment_parent_all_tasks" >
-        <action
-            android:id="@+id/action_parentAllTasksFragment_to_parentTaskContentFragment"
-            app:destination="@id/parentTaskContentFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
-    <fragment
-        android:id="@+id/parentNewTaskFragment"
-        android:name="com.diplom.kotlindiplom.parentFragments.ParentNewTaskFragment"
-        android:label="fragment_parent_new_task"
-        tools:layout="@layout/fragment_parent_new_task" />
-    <fragment
-        android:id="@+id/parentTaskContentFragment"
-        android:name="com.diplom.kotlindiplom.parentFragments.ParentTaskContentFragment"
-        android:label="fragment_parent_task_content"
-        tools:layout="@layout/fragment_parent_task_content" />
     <fragment
         android:id="@+id/parentNodeChildrenFragment"
         android:name="com.diplom.kotlindiplom.parentFragments.ParentNodeChildrenFragment"
@@ -461,71 +335,6 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
-    <fragment
-        android:id="@+id/listAwardsFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.awardFragments.ListAwardsFragment"
-        android:label="fragment_list_awards"
-        tools:layout="@layout/fragment_list_awards" >
-        <action
-            android:id="@+id/action_listAwardsFragment_to_newAwardFragment"
-            app:destination="@id/newAwardFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-        <action
-            android:id="@+id/action_listAwardsFragment_to_detailAwardFragment"
-            app:destination="@id/detailAwardFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"
-            app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/action_listAwardsFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-        <action
-            android:id="@+id/action_listAwardsFragment_to_loginDiaryFragment"
-            app:destination="@id/loginDiaryFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
-    <fragment
-        android:id="@+id/newAwardFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.awardFragments.NewAwardFragment"
-        android:label="fragment_new_award"
-        tools:layout="@layout/fragment_new_award" >
-        <action
-            android:id="@+id/action_newAwardFragment_to_listAwardsFragment"
-            app:destination="@id/listAwardsFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"
-            app:popUpTo="@id/listAwardsFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/detailAwardFragment"
-        android:name="com.diplom.kotlindiplom.generalFragments.awardFragments.DetailAwardFragment"
-        android:label="fragment_detail_award"
-        tools:layout="@layout/fragment_detail_award" >
-        <action
-            android:id="@+id/action_detailAwardFragment_to_listAwardsFragment"
-            app:destination="@id/listAwardsFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"
-            app:popUpTo="@id/listAwardsFragment"
-            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/detailsFinalMarkFragment2"
