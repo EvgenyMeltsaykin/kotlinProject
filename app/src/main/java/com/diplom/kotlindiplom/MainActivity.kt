@@ -24,10 +24,12 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebaseFeedback
 import com.diplom.kotlindiplom.MainActivity.FunctionUiSingleton.functionsUI
 import com.diplom.kotlindiplom.childFragments.RequestParentFragment
 import com.diplom.kotlindiplom.models.FunctionsApi
 import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.diplom.kotlindiplom.models.FunctionsFirebaseFeedback
 import com.diplom.kotlindiplom.models.FunctionsUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -49,15 +51,16 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     override fun getRoleUser(): String {
         return prefs.getString(functionsUI.APP_PREFERENCES_ROLE, "").toString()
     }
-
     object FunctionUiSingleton {
         val functionsUI = FunctionsUI()
     }
 
     object FirebaseSingleton {
         var firebase = FunctionsFirebase()
+        var firebaseFeedback = FunctionsFirebaseFeedback()
         fun newInstance() {
             firebase = FunctionsFirebase()
+            firebaseFeedback = FunctionsFirebaseFeedback()
         }
     }
 
@@ -96,13 +99,12 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
     }
 
     private fun setMessageListener() {
-
         firebase.feedbackRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val feedback = firebase.getAllFieldsFeedback(snapshot)
+                val feedback = firebaseFeedback.getAllFieldsFeedback(snapshot)
                 if (feedback.userUid == firebase.userUid) {
                     if (feedback.messages.isNotEmpty()){
                         if (feedback.messages.last().author != "user" && feedback.messages.last().readStatus == "0") {
@@ -144,7 +146,6 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
             navController.navigate(R.id.parentMyProfileFragment)
             drawer.closeDrawer(GravityCompat.START)
         }
-        val uiFunctions = FunctionsUI()
         val ref = firebase.userRef.child(firebase.userUid)
         ref.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {

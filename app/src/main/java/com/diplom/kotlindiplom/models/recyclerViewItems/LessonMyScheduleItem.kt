@@ -14,7 +14,7 @@ class LessonMyScheduleItem(val lesson: Lesson, val number: Int) : Item<ViewHolde
         }else{
             viewHolder.itemView.homeworkIndicatorImageView?.isVisible = true
         }
-        viewHolder.itemView.lessonNameTextView.text = lesson.name
+        viewHolder.itemView.lessonNameTextView.text = lesson.lessonName
         viewHolder.itemView.lessonTimeTextView.text = "Время: ${lesson.time}"
         viewHolder.itemView.cabinetTextView.text = "Кабинет: ${lesson.cabinet}"
     }

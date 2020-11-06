@@ -17,7 +17,7 @@ data class Child(
     var acceptUid: String? = "",
     val role: String = "child"
 ){
-    @Exclude
+    /*@Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "userUid" to userUid,
@@ -34,6 +34,6 @@ data class Child(
             "acceptUid" to acceptUid,
             "role" to role
         )
-    }
+    }*/
 
 }

@@ -9,7 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebaseFeedback
 import com.diplom.kotlindiplom.MainActivity.FunctionUiSingleton.functionsUI
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.Feedback
@@ -65,7 +68,7 @@ class FeedbackDetailsFragment : Fragment() {
                 return@setOnClickListener
             }
             if (textMessage.isNotEmpty()){
-                firebase.sendMessageFeedback(feedbackId,textMessage,"user")
+                firebaseFeedback.sendMessageFeedback(feedbackId,textMessage,"user")
                 textMessageEditText?.setText("")
             }
         }
@@ -73,7 +76,7 @@ class FeedbackDetailsFragment : Fragment() {
     private fun getMessageFromFeedback(){
         firebase.feedbackRef.child(feedbackId).child("messages").addChildEventListener(object :ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                firebase.getFeedback(feedbackId,object :Callback<Feedback>{
+                firebaseFeedback.getFeedback(feedbackId,object :Callback<Feedback>{
                     override fun onComplete(value: Feedback) {
                         adapter.clear()
                         countMessageUser = 1

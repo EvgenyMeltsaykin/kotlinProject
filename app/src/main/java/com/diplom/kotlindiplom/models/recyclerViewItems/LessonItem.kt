@@ -12,7 +12,7 @@ class LessonItem(val lesson: Lesson) : Item<ViewHolder>() {
     }
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
-        viewHolder.itemView.lessonNameTextView.text = lesson.name
+        viewHolder.itemView.lessonNameTextView.text = lesson.lessonName
         if (lesson.homework.isNotEmpty()){
             viewHolder.itemView.homeworkIndicatorImageView.setBackgroundResource(R.drawable.ic_circle_green)
         }

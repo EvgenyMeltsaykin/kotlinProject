@@ -12,7 +12,6 @@ import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Lesson
 import com.diplom.kotlindiplom.models.MyPagerAdapter
 import com.diplom.kotlindiplom.models.recyclerViewItems.LessonMySchedulePagerItem
@@ -79,13 +78,13 @@ class PagerMyScheduleFragment : Fragment() , AddLessonFragment.OnInputListener {
             val itemAdapter = item as LessonMySchedulePagerItem
             val addLessonFragment = AddLessonFragment()
             val bundle =  bundleOf()
-            if (itemAdapter.lesson.name.isEmpty()){
+            if (itemAdapter.lesson.lessonName.isEmpty()){
                 bundle.putString("day",weekday.toLowerCase())
                 bundle.putString("numberLesson",item.number.toString())
             }else{
                 bundle.putString("day",weekday.toLowerCase())
                 bundle.putString("numberLesson",item.number.toString())
-                bundle.putString("lessonName",item.lesson.name)
+                bundle.putString("lessonName",item.lesson.lessonName)
                 bundle.putString("time",item.lesson.time)
                 bundle.putString("cabinet",item.lesson.cabinet)
 

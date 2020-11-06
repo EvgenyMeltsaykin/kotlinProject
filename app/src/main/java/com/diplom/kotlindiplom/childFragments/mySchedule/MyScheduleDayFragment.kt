@@ -1,7 +1,6 @@
 package com.diplom.kotlindiplom.childFragments.mySchedule
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
-import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.Lesson
 import com.diplom.kotlindiplom.models.recyclerViewItems.LessonMyScheduleItem
 import com.xwray.groupie.GroupAdapter
@@ -60,7 +58,7 @@ class MyScheduleDayFragment : Fragment() {
             override fun onComplete(value: List<Lesson>) {
                 var i = 0
                 value.forEach {
-                    if (it.name.isNotEmpty()){
+                    if (it.lessonName.isNotEmpty()){
                         emptyLessonTextView?.isVisible = false
                         adapter.add(LessonMyScheduleItem(it,i))
                         i++
@@ -76,7 +74,7 @@ class MyScheduleDayFragment : Fragment() {
         adapter.setOnItemClickListener { item, view ->
             val lessonItem = item as LessonMyScheduleItem
             val bundle = bundleOf()
-            bundle.putString("lessonName",lessonItem.lesson.name)
+            bundle.putString("lessonName",lessonItem.lesson.lessonName)
             bundle.putString("lessonTime",lessonItem.lesson.time)
             bundle.putString("lessonCabinet",lessonItem.lesson.cabinet)
             bundle.putString("lessonNumber",lessonItem.number.toString())

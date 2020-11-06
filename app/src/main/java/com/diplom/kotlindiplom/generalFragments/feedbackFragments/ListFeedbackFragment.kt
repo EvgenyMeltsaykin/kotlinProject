@@ -10,7 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
-import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebaseFeedback
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.Feedback
 import com.diplom.kotlindiplom.models.recyclerViewItems.FeedbackItem
@@ -53,8 +53,8 @@ class ListFeedbackFragment : Fragment() {
         super.onResume()
         refreshListFeedback()
     }
-    fun refreshListFeedback(){
-        firebase.getListFeedback(object : Callback<List<Feedback>> {
+    private fun refreshListFeedback(){
+        firebaseFeedback.getListFeedback(object : Callback<List<Feedback>> {
             override fun onComplete(value: List<Feedback>) {
                 listFeedbackProgressBar?.isVisible = false
                 if (value.isEmpty()){

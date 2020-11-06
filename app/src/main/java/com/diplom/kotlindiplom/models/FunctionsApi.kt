@@ -37,7 +37,6 @@ class FunctionsApi() {
             .subscribe({ result ->
                 cities.clear()
                 citiesString.clear()
-
                 result.response?.items?.forEach {
                     cities.add(it)
                     citiesString.add(it.title.toString())

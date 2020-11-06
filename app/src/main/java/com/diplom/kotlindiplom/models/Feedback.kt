@@ -1,5 +1,7 @@
 package com.diplom.kotlindiplom.models
 
+import com.google.firebase.database.Exclude
+
 data class Feedback(
     var id :String = "",
     var topic:String = "",
@@ -7,5 +9,5 @@ data class Feedback(
     var codeQuestion:Int = 0,
     var time:String = "",
     var messages:List<MessageFeedback> = listOf(),
-    var userUid:String = "",
+    var userUid:String = ""
 )

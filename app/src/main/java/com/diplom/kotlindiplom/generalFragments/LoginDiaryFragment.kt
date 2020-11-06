@@ -121,7 +121,6 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     }
                 }
             } else {
-
                 showButtons()
             }
         }

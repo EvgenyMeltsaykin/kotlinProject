@@ -1,6 +1,7 @@
 package com.diplom.kotlindiplom.generalFragments.scheduleFragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.diplom.kotlindiplom.models.recyclerViewItems.LessonItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_schedule_day.*
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,12 +71,12 @@ class ScheduleDayFragment : Fragment() {
             })
         }
         adapter.clear()
-        firebase.getScheduleDay(firebase.userUid, day.toLowerCase(),object : Callback<List<Lesson>>{
+        firebase.getScheduleDay(firebase.userUid, day.toLowerCase(Locale.ROOT),object : Callback<List<Lesson>>{
             override fun onComplete(value: List<Lesson>) {
                 var fl = true
                 scheduleDayProgressBar?.isVisible = false
                 value.forEach {
-                    if (it.name.isNotEmpty()){
+                    if (lessonNotEmpty(it)){
                         adapter.add(LessonItem(it))
                         fl = false
                     }
@@ -82,13 +84,17 @@ class ScheduleDayFragment : Fragment() {
                 if (fl)messageTextView?.isVisible  =true
                 lessonsRecyclerView?.adapter = adapter
             }
+
+            private fun lessonNotEmpty(it: Lesson): Boolean {
+                return it.lessonName != "null"
+            }
         })
 
         adapter.setOnItemClickListener { item, view ->
             val lessonItem = item as LessonItem
             val bundle = bundleOf()
             bundle.putString("homework",lessonItem.lesson.homework)
-            bundle.putString("lessonName",lessonItem.lesson.name)
+            bundle.putString("lessonName",lessonItem.lesson.lessonName)
             Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.action_scheduleDayFragment_to_homeworkFragment,bundle)
         }
     }

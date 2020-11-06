@@ -10,8 +10,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
-import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebaseFeedback
 import com.diplom.kotlindiplom.R
+import com.diplom.kotlindiplom.models.Feedback
 import kotlinx.android.synthetic.main.fragment_mail.*
 
 
@@ -26,14 +27,18 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+
+    companion object {
+        private const val CODE_OTHER = 0
+        private const val CODE_ADD_DIARY = 1
+        private const val CODE_ADD_SCHOOLBOOK = 2
+        private const val MAX_NUMBER_CONSECUTIVE_MESSAGES = 3
+    }
+
     private var numberClass: String? = null
     private var subjectName: String? = null
     private var topic: String? = null
-    private val CODE_ADD_DIARY = 1
-    private val CODE_ADD_SCHOOLBOOK = 2
-    private val CODE_OTHER = 0
-    private var codeQuestion = 0
+    private var codeQuestion = CODE_OTHER
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,48 +66,38 @@ class MailFragment : Fragment() {
 
         if (topic == "Добавить учебник"){
             addSchoolBook()
-            codeQuestion = 2
+            codeQuestion = CODE_ADD_SCHOOLBOOK
         }
         if (topic == "Добавить дневник"){
             addDiary()
-            codeQuestion = 1
+            codeQuestion = CODE_ADD_DIARY
         }
         sendEmailButton?.setOnClickListener {
             if (contentMessageEditText?.text?.isEmpty()!! || topicMessageEditText?.text?.isEmpty()!!){
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
             }else{
                 //val to = resources.getString(R.string.emailSupport)
-                firebase.getCountOpenFeedback(object :Callback<Int>{
+                firebaseFeedback.getCountOpenFeedback(object :Callback<Int>{
                     override fun onComplete(value: Int) {
                         Log.d("Tag",value.toString())
-                        if (value >= 3){
+                        if (value >= MAX_NUMBER_CONSECUTIVE_MESSAGES){
                             Toast.makeText(requireContext(),"Ошибка при создании обращения. Подождите пока служба поддержки ответит на ваши вопросы.",Toast.LENGTH_SHORT).show()
                         }else{
-                            val topic = topicMessageEditText?.text.toString()
-                            val message = contentMessageEditText?.text.toString()
-                            firebase.addFeedback(codeQuestion,topic, message)
-                            Toast.makeText(requireContext(),"Обращение успешно отправлено",Toast.LENGTH_SHORT).show()
-                            topicMessageEditText?.setText("")
-                            contentMessageEditText?.setText("")
+                            sendFeedback()
                             Navigation.findNavController(requireActivity(),R.id.navFragment).popBackStack()
                         }
                     }
                 })
-
-/*
-                val email = Intent(Intent.ACTION_SEND)
-                email.putExtra(Intent.EXTRA_EMAIL, arrayOf(to))
-                email.putExtra(Intent.EXTRA_SUBJECT, topic)
-                email.putExtra(Intent.EXTRA_TEXT, message)
-
-                //для того чтобы запросить email клиент устанавливаем тип
-                email.type = "message/rfc822"
-
-                startActivity(Intent.createChooser(email, "Выберите email клиент :"))
-*/
             }
-
         }
+    }
+    private fun sendFeedback(){
+        val topic = topicMessageEditText?.text.toString()
+        val message = contentMessageEditText?.text.toString()
+        firebaseFeedback.addFeedback(codeQuestion,topic, message)
+        Toast.makeText(requireContext(),"Обращение успешно отправлено",Toast.LENGTH_SHORT).show()
+        topicMessageEditText?.setText("")
+        contentMessageEditText?.setText("")
     }
     private fun addDiary(){
         topicMessageEditText?.setText(topic.toString())
@@ -134,5 +129,7 @@ class MailFragment : Fragment() {
         topicMessageEditText?.setText(topic.toString())
         contentMessageEditText?.setText("Класс: $numberClass\nПредмет: $name\nАвтор: ")
     }
+
+
 
 }

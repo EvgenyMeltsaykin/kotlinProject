@@ -166,7 +166,8 @@ class Elschool {
         var tempUri = scheduleHtml.baseUri().replace("details", "confirmregularmarksbydaterange")
         val year = tempUri.substringAfter("year=").substringBefore("&")
         val week = tempUri.substringAfter("week=").substringBefore("&")
-        if (year.isNotEmpty()) {
+        Log.d("Tag", tempUri)
+        if (year.isDigitsOnly()) {
             val startYearDate = LocalDate.of(year.toInt(), 1, 1)
             val dateWithWeek = startYearDate.plusWeeks((week).toLong() - 1)
             val countDay = dateWithWeek.dayOfWeek.ordinal
@@ -178,7 +179,7 @@ class Elschool {
             //
             val resultUri = "$tempUri&startDate=$startDate&endDate=$endDate"
             //Просмотр оценки
-            val document = Jsoup.connect(resultUri)
+            Jsoup.connect(resultUri)
                 .ignoreContentType(true)
                 .cookies(cookies)
                 .userAgent("mozilla")
@@ -241,7 +242,7 @@ class Elschool {
                                 var cabinetAndTime = ""
                                 items.forEach { item ->
                                     val lesson = Lesson()
-                                    lesson.name = item.select("div[class=flex-grow-1]").text()
+                                    lesson.lessonName = item.select("div[class=flex-grow-1]").text()
                                     lesson.form = item.select("div[class=lesson-form]").text()
                                     cabinetAndTime =
                                         item.select("div[class=diary__discipline__time]").text()
@@ -255,7 +256,7 @@ class Elschool {
                                             item.select("span[class=diary__mark diary__mark-not-seen-before]")
                                                 .text()
                                     }
-                                    if (lesson.name.isNotEmpty()) {
+                                    if (lesson.lessonName.isNotEmpty()) {
                                         lessons.add(lesson)
                                     }
                                 }
@@ -264,42 +265,13 @@ class Elschool {
                             deleteSchedule()
                             firebaseCallback.onComplete(true)
                             schedule.forEach { (s, list) ->
-                                var i = 0
                                 val day = s.substringBefore(" ")
                                 val date = s.substringAfter(" ")
                                 if (day.isNotEmpty()) {
                                     list.forEach {
-                                        i++
-                                        firebase.setFieldUserDatabase(
-                                            firebase.userUid,
-                                            "diary/schedule/$day/lesson$i/lessonName",
-                                            it.name
-                                        )
-                                        firebase.setFieldUserDatabase(
-                                            firebase.userUid,
-                                            "diary/schedule/$day/lesson$i/time",
-                                            it.time
-                                        )
-                                        firebase.setFieldUserDatabase(
-                                            firebase.userUid,
-                                            "diary/schedule/$day/lesson$i/cabinet",
-                                            it.cabinet
-                                        )
-                                        firebase.setFieldUserDatabase(
-                                            firebase.userUid,
-                                            "diary/schedule/$day/lesson$i/form",
-                                            it.form
-                                        )
-                                        firebase.setFieldUserDatabase(
-                                            firebase.userUid,
-                                            "diary/schedule/$day/lesson$i/homework",
-                                            it.homework
-                                        )
-                                        firebase.setFieldUserDatabase(
-                                            firebase.userUid,
-                                            "diary/schedule/$day/lesson$i/mark",
-                                            it.mark
-                                        )
+                                        val ref =
+                                            firebase.diaryRef.child("schedule").child(day).push()
+                                        ref.setValue(it)
                                     }
                                     firebase.setFieldUserDatabase(
                                         firebase.userUid,
@@ -483,38 +455,53 @@ class Elschool {
                 }
             })
     }
+
     fun getLessonTeacher(snapshot: DataSnapshot): SchoolSubjectElschool? {
-        if (snapshot.child("changeName").value == null){
+        if (snapshot.child("changeName").value == null) {
             return null
         }
         val changeName = snapshot.child("changeName").value.toString()
-        val number =snapshot.child("number").value.toString().toInt()
+        val number = snapshot.child("number").value.toString().toInt()
         val startTime = snapshot.child("startTime").value.toString()
-        val endTime= snapshot.child("endTime").value.toString()
-        val rooId= snapshot.child("rooId").value.toString().toInt()
-        val instituteId= snapshot.child("instituteId").value.toString().toInt()
-        val departmentId= snapshot.child("departmentId").value.toString().toInt()
-        val departmentName= snapshot.child("departmentName").value.toString()
-        val groupId:Int?
-        if (snapshot.child("groupId").value == null){
+        val endTime = snapshot.child("endTime").value.toString()
+        val rooId = snapshot.child("rooId").value.toString().toInt()
+        val instituteId = snapshot.child("instituteId").value.toString().toInt()
+        val departmentId = snapshot.child("departmentId").value.toString().toInt()
+        val departmentName = snapshot.child("departmentName").value.toString()
+        val groupId: Int?
+        if (snapshot.child("groupId").value == null) {
             groupId = null
-        }else{
+        } else {
             groupId = snapshot.child("groupId").value.toString().toInt()
         }
-        val disciplineId= snapshot.child("disciplineId").value.toString().toInt()
-        val disciplineName= snapshot.child("disciplineName").value.toString()
-        val periodId= snapshot.child("periodId").value.toString().toInt()
-        return SchoolSubjectElschool(changeName,number, startTime, endTime, rooId, instituteId, departmentId, departmentName, groupId, disciplineId, disciplineName, periodId)
+        val disciplineId = snapshot.child("disciplineId").value.toString().toInt()
+        val disciplineName = snapshot.child("disciplineName").value.toString()
+        val periodId = snapshot.child("periodId").value.toString().toInt()
+        return SchoolSubjectElschool(
+            changeName,
+            number,
+            startTime,
+            endTime,
+            rooId,
+            instituteId,
+            departmentId,
+            departmentName,
+            groupId,
+            disciplineId,
+            disciplineName,
+            periodId
+        )
 
     }
-    fun getTeacherLessonsDay(day: String,callback: Callback<List<SchoolSubjectElschool>>){
+
+    fun getTeacherLessonsDay(day: String, callback: Callback<List<SchoolSubjectElschool>>) {
         val firebase = FunctionsFirebase()
         val ref = firebase.scheduleRef
         ref.keepSynced(true)
         val lessons = mutableListOf<SchoolSubjectElschool>()
-        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.children.forEach {schedule->
+                snapshot.children.forEach { schedule ->
                     val key = schedule.key.toString()
                     if (key == day.toLowerCase(Locale.ROOT)) {
                         schedule.children.forEach {
@@ -535,6 +522,7 @@ class Elschool {
 
         })
     }
+
     fun getFieldFromScheduleTeacher(day: String, field: String, callback: Callback<String>) {
         val firebase = FunctionsFirebase()
         val ref = firebase.scheduleRef.child(day).child(field)
@@ -568,49 +556,49 @@ class Elschool {
         firebase.getFieldDiary(firebase.userUid, "cookie", object : Callback<String> {
             override fun onComplete(value: String) {
 
-                    val cookies = hashMapOf<String, String>()
-                    cookies[keyCookie] = value
-                    try {
-                        getFieldFromScheduleTeacher(day, "date", object : Callback<String> {
-                            override fun onComplete(value: String) {
-                                if (value == date){
-                                    callback.onComplete(true)
-                                    return
-                                }
-                                GlobalScope.launch(Dispatchers.IO) {
-                                    val document =
-                                        Jsoup.connect("https://elschool.ru/MenuToLayout/MenuToLayout/ScheduleJSON?date=$date")
-                                            .ignoreContentType(true)
-                                            .cookies(cookies)
-                                            .userAgent("mozilla")
-                                            .method(Connection.Method.POST)
-                                            .post()
+                val cookies = hashMapOf<String, String>()
+                cookies[keyCookie] = value
+                try {
+                    getFieldFromScheduleTeacher(day, "date", object : Callback<String> {
+                        override fun onComplete(value: String) {
+                            if (value == date) {
+                                callback.onComplete(true)
+                                return
+                            }
+                            GlobalScope.launch(Dispatchers.IO) {
+                                val document =
+                                    Jsoup.connect("https://elschool.ru/MenuToLayout/MenuToLayout/ScheduleJSON?date=$date")
+                                        .ignoreContentType(true)
+                                        .cookies(cookies)
+                                        .userAgent("mozilla")
+                                        .method(Connection.Method.POST)
+                                        .post()
 
-                                    val tempAnswer =
-                                        document.select("body").text().toString().replace("\\", "")
-                                    val jsonAnswer =
-                                        tempAnswer.substringAfter("\",").substringAfter(":")
-                                            .substringBeforeLast("}")
-                                    val schoolSubjects = arrayListOf<SchoolSubjectElschool>()
-                                    val klaxon = Klaxon()
-                                    JsonReader(StringReader(jsonAnswer)).use { reader ->
-                                        reader.beginArray {
-                                            while (reader.hasNext()) {
-                                                val subject =
-                                                    klaxon.parse<SchoolSubjectElschool>(reader)
-                                                schoolSubjects.add(subject!!)
-                                            }
-                                            setTeacherLessonDatabase(schoolSubjects, day, date)
-                                            callback.onComplete(true)
+                                val tempAnswer =
+                                    document.select("body").text().toString().replace("\\", "")
+                                val jsonAnswer =
+                                    tempAnswer.substringAfter("\",").substringAfter(":")
+                                        .substringBeforeLast("}")
+                                val schoolSubjects = arrayListOf<SchoolSubjectElschool>()
+                                val klaxon = Klaxon()
+                                JsonReader(StringReader(jsonAnswer)).use { reader ->
+                                    reader.beginArray {
+                                        while (reader.hasNext()) {
+                                            val subject =
+                                                klaxon.parse<SchoolSubjectElschool>(reader)
+                                            schoolSubjects.add(subject!!)
                                         }
+                                        setTeacherLessonDatabase(schoolSubjects, day, date)
+                                        callback.onComplete(true)
                                     }
                                 }
                             }
-                        })
+                        }
+                    })
 
-                    } catch (e: Exception) {
-                        callback.onComplete(false)
-                    }
+                } catch (e: Exception) {
+                    callback.onComplete(false)
+                }
             }
         })
     }
@@ -687,10 +675,6 @@ class Elschool {
                                                     if (mark.isDigitsOnly()) {
                                                         middleMark += mark.toInt()
                                                         markCountForMiddleMark++
-                                                        Log.d(
-                                                            "Tag",
-                                                            "$lessonName markcount=" + markCountForMiddleMark.toString() + " middleMark = $middleMark"
-                                                        )
                                                     }
                                                     val date =
                                                         it.attr("data-popover-content")
@@ -707,16 +691,9 @@ class Elschool {
                                                         "marks/dateUpdate",
                                                         formatter
                                                     )
-                                                    firebase.setFieldDiary(
-                                                        firebase.userUid,
-                                                        "marks/$lessonCount/semestr$semesterCount/mark$markCount/date",
-                                                        date
-                                                    )
-                                                    firebase.setFieldDiary(
-                                                        firebase.userUid,
-                                                        "marks/$lessonCount/semestr$semesterCount/mark$markCount/value",
-                                                        mark
-                                                    )
+                                                    val ref = firebase.markRef.child(lessonCount.toString()).child("semestr$semesterCount").push()
+                                                    ref.child("date").setValue(date)
+                                                    ref.child("value").setValue(mark)
                                                     markCount++
                                                 }
                                             }

@@ -197,39 +197,6 @@ class ChildMyProfileFragment : Fragment() {
         val city = cityAutoCompleteTextViewChildMyProfile?.text.toString()
         val educationalInstitution =
             educationalInstitutionAutoCompleteTextViewChildMyProfile?.text.toString()
-        val email = emailTextInputChildMyProfile?.editText?.text.toString()
-        val point = pointTextViewChildMyProfile?.text.toString().toInt()
-/*
-        val user = FirebaseAuth.getInstance().currentUser
-        if (changeEmail) {
-            user?.updateEmail(email)
-                ?.addOnCompleteListener {
-                    if (!it.isSuccessful) return@addOnCompleteListener
-                    if (emailTextInputChildMyProfile?.editText?.text != null) {
-                        firebase.setFieldUserDatabase(firebase.uidUser, "email", email)
-                    }
-                    Toast.makeText(
-                        requireContext(),
-                        "Смена email прошла успешно, авторизуйтесь заного",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    val intent = Intent(
-                        requireActivity(),
-                        ChooseActivity::class.java
-                    )
-                    intent.flags =
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    startActivity(intent)
-                }
-                ?.addOnFailureListener {
-                    Toast.makeText(
-                        requireContext(),
-                        "Ошибка при смене email: ${it.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-        }
- */
         val header = requireActivity().navView.getHeaderView(0);
         val userNameHeader = header.findViewById<TextView>(R.id.usernameTextviewDrawer)
         userNameHeader.text = username
