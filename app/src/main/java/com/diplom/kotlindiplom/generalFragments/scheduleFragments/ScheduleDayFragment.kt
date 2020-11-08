@@ -54,11 +54,6 @@ class ScheduleDayFragment : Fragment() {
         if(!title.isNullOrBlank()) {
             activity?.title = title
         }
-        /*parentFragmentManager.addOnBackStackChangedListener {
-            val bundle = bundleOf()
-            bundle.putBoolean("updateSchedule",false)
-            Navigation.findNavController(requireActivity(),R.id.navFragment).navigate(R.id.weekdayFragment,bundle)
-        }*/
         messageTextView?.isVisible  =false
         val adapter = GroupAdapter<ViewHolder>()
         val day = activity?.title.toString().substringBefore(" ")

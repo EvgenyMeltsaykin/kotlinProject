@@ -11,7 +11,9 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.ActivityCallback
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebaseMark
 import com.diplom.kotlindiplom.R
 import kotlinx.android.synthetic.main.fragment_details_final_mark.*
 
@@ -60,7 +62,7 @@ class DetailsFinalMarkFragment : Fragment() {
         val detailMark = mutableListOf<String>()
         firebase.getFieldDiary(firebase.userUid,"semestrName",object :Callback<String>{
             override fun onComplete(semestrName: String) {
-                firebase.getMarksLessonSemester(lessonName!!,object :Callback<List<Int>>{
+                firebaseMark.getMarksLessonSemester(lessonName!!,object :Callback<List<Int>>{
                     override fun onComplete(value: List<Int>) {
                         var i = 0
                         var countMark = 0

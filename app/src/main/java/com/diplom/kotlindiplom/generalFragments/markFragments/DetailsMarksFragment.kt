@@ -12,7 +12,9 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebaseMark
 import com.diplom.kotlindiplom.R
 import kotlinx.android.synthetic.main.fragment_details_marks.*
 
@@ -61,7 +63,7 @@ class DetailsMarksFragment : Fragment() {
                 semestrNumberTextView?.text = "${value.capitalize()}: $semestrNumber"
             }
         })
-        firebase.getMiddleMark(lessonName,semestrNumber,object :Callback<String>{
+        firebaseMark.getMiddleMark(lessonName,semestrNumber,object :Callback<String>{
             override fun onComplete(value: String) {
                 middleMarkTextView?.text = "Средний балл: $value"
                 if (value == "0"){
@@ -73,7 +75,7 @@ class DetailsMarksFragment : Fragment() {
             }
         })
         lessonNameTextView?.text = "Предмет: $lessonName"
-        firebase.getDetailsMarks(lessonName,semestrNumber,object : Callback<Map<String,String>>{
+        firebaseMark.getDetailsMarks(lessonName,semestrNumber,object : Callback<Map<String,String>>{
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onComplete(value: Map<String, String>) {
                 value.forEach { (s, s1) ->

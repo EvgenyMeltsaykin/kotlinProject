@@ -27,7 +27,7 @@ import kotlin.math.roundToInt
 open class FunctionsFirebase {
     val rootRef = FirebaseDatabase.getInstance().reference
     val diariesRef = rootRef.child("diaries")
-    val secretKey = "applicatonFromDiplom"
+    private val secretKey = "applicatonFromDiplom"
     val userRef = rootRef.child("users")
     val userUid = FirebaseAuth.getInstance().uid.toString()
     val diaryRef = userRef.child(userUid).child("diary")
@@ -147,40 +147,14 @@ open class FunctionsFirebase {
     fun updateLessonMyScheduleInFirebase(
         weekday: String,
         numberLesson: String,
-        lessonName: String,
-        cabinet: String,
-        homework: String,
-        time: String,
-        dateHomework: String
+        lesson: Lesson
     ) {
         val ref = userRef.child(userUid).child("mySchedule").child(weekday).child(numberLesson)
-        ref.child("dateHomework").setValue(dateHomework)
-        ref.child("homework").setValue(homework)
-        ref.child("cabinet").setValue(cabinet)
-        ref.child("lessonName").setValue(lessonName)
-        ref.child("time").setValue(time)
-    }
-
-    fun getFieldsLessonMyScheduleOutFirebase(infoLesson: DataSnapshot): Lesson {
-        val lesson = Lesson()
-        infoLesson.children.forEach {
-            if (it.key.toString() == "lessonName") {
-                lesson.lessonName = it.value.toString()
-            }
-            if (it.key.toString() == "homework") {
-                lesson.homework = it.value.toString()
-            }
-            if (it.key.toString() == "cabinet") {
-                lesson.cabinet = it.value.toString()
-            }
-            if (it.key.toString() == "time") {
-                lesson.time = it.value.toString()
-            }
-            if (it.key.toString() == "dateHomework") {
-                lesson.dateHomework = it.value.toString()
-            }
-        }
-        return lesson
+        ref.child("dateHomework").setValue(lesson.dateHomework)
+        ref.child("homework").setValue(lesson.homework)
+        ref.child("cabinet").setValue(lesson.cabinet)
+        ref.child("lessonName").setValue(lesson.lessonName)
+        ref.child("time").setValue(lesson.time)
     }
 
     fun getLessonMyScheduleOutFirebase(
@@ -195,7 +169,7 @@ open class FunctionsFirebase {
                 if (snapshot.exists()) {
                     var i = 0
                     snapshot.children.forEach { infoLesson ->
-                        lessons.add(getFieldsLessonMyScheduleOutFirebase(infoLesson))
+                        lessons.add(getLesson(infoLesson))
                         i++
                     }
                     firebaseCallBack.onComplete(lessons)
@@ -264,134 +238,6 @@ open class FunctionsFirebase {
 
         })
     }
-
-    fun downloadSchoolBook(book: SchoolBook, context: Context, activity: Activity) {
-        val ref = FirebaseStorage.getInstance().getReferenceFromUrl(book.url)
-        ref.downloadUrl.addOnSuccessListener { uri ->
-            val downloadManager =
-                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-            val request = DownloadManager.Request(uri)
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (checkSelfPermission(context, WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED
-                ) {
-                    Toast.makeText(context, "Загрузка началась", Toast.LENGTH_SHORT).show()
-                    request.setDestinationInExternalPublicDir(
-                        DIRECTORY_DOWNLOADS,
-                        book.name + ".pdf"
-                    )
-                    downloadManager.enqueue(request)
-                } else {
-                    ActivityCompat.requestPermissions(
-                        activity,
-                        arrayOf(WRITE_EXTERNAL_STORAGE),
-                        1
-                    )
-                }
-            }
-        }.addOnFailureListener {
-            Toast.makeText(context, "Ошибка при загрузке", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun getDetailsBook(bookSnap: DataSnapshot): SchoolBook {
-        val schoolBook = SchoolBook()
-        bookSnap.children.forEach { detail ->
-            if (detail.key.toString() == "name") {
-                schoolBook.name = detail.value.toString()
-            }
-            if (detail.key.toString() == "cover") {
-                schoolBook.cover = detail.value.toString()
-            }
-            if (detail.key.toString() == "url") {
-                schoolBook.url = detail.value.toString()
-            }
-        }
-        return schoolBook
-    }
-
-    fun getSchoolBooks(
-        numberClass: String?,
-        subjectName: String?,
-        firebaseCallBack: Callback<List<SchoolBook>>
-    ) {
-        val ref = rootRef.child("schoolBooks").child("${numberClass}class").child(subjectName!!)
-        ref.keepSynced(true)
-        val books = mutableListOf<SchoolBook>()
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    p0.children.forEach { book ->
-                        books.add(getDetailsBook(book))
-                    }
-                }
-                firebaseCallBack.onComplete(books)
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
-    }
-
-    fun getMarksLessonSemester(
-        lessonName: String,
-        firebaseCallBack: Callback<List<Int>>
-    ) {
-        val ref =
-            userRef.child(userUid).child("diary")
-                .child("marks").orderByChild("lessonName").equalTo(lessonName)
-        ref.keepSynced(true)
-        val marksSemester = mutableListOf<Int>()
-        ref.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    snapshot.children.forEach { lesson ->
-                        lesson.children.forEach { semestr ->
-                            semestr.children.forEach {
-                                if (it.key.toString() == "middleMark") {
-                                    marksSemester.add(
-                                        it.value.toString().toFloat().roundToInt()
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    firebaseCallBack.onComplete(marksSemester)
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
-    }
-
-    fun getFieldMarks(field: String, firebaseCallBack: Callback<String>) {
-
-        val ref = userRef.child(userUid).child("diary").child("marks")
-        ref.keepSynced(true)
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    p0.children.forEach {
-                        if (it.key.toString() == field) {
-                            firebaseCallBack.onComplete(it.value.toString())
-                        }
-                    }
-                }
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
-    }
-
     fun getLessonsAndFinalMark(
         firebaseCallBack: Callback<Map<String, String>>
     ) {
@@ -410,7 +256,7 @@ open class FunctionsFirebase {
                             }
                             info.children.forEach { semestr ->
                                 if (semestr.key.toString() == "middleMark") {
-                                    if (semestr.value.toString().toFloat() != 0f){
+                                    if (semestr.value.toString().toFloat() != 0f) {
                                         middleMarks.add(semestr.value.toString().toFloat())
                                     }
                                 }
@@ -479,83 +325,6 @@ open class FunctionsFirebase {
         })
     }
 
-    fun getMiddleMark(
-        lessonName: String,
-        semesterNumber: String,
-        firebaseCallBack: Callback<String>
-    ) {
-        val ref = userRef.child(userUid).child("diary").child("marks").orderByChild("lessonName")
-            .equalTo(lessonName)
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    snapshot.children.forEach { lesson ->
-                        lesson.children.forEach { semestr ->
-                            if (semestr.key.toString() == "semestr$semesterNumber") {
-                                semestr.children.forEach { middleMark ->
-                                    if (middleMark.key.toString() == "middleMark") {
-                                        val mark = middleMark.value.toString()
-                                        firebaseCallBack.onComplete(mark)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
-    }
-
-    fun getDetailsMarks(
-        lessonName: String,
-        numberSemester: String,
-        firebaseCallBack: Callback<Map<String, String>>
-    ) {
-        val ref = userRef.child(userUid).child("diary").child("marks").orderByChild("lessonName")
-            .equalTo(lessonName)
-        val detailMarksMap = mutableMapOf<String, String>()
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    p0.children.forEach { lesson ->
-                        lesson.children.forEach { info ->
-                            lesson.children.forEach { semestr ->
-                                if (semestr.key.toString() == "semestr$numberSemester") {
-                                    semestr.children.forEach { mark ->
-                                        var date = ""
-                                        var value = ""
-                                        mark.children.forEach { detailMark ->
-                                            if (detailMark.key.toString() == "date") {
-                                                date =
-                                                    detailMark.value.toString()
-                                            }
-                                            if (detailMark.key.toString() == "value") {
-                                                value =
-                                                    detailMark.value.toString()
-                                            }
-                                        }
-                                        detailMarksMap[date] = value
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    firebaseCallBack.onComplete(detailMarksMap)
-                }
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
-    }
-
     fun getLesson(fieldsLesson: DataSnapshot): Lesson {
         val lesson = Lesson()
         lesson.lessonName = fieldsLesson.child("lessonName").value.toString()
@@ -564,6 +333,7 @@ open class FunctionsFirebase {
         lesson.homework = fieldsLesson.child("homework").value.toString()
         lesson.form = fieldsLesson.child("form").value.toString()
         lesson.mark = fieldsLesson.child("mark").value.toString()
+        lesson.dateHomework = fieldsLesson.child("dateHomework").value.toString()
         return lesson
     }
 
@@ -615,6 +385,7 @@ open class FunctionsFirebase {
         val ref = userRef.child(uid).child("diary")
         ref.child(field).setValue(value)
     }
+
     fun getScheduleDay(uid: String, day: String, firebaseCallBack: Callback<List<Lesson>>) {
         val lessons = mutableListOf<Lesson>()
         val ref = userRef.child(uid).child("diary")
@@ -643,8 +414,61 @@ open class FunctionsFirebase {
         val temp = Arrays.toString(cipherText)
         setFieldUserDatabase(userUid, "diary/login", login)
         setFieldUserDatabase(userUid, "diary/password", temp)
+    }
+    @ExperimentalStdlibApi
+    fun getLoginAndPasswordAndUrlDiary(
+        firebaseCallBack: Callback<Map<String, String>>
+    ) {
+        val ref = userRef.child(userUid).child("diary")
+        val value = mutableMapOf<String, String>()
 
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
 
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    p0.children.forEach {
+                        if (it.key.toString() == "login") {
+                            value["login"] = it.value.toString()
+                        }
+                        if (it.key.toString() == "password") {
+                            if (it.value.toString().isNotEmpty()) {
+                                val temp = it.value.toString()
+                                val byteValues: List<String> =
+                                    temp.substring(1, temp.length - 1).split(",")
+                                val bytes = ByteArray(byteValues.size)
+
+                                run {
+                                    var i = 0
+                                    val len = bytes.size
+                                    while (i < len) {
+                                        bytes[i] = byteValues[i].trim { it <= ' ' }
+                                            .toByte()
+                                        i++
+                                    }
+                                }
+                                val cryptor = AES256JNCryptor()
+                                val decrypt =
+                                    cryptor.decryptData(
+                                        bytes,
+                                        secretKey.toCharArray()
+                                    )
+                                value["password"] = decrypt.decodeToString()
+                            } else {
+                                value["password"] = ""
+                            }
+                        }
+                        if (it.key.toString() == "url") {
+                            value["url"] = it.value.toString()
+                        }
+
+                    }
+                    firebaseCallBack.onComplete(value)
+                }
+            }
+        })
     }
 
     fun getPointChild(uid: String, firebaseCallBack: Callback<String>) {

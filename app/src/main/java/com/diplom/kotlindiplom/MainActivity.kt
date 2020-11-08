@@ -27,10 +27,7 @@ import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebaseFeedback
 import com.diplom.kotlindiplom.MainActivity.FunctionUiSingleton.functionsUI
 import com.diplom.kotlindiplom.childFragments.RequestParentFragment
-import com.diplom.kotlindiplom.models.FunctionsApi
-import com.diplom.kotlindiplom.models.FunctionsFirebase
-import com.diplom.kotlindiplom.models.FunctionsFirebaseFeedback
-import com.diplom.kotlindiplom.models.FunctionsUI
+import com.diplom.kotlindiplom.models.*
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -57,9 +54,13 @@ class MainActivity : AppCompatActivity(), ActivityCallback {
 
     object FirebaseSingleton {
         var firebase = FunctionsFirebase()
+        var firebaseSchoolBook = FunctionsFirebaseSchoolBook()
+        var firebaseMark = FunctionsFirebaseMark()
         var firebaseFeedback = FunctionsFirebaseFeedback()
         fun newInstance() {
             firebase = FunctionsFirebase()
+            firebaseSchoolBook = FunctionsFirebaseSchoolBook()
+            firebaseMark = FunctionsFirebaseMark()
             firebaseFeedback = FunctionsFirebaseFeedback()
         }
     }

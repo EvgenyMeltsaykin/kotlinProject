@@ -122,6 +122,7 @@ class Elschool {
             val parseDoc = document.parse()
 
             val title = parseDoc.title()
+            Log.d("Tag",title)
             if (title == "Личный кабинет") {
                 getRoleFromDiary(parseDoc)
                 val id = parseDoc.text().substringAfter("ID ").substringBefore(" ")
@@ -603,7 +604,6 @@ class Elschool {
         })
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getMarksFromDiary(
         idChild: String,
         firebaseCallback: Callback<Boolean>
@@ -645,7 +645,7 @@ class Elschool {
                                 gradeHtml.select("div[class=DivForGradesAndAbsencesTable]")
                                     .select("tbody")
                             var lessonCount = 1
-                            var add = false
+                            var error = true
                             gradeTable.forEach {
                                 var i = 0
                                 //var lessonHtml = it.select("tr[lesson=\"$lessonCount\"]")
@@ -680,7 +680,7 @@ class Elschool {
                                                         it.attr("data-popover-content")
                                                             .substringBefore("<p>")
                                                             .substringAfterLast(" ")
-                                                    add = true
+                                                    error = false
                                                     val nowDate = Calendar.getInstance().time
                                                     val formatter = SimpleDateFormat(
                                                         "yyyy-MM-dd HH:mm",
@@ -691,7 +691,9 @@ class Elschool {
                                                         "marks/dateUpdate",
                                                         formatter
                                                     )
-                                                    val ref = firebase.markRef.child(lessonCount.toString()).child("semestr$semesterCount").push()
+                                                    val ref =
+                                                        firebase.markRef.child(lessonCount.toString())
+                                                            .child("semestr$semesterCount").push()
                                                     ref.child("date").setValue(date)
                                                     ref.child("value").setValue(mark)
                                                     markCount++
@@ -713,88 +715,17 @@ class Elschool {
                                     }
                                     lessonCount++
                                 } while (lessonHtml.isNotEmpty())
-                                firebaseCallback.onComplete(add)
+                                firebaseCallback.onComplete(error)
                                 return@launch
                             }
                         } catch (e: IOException) {
                             e.printStackTrace()
-                            firebaseCallback.onComplete(false)
+                            firebaseCallback.onComplete(true)
                         }
                     }
 
                 }
             })
-
-
         }
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @ExperimentalStdlibApi
-    fun getMarks(
-        idChild: String = "",
-        context: Context,
-        progressBar: ProgressBar,
-        hideButtons: () -> Unit,
-        showButtons: () -> Unit
-    ) {
-        val firebase = FunctionsFirebase()
-        Toast.makeText(context, "Подождите, идет загрузка оценок", Toast.LENGTH_SHORT).show()
-        progressBar.isVisible = true
-        hideButtons()
-        getMarksFromDiary(
-            idChild,
-            object : Callback<Boolean> {
-                override fun onComplete(end: Boolean) {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        if (!end) {
-                            Toast.makeText(
-                                context,
-                                "При загрузке оценок произошла ошибка. Возможно, оценки еще не добавлены.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            progressBar.isVisible = false
-                            showButtons()
-                        }
-                        val ref =
-                            firebase.userRef.child(firebase.userUid).child("diary").child("marks")
-                        ref.addChildEventListener(object : ChildEventListener {
-                            override fun onChildAdded(
-                                p0: DataSnapshot,
-                                p1: String?
-                            ) {
-                                progressBar.isVisible = false
-                                showButtons()
-                            }
-
-                            override fun onChildChanged(
-                                p0: DataSnapshot,
-                                p1: String?
-                            ) {
-                                return
-                            }
-
-                            override fun onChildRemoved(p0: DataSnapshot) {
-                                return
-                            }
-
-                            override fun onChildMoved(
-                                p0: DataSnapshot,
-                                p1: String?
-                            ) {
-                                return
-                            }
-
-                            override fun onCancelled(p0: DatabaseError) {
-                                return
-                            }
-
-                        })
-                    }
-                }
-            })
-
-    }
-
-
 }

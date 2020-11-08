@@ -10,6 +10,8 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebaseSchoolBook
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.diplom.kotlindiplom.models.SchoolBook
@@ -55,12 +57,11 @@ class SchoolBooksFragment : Fragment() {
         //requireActivity().invalidateOptionsMenu()
         activity?.title = "Выберите учебник"
         val adapter = GroupAdapter<ViewHolder>()
-        val firebase = FunctionsFirebase()
         messageStaticTextView?.isVisible = false
         writeEmailButton?.isVisible = false
         emptySchoolBooksTextView?.isVisible = false
         schoolBooksProgressBar?.isVisible = true
-        firebase.getSchoolBooks(
+        firebaseSchoolBook.getSchoolBooks(
             numberClass,
             subjectName,
             object : Callback<List<SchoolBook>> {
@@ -76,7 +77,7 @@ class SchoolBooksFragment : Fragment() {
                                 ) {
                                     val animAlpha = AnimationUtils.loadAnimation(context, R.anim.alpha)
                                     viewHolder.itemView.downloadButton.startAnimation(animAlpha)
-                                    firebase.downloadSchoolBook(book,requireContext(),requireActivity())
+                                    firebaseSchoolBook.downloadSchoolBook(book,requireContext(),requireActivity())
                                 }
                             })
                         )

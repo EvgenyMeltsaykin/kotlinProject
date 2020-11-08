@@ -94,11 +94,7 @@ class LoginDiaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 hideButtons()
                 progressBar?.isVisible = true
                 GlobalScope.launch(Dispatchers.Main) {
-                    var rightLogin = false
-                    when (urlDiary) {
-                        diary.elschool.url -> rightLogin =
-                            withContext(Dispatchers.IO) { diary.elschool.login(login, password) }
-                    }
+                    val rightLogin = diary.loginInDiary(urlDiary,login,password)
                     if (!rightLogin) {
                         showButtons()
                         Toast.makeText(

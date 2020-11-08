@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.Navigation
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
+import com.diplom.kotlindiplom.models.Lesson
 import kotlinx.android.synthetic.main.fragment_detail_lesson_my_schedule.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -65,10 +67,10 @@ class DetailLessonMyScheduleFragment : Fragment() {
             homeworkTextInput.editText?.setText(lessonHomework)
         }
         saveLessonButton?.setOnClickListener {
-            val firebase = FunctionsFirebase()
             val homework = homeworkTextInput?.editText?.text.toString()
             val dateHomework = dateHomeworkTextInput?.editText?.text.toString()
-            firebase.updateLessonMyScheduleInFirebase(weekday,lessonNumber,lessonName,lessonCabinet, homework,lessonTime,dateHomework)
+            val lesson = Lesson(lessonName,homework,lessonTime,lessonCabinet,dateHomework = dateHomework)
+            firebase.updateLessonMyScheduleInFirebase(weekday,lessonNumber,lesson)
             Toast.makeText(requireContext(),"Домашняя работа сохранена",Toast.LENGTH_SHORT).show()
             Navigation.findNavController(requireActivity(),R.id.navFragment).popBackStack()
         }

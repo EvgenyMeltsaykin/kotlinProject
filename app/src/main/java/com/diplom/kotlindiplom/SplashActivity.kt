@@ -43,11 +43,21 @@ class SplashActivity : AppCompatActivity() {
         if (user != null) {
             if (user.isEmailVerified) {
                 val firebase = FunctionsFirebase()
-                Log.d("Tag", "begin")
-                firebase.getFieldDiary(firebase.userUid,"roleDiary",object :Callback<String>{
-                    override fun onComplete(value: String) {
-                        if (value == "child" || value == "parent"){
-                            firebase.updateSchedule()
+                firebase.getFieldsDiary(firebase.userUid, listOf("roleDiary", "url"),object :Callback<Map<String,String>>{
+                    override fun onComplete(roleAndUrl: Map<String, String>) {
+                        if (roleAndUrl["roleDiary"] == "child" || roleAndUrl["roleDiary"] == "parent"){
+                            firebase.getLoginAndPasswordAndUrlDiary(object :Callback<Map<String,String>>{
+                                @RequiresApi(Build.VERSION_CODES.N)
+                                override fun onComplete(loginAndPassword: Map<String, String>) {
+
+                                    val diary = Diary()
+                                    GlobalScope.launch(Dispatchers.Main) {
+                                        diary.loginInDiary(roleAndUrl["url"]!!,loginAndPassword["login"]!!,loginAndPassword["password"]!!)
+                                    }
+                                    firebase.updateSchedule()
+                                }
+                            })
+
                         }
                     }
                 })

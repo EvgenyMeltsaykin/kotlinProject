@@ -11,6 +11,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebaseMark
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.models.FunctionsFirebase
 import com.github.mikephil.charting.data.*
@@ -57,8 +59,7 @@ class GraphMarksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.title = lessonName
-        val firebase = FunctionsFirebase()
-        firebase.getDetailsMarks(
+        firebaseMark.getDetailsMarks(
             lessonName,
             semestrNumber,
             object : Callback<Map<String, String>> {

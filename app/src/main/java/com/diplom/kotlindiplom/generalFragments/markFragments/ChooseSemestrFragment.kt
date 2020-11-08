@@ -7,15 +7,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import com.diplom.kotlindiplom.Callback
+import com.diplom.kotlindiplom.MainActivity
 import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebase
+import com.diplom.kotlindiplom.MainActivity.FirebaseSingleton.firebaseMark
 import com.diplom.kotlindiplom.R
 import com.diplom.kotlindiplom.diaries.Diary
 import kotlinx.android.synthetic.main.fragment_choose_semestr.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -57,7 +63,7 @@ class ChooseSemestrElschoolFragment : Fragment() {
         activity?.title = "Выберите"
         val bundle = bundleOf()
         progressBar?.isVisible = false
-        firebase.getFieldMarks("dateUpdate", object : Callback<String> {
+        firebaseMark.getFieldMarks("dateUpdate", object : Callback<String> {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onComplete(value: String) {
                 dateUpdateTextView?.text = "Дата обновления: $value"
@@ -101,54 +107,68 @@ class ChooseSemestrElschoolFragment : Fragment() {
         }
 
     }
-
     @ExperimentalStdlibApi
     fun refreshMarks() {
         val nowDate = Calendar.getInstance().time
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(nowDate)
         dateUpdateTextView?.text = "Дата обновления: $formatter"
-        val hideButtons = {
-            refreshMarkButton?.isVisible = false
-            firstSemestrButton?.isVisible = false
-            secondSemestrButton?.isVisible = false
-            thirdSemestrButton?.isVisible = false
-            yearsMarksButton?.isVisible = false
-        }
-        val showButtons = {
-            refreshMarkButton?.isVisible = true
-            firstSemestrButton?.isVisible = true
-            secondSemestrButton?.isVisible = true
-            thirdSemestrButton?.isVisible = true
-            yearsMarksButton?.isVisible = true
-        }
-        firebase.getFieldDiary(firebase.userUid, "url", object : Callback<String> {
-            override fun onComplete(url: String) {
-                firebase.getFieldDiary(
-                    firebase.userUid,
-                    "idChild",
-                    object : Callback<String> {
-                        @RequiresApi(Build.VERSION_CODES.O)
-                        override fun onComplete(valueIdChild: String) {
-                            if (valueIdChild != idChild) {
-                                val diary = Diary()
-                                when (url) {
-                                    diary.elschool.url -> {
-                                        diary.elschool.getMarks(
-                                            valueIdChild,
-                                            requireContext(),
-                                            progressBar,
-                                            hideButtons,
-                                            showButtons
-                                        )
+        firebase.getFieldsDiary(firebase.userUid, listOf("url","idChild"),object :Callback<Map<String,String>>{
+            override fun onComplete(value: Map<String, String>) {
+                val idChildFromDatabase  = value["idChild"] ?: error("")
+                val urlDiary  = value["url"]
+                if (idChildFromDatabase != idChild) {
+                    val diary = Diary()
+                    Toast.makeText(context, "Подождите, идет загрузка оценок", Toast.LENGTH_SHORT).show()
+                    progressBar.isVisible = true
+                    hideButtons()
+                    when (urlDiary) {
+                        diary.elschool.url -> {
+                            diary.elschool.getMarksFromDiary(
+                                idChildFromDatabase,
+                                object :Callback<Boolean>{
+                                    override fun onComplete(error: Boolean) {
+                                        GlobalScope.launch(Dispatchers.Main) {
+                                            if (error){
+                                                Toast.makeText(
+                                                    context,
+                                                    "При загрузке оценок произошла ошибка. Возможно, оценки еще не добавлены.",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }else{
+                                                Toast.makeText(
+                                                    context,
+                                                    "Оценки успешно загружены.",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                            progressBar.isVisible = false
+                                            showButtons()
+                                        }
                                     }
                                 }
-                            }
+                            )
                         }
-                    })
-
+                    }
+                }
             }
         })
     }
+    private fun hideButtons() {
+        refreshMarkButton?.isVisible = false
+        firstSemestrButton?.isVisible = false
+        secondSemestrButton?.isVisible = false
+        thirdSemestrButton?.isVisible = false
+        yearsMarksButton?.isVisible = false
+    }
+    private fun showButtons() {
+        refreshMarkButton?.isVisible = true
+        firstSemestrButton?.isVisible = true
+        secondSemestrButton?.isVisible = true
+        thirdSemestrButton?.isVisible = true
+        yearsMarksButton?.isVisible = true
+    }
+
+
 
     fun navigateToLessons(activity: Activity, bundle: Bundle) {
         Navigation.findNavController(activity, R.id.navFragment)
